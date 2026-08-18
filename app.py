@@ -1044,7 +1044,7 @@ app_html = f"""
      ☰ MENÚ LATERAL MINIMALISTA
      ============================================================ -->
 <style>
-    #btn-menu-lateral {
+    #btn-menu-lateral {{
         position: fixed;
         top: 10px;
         left: 10px;
@@ -1059,9 +1059,9 @@ app_html = f"""
         font-weight: bold;
         cursor: pointer;
         box-shadow: 0 3px 8px rgba(0,0,0,0.45);
-    }
+    }}
 
-    #menu-lateral-ruteos {
+    #menu-lateral-ruteos {{
        position: fixed;
        top: 0;
        left: -420px;
@@ -1076,34 +1076,34 @@ app_html = f"""
        box-sizing: border-box;
        color: white;
        overflow-y: auto;
-   }
+   }}
 
     #menu-lateral-ruteos.abierto { left: 0; }
 
-    .menu-ruteos-header {
+    .menu-ruteos-header {{
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding-bottom: 15px;
         margin-bottom: 20px;
         border-bottom: 1px solid #444;
-    }
+    }}
 
-    .menu-ruteos-titulo {
+    .menu-ruteos-titulo {{
         font-size: 15px;
         font-weight: bold;
         color: #66CDAA;
-    }
+    }}
 
-    #cerrar-menu-ruteos {
+    #cerrar-menu-ruteos {{
         border: none;
         background: transparent;
         color: white;
         font-size: 21px;
         cursor: pointer;
-    }
+    }}
 
-    .opcion-menu-ruteos {
+    .opcion-menu-ruteos {{
         width: 100%;
         box-sizing: border-box;
         padding: 12px 15px;
@@ -1116,13 +1116,13 @@ app_html = f"""
         font-weight: 600;
         text-align: left;
         cursor: pointer;
-    }
+    }}
 
-    .opcion-menu-ruteos:hover {
+    .opcion-menu-ruteos:hover {{
         background: #363a3f;
         border-color: #66CDAA;
         color: white;
-    }
+    }}
 </style>
 
 <button id="btn-menu-lateral" onclick="abrirCerrarMenuRuteos()" title="Abrir menú">☰</button>
