@@ -2063,7 +2063,7 @@ app_html = f"""
         border-bottom: 1px solid #444;
     }}
 
-    .menu-ruteos-titulo {
+    .menu-ruteos-titulo {{
         font-size: 15px;
         font-weight: bold;
         color: #66CDAA;
