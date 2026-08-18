@@ -1,5 +1,4 @@
 import json
-import io
 import pandas as pd
 import streamlit as st 
 from streamlit.components.v1 import html  
@@ -8,75 +7,21 @@ from reglas import reglas_ruteo, MAPA_ORIGENES, PREGUNTAS_FRECUENTES
 
 st.set_page_config(page_title="Monitor Logístico - Liliana García", layout="wide", initial_sidebar_state="collapsed")
 
-# 🟢 INYECCIÓN LIMPIA DIRECTA AL DOM PARA OCULTAR ELEMENTOS NATIVOS
-st.markdown("""
-    <script>
-        try {
-            const css = `
-                [data-testid="stViewerBadge"],
-                .stAppViewerBlock,
-                div[class*="stViewerBadge"],
-                iframe[title="streamlit_badge"],
-                footer,
-                header[data-testid="stHeader"] {
-                    display: none !important;
-                    visibility: hidden !important;
-                    opacity: 0 !important;
-                    pointer-events: none !important;
-                }
-            `;
-            const style = window.parent.document.createElement('style');
-            style.type = 'text/css';
-            style.appendChild(window.parent.document.createTextNode(css));
-            window.parent.document.head.appendChild(style);
-        } catch (e) {
-            console.log("Ignorado");
-        }
-    </script>
-""", unsafe_allow_html=True)
-
-URL_MAPA = "https://drive.google.com/thumbnail?id=1M4GLEwFzhLrZjV-zmvGrdTQhC6IjwxOJ&sz=w1000"
-
-# ==========================================
-# CONEXIÓN ANÓNIMA Y LECTURA DE NOTAS DE SUPABASE
-# ==========================================
-@st.cache_resource
-def init_supabase():
-    try:
-        url = st.secrets["SUPABASE_URL"]
-        key = st.secrets["SUPABASE_KEY"]
-        return create_client(url, key)
-    except Exception:
-        return None
-
-supabase = init_supabase()
-
-def obtener_notas_svc():
-    """Consulta todas las notas de SVC almacenadas en Supabase."""
-    if not supabase:
-        return []
-    try:
-        response = supabase.table("notas_svc").select("*").execute()
-        return response.data
-    except Exception as e:
-        return []
-
-# ==========================================
-# CSS GENERAL DE LA APLICACIÓN
-# ========================================== 
+# 🟢 OCULTAR ELEMENTOS NATIVOS Y BARRAS SOBREPUESTAS
 st.markdown("""
     <style>
     header, header[data-testid="stHeader"], .stAppHeader, div[data-testid="stToolbar"],
     footer, .stAppFooter, #MainMenu, section[data-testid="stSidebar"],
     button[title="View app source"], button[title="Edit this app"], a[href*="github.com"],
     [data-testid="stViewerBadge"], .stAppViewerBlock, div[class*="stViewerBadge"],
-    iframe[title="streamlit_badge"] {
+    iframe[title="streamlit_badge"], div[data-testid="stStatusWidget"] {
         display: none !important;
         visibility: hidden !important;
         height: 0px !important;
         padding: 0px !important;
         margin: 0px !important;
         opacity: 0 !important;
+        pointer-events: none !important;
     }
 
     html, body, .stApp {
@@ -104,6 +49,31 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
+
+URL_MAPA = "https://drive.google.com/thumbnail?id=1M4GLEwFzhLrZjV-zmvGrdTQhC6IjwxOJ&sz=w1000"
+
+# ==========================================
+# CONEXIÓN A SUPABASE Y NOTAS
+# ==========================================
+@st.cache_resource
+def init_supabase():
+    try:
+        url = st.secrets["SUPABASE_URL"]
+        key = st.secrets["SUPABASE_KEY"]
+        return create_client(url, key)
+    except Exception:
+        return None
+
+supabase = init_supabase()
+
+def obtener_notas_svc():
+    if not supabase:
+        return []
+    try:
+        response = supabase.table("notas_svc").select("*").execute()
+        return response.data
+    except Exception:
+        return []
 
 # --- DATOS BASE DE RUTEOS Y PLANES ---
 u_SDE = {"Moto Car - 3": [25, 30], "Moto Car Newbie": [25, 25], "Car - 5h": [25, 30], "Car - 5 Extendida": [25, 30], "Car - 3h": [25, 28]}
@@ -223,8 +193,8 @@ def gen_master_rows(data_dict, table_id):
         if "---" in name:
             colspan = 8 if mostrar_orh_ocup else 5
             rows += f'''
-            <tr class="es-divisor" style="background: #25282b !important; color: #25282b; height: 28px;">
-                <td colspan="{colspan}" style="text-align: center; font-weight: bold; font-size: 13px; letter-spacing: 3px; border: none; pointer-events: none;"> 
+            <tr class="es-divisor" style="background: #25282b !important; color: #ffffff; height: 28px;">
+                <td colspan="{colspan}" style="text-align: center; font-weight: bold; font-size: 13px; letter-spacing: 3px; border: none; pointer-events: none; color: #ffffff;"> 
                     {name}
                 </td>
                 <td class="edit-name" style="display:none;">IGNORAR</td>
@@ -236,7 +206,7 @@ def gen_master_rows(data_dict, table_id):
                 <td class="f-left" style="display:none;">0</td>
             </tr>'''
         else:
-            st_base = "background: #ebebeb; color: #969696;" if not name else ""
+            st_base = "background: #dcdcdc; color: #25282b;" if not name else "background: #ffffff; color: #25282b;"
             if mostrar_orh_ocup:
                 celdas_orh_ocup = f'''
                 <td contenteditable="true" class="edit-orh" oninput="recalc()" style="text-align:center; border:0.2px solid #25282b; width:45px; background:#ffffff; color:#141414;">0</td>
@@ -254,10 +224,10 @@ def gen_master_rows(data_dict, table_id):
             <tr class="master-row" style="{st_base}">
                 <td contenteditable="true" class="edit-name" oninput="recalc()" style="font-weight: bold; text-align: left; padding-left: 10px; border: 0.2px solid #25282b; width: 150px; color: #25282b;">{name}</td>
                 {celdas_orh_ocup}
-                <td contenteditable="true" class="edit-spr-min" oninput="recalc()" style="text-align: center; border: 0.2px solid #25282b; width: 45px; background-color: #25282b; color: #ffffff;">{spr[0]}</td>
-                <td contenteditable="true" class="edit-spr-max" oninput="recalc()" style="text-align: center; border: 0.2px solid #25282b; width: 45px; background-color: #25282b; color: #ffffff;">{spr[1]}</td>
-                <td contenteditable="true" class="f-stock" oninput="recalc()" style="text-align: center; border: 0.2px solid #25282b; width: 55px; font-weight: bold; font-size: 13px;">0</td>
-                <td class="f-ruteadas" style="text-align: center; border: 0.2px solid #25282b; width: 55px; background-color: #ffffff; font-weight: bold;">0</td>
+                <td contenteditable="true" class="edit-spr-min" oninput="recalc()" style="text-align: center; border: 0.2px solid #25282b; width: 45px; background-color: #25282b; color: #ffffff; font-weight: bold;">{spr[0]}</td>
+                <td contenteditable="true" class="edit-spr-max" oninput="recalc()" style="text-align: center; border: 0.2px solid #25282b; width: 45px; background-color: #25282b; color: #ffffff; font-weight: bold;">{spr[1]}</td>
+                <td contenteditable="true" class="f-stock" oninput="recalc()" style="text-align: center; border: 0.2px solid #25282b; width: 55px; font-weight: bold; font-size: 13px; color: #25282b; background-color: #ffff00;">0</td>
+                <td class="f-ruteadas" style="text-align: center; border: 0.2px solid #25282b; width: 55px; background-color: #ffffff; font-weight: bold; color: #25282b;">0</td>
                 <td class="f-left" style="text-align:center; border:0.2px solid #25282b; width:45px; font-weight:bold; color:#25282b; border-radius:2px;">0</td>
             </tr>'''
     return rows
@@ -502,7 +472,6 @@ app_html = f"""
         }}
         #google-alert.show {{ top: 20px; }}
 
-        /* MODO EXCEL */
         body.excel-view #fleet-float, body.excel-view #ruteo-float {{ display: none !important; }}
         body.excel-view .meli-table td {{ padding: 2px 3px !important; font-size: 14px !important; }}
     </style> 
@@ -515,7 +484,7 @@ app_html = f"""
 <!-- PANEL SUPERIOR -->
 <div style="width:100%; padding:0; margin-bottom:10px;">
 
-    <!-- 🟢 SELECTOR DE RUTEO DE LA PANTALLA PRINCIPAL (TEMPLATE ANTERIOR) -->
+    <!-- SELECTOR DE RUTEO PRINCIPAL -->
     <div style="background-color: #25282b; color: white; padding: 12px; border-radius: 6px; font-weight: bold; text-align: center; margin-bottom: 10px; border: 1px solid #3b3f43; display: flex; flex-direction: column; align-items: center; gap: 8px;">
         <div style="font-size: 11px; color: #20B2AA; letter-spacing: 1.5px; text-transform: uppercase;">
             📌 SELECCIONAR RUTEO EN PANTALLA
@@ -551,15 +520,15 @@ app_html = f"""
     <div id="resumen-flota-ruteada" style="display: flex; gap: 15px; margin: 15px 0; justify-content: center;">
         <div style="background: #d7e5fa; padding: 8px; border-radius: 5px; border: 1px solid #bbdefb; text-align: center; width: 100px;">
             <div style="font-size: 10px; font-weight: bold; color: #0861c7;">MLP</div>
-            <div id="val-mlp-rute-2" style="font-size: 14px; font-weight: bold;">0</div>
+            <div id="val-mlp-rute-2" style="font-size: 14px; font-weight: bold; color: #0861c7;">0</div>
         </div>
         <div style="background: #c6f7f3; padding: 8px; border-radius: 5px; border: 1px solid #68b0ac; text-align: center; width: 100px;">
             <div style="font-size: 10px; font-weight: bold; color: #12736d;">RENTAL</div>
-            <div id="val-rental-rute-2" style="font-size: 14px; font-weight: bold;">0</div>
+            <div id="val-rental-rute-2" style="font-size: 14px; font-weight: bold; color: #12736d;">0</div>
         </div>
         <div style="background: #d3f5d3; padding: 8px; border-radius: 5px; border: 1px solid #90EE90; text-align: center; width: 100px;">
             <div style="font-size: 10px; font-weight: bold; color: #209626;">CAR</div>
-            <div id="val-car-rute-2" style="font-size: 14px; font-weight: bold;">0</div>
+            <div id="val-car-rute-2" style="font-size: 14px; font-weight: bold; color: #209626;">0</div>
         </div>
     </div>
 
@@ -1040,9 +1009,7 @@ app_html = f"""
     }}, 1000);
 </script>
 
-<!-- ============================================================
-     ☰ MENÚ LATERAL MINIMALISTA
-     ============================================================ -->
+<!-- MENÚ LATERAL MINIMALISTA -->
 <style>
     #btn-menu-lateral {{
         position: fixed;
@@ -1133,23 +1100,15 @@ app_html = f"""
         <button id="cerrar-menu-ruteos" onclick="abrirCerrarMenuRuteos()">✕</button>
     </div>
 
-    <!-- LIMPIAR PANTALLA -->
     <button class="opcion-menu-ruteos" onclick="limpiarPantallaCompleta()">🧹 &nbsp; LIMPIAR PANTALLA</button>
-
-    <!-- OCULTAR PLANES EXTRA -->
     <button id="btn-ocultar-extra-menu" class="opcion-menu-ruteos" onclick="togglePlanesExtra()">👁️ &nbsp; OCULTAR PLANES EXTRA</button>
-
-    <!-- MAPA OPERATIVO -->
     <button class="opcion-menu-ruteos" onclick="toggleMapaOperativo()">🗺️ &nbsp; MAPA DE EXTENDIDO</button>
 
     <div id="panel-mapa-operativo" style="display: none; margin-top: 10px; padding: 10px; background: #17191b; border-radius: 8px; text-align: center;">
         <img id="img-mapa-operativo" src="https://drive.google.com/thumbnail?id=1M4GLEwFzhLrZjV-zmvGrdTQhC6IjwxOJ&sz=w1000" style="width: 100%; border-radius: 6px;" />
     </div>
 
-    <!-- NOTAS SVC -->
     <button class="opcion-menu-ruteos" onclick="abrirModalNotasSVC()">📝 &nbsp; AGREGAR NOTA SVC</button>
-
-    <!-- ASISTENTE DE RUTEO -->
     <button class="opcion-menu-ruteos" onclick="togglePanelBotLateral()">🤖 &nbsp; ASISTENTE DE RUTEO</button>
 
     <div id="panel-bot-lateral-contenido" style="display: none; margin-top: 10px; background: #17191b; border: 1px solid #34383d; border-radius: 12px; padding: 10px;">
@@ -1172,7 +1131,7 @@ app_html = f"""
 <script>
     function abrirCerrarMenuRuteos() {{
         const menu = document.getElementById("menu-lateral-ruteos");
-        const boton = document.getElementById("btn-menu-lateral"); 
+        const boton = document.getElementById("btn-menu-lateral");
         if (!menu) return;
         menu.classList.toggle("abierto");
         if (boton) boton.style.display = menu.classList.contains("abierto") ? "none" : "block";
@@ -1235,7 +1194,6 @@ app_html = f"""
         let q = consulta.toLowerCase().trim();
         let respuesta = "";
 
-        // 1. MAPA DE ORIGENES
         if (typeof MAPA_ORIGENES !== "undefined") {{
             Object.keys(MAPA_ORIGENES).forEach(key => {{
                 if (q.includes(key.toLowerCase())) {{
@@ -1245,7 +1203,6 @@ app_html = f"""
             }});
         }}
 
-        // 2. REGLAS
         if (typeof REGLAS_RUTEO !== "undefined") {{
             Object.keys(REGLAS_RUTEO).forEach(k => {{
                 let kClean = k.toLowerCase().replace("_extendido","").replace("_precarga","");
@@ -1255,7 +1212,6 @@ app_html = f"""
             }});
         }}
 
-        // 3. NOTAS DE LA BASE DE DATOS
         if (typeof NOTAS_SVC !== "undefined" && Array.isArray(NOTAS_SVC)) {{
             let notas = NOTAS_SVC.filter(n => String(n.svc).toLowerCase().includes(q));
             if (notas.length > 0) {{
