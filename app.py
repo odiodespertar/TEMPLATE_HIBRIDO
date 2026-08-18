@@ -1078,7 +1078,7 @@ app_html = f"""
        overflow-y: auto;
    }}
 
-    #menu-lateral-ruteos.abierto { left: 0; }
+    #menu-lateral-ruteos.abierto {{ left: 0; }}
 
     .menu-ruteos-header {{
         display: flex;
