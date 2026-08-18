@@ -2,3 +2,5 @@ streamlit
 pandas
 numpy
 openpyxl
+supabase
+extra-streamlit-components==0.1.81
