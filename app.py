@@ -1,59 +1,15 @@
 import json
-import pandas as pd
 import streamlit as st 
+import pandas as pd
+import io
 from streamlit.components.v1 import html  
 from supabase import create_client
 from reglas import reglas_ruteo, MAPA_ORIGENES, PREGUNTAS_FRECUENTES
 
-st.set_page_config(page_title="Monitor Logístico - Liliana García", layout="wide", initial_sidebar_state="collapsed")
-
-# 🟢 OCULTAR ELEMENTOS NATIVOS Y BARRAS SOBREPUESTAS
-st.markdown("""
-    <style>
-    header, header[data-testid="stHeader"], .stAppHeader, div[data-testid="stToolbar"],
-    footer, .stAppFooter, #MainMenu, section[data-testid="stSidebar"],
-    button[title="View app source"], button[title="Edit this app"], a[href*="github.com"],
-    [data-testid="stViewerBadge"], .stAppViewerBlock, div[class*="stViewerBadge"],
-    iframe[title="streamlit_badge"], div[data-testid="stStatusWidget"] {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0px !important;
-        padding: 0px !important;
-        margin: 0px !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-    }
-
-    html, body, .stApp {
-        overflow-x: hidden !important;
-        background-color: #25282b;
-    }
-    
-    .main .block-container, div[data-testid="stAppViewBlockContainer"] {
-        margin-top: -4rem !important;
-        padding-bottom: 0rem !important;
-        padding-left: 0.5rem !important;
-        padding-right: 0.5rem !important;
-    }
-
-    .block-container { padding: 0rem !important; }
-    .poligono-bloque {
-        letter-spacing: -0.2px; 
-        white-space: nowrap;    
-        zoom: 0.95; 
-    }
-    table {
-        table-layout: fixed;
-        width: 100%;
-        word-wrap: break-word;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-URL_MAPA = "https://drive.google.com/thumbnail?id=1M4GLEwFzhLrZjV-zmvGrdTQhC6IjwxOJ&sz=w1000"
+st.set_page_config(page_title="Monitor Logístico - Liliana García", layout="wide", initial_sidebar_state="expanded")
 
 # ==========================================
-# CONEXIÓN A SUPABASE Y NOTAS
+# CONEXIÓN A SUPABASE PARA NOTAS SVC
 # ==========================================
 @st.cache_resource
 def init_supabase():
@@ -75,31 +31,510 @@ def obtener_notas_svc():
     except Exception:
         return []
 
-# --- DATOS BASE DE RUTEOS Y PLANES ---
+# ==========================================
+# ESTADO Y CONTROL DEL MODO FLOTANTE
+# ==========================================
+if "flotar_activo" not in st.session_state:
+    st.session_state.flotar_activo = False
+
+def toggle_flotar():
+    st.session_state.flotar_activo = not st.session_state.flotar_activo
+
+if st.session_state.flotar_activo:
+    st.markdown("""
+        <style>
+            div[data-testid="stHorizontalBlock"]:has(> div:has(h3)), 
+            div.element-container:has(div.stMetric),
+            div.element-container:has(text),
+            div[data-testid="stHorizontalBlock"] button:not(:has(p:contains("FLOTAR"))),
+            .row-widget.stButton:not(:has(button:contains("FLOTAR"))) {
+                display: none !important;
+            }
+
+            table, div[data-testid="stTable"], .js-plotly-plot {
+                max-height: 380px !important;
+                overflow-y: auto !important;
+                display: block !important;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
+# ==========================================
+# CSS GENERAL + ESTILO DE VENTANA FLOTANTE
+# ========================================== 
+st.markdown("""
+    <style>
+    .block-container {padding: 0rem !important;}
+    footer, #MainMenu, header {visibility: hidden;}
+    body { background-color: #25282b; }
+    .poligono-bloque {
+        letter-spacing: -0.2px; 
+        white-space: nowrap;    
+        zoom: 0.95; 
+    }
+    #contenedor-padre { display: flex; flex-direction: column; }
+    .delta { display: none !important; }
+    #visor { padding-right: 210px !important; box-sizing: border-box; }
+    .tabla-flota-reducida {
+        max-width: 80% !important;
+        margin-left: 0 !important;
+        margin-right: auto;
+    }
+    table {
+        table-layout: fixed;
+        width: 100%;
+        word-wrap: break-word;
+    }
+    @media (max-width: 1200px) {
+        .calc-row td, .calc-row select, .calc-row span {
+            font-size: 12px !important;
+        }
+    }
+    @media screen and (-webkit-min-device-pixel-ratio:0) {
+        .poligono-bloque {
+            zoom: 0.95; 
+        }
+    }
+    div[data-testid="stExpander"] {
+        position: fixed !important;
+        bottom: 15px !important;
+        right: 15px !important;
+        width: 550px !important;
+        max-height: 100vh !important;
+        z-index: 999999 !important;
+        background-color: #fcf1b6 !important;
+        border-radius: 12px !important;
+        border: 4px solid #FFD700 !important;
+        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.7) !important;
+        overflow: hidden !important;
+    }
+    
+    div[data-testid="stExpander"] summary,
+    div[data-testid="stExpander"] summary p, 
+    div[data-testid="stExpander"] summary span,
+    div[data-testid="stExpander"] summary div,
+    div[data-testid="stExpander"] summary svg {
+        color: #1e1d1f !important;
+        fill: #19191a !important;
+        font-weight: 800 !important;
+        font-size: 1.1rem !important;
+    }
+
+    div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p {
+        color: #19191a !important;
+        font-weight: bold !important;
+    }
+
+    div[data-testid="stChatMessage"]:has(div[aria-label="user"]),
+    div[data-testid="stChatMessage"]:has([data-testid*="User"]) {
+        background-color: #FFD700 !important;
+        border-radius: 10px !important;
+        padding: 8px !important;
+        margin: 6px 0 !important;
+        box-shadow: 0px 2px 5px rgba(0,0,0,0.2) !important;
+    }
+
+    div[data-testid="stChatMessage"]:has(div[aria-label="user"]) *,
+    div[data-testid="stChatMessage"]:has([data-testid*="User"]) * {
+        color: #FFFFFF !important;
+    }
+
+    div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]),
+    div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) {
+        color-scheme: light !important;
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        border: 2px solid #FFD700 !important;
+        border-radius: 10px !important;
+        padding: 8px !important;
+        margin: 6px 0 !important;
+    }
+
+    div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) *,
+    div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) * {
+        color-scheme: light !important;
+        color: #000000 !important;
+        font-weight: 600 !important;
+    }
+
+    div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] {
+        max-height: 760px !important;
+        overflow-y: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .fleet-floating .vista-excel-btn,
+    .fleet-floating .autocalcular-btn,
+    .fleet-floating .activas-btn,
+    .fleet-floating .todas-btn,
+    .fleet-floating .pestanas-container {
+        display: none !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# ==========================================
+# 🤖 ASISTENTE INTERACTIVO ORIGINAL DE RUTEO
+# ==========================================
+with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
+    st.markdown("""
+    <style>
+        div[data-testid="stExpander"] button {
+            background-color: #f1f5f9 !important;
+            color: #0f172a !important;
+            border: 1px solid #cbd5e1 !important;
+            font-weight: 600 !important;
+        }
+        div[data-testid="stExpander"] button:hover {
+            background-color: #e2e8f0 !important;
+            color: #0284c7 !important;
+            border-color: #0284c7 !important;
+        }
+        div[data-testid="stExpander"] label p {
+            color: #0f172a !important;
+            font-weight: 600 !important;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+    st.write("👉 Consulta un SVC para indicaciones 🔍")
+
+    if "main_chat_messages" not in st.session_state:
+        st.session_state.main_chat_messages = []
+    if "esperando_subtipo_smx5" not in st.session_state:
+        st.session_state.esperando_subtipo_smx5 = False
+    if "flujo_resumen" not in st.session_state:
+        st.session_state.flujo_resumen = False
+    if "paso_resumen" not in st.session_state:
+        st.session_state.paso_resumen = 0
+    if "paso_historial" not in st.session_state:
+        st.session_state.paso_historial = []
+    if "data_resumen" not in st.session_state:
+        st.session_state.data_resumen = {}
+
+    with st.container(height=480):
+        for idx, msg in enumerate(st.session_state.main_chat_messages):
+            with st.chat_message(msg["role"]):
+                st.markdown(msg["content"], unsafe_allow_html=True)
+                
+                if st.session_state.flujo_resumen and idx == len(st.session_state.main_chat_messages) - 1:
+                    paso = st.session_state.paso_resumen
+
+                    if paso == 1:
+                        st.write("👇 **¿Qué tipo de ciclo fue?:**")
+                        col1, col2 = st.columns(2)
+                        if col1.button("1️⃣ Uniciclo", key="btn_resumen_uniciclo", use_container_width=True):
+                            st.session_state.data_resumen["ciclo"] = "Uniciclo"
+                            st.session_state.paso_historial.append(1)
+                            st.session_state.paso_resumen = 2
+                            st.rerun()
+                        if col2.button("2️⃣ Ciclo 1", key="btn_resumen_c1", use_container_width=True):
+                            st.session_state.data_resumen["ciclo"] = "C1"
+                            st.session_state.paso_historial.append(1)
+                            st.session_state.paso_resumen = 2
+                            st.rerun()
+
+                    elif paso == 2:
+                        st.write("👇 **Unidades dedicadas para nodos (selecciona la casilla):**")
+                        u1 = st.checkbox("3.5 tons", key="chk_35")
+                        u2 = st.checkbox("Delivery Cell", key="chk_del")
+                        
+                        unidades_elegidas = []
+                        if u1: unidades_elegidas.append("3.5 tons")
+                        if u2: unidades_elegidas.append("Delivery Cell")
+                        
+                        st.write("¿Logis tomó todas?")
+                        col_s, col_n = st.columns(2)
+                        if col_s.button("1️⃣ Sí", use_container_width=True):
+                            st.session_state.data_resumen["unidades_centro"] = unidades_elegidas
+                            st.session_state.data_resumen["logis_tomo_todas"] = True
+                            st.session_state.paso_historial.append(2)
+                            st.session_state.paso_resumen = 2.5
+                            st.rerun()
+                        if col_n.button("2️⃣ No", use_container_width=True):
+                            st.session_state.data_resumen["unidades_centro"] = unidades_elegidas
+                            st.session_state.data_resumen["logis_tomo_todas"] = False
+                            st.session_state.paso_historial.append(2)
+                            st.session_state.paso_resumen = 2.2
+                            st.rerun()
+
+                    elif paso == 2.2:
+                        st.write("👇 **¿Cuál o cuáles unidades dejó fuera Logis?**")
+                        unis_pre = st.session_state.data_resumen.get("unidades_centro", [])
+                        
+                        fuera_elegidas = []
+                        for i_idx, u in enumerate(unis_pre):
+                            if st.checkbox(f"Dejó fuera: {u}", key=f"chk_fuera_{i_idx}"):
+                                fuera_elegidas.append(u)
+                        
+                        if st.button("Continuar ➡️", use_container_width=True):
+                            st.session_state.data_resumen["unidades_fuera"] = fuera_elegidas
+                            st.session_state.paso_historial.append(2.2)
+                            st.session_state.paso_resumen = 2.5
+                            st.rerun()
+
+                    elif paso == 2.5:
+                        st.write("👇 **¿Hubo Bulk (H&B)?**")
+                        c1, c2 = st.columns(2)
+                        if c1.button("1️⃣ Sí", use_container_width=True):
+                            st.session_state.data_resumen["hubo_bulk"] = True
+                            st.session_state.paso_historial.append(2.5)
+                            st.session_state.paso_resumen = 3
+                            st.rerun()
+                        if c2.button("2️⃣ No", use_container_width=True):
+                            st.session_state.data_resumen["hubo_bulk"] = False
+                            st.session_state.paso_historial.append(2.5)
+                            st.session_state.paso_resumen = 3
+                            st.rerun()
+
+                    elif paso == 3:
+                        st.write("👇 **¿Hubo dropeo de nodos?**")
+                        c1, c2 = st.columns(2)
+                        if c1.button("1️⃣ Sí", use_container_width=True):
+                            st.session_state.data_resumen["dropeo_nodos"] = True
+                            st.session_state.paso_historial.append(3)
+                            st.session_state.paso_resumen = 3.5
+                            st.rerun()
+                        if c2.button("2️⃣ No", use_container_width=True):
+                            st.session_state.data_resumen["dropeo_nodos"] = False
+                            st.session_state.data_resumen["dropeo_restriccion"] = False
+                            st.session_state.paso_historial.append(3)
+                            st.session_state.paso_resumen = 4
+                            st.rerun()
+
+                    elif paso == 3.5:
+                        st.write("👇 **¿En la contingencia hubo dropeo de IDs por restricción?**")
+                        c1, c2 = st.columns(2)
+                        if c1.button("1️⃣ Sí", use_container_width=True):
+                            st.session_state.data_resumen["dropeo_restriccion"] = True
+                            st.session_state.paso_historial.append(3.5)
+                            st.session_state.paso_resumen = 4
+                            st.rerun()
+                        if c2.button("2️⃣ No", use_container_width=True):
+                            st.session_state.data_resumen["dropeo_restriccion"] = False
+                            st.session_state.paso_historial.append(3.5)
+                            st.session_state.paso_resumen = 4
+                            st.rerun()
+
+                    elif paso == 4:
+                        st.write("👇 **¿Se cargó Alchichica ND en AM0?**")
+                        c1, c2 = st.columns(2)
+                        if c1.button("1️⃣ Sí", use_container_width=True):
+                            st.session_state.data_resumen["alchichica"] = True
+                            st.session_state.paso_historial.append(4)
+                            st.session_state.paso_resumen = 4.5
+                            st.rerun()
+                        if c2.button("2️⃣ No", use_container_width=True):
+                            st.session_state.data_resumen["alchichica"] = False
+                            st.session_state.paso_historial.append(4)
+                            st.session_state.paso_resumen = 5
+                            st.rerun()
+
+                    elif paso == 4.5:
+                        st.write("👇 **¿Fue con 2 Small Van MLP?**")
+                        c1, c2 = st.columns(2)
+                        if c1.button("1️⃣ Sí", use_container_width=True):
+                            st.session_state.data_resumen["alchichica_2sv"] = True
+                            st.session_state.paso_historial.append(4.5)
+                            st.session_state.paso_resumen = 5
+                            st.rerun()
+                        if c2.button("2️⃣ No", use_container_width=True):
+                            st.session_state.data_resumen["alchichica_2sv"] = False
+                            st.session_state.paso_historial.append(4.5)
+                            st.session_state.paso_resumen = 5
+                            st.rerun()
+
+                    elif paso == 5:
+                        st.write("👇 **Día del ruteo:**")
+                        dia_sel = st.selectbox("Selecciona:", ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"], index=4)
+                        
+                        if st.button("🚀 Generar Resumen", use_container_width=True):
+                            d = st.session_state.data_resumen
+                            ciclo_txt = d.get("ciclo", "C1")
+                            unis = d.get("unidades_centro", [])
+                            logis_tomo_todas = d.get("logis_tomo_todas", True)
+                            unis_fuera = d.get("unidades_fuera", [])
+
+                            if logis_tomo_todas or not unis_fuera:
+                                texto_unidades = "👉 <b>Unidades 3.5 tons y Delivery Cell</b>: se asignaron al polígono de Centro, logis tomó ambas."
+                            elif len(unis_fuera) == len(unis):
+                                texto_unidades = "👉 <b>Unidades 3.5 tons y Delivery Cell</b>: se asignaron al polígono de Centro, logis dejó fuera ambas."
+                            else:
+                                fuera_str = " y ".join([", ".join(unis_fuera[:-1]), unis_fuera[-1]]) if len(unis_fuera) > 1 else unis_fuera[0]
+                                texto_unidades = f"👉 <b>Unidades 3.5 tons y Delivery Cell</b>: se asignaron al polígono de Centro, logis dejó fuera la {fuera_str}."
+
+                            if d.get("dropeo_nodos", False):
+                                if d.get("dropeo_restriccion", False):
+                                    texto_dropeo = f"👉 <b>Hubo dropeo de nodo</b> y se cargó en contingencia (logis nos dejó fuera ids por zona de restricción)."
+                                else:
+                                    texto_dropeo = f"👉 <b>Hubo dropeo de nodo</b> y se cargó en contingencia."
+                            else:
+                                texto_dropeo = "👉 No hubo dropeo de nodo."
+
+                            if d.get("alchichica", False):
+                                if d.get("alchichica_2sv", True):
+                                    texto_alchichica = "🚛 Se cargó plan de <b>Alchichica ND</b> en AM0 con 2 unidades Small Van MLP."
+                                else:
+                                    texto_alchichica = "🚛 Se cargó plan de <b>Alchichica ND</b> en AM0."
+                            else:
+                                texto_alchichica = ""
+
+                            texto_bulk = "📦 Se asignó H&B para el volumen Bulk." if d.get("hubo_bulk", False) else ""
+
+                            lineas_html = [
+                                f"**Queda publicado {ciclo_txt} team**:<br><br>",
+                                '<span style="font-weight: normal;">',
+                                "📌 Se trabajó con el volumen disponible al momento de iniciar el ruteo.<br>",
+                                "📌 Se cargaron las Rentals como híbridas en Centro, pero el sistema no las consideró todas como híbridas.<br>",
+                                f"{texto_unidades}<br>"
+                            ]
+                            if texto_bulk: lineas_html.append(f"{texto_bulk}<br>")
+                            lineas_html.append(f"{texto_dropeo}<br>")
+                            if texto_alchichica: lineas_html.append(f"{texto_alchichica}<br>")
+                            lineas_html.append(f"📌 Se usaron los parámetros establecidos para C1 del día {dia_sel}.<br>")
+                            lineas_html.append("📋 Comparto template final.")
+                            lineas_html.append("</span><br><br>")
+                            lineas_html.append("<b>**¡Excelente turno! 👋**</b>")
+
+                            resumen_final = "".join(lineas_html)
+                            st.session_state.flujo_resumen = False
+                            st.session_state.paso_resumen = 0
+                            st.session_state.paso_historial = []
+                            st.session_state.main_chat_messages.append({"role": "assistant", "content": resumen_final})
+                            st.rerun()
+
+                    if len(st.session_state.paso_historial) > 0 and paso > 1:
+                        st.markdown("---")
+                        if st.button("↩️ Volver al paso anterior / Corregir", key="btn_atras_resumen"):
+                            st.session_state.paso_resumen = st.session_state.paso_historial.pop()
+                            st.rerun()
+
+        if st.session_state.esperando_subtipo_smx5:
+            with st.chat_message("assistant"):
+                st.write("👇 **Selecciona una opción o escribe 1 ó 2:**")
+                col1, col2 = st.columns(2)
+                eleccion_btn = None
+                with col1:
+                    if st.button("1️⃣ Extendido", key="btn_smx5_1", use_container_width=True): eleccion_btn = "1"
+                with col2:
+                    if st.button("2️⃣ Precarga", key="btn_smx5_2", use_container_width=True): eleccion_btn = "2"
+
+                if eleccion_btn:
+                    st.session_state.esperando_subtipo_smx5 = False
+                    if eleccion_btn == "1":
+                        st.session_state.main_chat_messages.append({"role": "user", "content": "1️⃣ Extendido"})
+                        st.session_state.main_chat_messages.append({"role": "assistant", "content": reglas_ruteo["smx5_extendido"]})
+                    else:
+                        st.session_state.main_chat_messages.append({"role": "user", "content": "2️⃣ Precarga"})
+                        st.session_state.main_chat_messages.append({"role": "assistant", "content": reglas_ruteo["smx5_precarga"]})
+                    st.rerun()
+
+        if query_main := st.chat_input("✏️ Escribe tu consulta...", key="main_chat_input"):
+            st.session_state.main_chat_messages.append({"role": "user", "content": query_main})
+            query_lower = query_main.lower().strip()
+
+            if "resumen" in query_lower or "cierre" in query_lower or "ciere" in query_lower:
+                st.session_state.flujo_resumen = True
+                st.session_state.paso_resumen = 1
+                st.session_state.paso_historial = []
+                st.session_state.data_resumen = {}
+                st.session_state.main_chat_messages.append({
+                    "role": "assistant", 
+                    "content": "📋 **Generador de Cierre.** Responde seleccionando las opciones de abajo:"
+                })
+                st.rerun()
+
+            elif st.session_state.esperando_subtipo_smx5:
+                st.session_state.esperando_subtipo_smx5 = False
+                if "extendido" in query_lower or "1" in query_lower: respuesta_main = reglas_ruteo["smx5_extendido"]
+                elif "precarga" in query_lower or "2" in query_lower: respuesta_main = reglas_ruteo["smx5_precarga"]
+                else: respuesta_main = "⚠️ Opción no válida. Consulta escribiendo **SMX5** nuevamente."
+
+            elif query_lower == "smx5":
+                st.session_state.esperando_subtipo_smx5 = True
+                respuesta_main = "🔍 Detecté **SMX5**. ¿De cuál requieres las prioridades?\n\n1️⃣ **Extendido**\n2️⃣ **Precarga**\n\n*(Elige dando clic en los botones superiores o escribe 1 ó 2)*"
+
+            else:
+                partes_respuesta = []
+                svc_mapa = None
+                for key in MAPA_ORIGENES.keys():
+                    if key in query_lower:
+                        svc_mapa = key
+                        break
+
+                if svc_mapa:
+                    info = MAPA_ORIGENES[svc_mapa]
+                    origen_tag = f"<span style='background-color: #e2e8f0; color: #0f172a; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-family: monospace;'>{info['origen']}</span>"
+                    bloque_mapa = (
+                        f"📍 **Origen y Validación para {svc_mapa.upper()}:**\n\n"
+                        f"* 🗺️ **Región:** Región {info['region']}\n"
+                        f"* 🏢 **Origen(es) On Way:** {origen_tag}\n"
+                        f"* ✅ **Validación requerida:** {info['val']}\n\n"
+                        f"*(Nota: Si el SVC solicita agregar blancos, se anexan)*"
+                    )
+                    partes_respuesta.append(bloque_mapa)
+
+                # 🟢 BÚSQUEDA DE NOTAS DE SUPABASE
+                notas_bd = obtener_notas_svc()
+                notas_matcheadas = [n for n in notas_bd if String(n.get("svc","")).lower().strip() in query_lower or query_lower in String(n.get("svc","")).lower().strip()]
+                if notas_matcheadas:
+                    bloque_notas = "📝 **Notas adicionales registradas:**\n\n" + "\n".join([f"• {n['contenido']}" for n in notas_matcheadas])
+                    partes_respuesta.append(bloque_notas)
+
+                coincidencias_faq = []
+                if any(w in query_lower for w in ["large van sdd", "sdd"]): coincidencias_faq.append(PREGUNTAS_FRECUENTES["large_van_sdd"])
+                if "bulk" in query_lower:
+                    if any(w in query_lower for w in ["sja1", "centro 1", "centro 2"]): coincidencias_faq.append(PREGUNTAS_FRECUENTES["bulk_sja1"])
+                    else: coincidencias_faq.append(PREGUNTAS_FRECUENTES["bulk_general"])
+                if "alchichica" in query_lower: coincidencias_faq.append(PREGUNTAS_FRECUENTES["alchichica"])
+                if any(w in query_lower for w in ["xico", "tuzamapa"]): coincidencias_faq.append(PREGUNTAS_FRECUENTES["tuzamapa_xico"])
+                if "dropeo" in query_lower or "drop" in query_lower: coincidencias_faq.append(PREGUNTAS_FRECUENTES["dropeo_nodos_sja1"])
+
+                if coincidencias_faq:
+                    partes_respuesta.append("\n\n---\n\n".join(coincidencias_faq))
+
+                if not coincidencias_faq:
+                    mapeo_centros = {
+                        "smx9": "smx9_extendido", "sgd2": "sgd2_extendido", "smx4": "smx4_extendido",
+                        "smx2": "smx2_extendido", "smt2": "smt2_extendido", "scp1": "scp1",
+                        "smd1": "smd1", "sch1": "sch1", "sja1": "sja1"
+                    }
+                    centro_encontrado = None
+                    clave_regla = None
+
+                    for termino, clave in mapeo_centros.items():
+                        if termino in query_lower:
+                            centro_encontrado = termino.upper()
+                            clave_regla = clave
+                            break
+
+                    if clave_regla and clave_regla in reglas_ruteo:
+                        texto_regla = reglas_ruteo[clave_regla]
+                        lineas = [l.strip() for l in texto_regla.split("\n") if l.strip()]
+                        if svc_mapa:
+                            lineas = [l for l in lineas if not any(palabra in l.lower() for palabra in ["origen", "orígenes", "📌 origen"])]
+                        res = "\n".join(lineas)
+                        partes_respuesta.append(f"📋 **Indicaciones complementarias ({centro_encontrado}):**\n\n{res}")
+
+                if partes_respuesta:
+                    respuesta_main = "\n\n---\n\n".join(partes_respuesta)
+                else:
+                    respuesta_main = "⚠️ No encontré esa consulta en la base de datos. Puedes consultar por un SVC (ej. SJA1, SLE1, SCP1)."
+
+            st.session_state.main_chat_messages.append({"role": "assistant", "content": respuesta_main})
+            st.rerun()
+
+# --- DATOS BASE DE UNIDADES Y PLANES ---
 u_SDE = {"Moto Car - 3": [25, 30], "Moto Car Newbie": [25, 25], "Car - 5h": [25, 30], "Car - 5 Extendida": [25, 30], "Car - 3h": [25, 28]}
-
-u_PREC = {      
-    "Car - 8h": [70, 75],
-    "Small 9h Ext Car": [70, 75] 
-}
-
+u_PREC = {"Car - 8h": [70, 75], "Small 9h Ext Car": [70, 75]}
 NOMBRES_PLANES_PREC = ["CHALCO", "COYOACÁN", "IZTAPALAPA", "MILPA ALTA", "TLAHUAC", "TLALPAN NORTE", "TLALPAN SUR", "XOCHIMILCO"]
 
-u_PREC_SMX2 = {
-    "Car - 8h": [70, 75],
-    "Small 9h Ext Car": [70, 75],
-    "Car Zona Extendida": [65, 65]
-}
+u_PREC_SMX2 = {"Car - 8h": [70, 75], "Small 9h Ext Car": [70, 75], "Car Zona Extendida": [65, 65]}
 NOMBRES_PLANES_PREG = ["CHALCO", "CHIMAS", "IXTAPALUCA VALLE CHALCO", "IZTAPALAPA 1", "IZTAPALAPA 2", "LA PAZ", "PUEBLOS", "TEXCOCO"]
 
-NOMBRES_PLANES_C1 = [
-    "CALKINI", "CAMPECHE", "CANDELARIA", "CHAMPOTÓN", "ESCÁRCEGA",
-    "ESCÁRCEGA EXT", "HOLPECHEN", "MAXCANUN", "SEYBAPLAYA", "PLAN 10", "PLAN 11"
-]
-
-u_C1 = {
-    "Rental Large Van": [100, 100], "Large Van MLP": [100, 100], "Small Van MLP":[100, 100], "Delivery Cell Large Van": [1, 1], "Delivery Cell Small Van": [1, 1]
-}
+NOMBRES_PLANES_C1 = ["CALKINI", "CAMPECHE", "CANDELARIA", "CHAMPOTÓN", "ESCÁRCEGA", "ESCÁRCEGA EXT", "HOLPECHEN", "MAXCANUN", "SEYBAPLAYA", "PLAN 10", "PLAN 11"]
+u_C1 = {"Rental Large Van": [100, 100], "Large Van MLP": [100, 100], "Small Van MLP":[100, 100], "Delivery Cell Large Van": [1, 1], "Delivery Cell Small Van": [1, 1]}
 
 u_C1_SJA1 = { 
     "Small Van MLP foráneo": [110, 120], "Large Van MLP foráneo": [110, 120], "Car MLP": [80, 100],
@@ -108,11 +543,7 @@ u_C1_SJA1 = {
     "Car 8h": [70, 70], "Car Newbie": [70, 70], "Car Zona Extendida": [70, 70], "Moto 3h": [30, 30],
     "Small Van 9h": [70, 70], "Small Van 9h Ext": [70, 70], "Small Van Newbie": [70, 70], "Media Milla SP": [1, 1]
 }
-
-NOMBRES_PLANES_C1_SJA1 = [
-   "ACTOPAN", "⚠️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", "TEZUITLAN", "TLALTETELA", "TRAPICHE",  
-   "TUZAMAPA", "XICO", "CONTINGENCIA CENTRO NODO", "CONTINGENCIA TUZAMAPA", "CONTINGENCIA XICO", "PLAN 16", "PLAN 17"
-]
+NOMBRES_PLANES_C1_SJA1 = ["ACTOPAN", "⚠️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", "TEZUITLAN", "TLALTETELA", "TRAPICHE", "TUZAMAPA", "XICO", "CONTINGENCIA NODO", "PLAN 14", "PLAN 15", "PLAN 16", "PLAN 17"]
 
 u_C1_SCH1 = { 
     "Car MLP": [110, 120], "Small Van MLP": [110, 120], "Large Van MLP": [110, 120], "Small Van MLP Newbie": [110, 120],
@@ -125,11 +556,7 @@ u_C1_SCH1 = {
     "Moto 3h": [30, 30], "Moto Newbie": [25, 25], "Small Van 11h Ext": [70, 70], "Small Van 9h": [70, 70],
     "Small Van 9h Ext": [70, 70], "Small Van Newbie": [70, 70]
 }
-
-NOMBRES_PLANES_C1_SCH1 = [
-   "AEROPUERTO", "CANTERA", "DELICIAS", "GRANJAS", "MEOQUI", "NORTE", "SUR", "CUAUHTEMOC", "PARRAL", "PLAN 10",  
-   "PLAN 11", "PLAN 12", "PLAN 13", "PLAN 14"
-]
+NOMBRES_PLANES_C1_SCH1 = ["AEROPUERTO", "CANTERA", "DELICIAS", "GRANJAS", "MEOQUI", "NORTE", "SUR", "CUAUHTEMOC", "PARRAL", "PLAN 10", "PLAN 11", "PLAN 12", "PLAN 13", "PLAN 14"]
 
 u_C1_VACIA = { 
     "Car MLP": [110, 120], "Small Van MLP": [110, 120], "Large Van MLP": [110, 120], "Small Van MLP Newbie": [110, 120],
@@ -142,11 +569,7 @@ u_C1_VACIA = {
     "Car 3h": [30,30], "Car 5h": [30, 30], "Moto 3h": [30, 30], "Moto Newbie": [25, 25], "Small Van 11h Ext": [70, 70],
     "Small Van 9h": [70, 70], "Small Van 9h Ext": [70, 70], "Small Van Newbie": [70, 70]
 }
-
-NOMBRES_PLANES_C1_VACIA = [
-   "PLAN 1", "PLAN 2", "PLAN 3", "PLAN 4", "PLAN 5", "PLAN 6", "PLAN 7", "PLAN 8", "PLAN 9", "PLAN 10",  
-   "PLAN 11", "PLAN 12", "PLAN 13", "PLAN 14"
-]
+NOMBRES_PLANES_C1_VACIA = ["PLAN 1", "PLAN 2", "PLAN 3", "PLAN 4", "PLAN 5", "PLAN 6", "PLAN 7", "PLAN 8", "PLAN 9", "PLAN 10", "PLAN 11", "PLAN 12", "PLAN 13", "PLAN 14"]
 
 u_C1_SMD1 = { 
     "Car MLP": [110, 120], "Small Van MLP": [110, 120], "Large Van MLP": [110, 120], "Small Van MLP Newbie": [110, 120],
@@ -159,11 +582,7 @@ u_C1_SMD1 = {
     "Moto 3h": [30, 30], "Moto Newbie": [25, 25], "Small Van 11h Ext": [70, 70], "Small Van 9h": [70, 70],
     "Small Van 9h Ext": [70, 70], "Small Van Newbie": [70, 70]
 }
-
-NOMBRES_PLANES_C1_SMD1 = [
-   "⚠️ CENTRO 1", "⚠️ CENTRO 2", "⚠️ KANASIN", "MOTUL", "MUNA", "⚠️ NORTE", "SEYE", "UMAN", "PLAN 9", "PLAN 10",  
-   "PLAN 11", "PLAN 12", "PLAN 13", "PLAN 14"
-]
+NOMBRES_PLANES_C1_SMD1 = ["⚠️ CENTRO 1", "⚠️ CENTRO 2", "⚠️ KANASIN", "MOTUL", "MUNA", "⚠️ NORTE", "SEYE", "UMAN", "PLAN 9", "PLAN 10", "PLAN 11", "PLAN 12", "PLAN 13", "PLAN 14"]
 
 def gen_master_rows(data_dict, table_id):
     rows = ""
@@ -172,29 +591,23 @@ def gen_master_rows(data_dict, table_id):
 
     nombres_prec = ["CHALCO", "COYOACÁN", "IZTAPALAPA", "MILPA ALTA", "TLAHUAC", "TLALPAN NORTE", "TLALPAN SUR", "XOCHIMILCO"]
     nombres_smx2 = ["CHALCO", "CHIMAS", "IXTAPALUCA VALLE CHALCO", "IZTAPALAPA 1", "IZTAPALAPA 2", "LA PAZ", "PUEBLOS", "TEXCOCO"]
-
     mostrar_orh_ocup = (table_id in [1, 2, 6, 7, 8, 5, 9])
     num_filas_objetivo = 45 if table_id == "PREC" else 3
     rango_final = max(total_items, num_filas_objetivo)
 
     for i in range(1, rango_final + 1):
-        if (data_dict == u_PREC) and (i-1) < len(nombres_prec):
-            p_name = nombres_prec[i-1]
-        elif (data_dict == u_PREC_SMX2) and (i-1) < len(nombres_smx2):
-            p_name = nombres_smx2[i-1]
-        else:
-            p_name = f"PLAN {i}"
+        if (data_dict == u_PREC) and (i-1) < len(nombres_prec): p_name = nombres_prec[i-1]
+        elif (data_dict == u_PREC_SMX2) and (i-1) < len(nombres_smx2): p_name = nombres_smx2[i-1]
+        else: p_name = f"PLAN {i}"
 
-        if (i-1) < total_items:
-            name, spr = items[i-1]
-        else:
-            name, spr = "", [0, 0]
+        if (i-1) < total_items: name, spr = items[i-1]
+        else: name, spr = "", [0, 0]
 
         if "---" in name:
             colspan = 8 if mostrar_orh_ocup else 5
             rows += f'''
-            <tr class="es-divisor" style="background: #25282b !important; color: #ffffff; height: 28px;">
-                <td colspan="{colspan}" style="text-align: center; font-weight: bold; font-size: 13px; letter-spacing: 3px; border: none; pointer-events: none; color: #ffffff;"> 
+            <tr class="es-divisor" style="background: #25282b !important; color: #25282b; height: 28px;">
+                <td colspan="{colspan}" style="text-align: center; font-weight: bold; font-size: 13px; letter-spacing: 3px; border: none; pointer-events: none;"> 
                     {name}
                 </td>
                 <td class="edit-name" style="display:none;">IGNORAR</td>
@@ -206,7 +619,7 @@ def gen_master_rows(data_dict, table_id):
                 <td class="f-left" style="display:none;">0</td>
             </tr>'''
         else:
-            st_base = "background: #dcdcdc; color: #25282b;" if not name else "background: #ffffff; color: #25282b;"
+            st_base = "background: #ebebeb; color: #969696;" if not name else ""
             if mostrar_orh_ocup:
                 celdas_orh_ocup = f'''
                 <td contenteditable="true" class="edit-orh" oninput="recalc()" style="text-align:center; border:0.2px solid #25282b; width:45px; background:#ffffff; color:#141414;">0</td>
@@ -224,10 +637,10 @@ def gen_master_rows(data_dict, table_id):
             <tr class="master-row" style="{st_base}">
                 <td contenteditable="true" class="edit-name" oninput="recalc()" style="font-weight: bold; text-align: left; padding-left: 10px; border: 0.2px solid #25282b; width: 150px; color: #25282b;">{name}</td>
                 {celdas_orh_ocup}
-                <td contenteditable="true" class="edit-spr-min" oninput="recalc()" style="text-align: center; border: 0.2px solid #25282b; width: 45px; background-color: #25282b; color: #ffffff; font-weight: bold;">{spr[0]}</td>
-                <td contenteditable="true" class="edit-spr-max" oninput="recalc()" style="text-align: center; border: 0.2px solid #25282b; width: 45px; background-color: #25282b; color: #ffffff; font-weight: bold;">{spr[1]}</td>
-                <td contenteditable="true" class="f-stock" oninput="recalc()" style="text-align: center; border: 0.2px solid #25282b; width: 55px; font-weight: bold; font-size: 13px; color: #25282b; background-color: #ffff00;">0</td>
-                <td class="f-ruteadas" style="text-align: center; border: 0.2px solid #25282b; width: 55px; background-color: #ffffff; font-weight: bold; color: #25282b;">0</td>
+                <td contenteditable="true" class="edit-spr-min" oninput="recalc()" style="text-align: center; border: 0.2px solid #25282b; width: 45px; background-color: #25282b; color: #ffffff;">{spr[0]}</td>
+                <td contenteditable="true" class="edit-spr-max" oninput="recalc()" style="text-align: center; border: 0.2px solid #25282b; width: 45px; background-color: #25282b; color: #ffffff;">{spr[1]}</td>
+                <td contenteditable="true" class="f-stock" oninput="recalc()" style="text-align: center; border: 0.2px solid #25282b; width: 55px; font-weight: bold; font-size: 13px;">0</td>
+                <td class="f-ruteadas" style="text-align: center; border: 0.2px solid #25282b; width: 55px; background-color: #ffffff; font-weight: bold;">0</td>
                 <td class="f-left" style="text-align:center; border:0.2px solid #25282b; width:45px; font-weight:bold; color:#25282b; border-radius:2px;">0</td>
             </tr>'''
     return rows
@@ -250,26 +663,26 @@ def gen_poligonos(data_target=None):
 
     fila_inner = f'''
     <tr class="calc-row">
-        <td class="u-manual-cell" style="background: #d3f0e5; border: 0.6px solid #25282b; padding: 2px; width: 105px;">
+        <td class="u-manual-cell" style="background: #d3f0e5; border: 0.6px solid #25282b; padding: 2px; width: 105px; min-width: 105px; max-width: 105px;">
             <div style="{div_flex}">
                 <button style="{btn_s}" onclick="stepVal(this, -1, 'u')">-</button>
                 <span contenteditable="true" class="u-manual" oninput="manualEdit(this)" style="{span_num_u}color: #25282b !important;">0</span>
                 <button style="{btn_s}" onclick="stepVal(this, 1, 'u')">+</button>
             </div>
         </td>
-        <td class="spr-real-cell" style="background: #FFFFFF; border: 0.6px solid #25282b; padding: 2px; width: 90px;">
+        <td class="spr-real-cell" style="background: #FFFFFF; border: 0.6px solid #25282b; padding: 2px; width: 90px; min-width: 90px; max-width: 90px;">
             <div style="{div_flex}">
                 <button style="{btn_s}" onclick="stepVal(this, -1, 's')">-</button>
                 <span contenteditable="true" class="spr-real-val" oninput="manualEdit(this)" style="{span_num_spr} color: #25282b !important;">0</span>
                 <button style="{btn_s}" onclick="stepVal(this, 1, 's')">+</button>
             </div>
         </td>
-        <td style="border: 0.5px solid #25282b; padding: 2px; width: 170px;">
+        <td style="border: 0.5px solid #25282b; padding: 2px; width: 170px; min-width: 170px; max-width: 170px;">
             <select class="s-type" onchange="resetRow(this); updateSelectColor(this);" style="{select_style} color: #808080;"> 
                 <option value="">Seleccionar...</option>
             </select>
         </td>
-        <td style="width: 45px; text-align: center; border: 0.5px solid #25282b;"><input type="checkbox" class="ok-check" style="transform: scale(1.7); accent-color: #9ACD32; cursor: pointer;"></td>
+        <td style="width: 45px; min-width: 45px; max-width: 45px; text-align: center; border: 0.5px solid #25282b;"><input type="checkbox" class="ok-check" style="transform: scale(1.7); accent-color: #9ACD32; cursor: pointer;"></td>
     </tr>'''
 
     campo_volumen_normal = '''<div style="text-align:center;"><span class="v-total-val" contenteditable="true" oninput="recalc()" style="display:inline-block; min-width:55px; padding:2px 8px; border:none; border-radius:4px; background:#ededed; font-size:22px; font-weight:bold; color:#808080; text-align:center;">0</span></div>'''
@@ -284,78 +697,54 @@ def gen_poligonos(data_target=None):
 '''
 
     campo_campeche = '''
-<div style="text-align:center;"><span class="v-total-val" contenteditable="true" oninput="recalc()" style="display:inline-block; min-width:55px; padding:2px 8px; border-radius:4px; background:#ededed; font-size:22px; font-weight:bold; color:#808080; text-align:center;">0</span></div>
+<div style="text-align:center;"><span class="v-total-val" contenteditable="true" oninput="recalc()" style="display:inline-block; min-width:55px; padding:2px 8px; border:none; border-radius:4px; background:#ededed; font-size:22px; font-weight:bold; color:#808080; text-align:center;">0</span></div>
 <hr style="margin:4px 0; border:none; border-top:1px solid #999;">
 <div style="font-size:13px; font-weight:bold; color:#25282b; text-align:center;">Nodos:
     <div style="margin-top:2px;"><span class="nodos-campeche" contenteditable="true" style="display:inline-block; min-width:28px; text-align:center; border:none; border-radius:4px; background:#ededed; font-size:16px; font-weight:bold; color:#FF6347; padding:0 4px;">0</span></div>
 </div>
 '''
 
-    if data_target == u_C1_SJA1:
-        limite_tablas = len(NOMBRES_PLANES_C1_SJA1) + 1
-    elif data_target in (u_C1_SCH1, u_C1_VACIA):
-        limite_tablas = 16
-    elif data_target == u_C1_SMD1:
-        limite_tablas = 20
-    elif es_sde:
-        limite_tablas = 5
-    else:
-        limite_tablas = 20
+    if data_target == u_C1_SJA1: limite_tablas = len(NOMBRES_PLANES_C1_SJA1) + 1
+    elif data_target in (u_C1_SCH1, u_C1_VACIA): limite_tablas = 16
+    elif data_target == u_C1_SMD1: limite_tablas = 20
+    elif es_sde: limite_tablas = 5
+    else: limite_tablas = 20
     
     for i in range(1, limite_tablas): 
-        if data_target == u_C1_VACIA and (i-1) < len(NOMBRES_PLANES_C1_VACIA):
-            nombre_final = NOMBRES_PLANES_C1_VACIA[i-1]
-        elif data_target == u_PREC and (i-1) < len(nombres_prec):
-            nombre_final = nombres_prec[i-1]
-        elif data_target == u_PREC_SMX2 and (i-1) < len(nombres_smx2):
-            nombre_final = nombres_smx2[i-1]
-        elif data_target == u_C1 and (i-1) < len(NOMBRES_PLANES_C1):
-            nombre_final = NOMBRES_PLANES_C1[i-1]
-        elif data_target == u_C1_SJA1 and (i-1) < len(NOMBRES_PLANES_C1_SJA1):
-            nombre_final = NOMBRES_PLANES_C1_SJA1[i-1]
-        elif data_target == u_C1_SCH1 and (i-1) < len(NOMBRES_PLANES_C1_SCH1):
-            nombre_final = NOMBRES_PLANES_C1_SCH1[i-1]
-        elif data_target == u_C1_SMD1 and (i-1) < len(NOMBRES_PLANES_C1_SMD1):
-            nombre_final = NOMBRES_PLANES_C1_SMD1[i-1]
-        else:
-            nombre_final = f"PLAN {i}"
+        if data_target == u_C1_VACIA and (i-1) < len(NOMBRES_PLANES_C1_VACIA): nombre_final = NOMBRES_PLANES_C1_VACIA[i-1]
+        elif data_target == u_PREC and (i-1) < len(nombres_prec): nombre_final = nombres_prec[i-1]
+        elif data_target == u_PREC_SMX2 and (i-1) < len(nombres_smx2): nombre_final = nombres_smx2[i-1]
+        elif data_target == u_C1 and (i-1) < len(NOMBRES_PLANES_C1): nombre_final = NOMBRES_PLANES_C1[i-1]
+        elif data_target == u_C1_SJA1 and (i-1) < len(NOMBRES_PLANES_C1_SJA1): nombre_final = NOMBRES_PLANES_C1_SJA1[i-1]
+        elif data_target == u_C1_SCH1 and (i-1) < len(NOMBRES_PLANES_C1_SCH1): nombre_final = NOMBRES_PLANES_C1_SCH1[i-1]
+        elif data_target == u_C1_SMD1 and (i-1) < len(NOMBRES_PLANES_C1_SMD1): nombre_final = NOMBRES_PLANES_C1_SMD1[i-1]
+        else: nombre_final = f"PLAN {i}"
 
-        if nombre_final == "CAMPECHE":
-            contenido_volumen = campo_campeche
-        elif es_c1:
-            contenido_volumen = campo_volumen_c1
-        else:
-            contenido_volumen = campo_volumen_normal
+        if nombre_final == "CAMPECHE": contenido_volumen = campo_campeche
+        elif es_c1: contenido_volumen = campo_volumen_c1
+        else: contenido_volumen = campo_volumen_normal
 
-        if es_sde or es_prec:
-            rowspan_actual = 3
-        elif data_target == u_C1_SJA1:
-            rowspan_actual = 8 if nombre_final == "⚠️ CENTRO 1" else 5
-        elif data_target in (u_C1_SMD1, u_C1_VACIA):
-            rowspan_actual = 5
-        else:
-            rowspan_actual = 3
+        if es_sde or es_prec: rowspan_actual = 3
+        elif data_target == u_C1_SJA1: rowspan_actual = 8 if nombre_final == "⚠️ CENTRO 1" else 5
+        elif data_target in (u_C1_SMD1, u_C1_VACIA): rowspan_actual = 5
+        else: rowspan_actual = 3
 
-        if es_sde or es_prec:
-            filas_extra = fila_inner * 2
-        elif data_target == u_C1_SJA1:
-            filas_extra = fila_inner * 7 if nombre_final == "⚠️ CENTRO 1" else fila_inner * 4
-        elif data_target in (u_C1_SMD1, u_C1_VACIA):
-            filas_extra = fila_inner * 4
-        else:
-            filas_extra = fila_inner * 2
+        if es_sde or es_prec: filas_extra = fila_inner * 2
+        elif data_target == u_C1_SJA1: filas_extra = fila_inner * 7 if nombre_final == "⚠️ CENTRO 1" else fila_inner * 4
+        elif data_target in (u_C1_SMD1, u_C1_VACIA): filas_extra = fila_inner * 4
+        else: filas_extra = fila_inner * 2
 
         polys += f'''
-        <div class="poligono-bloque" style="margin-bottom:12px; background: #ededed; border: 1.5px solid #25282b;">           
+        <div class="poligono-bloque" style="margin-bottom:12px; box-shadow: none; border-radius: 0px; overflow-x: auto; background: #ededed; border: 1.5px solid #25282b;">           
             <table style="width: 100%; min-width: 630px; border-collapse: collapse; border: 1.5px solid #25282b;">
                 <thead>
                     <tr style="background: #25282b; color: white; font-size: 12px; height: 28px;">                        
-                        <th style="padding: 0 10px; border-right: 1px solid #25282b; width: 130px;">PLAN</th>
+                        <th style="padding: 0 10px; border-right: 1px solid #25282b; min-width: 130px; width: 130px;">PLAN</th>
                         <th style="border-right: 1px solid #25282b; width: 85px;">VOL. TOTAL</th>
-                        <th style="width: 105px; border-right: 1px solid #25282b;"># USADAS</th>
-                        <th style="width: 105px; border-right: 1px solid #25282b;">SPR</th>
-                        <th style="width: 180px; border-right: 1px solid #25282b;">TIPO DE UNIDAD</th>
-                        <th style="width: 45px; text-align: center;">OK</th> 
+                        <th style="width: 105px; min-width: 105px; max-width: 105px; border-right: 1px solid #25282b;"># USADAS</th>
+                        <th style="width: 105px; min-width: 105px; max-width: 105px; border-right: 1px solid #25282b;">SPR</th>
+                        <th style="width: 180px; min-width: 180px; max-width: 180px; border-right: 1px solid #25282b;">TIPO DE UNIDAD</th>
+                        <th style="width: 45px; min-width: 45px; max-width: 45px; text-align: center;">OK</th> 
                     </tr>
                 </thead>
                 <tbody>
@@ -401,10 +790,8 @@ def gen_poligonos(data_target=None):
         </div>'''
     return polys
 
-reglas_json = json.dumps(reglas_ruteo)
-mapa_origenes_json = json.dumps(MAPA_ORIGENES)
-preguntas_faq_json = json.dumps(PREGUNTAS_FRECUENTES)
-notas_svc_json = json.dumps(obtener_notas_svc())
+PERFILES = {}
+perfil_actual = "LUNES"
 
 app_html = f"""
 <!DOCTYPE html>
@@ -545,6 +932,12 @@ app_html = f"""
 
     <!-- CONTENEDOR DE TABLAS DE DISPONIBILIDAD -->
     <div id="fleet-sticky" class="fleet-normal">
+        <div id="handle-moverse-flotante" onpointerdown="iniciarArrastreFlotante(event)" style="display:none; width:100%; height:28px; background:#343a40; color:#ffffff; font-size:11px; font-weight:bold; line-height:28px; border-radius:6px 6px 0 0; margin:-6px -6px 6px -6px; cursor:grab; user-select:none; z-index:9999999; position:relative; padding:0 8px; box-sizing:border-box; touch-action:none;">
+            <span style="float:left;">:: CLIC Y ARRASTRA AQUÍ PARA MOVER ::</span>
+            <button onclick="toggleFleetFloating();" onpointerdown="event.stopPropagation();" style="float:right; margin-top:3px; cursor:pointer; background:#dc3545; color:white; border:none; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:bold; outline:none;">✕ NORMAL (enter)</button>
+            <div style="clear:both;"></div>
+        </div>
+
         <div id="tab-2" class="t-content" style="display:none;">
             <table class="meli-table">
                 <thead>
@@ -742,10 +1135,18 @@ app_html = f"""
         ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) 
         : null;
 
-    const REGLAS_RUTEO = {reglas_json};
-    const MAPA_ORIGENES = {mapa_origenes_json};
-    const PREGUNTAS_FRECUENTES = {preguntas_faq_json};
-	let NOTAS_SVC = {notas_svc_json};
+    // SELECCIÓN DE TEXTO AL ENTRAR A CELDAS
+    document.addEventListener("focusin", function(e) {{
+        const celda = e.target;
+        if (!celda.hasAttribute("contenteditable")) return;
+        setTimeout(() => {{
+            const rango = document.createRange();
+            rango.selectNodeContents(celda);
+            const seleccion = window.getSelection();
+            seleccion.removeAllRanges();
+            seleccion.addRange(rango);
+        }}, 0);
+    }});
 
     function abrirModalNotasSVC() {{
         cerrarMenuRuteos();
@@ -761,7 +1162,6 @@ app_html = f"""
     async function guardarNotaDesdeBot() {{
         const inputSvc = document.getElementById("input-nota-svc");
         const inputNota = document.getElementById("input-contenido-nota-svc");
-
         if (!inputSvc || !inputNota) return;
 
         const svc = inputSvc.value.trim().toUpperCase();
@@ -785,13 +1185,6 @@ app_html = f"""
             if (error) {{
                 alert("❌ Error al guardar: " + error.message);
                 return;
-            }}
-
-            let idx = NOTAS_SVC.findIndex(n => String(n.svc).toUpperCase() === svc);
-            if (idx !== -1) {{
-                NOTAS_SVC[idx].contenido = contenido;
-            }} else {{
-                NOTAS_SVC.push({{ svc: svc, contenido: contenido }});
             }}
 
             inputSvc.value = "";
@@ -823,7 +1216,6 @@ app_html = f"""
 
     function limpiarPantallaCompleta() {{
         if (!confirm("¿Deseas vaciar los valores editados de la pantalla para iniciar un nuevo ruteo?")) return;
-        
         document.querySelectorAll('.v-total-val, .nodos-val, .nodos-campeche').forEach(el => el.innerText = "0");
         document.querySelectorAll('.calc-row').forEach(row => {{
             let uSpan = row.querySelector('.u-manual');
@@ -833,10 +1225,7 @@ app_html = f"""
 
             if (uSpan) uSpan.innerText = "0";
             if (sprSpan) sprSpan.innerText = "0";
-            if (selectType) {{
-                selectType.value = "";
-                updateSelectColor(selectType);
-            }}
+            if (selectType) {{ selectType.value = ""; updateSelectColor(selectType); }}
             if (checkOk) checkOk.checked = false;
         }});
 
@@ -850,15 +1239,10 @@ app_html = f"""
         let sel = row.querySelector('.s-type').value;
         if (sel === "Seleccionar..." || !sel) return;
 
-        let fRows = Array.from(document.querySelectorAll('#body-' + currentTab + ' tr'));
-        let fRow = fRows.find(r => r.querySelector('.edit-name').innerText.trim() === sel);
-        if (!fRow) return;
-
         if (type === 'u') {{
             let span = row.querySelector('.u-manual');
             let val = parseInt(span.innerText) || 0;
-            let newVal = Math.max(0, val + delta);
-            span.innerText = newVal;
+            span.innerText = Math.max(0, val + delta);
         }} else {{
             let span = row.querySelector('.spr-real-val');
             let val = parseFloat(span.innerText) || 0;
@@ -866,6 +1250,18 @@ app_html = f"""
         }}
         editedRowsPlan.add(row);
         recalc();
+    }}
+
+    function manualEdit(el) {{ 
+        let r = el.closest('tr');
+        if (r) editedRowsPlan.add(r);
+        recalc(); 
+    }}
+
+    function resetRow(sel) {{ updateSelectColor(sel); recalc(); }}
+
+    function updateSelectColor(selectElement) {{
+        selectElement.style.color = (selectElement.value === "") ? "#808080" : "#25282b";
     }}
 
     function recalc() {{
@@ -954,16 +1350,6 @@ app_html = f"""
         if (elCar) elCar.innerText = totalCarReal;
     }}
 
-    function updateSelectColor(selectElement) {{
-        if (selectElement.value === "") {{
-            selectElement.style.color = "#808080";
-        }} else {{
-            selectElement.style.color = "#25282b";
-        }}
-    }}
-
-    function manualEdit(el) {{ recalc(); }}
-    function resetRow(sel) {{ updateSelectColor(sel); recalc(); }}
     function filterRows(onlyActive) {{
         const rows = document.querySelectorAll('#body-' + currentTab + ' .master-row');
         rows.forEach(row => {{
@@ -1001,7 +1387,41 @@ app_html = f"""
         recalc();
     }}
 
-    // RELOJ
+    function iniciarArrastreFlotante(e) {{
+        const el = document.getElementById("fleet-sticky");
+        const handle = document.getElementById("handle-moverse-flotante");
+        if (!el || !handle) return;
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (e.pointerId !== undefined) {{
+            try {{ handle.setPointerCapture(e.pointerId); }} catch(err) {{}}
+        }}
+
+        const startY = e.clientY;
+        const rect = el.getBoundingClientRect();
+        const startTop = rect.top;
+
+        function enMovimiento(evt) {{
+            const dy = evt.clientY - startY;
+            let newTop = Math.max(10, Math.min(window.innerHeight - el.offsetHeight - 10, startTop + dy));
+            el.style.setProperty("top", newTop + "px", "important");
+        }}
+
+        function alSoltar(evt) {{
+            if (evt && evt.pointerId !== undefined) {{
+                try {{ handle.releasePointerCapture(evt.pointerId); }} catch(err) {{}}
+            }}
+            window.removeEventListener("pointermove", enMovimiento, true);
+            window.removeEventListener("pointerup", alSoltar, true);
+            window.removeEventListener("pointercancel", alSoltar, true);
+        }}
+
+        window.addEventListener("pointermove", enMovimiento, true);
+        window.addEventListener("pointerup", alSoltar, true);
+        window.addEventListener("pointercancel", alSoltar, true);
+    }}
+
     setInterval(() => {{
         const ahora = new Date();
         const el = document.getElementById("hora-actual");
@@ -1009,7 +1429,7 @@ app_html = f"""
     }}, 1000);
 </script>
 
-<!-- MENÚ LATERAL MINIMALISTA -->
+<!-- MENÚ LATERAL -->
 <style>
     #btn-menu-lateral {{
         position: fixed;
@@ -1109,23 +1529,6 @@ app_html = f"""
     </div>
 
     <button class="opcion-menu-ruteos" onclick="abrirModalNotasSVC()">📝 &nbsp; AGREGAR NOTA SVC</button>
-    <button class="opcion-menu-ruteos" onclick="togglePanelBotLateral()">🤖 &nbsp; ASISTENTE DE RUTEO</button>
-
-    <div id="panel-bot-lateral-contenido" style="display: none; margin-top: 10px; background: #17191b; border: 1px solid #34383d; border-radius: 12px; padding: 10px;">
-        <div style="text-align: center; font-size: 20px;">🚚</div>
-        <div style="text-align: center; font-size: 11px; font-weight: bold; color: #22c55e; margin-bottom: 8px;">● Routing Online</div>
-        
-        <div id="box-mensajes-bot" style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; font-size: 13px; padding: 4px;">
-            <div style="background: #262626; border-left: 3px solid #008218; padding: 8px; border-radius: 6px; color: #ffffff;">
-                🤖 <b>Asistente de Ruteo:</b><br>Escribe el código de un SVC para ver prioridades e indicaciones.
-            </div>
-        </div>
-
-        <div style="display: flex; gap: 6px; margin-top: 10px;">
-            <input type="text" id="input-bot-lateral" placeholder="Escribe tu consulta..." onkeydown="if(event.key==='Enter') enviarConsultaBotLateral()" style="flex: 1; padding: 8px; border-radius: 6px; border: 1px solid #444; background: #141414; color: white; font-size: 13px;">
-            <button onclick="enviarConsultaBotLateral()" style="cursor: pointer; background: #20B2AA; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold;">🚀</button>
-        </div>
-    </div>
 </div>
 
 <script>
@@ -1142,12 +1545,6 @@ app_html = f"""
         const boton = document.getElementById("btn-menu-lateral");
         if (menu) menu.classList.remove("abierto");
         if (boton) boton.style.display = "block";
-    }}
-
-    function togglePanelBotLateral() {{
-        const panel = document.getElementById("panel-bot-lateral-contenido");
-        if (!panel) return;
-        panel.style.display = (panel.style.display === "none" || panel.style.display === "") ? "block" : "none";
     }}
 
     function toggleMapaOperativo() {{
@@ -1174,64 +1571,6 @@ app_html = f"""
         if (btnMenu) {{
             btnMenu.innerHTML = planesExtraOcultos ? "👁️ &nbsp; MOSTRAR PLANES EXTRA" : "👁️ &nbsp; OCULTAR PLANES EXTRA";
         }}
-    }}
-
-    function enviarConsultaBotLateral() {{
-        const input = document.getElementById("input-bot-lateral");
-        const box = document.getElementById("box-mensajes-bot");
-        if (!input || !box) return;
-
-        let consulta = input.value.trim();
-        if (!consulta) return;
-
-        box.innerHTML += `
-            <div style="background: #008080; padding: 6px; border-radius: 6px; color: #ffffff; text-align: right; margin-bottom: 4px;">
-                <b>Tú:</b> ${{consulta}}
-            </div>
-        `;
-        input.value = "";
-
-        let q = consulta.toLowerCase().trim();
-        let respuesta = "";
-
-        if (typeof MAPA_ORIGENES !== "undefined") {{
-            Object.keys(MAPA_ORIGENES).forEach(key => {{
-                if (q.includes(key.toLowerCase())) {{
-                    let info = MAPA_ORIGENES[key];
-                    respuesta += `📍 <b>${{key.toUpperCase()}}:</b> Región ${{info.region}} | Origen: ${{info.origen}} | Val: ${{info.val}}<br>`;
-                }}
-            }});
-        }}
-
-        if (typeof REGLAS_RUTEO !== "undefined") {{
-            Object.keys(REGLAS_RUTEO).forEach(k => {{
-                let kClean = k.toLowerCase().replace("_extendido","").replace("_precarga","");
-                if (q.includes(kClean)) {{
-                    respuesta += `📋 <b>Regla (${{k.toUpperCase()}}):</b><br>${{REGLAS_RUTEO[k].replace(/\\n/g, "<br>")}}<br>`;
-                }}
-            }});
-        }}
-
-        if (typeof NOTAS_SVC !== "undefined" && Array.isArray(NOTAS_SVC)) {{
-            let notas = NOTAS_SVC.filter(n => String(n.svc).toLowerCase().includes(q));
-            if (notas.length > 0) {{
-                respuesta += `📝 <b>Notas adicionales guardadas:</b><br>`;
-                notas.forEach(n => {{ respuesta += `• ${{n.contenido}}<br>`; }});
-            }}
-        }}
-
-        if (!respuesta) {{
-            respuesta = "⚠️ No encontré información para esa búsqueda. Intenta consultando el código de una estación de ruteo (ej. SJA1).";
-        }}
-
-        setTimeout(() => {{
-            box.innerHTML += `
-                <div style="background: #cae8e2; border-left: 3px solid #20B2AA; padding: 6px; border-radius: 6px; color: #000000; margin-bottom: 4px;">
-                    🤖 <b>Bot:</b><br>${{respuesta}}
-                </div>
-            `;
-            box.scrollTop = box.scrollHeight;
-        }}, 150);
     }}
 </script>
 </body>
