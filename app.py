@@ -1887,6 +1887,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 <body>
 <div id="google-alert">⚠️ <span id="alert-msg"></span> [ENTER para cerrar]</div>
 
+
+
 <!-- 🟢 ESTRUCTURA DEL MENÚ LATERAL -->
 <button id="btn-menu-lateral" onclick="toggleMenuLateralVisual()" title="Abrir menú">☰</button>
 
@@ -1902,10 +1904,10 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     <!-- 👁️ OPCIÓN 2: OCULTAR PLANES EXTRA -->
     <button id="btn-ocultar-extra-menu" class="opcion-menu-ruteos" onclick="togglePlanesExtra()">👁️ &nbsp; OCULTAR PLANES EXTRA</button>
 
-    <!-- 🗺️ OPCIÓN MAPA DE EXTENDIDO -->
+    <!-- 🗺️ OPCIÓN 3: MAPA DE EXTENDIDO -->
     <button class="opcion-menu-ruteos" onclick="toggleMapaOperativo()">🗺️ &nbsp; MAPA DE EXTENDIDO</button>
 
-    <!-- CONTENEDOR DEL MAPA CON ZOOM -->
+    <!-- CONTENEDOR DEL MAPA CON ZOOM (DENTRO DEL MENÚ) -->
     <div id="panel-mapa-operativo" style="display: none; margin-top: 10px; padding: 10px; background: #17191b; border: 1px solid #34383d; border-radius: 12px; text-align: center;">
         <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 8px;">
             <button onclick="aplicarZoomMapa(1.2)" style="background: #25282b; color: white; border: 1px solid #555; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">🔍 +</button>
@@ -1918,14 +1920,13 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             <img id="img-mapa-operativo" src="https://drive.google.com/thumbnail?id=1M4GLEwFzhLrZjV-zmvGrdTQhC6IjwxOJ&sz=w1000" alt="Mapa Operativo" onclick="abrirMapaPantallaCompleta()" style="width: 100%; transition: transform 0.2s ease; transform-origin: top left; cursor: zoom-in;" title="Haz clic para abrir en pantalla completa" />
         </div>
     </div>
+</div> <!-- 👈 AQUÍ SE CIERRA CORRECTAMENTE EL MENÚ LATERAL -->
 
-    <!-- MODAL PANTALLA COMPLETA SUPERPUESTO -->
-    <div id="modal-mapa-fullscreen" onclick="cerrarMapaPantallaCompleta()" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.85); z-index: 99999999; justify-content: center; align-items: center; cursor: zoom-out;">
-        <span style="position: absolute; top: 15px; right: 25px; color: white; font-size: 35px; font-weight: bold;">✕</span>
-        <img src="https://drive.google.com/thumbnail?id=1M4GLEwFzhLrZjV-zmvGrdTQhC6IjwxOJ&sz=w1000" style="max-width: 90%; max-height: 90%; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.8);" />
-    </div>
-
-
+<!-- MODAL PANTALLA COMPLETA SUPERPUESTO (AFUERA DEL MENÚ) -->
+<div id="modal-mapa-fullscreen" onclick="cerrarMapaPantallaCompleta()" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.85); z-index: 99999999; justify-content: center; align-items: center; cursor: zoom-out;">
+    <span style="position: absolute; top: 15px; right: 25px; color: white; font-size: 35px; font-weight: bold;">✕</span>
+    <img src="https://drive.google.com/thumbnail?id=1M4GLEwFzhLrZjV-zmvGrdTQhC6IjwxOJ&sz=w1000" style="max-width: 90%; max-height: 90%; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.8);" />
+</div>
 
 <div style="display:flex; flex-direction:column; gap:20px; width:100%;">
 
