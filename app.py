@@ -2068,12 +2068,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     </button>
 
     <div class="btn-tooltip-container">
-        <button id="excel-btn" onclick="toggleExcelView()" title="VISTA EXCEL"
-            style="cursor:pointer; background:#228B22; color:white; border:none; font-size:12px; padding:4px 9px; border-radius:6px; font-weight:bold; box-shadow:0 2px 0 #1c6d1c; outline:none;">
-            VISTA EXCEL
-        </button>
-    </div>
-
     <button onclick="distribuirAutomatico()" 
         style="cursor:pointer; background: #26d4ca; color: #2e3030; border: none; font-size: 12px; padding: 4px 9px; border-radius: 6px; font-weight: bold; box-shadow: 0 2px 0 #2d968f; outline: none;">
         🧠 AUTO-CALCULAR
@@ -2087,6 +2081,11 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     <button class="filter-btn" onclick="filterRows(false)" 
         style="cursor:pointer; background: #808080; color:white; border:none; font-size:12px; padding:4px 9px; border-radius:6px; font-weight:bold; outline: none;">
         TODAS
+    </button>
+
+    <button id="excel-btn" onclick="toggleExcelView()" title="VISTA EXCEL"
+            style="cursor:pointer; background:#228B22; color:white; border:none; font-size:12px; padding:4px 9px; border-radius:6px; font-weight:bold; box-shadow:0 2px 0 #1c6d1c; outline:none;">
+            VISTA EXCEL
     </button>
 
 </div>
