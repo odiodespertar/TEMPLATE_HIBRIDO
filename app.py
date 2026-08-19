@@ -6,7 +6,7 @@ from streamlit.components.v1 import html
 from supabase import create_client
 from reglas import reglas_ruteo, MAPA_ORIGENES, PREGUNTAS_FRECUENTES
 
-st.set_page_config(page_title="Monitor Logístico - Liliana García", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Monitor Logístico - Liliana García", layout="wide", initial_sidebar_state="collapsed")
 
 # ==========================================
 # CONEXIÓN ANÓNIMA A SUPABASE PARA NOTAS SVC
@@ -40,61 +40,20 @@ if "flotar_activo" not in st.session_state:
 def toggle_flotar():
     st.session_state.flotar_activo = not st.session_state.flotar_activo
 
-if st.session_state.flotar_activo:
-    st.markdown("""
-        <style>
-            div[data-testid="stHorizontalBlock"]:has(> div:has(h3)), 
-            div.element-container:has(div.stMetric),
-            div.element-container:has(text),
-            div[data-testid="stHorizontalBlock"] button:not(:has(p:contains("FLOTAR"))),
-            .row-widget.stButton:not(:has(button:contains("FLOTAR"))) {
-                display: none !important;
-            }
-
-            table, div[data-testid="stTable"], .js-plotly-plot {
-                max-height: 380px !important;
-                overflow-y: auto !important;
-                display: block !important;
-            }
-        </style>
-    """, unsafe_allow_html=True)
-
 # ==========================================
-# CSS GENERAL + ESTILO DE VENTANA FLOTANTE
+# CSS GENERAL (SIN BLOQUEOS DE STREAMLIT)
 # ========================================== 
 st.markdown("""
     <style>
     .block-container {padding: 0rem !important;}
     footer, #MainMenu, header {visibility: hidden;}
     body { background-color: #25282b; }
-    .poligono-bloque {
-        letter-spacing: -0.2px; 
-        white-space: nowrap;    
-        zoom: 0.95; 
+    
+    .main .block-container {
+        margin-top: -3rem !important;
+        padding-bottom: 0rem !important;
     }
-    #contenedor-padre { display: flex; flex-direction: column; }
-    .delta { display: none !important; }
-    #visor { padding-right: 210px !important; box-sizing: border-box; }
-    .tabla-flota-reducida {
-        max-width: 80% !important;
-        margin-left: 0 !important;
-        margin-right: auto;
-    }
-    table {
-        table-layout: fixed;
-        width: 100%;
-        word-wrap: break-word;
-    }
-    @media (max-width: 1200px) {
-        .calc-row td, .calc-row select, .calc-row span {
-            font-size: 12px !important;
-        }
-    }
-    @media screen and (-webkit-min-device-pixel-ratio:0) {
-        .poligono-bloque {
-            zoom: 0.95; 
-        }
-    }
+
     div[data-testid="stExpander"] {
         position: fixed !important;
         bottom: 15px !important;
@@ -163,19 +122,11 @@ st.markdown("""
         display: flex !important;
         flex-direction: column !important;
     }
-
-    .fleet-floating .vista-excel-btn,
-    .fleet-floating .autocalcular-btn,
-    .fleet-floating .activas-btn,
-    .fleet-floating .todas-btn,
-    .fleet-floating .pestanas-container {
-        display: none !important;
-    }
     </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 🤖 ASISTENTE INTERACTIVO ORIGINAL DE RUTEO
+# 🤖 ASISTENTE INTERACTIVO DE RUTEO
 # ==========================================
 with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
     st.markdown("""
@@ -262,12 +213,10 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
                     elif paso == 2.2:
                         st.write("👇 **¿Cuál o cuáles unidades dejó fuera Logis?**")
                         unis_pre = st.session_state.data_resumen.get("unidades_centro", [])
-                        
                         fuera_elegidas = []
                         for i_idx, u in enumerate(unis_pre):
                             if st.checkbox(f"Dejó fuera: {u}", key=f"chk_fuera_{i_idx}"):
                                 fuera_elegidas.append(u)
-                        
                         if st.button("Continuar ➡️", use_container_width=True):
                             st.session_state.data_resumen["unidades_fuera"] = fuera_elegidas
                             st.session_state.paso_historial.append(2.2)
@@ -475,7 +424,7 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
                     )
                     partes_respuesta.append(bloque_mapa)
 
-                # 🟢 BÚSQUEDA DE NOTAS ADICIONALES DE SUPABASE
+                # 🟢 BÚSQUEDA DE NOTAS DE SUPABASE EN TIEMPO REAL
                 notas_bd = obtener_notas_svc()
                 notas_matcheadas = [n for n in notas_bd if str(n.get("svc","")).lower().strip() in query_lower or query_lower in str(n.get("svc","")).lower().strip()]
                 if notas_matcheadas:
@@ -753,14 +702,14 @@ def gen_poligonos(data_target=None):
                         <td class="vol-cell" rowspan="{rowspan_actual}" style="color:#808080; font-weight:bold; text-align:center; border:1px solid #25282b; padding:5px;">
                             {contenido_volumen}
                         </td>
-                        <td class="u-manual-cell" style="background: #d3f0e5; border: 0.5px solid #25282b; padding: 2px; width: 105px; min-width: 105px; max-width: 105px;">
+                        <td class="u-manual-cell" style="background: #d3f0e5; border: 0.5px solid #25282b; padding: 2px; width: 105px;">
                             <div style="{div_flex}">
                                 <button style="{btn_s}" onclick="stepVal(this, -1, 'u')">-</button> 
                                 <span contenteditable="true" class="u-manual" oninput="manualEdit(this)" style="{span_num_u} color: #25282b !important;">0</span>
                                 <button style="{btn_s}" onclick="stepVal(this, 1, 'u')">+</button>
                             </div>
                         </td>
-                        <td class="spr-real-cell" style="background: #FFFFFF; border: 0.5px solid #25282b; padding: 2px; width: 90px; min-width: 90px; max-width: 90px;">
+                        <td class="spr-real-cell" style="background: #FFFFFF; border: 0.5px solid #25282b; padding: 2px; width: 90px;">
                             <div style="{div_flex}">
                                 <button style="{btn_s}" onclick="stepVal(this, -1, 's')">-</button>
                                 <span contenteditable="true" class="spr-real-val" oninput="manualEdit(this)" style="{span_num_spr}">0</span>
@@ -802,12 +751,12 @@ app_html = f"""
         tr.master-row:hover, tr.calc-row:hover {{
             background-color: #fffecd !important;
             box-shadow: inset 0 0 2px #ffc107 !important;
-            transition: background-color 0.15s ease, box-shadow 0.15s ease;
+            transition: background-color 0.15s ease;
             cursor: pointer;
         }}
         tr.master-row:hover td, tr.calc-row:hover td {{ color: #000 !important; }}
 
-        body {{ font-family: sans-serif; background: #ffffff; padding: 14px; }}
+        body {{ font-family: sans-serif; background: #ffffff; padding: 14px; margin: 0; }}
 
         .meli-table {{
             width: 100% !important; 
@@ -895,24 +844,24 @@ app_html = f"""
     <div id="resumen-flota-ruteada" style="display: flex; gap: 15px; margin: 15px 0; justify-content: center;">
         <div style="background: #d7e5fa; padding: 8px; border-radius: 5px; border: 1px solid #bbdefb; text-align: center; width: 100px;">
             <div style="font-size: 10px; font-weight: bold; color: #0861c7;">MLP</div>
-            <div id="val-mlp-rute-2" style="font-size: 14px; font-weight: bold;">0</div>
+            <div id="val-mlp-rute-2" style="font-size: 14px; font-weight: bold; color: #0861c7;">0</div>
         </div>
         <div style="background: #c6f7f3; padding: 8px; border-radius: 5px; border: 1px solid #68b0ac; text-align: center; width: 100px;">
             <div style="font-size: 10px; font-weight: bold; color: #12736d;">RENTAL</div>
-            <div id="val-rental-rute-2" style="font-size: 14px; font-weight: bold;">0</div>
+            <div id="val-rental-rute-2" style="font-size: 14px; font-weight: bold; color: #12736d;">0</div>
         </div>
         <div style="background: #d3f5d3; padding: 8px; border-radius: 5px; border: 1px solid #90EE90; text-align: center; width: 100px;">
             <div style="font-size: 10px; font-weight: bold; color: #209626;">CAR</div>
-            <div id="val-car-rute-2" style="font-size: 14px; font-weight: bold;">0</div>
+            <div id="val-car-rute-2" style="font-size: 14px; font-weight: bold; color: #209626;">0</div>
         </div>
     </div>
 
     <div id="dos-pct-global" style="background:#f5f5f5; border:1px solid #d0d0d0; border-radius:6px; padding:6px; margin-bottom:10px; text-align:center; font-weight:bold; color:#25282b;"></div>
 
     <div id="fleet-drag-handle" style="display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap; padding: 4px 0; margin-bottom: 8px;">
-        <button id="fleet-toggle-btn" onclick="toggleFleetFloating();" style="cursor:pointer; border:none; background:#25282b; color:white; padding:4px 9px; border-radius:6px; font-weight:bold; font-size:12px; box-shadow:0 2px 0 #111213; outline:none;">FLOTAR ☁️</button>
-        <button id="excel-btn" onclick="toggleExcelView()" style="cursor:pointer; background:#228B22; color:white; border:none; font-size:12px; padding:4px 9px; border-radius:6px; font-weight:bold; box-shadow:0 2px 0 #1c6d1c; outline:none;">VISTA EXCEL</button>
-        <button onclick="distribuirAutomatico()" style="cursor:pointer; background: #26d4ca; color: #2e3030; border: none; font-size: 12px; padding: 4px 9px; border-radius: 6px; font-weight: bold; box-shadow: 0 2px 0 #2d968f; outline: none;">🧠 AUTO-CALCULAR</button>
+        <button id="fleet-toggle-btn" onclick="toggleFleetFloating();" style="cursor:pointer; border:none; background:#25282b; color:white; padding:4px 9px; border-radius:6px; font-weight:bold; font-size:12px; outline:none;">FLOTAR ☁️</button>
+        <button id="excel-btn" onclick="toggleExcelView()" style="cursor:pointer; background:#228B22; color:white; border:none; font-size:12px; padding:4px 9px; border-radius:6px; font-weight:bold; outline:none;">VISTA EXCEL</button>
+        <button onclick="distribuirAutomatico()" style="cursor:pointer; background: #26d4ca; color: #2e3030; border: none; font-size: 12px; padding: 4px 9px; border-radius: 6px; font-weight: bold; outline: none;">🧠 AUTO-CALCULAR</button>
         <button class="filter-btn" onclick="filterRows(true)" style="cursor:pointer; background: linear-gradient(180deg, #4f4f4f 0%, #25282b 100%); color: white; border: 1px solid #25282b; font-size: 12px; padding: 4px 9px; border-radius: 6px; font-weight: bold; outline: none;">ACTIVAS</button>
         <button class="filter-btn" onclick="filterRows(false)" style="cursor:pointer; background: #808080; color:white; border:none; font-size:12px; padding:4px 9px; border-radius:6px; font-weight:bold; outline: none;">TODAS</button>
     </div>
@@ -1125,7 +1074,7 @@ app_html = f"""
     </div>
 </div>
 
-<!-- LÓGICA DE JAVASCRIPT NATIVA ORIGINAL CON LLAVES DUPLICADAS PARA PYTHON -->
+<!-- LÓGICA DE JAVASCRIPT NATIVA ORIGINAL -->
 <script>
     const perfiles = {json.dumps(PERFILES)};
     const perfilActual = "{perfil_actual}";
@@ -1145,7 +1094,7 @@ app_html = f"""
         ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) 
         : null;
 
-    // SELECCIÓN DE TEXTO AL ENTRAR A CELDAS
+    // SELECCIÓN DE TEXTO AL ENTRAR A CELDAS (NATIVO DEL TEMPLATE ANTERIOR)
     document.addEventListener("focusin", function(e) {{
         const celda = e.target;
         if (!celda.hasAttribute("contenteditable")) return;
@@ -1753,7 +1702,7 @@ html_limpio = """
             <div style="color: #ffffff; font-size: 10px; margin-bottom: 5px;">HORA / RESTADOR / CONVERTIDOR</div>
             <div id="horaReal" style="font-size: 38px; color: #FF00FF; font-family: sans-serif; font-weight: bold;">--:--</div>
         </div>
-        <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+        <div style="display: flex; justify-content: center; align-items: gap: 15px;">
             <div>
                 <span style="color: #add8e6; font-size: 11px; display: block;">MINUTOS</span>
                 <input type="number" id="minInput" value="10" 
