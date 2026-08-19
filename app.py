@@ -1,35 +1,12 @@
 import json
+import streamlit as st 
 import pandas as pd
 import io
-import streamlit as st 
 from streamlit.components.v1 import html  
-from supabase import create_client
 from reglas import reglas_ruteo, MAPA_ORIGENES, PREGUNTAS_FRECUENTES
 
 st.set_page_config(page_title="Monitor Logístico - Liliana García", layout="wide", initial_sidebar_state="expanded")
 
-# ==========================================
-# CONEXIÓN A SUPABASE PARA NOTAS SVC
-# ==========================================
-@st.cache_resource
-def init_supabase():
-    try:
-        url = st.secrets["SUPABASE_URL"]
-        key = st.secrets["SUPABASE_KEY"]
-        return create_client(url, key)
-    except Exception:
-        return None
-
-supabase = init_supabase()
-
-def obtener_notas_svc():
-    if not supabase:
-        return []
-    try:
-        response = supabase.table("notas_svc").select("*").execute()
-        return response.data
-    except Exception:
-        return []
 
 # ==========================================
 # ESTADO Y CONTROL DEL MODO FLOTANTE
@@ -58,6 +35,7 @@ if st.session_state.flotar_activo:
             }
         </style>
     """, unsafe_allow_html=True)
+
 
 # ==========================================
 # CSS GENERAL + ESTILO DE VENTANA FLOTANTE
@@ -95,6 +73,7 @@ st.markdown("""
             zoom: 0.95; 
         }
     }
+    /* --- VENTANA FLOTANTE AJUSTADA Y ORDENADA --- */
     div[data-testid="stExpander"] {
         position: fixed !important;
         bottom: 15px !important;
@@ -174,10 +153,12 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+
 # ==========================================
 # 🤖 ASISTENTE DE PRIORIDADES Y RESUMEN
 # ==========================================
 with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
+
     st.markdown("""
     <style>
         div[data-testid="stExpander"] button {
@@ -262,10 +243,12 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
                     elif paso == 2.2:
                         st.write("👇 **¿Cuál o cuáles unidades dejó fuera Logis?**")
                         unis_pre = st.session_state.data_resumen.get("unidades_centro", [])
+                        
                         fuera_elegidas = []
                         for i_idx, u in enumerate(unis_pre):
                             if st.checkbox(f"Dejó fuera: {u}", key=f"chk_fuera_{i_idx}"):
                                 fuera_elegidas.append(u)
+                        
                         if st.button("Continuar ➡️", use_container_width=True):
                             st.session_state.data_resumen["unidades_fuera"] = fuera_elegidas
                             st.session_state.paso_historial.append(2.2)
@@ -473,13 +456,6 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
                     )
                     partes_respuesta.append(bloque_mapa)
 
-                # 🟢 BÚSQUEDA DE NOTAS ADICIONALES DE SUPABASE EN TIEMPO REAL
-                notas_bd = obtener_notas_svc()
-                notas_matcheadas = [n for n in notas_bd if str(n.get("svc","")).lower().strip() in query_lower or query_lower in str(n.get("svc","")).lower().strip()]
-                if notas_matcheadas:
-                    bloque_notas = "📝 **Notas adicionales registradas:**\n\n" + "\n".join([f"• {n['contenido']}" for n in notas_matcheadas])
-                    partes_respuesta.append(bloque_notas)
-
                 coincidencias_faq = []
                 if any(w in query_lower for w in ["large van sdd", "sdd"]): coincidencias_faq.append(PREGUNTAS_FRECUENTES["large_van_sdd"])
                 if "bulk" in query_lower:
@@ -523,16 +499,33 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
             st.session_state.main_chat_messages.append({"role": "assistant", "content": respuesta_main})
             st.rerun()
 
-# --- DATOS BASE DE UNIDADES Y PLANES ---
+# --- DATOS BASE ---
 u_SDE = {"Moto Car - 3": [25, 30], "Moto Car Newbie": [25, 25], "Car - 5h": [25, 30], "Car - 5 Extendida": [25, 30], "Car - 3h": [25, 28]}
-u_PREC = {"Car - 8h": [70, 75], "Small 9h Ext Car": [70, 75]}
+
+u_PREC = {      
+    "Car - 8h": [70, 75],
+    "Small 9h Ext Car": [70, 75] 
+}
+
 NOMBRES_PLANES_PREC = ["CHALCO", "COYOACÁN", "IZTAPALAPA", "MILPA ALTA", "TLAHUAC", "TLALPAN NORTE", "TLALPAN SUR", "XOCHIMILCO"]
 
-u_PREC_SMX2 = {"Car - 8h": [70, 75], "Small 9h Ext Car": [70, 75], "Car Zona Extendida": [65, 65]}
+u_PREC_SMX2 = {
+    "Car - 8h": [70, 75],
+    "Small 9h Ext Car": [70, 75],
+    "Car Zona Extendida": [65, 65]
+}
 NOMBRES_PLANES_PREG = ["CHALCO", "CHIMAS", "IXTAPALUCA VALLE CHALCO", "IZTAPALAPA 1", "IZTAPALAPA 2", "LA PAZ", "PUEBLOS", "TEXCOCO"]
 
-NOMBRES_PLANES_C1 = ["CALKINI", "CAMPECHE", "CANDELARIA", "CHAMPOTÓN", "ESCÁRCEGA", "ESCÁRCEGA EXT", "HOLPECHEN", "MAXCANUN", "SEYBAPLAYA", "PLAN 10", "PLAN 11"]
-u_C1 = {"Rental Large Van": [100, 100], "Large Van MLP": [100, 100], "Small Van MLP":[100, 100], "Delivery Cell Large Van": [1, 1], "Delivery Cell Small Van": [1, 1]}
+NOMBRES_PLANES_C1 = [
+    "CALKINI", "CAMPECHE", "CANDELARIA", "CHAMPOTÓN", "ESCÁRCEGA", "ESCÁRCEGA EXT", "HOLPECHEN", "MAXCANUN", "SEYBAPLAYA", "PLAN 10", "PLAN 11"
+]
+
+u_C1 = {
+    "Rental Large Van": [100, 100], "Large Van MLP": [100, 100], "Small Van MLP":[100, 100], "Delivery Cell Large Van": [1, 1], "Delivery Cell Small Van": [1, 1]
+}
+
+u_C2 = u_C1.copy()
+u_C2["Large Van Híbrida"] = [100, 100]
 
 u_C1_SJA1 = { 
     "Small Van MLP foráneo": [110, 120], "Large Van MLP foráneo": [110, 120], "Car MLP": [80, 100],
@@ -541,7 +534,11 @@ u_C1_SJA1 = {
     "Car 8h": [70, 70], "Car Newbie": [70, 70], "Car Zona Extendida": [70, 70], "Moto 3h": [30, 30],
     "Small Van 9h": [70, 70], "Small Van 9h Ext": [70, 70], "Small Van Newbie": [70, 70], "Media Milla SP": [1, 1]
 }
-NOMBRES_PLANES_C1_SJA1 = ["ACTOPAN", "⚠️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", "TEZUITLAN", "TLALTETELA", "TRAPICHE", "TUZAMAPA", "XICO", "CONTINGENCIA NODO", "PLAN 14", "PLAN 15", "PLAN 16", "PLAN 17"]
+
+NOMBRES_PLANES_C1_SJA1 = [
+   "ACTOPAN", "⚠️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", "TEZUITLAN", "TLALTETELA", "TRAPICHE",  
+   "TUZAMAPA", "XICO", "CONTINGENCIA NODO", "PLAN 14", "PLAN 15", "PLAN 16", "PLAN 17"
+]
 
 u_C1_SCH1 = { 
     "Car MLP": [110, 120], "Small Van MLP": [110, 120], "Large Van MLP": [110, 120], "Small Van MLP Newbie": [110, 120],
@@ -554,7 +551,11 @@ u_C1_SCH1 = {
     "Moto 3h": [30, 30], "Moto Newbie": [25, 25], "Small Van 11h Ext": [70, 70], "Small Van 9h": [70, 70],
     "Small Van 9h Ext": [70, 70], "Small Van Newbie": [70, 70]
 }
-NOMBRES_PLANES_C1_SCH1 = ["AEROPUERTO", "CANTERA", "DELICIAS", "GRANJAS", "MEOQUI", "NORTE", "SUR", "CUAUHTEMOC", "PARRAL", "PLAN 10", "PLAN 11", "PLAN 12", "PLAN 13", "PLAN 14"]
+
+NOMBRES_PLANES_C1_SCH1 = [
+   "AEROPUERTO", "CANTERA", "DELICIAS", "GRANJAS", "MEOQUI", "NORTE", "SUR", "CUAUHTEMOC", "PARRAL", "PLAN 10",  
+   "PLAN 11", "PLAN 12", "PLAN 13", "PLAN 14"
+]
 
 u_C1_VACIA = { 
     "Car MLP": [110, 120], "Small Van MLP": [110, 120], "Large Van MLP": [110, 120], "Small Van MLP Newbie": [110, 120],
@@ -567,7 +568,11 @@ u_C1_VACIA = {
     "Car 3h": [30,30], "Car 5h": [30, 30], "Moto 3h": [30, 30], "Moto Newbie": [25, 25], "Small Van 11h Ext": [70, 70],
     "Small Van 9h": [70, 70], "Small Van 9h Ext": [70, 70], "Small Van Newbie": [70, 70]
 }
-NOMBRES_PLANES_C1_VACIA = ["PLAN 1", "PLAN 2", "PLAN 3", "PLAN 4", "PLAN 5", "PLAN 6", "PLAN 7", "PLAN 8", "PLAN 9", "PLAN 10", "PLAN 11", "PLAN 12", "PLAN 13", "PLAN 14"]
+
+NOMBRES_PLANES_C1_VACIA = [
+   "PLAN 1", "PLAN 2", "PLAN 3", "PLAN 4", "PLAN 5", "PLAN 6", "PLAN 7", "PLAN 8", "PLAN 9", "PLAN 10",  
+   "PLAN 11", "PLAN 12", "PLAN 13", "PLAN 14"
+]
 
 u_C1_SMD1 = { 
     "Car MLP": [110, 120], "Small Van MLP": [110, 120], "Large Van MLP": [110, 120], "Small Van MLP Newbie": [110, 120],
@@ -580,7 +585,11 @@ u_C1_SMD1 = {
     "Moto 3h": [30, 30], "Moto Newbie": [25, 25], "Small Van 11h Ext": [70, 70], "Small Van 9h": [70, 70],
     "Small Van 9h Ext": [70, 70], "Small Van Newbie": [70, 70]
 }
-NOMBRES_PLANES_C1_SMD1 = ["⚠️ CENTRO 1", "⚠️ CENTRO 2", "⚠️ KANASIN", "MOTUL", "MUNA", "⚠️ NORTE", "SEYE", "UMAN", "PLAN 9", "PLAN 10", "PLAN 11", "PLAN 12", "PLAN 13", "PLAN 14"]
+
+NOMBRES_PLANES_C1_SMD1 = [
+   "⚠️ CENTRO 1", "⚠️ CENTRO 2", "⚠️ KANASIN", "MOTUL", "MUNA", "⚠️ NORTE", "SEYE", "UMAN", "PLAN 9", "PLAN 10",  
+   "PLAN 11", "PLAN 12", "PLAN 13", "PLAN 14"
+]
 
 def gen_master_rows(data_dict, table_id):
     rows = ""
@@ -589,20 +598,28 @@ def gen_master_rows(data_dict, table_id):
 
     nombres_prec = ["CHALCO", "COYOACÁN", "IZTAPALAPA", "MILPA ALTA", "TLAHUAC", "TLALPAN NORTE", "TLALPAN SUR", "XOCHIMILCO"]
     nombres_smx2 = ["CHALCO", "CHIMAS", "IXTAPALUCA VALLE CHALCO", "IZTAPALAPA 1", "IZTAPALAPA 2", "LA PAZ", "PUEBLOS", "TEXCOCO"]
+
     mostrar_orh_ocup = (table_id in [1, 2, 6, 7, 8, 5, 9])
+
     num_filas_objetivo = 45 if table_id == "PREC" else 3
     rango_final = max(total_items, num_filas_objetivo)
 
     for i in range(1, rango_final + 1):
-        if (data_dict == u_PREC) and (i-1) < len(nombres_prec): p_name = nombres_prec[i-1]
-        elif (data_dict == u_PREC_SMX2) and (i-1) < len(nombres_smx2): p_name = nombres_smx2[i-1]
-        else: p_name = f"PLAN {i}"
+        if (data_dict == u_PREC) and (i-1) < len(nombres_prec):
+            p_name = nombres_prec[i-1]
+        elif (data_dict == u_PREC_SMX2) and (i-1) < len(nombres_smx2):
+            p_name = nombres_smx2[i-1]
+        else:
+            p_name = f"PLAN {i}"
 
-        if (i-1) < total_items: name, spr = items[i-1]
-        else: name, spr = "", [0, 0]
+        if (i-1) < total_items:
+            name, spr = items[i-1]
+        else:
+            name, spr = "", [0, 0]
 
         if "---" in name:
             colspan = 8 if mostrar_orh_ocup else 5
+
             rows += f'''
             <tr class="es-divisor" style="background: #25282b !important; color: #25282b; height: 28px;">
                 <td colspan="{colspan}" style="text-align: center; font-weight: bold; font-size: 13px; letter-spacing: 3px; border: none; pointer-events: none;"> 
@@ -616,13 +633,31 @@ def gen_master_rows(data_dict, table_id):
                 <td class="f-stock" style="display:none;">0</td>
                 <td class="f-left" style="display:none;">0</td>
             </tr>'''
+
         else:
             st_base = "background: #ebebeb; color: #969696;" if not name else ""
+
+            celdas_orh_ocup = ""
             if mostrar_orh_ocup:
                 celdas_orh_ocup = f'''
-                <td contenteditable="true" class="edit-orh" oninput="recalc()" style="text-align:center; border:0.2px solid #25282b; width:45px; background:#ffffff; color:#141414;">0</td>
-                <td class="orh-hora" style="text-align:center; border:0.2px solid #25282b; width:60px; background:#f5f5f5; color:#141414; font-weight:bold;">00:00 hs</td>
-                <td contenteditable="true" class="edit-ocup" oninput="recalc()" style="text-align:center; border:0.2px solid #25282b; width:70px; background:#ffffff; color:#25282b;">0</td>
+                <td contenteditable="true"
+                    class="edit-orh"
+                    oninput="recalc()"
+                    style="text-align:center; border:0.2px solid #25282b; width:45px; background:#ffffff; color:#141414;">
+                    0
+                </td>
+
+                <td class="orh-hora"
+                    style="text-align:center; border:0.2px solid #25282b; width:60px; background:#f5f5f5; color:#141414; font-weight:bold;">
+                    00:00 hs
+                </td>
+
+                <td contenteditable="true"
+                    class="edit-ocup"
+                    oninput="recalc()"
+                    style="text-align:center; border:0.2px solid #25282b; width:70px; background:#ffffff; color:#25282b;">
+                    0
+                </td>
                 '''
             else:
                 celdas_orh_ocup = '''
@@ -633,15 +668,40 @@ def gen_master_rows(data_dict, table_id):
 
             rows += f'''
             <tr class="master-row" style="{st_base}">
-                <td contenteditable="true" class="edit-name" oninput="recalc()" style="font-weight: bold; text-align: left; padding-left: 10px; border: 0.2px solid #25282b; width: 150px; color: #25282b;">{name}</td>
+                <td contenteditable="true" class="edit-name" oninput="recalc()"
+                    style="font-weight: bold; text-align: left; padding-left: 10px; border: 0.2px solid #25282b; width: 150px; color: #25282b;">
+                    {name}
+                </td>
+
                 {celdas_orh_ocup}
-                <td contenteditable="true" class="edit-spr-min" oninput="recalc()" style="text-align: center; border: 0.2px solid #25282b; width: 45px; background-color: #25282b; color: #ffffff;">{spr[0]}</td>
-                <td contenteditable="true" class="edit-spr-max" oninput="recalc()" style="text-align: center; border: 0.2px solid #25282b; width: 45px; background-color: #25282b; color: #ffffff;">{spr[1]}</td>
-                <td contenteditable="true" class="f-stock" oninput="recalc()" style="text-align: center; border: 0.2px solid #25282b; width: 55px; font-weight: bold; font-size: 13px;">0</td>
-                <td class="f-ruteadas" style="text-align: center; border: 0.2px solid #25282b; width: 55px; background-color: #ffffff; font-weight: bold;">0</td>
-                <td class="f-left" style="text-align:center; border:0.2px solid #25282b; width:45px; font-weight:bold; color:#25282b; border-radius:2px;">0</td>
+
+                <td contenteditable="true" class="edit-spr-min" oninput="recalc()"
+                    style="text-align: center; border: 0.2px solid #25282b; width: 45px; background-color: #25282b; color: #ffffff;">
+                    {spr[0]}
+                </td>
+
+                <td contenteditable="true" class="edit-spr-max" oninput="recalc()"
+                    style="text-align: center; border: 0.2px solid #25282b; width: 45px; background-color: #25282b; color: #ffffff;">
+                    {spr[1]}
+                </td>
+
+                <td contenteditable="true" class="f-stock" oninput="recalc()"
+                    style="text-align: center; border: 0.2px solid #25282b; width: 55px; font-weight: bold; font-size: 13px;">
+                    0
+                </td>
+
+                <td class="f-ruteadas" 
+                    style="text-align: center; border: 0.2px solid #25282b; width: 55px; background-color: #ffffff; font-weight: bold;">
+                    0
+                </td>
+
+                <td class="f-left"
+                    style="text-align:center; border:0.2px solid #25282b; width:45px; font-weight:bold; color:#25282b; border-radius:2px;">
+                    0
+                </td>
             </tr>'''
     return rows
+
 
 def gen_poligonos(data_target=None):
     polys = ""
@@ -650,7 +710,13 @@ def gen_poligonos(data_target=None):
     nombres_prec = ["CHALCO", "COYOACÁN", "IZTAPALAPA", "MILPA ALTA", "TLAHUAC", "TLALPAN NORTE", "TLALPAN SUR", "XOCHIMILCO"]
     nombres_smx2 = ["CHALCO", "CHIMAS", "IXTAPALUCA VALLE CHALCO", "IZTAPALAPA 1", "IZTAPALAPA 2", "LA PAZ", "PUEBLOS", "TEXCOCO"]
 
-    es_c1 = data_target in (u_C1, u_C1_SJA1, u_C1_SCH1, u_C1_SMD1, u_C1_VACIA)
+    es_c1 = data_target in (
+        u_C1,
+        u_C1_SJA1,
+        u_C1_SCH1,
+        u_C1_SMD1,
+        u_C1_VACIA,
+    )
     es_sde = (data_target == u_SDE)
     es_prec = (data_target == u_PREC)
 
@@ -683,54 +749,172 @@ def gen_poligonos(data_target=None):
         <td style="width: 45px; min-width: 45px; max-width: 45px; text-align: center; border: 0.5px solid #25282b;"><input type="checkbox" class="ok-check" style="transform: scale(1.7); accent-color: #9ACD32; cursor: pointer;"></td>
     </tr>'''
 
-    campo_volumen_normal = '''<div style="text-align:center;"><span class="v-total-val" contenteditable="true" oninput="recalc()" style="display:inline-block; min-width:55px; padding:2px 8px; border:none; border-radius:4px; background:#ededed; font-size:22px; font-weight:bold; color:#808080; text-align:center;">0</span></div>'''
+    campo_volumen_normal = '''
+<div style="text-align:center;">
+    <span class="v-total-val"
+            contenteditable="true"
+            oninput="recalc()"
+            style="
+            display:inline-block;
+            min-width:55px;
+            padding:2px 8px;
+            border:none;
+            border-radius:4px;
+            background:#ededed;
+            font-size:22px;
+            font-weight:bold;
+            color:#808080;
+            text-align:center;
+          ">
+        0
+    </span>
+</div>
+'''
 
     campo_volumen_c1 = '''
-<div style="text-align:center;"><span class="v-total-val" contenteditable="true" oninput="recalc()" style="display:inline-block; min-width:55px; padding:2px 8px; border:none; border-radius:4px; background:#ededed; font-size:22px; font-weight:bold; color:#808080; text-align:center;">0</span></div>
+<div style="text-align:center;">
+    <span class="v-total-val"
+          contenteditable="true"
+          oninput="recalc()"
+          style="
+            display:inline-block;
+            min-width:55px;
+            padding:2px 8px;
+            border:none;
+            border-radius:4px;
+            background:#ededed;
+            font-size:22px;
+            font-weight:bold;
+            color:#808080;
+            text-align:center;
+          ">
+        0
+    </span>
+</div>
+
 <hr style="margin:4px 0; border:none; border-top:2px solid #999;">
+
 <div style="font-size:12px; font-weight:bold; color:#25282b; text-align:center;">
     <div>Nodos:</div>
-    <span class="nodos-val" contenteditable="true" style="display:inline-block; min-width:28px; text-align:center; border:none; border-radius:4px; background:#ededed; font-size:16px; font-weight:bold; color:#FF6347; padding:0 4px; margin-top:2px;">0</span>
+    <span class="nodos-val"
+      contenteditable="true"
+      style="
+        display:inline-block;
+        min-width:28px;
+        text-align:center;
+        border:none;
+        border-radius:4px;
+        background:#ededed;
+        font-size:16px;
+        font-weight:bold;
+        color:#FF6347;
+        padding:0 4px;
+        margin-top:2px;
+      ">
+        0
+    </span>
 </div>
 '''
 
     campo_campeche = '''
-<div style="text-align:center;"><span class="v-total-val" contenteditable="true" oninput="recalc()" style="display:inline-block; min-width:55px; padding:2px 8px; border:none; border-radius:4px; background:#ededed; font-size:22px; font-weight:bold; color:#808080; text-align:center;">0</span></div>
+<div style="text-align:center;">
+    <span class="v-total-val"
+          contenteditable="true"
+          oninput="recalc()"
+          style="
+            display:inline-block;
+            min-width:55px;
+            padding:2px 8px;
+            border:none;
+            border-radius:4px;
+            background:#ededed;
+            font-size:22px;
+            font-weight:bold;
+            color:#808080;
+            text-align:center;
+          ">
+        0
+    </span>
+</div>
+
 <hr style="margin:4px 0; border:none; border-top:1px solid #999;">
-<div style="font-size:13px; font-weight:bold; color:#25282b; text-align:center;">Nodos:
-    <div style="margin-top:2px;"><span class="nodos-campeche" contenteditable="true" style="display:inline-block; min-width:28px; text-align:center; border:none; border-radius:4px; background:#ededed; font-size:16px; font-weight:bold; color:#FF6347; padding:0 4px;">0</span></div>
+
+<div style="font-size:13px; font-weight:bold; color:#25282b; text-align:center;">
+    Nodos:
+    <div style="margin-top:2px;">
+        <span class="nodos-campeche"
+              contenteditable="true"
+              style="
+                display:inline-block;
+                min-width:28px;
+                text-align:center;
+                border:none;
+                border-radius:4px;
+                background:#ededed;
+                font-size:16px;
+                font-weight:bold;
+                color:#FF6347;
+                padding:0 4px;
+              ">
+            0
+        </span>
+    </div>
 </div>
 '''
 
-    if data_target == u_C1_SJA1: limite_tablas = len(NOMBRES_PLANES_C1_SJA1) + 1
-    elif data_target in (u_C1_SCH1, u_C1_VACIA): limite_tablas = 16
-    elif data_target == u_C1_SMD1: limite_tablas = 20
-    elif es_sde: limite_tablas = 5
-    else: limite_tablas = 20
+    if data_target == u_C1_SJA1:
+        limite_tablas = len(NOMBRES_PLANES_C1_SJA1) + 1
+    elif data_target in (u_C1_SCH1, u_C1_VACIA):
+        limite_tablas = 16
+    elif data_target == u_C1_SMD1:
+        limite_tablas = 20
+    elif es_sde:
+        limite_tablas = 5
+    else:
+        limite_tablas = 20
     
     for i in range(1, limite_tablas): 
-        if data_target == u_C1_VACIA and (i-1) < len(NOMBRES_PLANES_C1_VACIA): nombre_final = NOMBRES_PLANES_C1_VACIA[i-1]
-        elif data_target == u_PREC and (i-1) < len(nombres_prec): nombre_final = nombres_prec[i-1]
-        elif data_target == u_PREC_SMX2 and (i-1) < len(nombres_smx2): nombre_final = nombres_smx2[i-1]
-        elif data_target == u_C1 and (i-1) < len(NOMBRES_PLANES_C1): nombre_final = NOMBRES_PLANES_C1[i-1]
-        elif data_target == u_C1_SJA1 and (i-1) < len(NOMBRES_PLANES_C1_SJA1): nombre_final = NOMBRES_PLANES_C1_SJA1[i-1]
-        elif data_target == u_C1_SCH1 and (i-1) < len(NOMBRES_PLANES_C1_SCH1): nombre_final = NOMBRES_PLANES_C1_SCH1[i-1]
-        elif data_target == u_C1_SMD1 and (i-1) < len(NOMBRES_PLANES_C1_SMD1): nombre_final = NOMBRES_PLANES_C1_SMD1[i-1]
-        else: nombre_final = f"PLAN {i}"
+        if data_target == u_C1_VACIA and (i-1) < len(NOMBRES_PLANES_C1_VACIA):
+            nombre_final = NOMBRES_PLANES_C1_VACIA[i-1]
+        elif data_target == u_PREC and (i-1) < len(nombres_prec):
+            nombre_final = nombres_prec[i-1]
+        elif data_target == u_PREC_SMX2 and (i-1) < len(nombres_smx2):
+            nombre_final = nombres_smx2[i-1]
+        elif data_target == u_C1 and (i-1) < len(NOMBRES_PLANES_C1):
+            nombre_final = NOMBRES_PLANES_C1[i-1]
+        elif data_target == u_C1_SJA1 and (i-1) < len(NOMBRES_PLANES_C1_SJA1):
+            nombre_final = NOMBRES_PLANES_C1_SJA1[i-1]
+        elif data_target == u_C1_SCH1 and (i-1) < len(NOMBRES_PLANES_C1_SCH1):
+            nombre_final = NOMBRES_PLANES_C1_SCH1[i-1]
+        elif data_target == u_C1_SMD1 and (i-1) < len(NOMBRES_PLANES_C1_SMD1):
+            nombre_final = NOMBRES_PLANES_C1_SMD1[i-1]
+        else:
+            nombre_final = f"PLAN {i}"
 
-        if nombre_final == "CAMPECHE": contenido_volumen = campo_campeche
-        elif es_c1: contenido_volumen = campo_volumen_c1
-        else: contenido_volumen = campo_volumen_normal
+        if nombre_final == "CAMPECHE":
+            contenido_volumen = campo_campeche
+        elif es_c1:
+            contenido_volumen = campo_volumen_c1
+        else:
+            contenido_volumen = campo_volumen_normal
 
-        if es_sde or es_prec: rowspan_actual = 3
-        elif data_target == u_C1_SJA1: rowspan_actual = 8 if nombre_final == "⚠️ CENTRO 1" else 5
-        elif data_target in (u_C1_SMD1, u_C1_VACIA): rowspan_actual = 5
-        else: rowspan_actual = 3
+        if es_sde or es_prec:
+            rowspan_actual = 3
+        elif data_target == u_C1_SJA1:
+            rowspan_actual = 8 if nombre_final == "⚠️ CENTRO 1" else 5
+        elif data_target in (u_C1_SMD1, u_C1_VACIA):
+            rowspan_actual = 5
+        else:
+            rowspan_actual = 3
 
-        if es_sde or es_prec: filas_extra = fila_inner * 2
-        elif data_target == u_C1_SJA1: filas_extra = fila_inner * 7 if nombre_final == "⚠️ CENTRO 1" else fila_inner * 4
-        elif data_target in (u_C1_SMD1, u_C1_VACIA): filas_extra = fila_inner * 4
-        else: filas_extra = fila_inner * 2
+        if es_sde or es_prec:
+            filas_extra = fila_inner * 2
+        elif data_target == u_C1_SJA1:
+            filas_extra = fila_inner * 7 if nombre_final == "⚠️ CENTRO 1" else fila_inner * 4
+        elif data_target in (u_C1_SMD1, u_C1_VACIA):
+            filas_extra = fila_inner * 4
+        else:
+            filas_extra = fila_inner * 2
 
         polys += f'''
         <div class="poligono-bloque" style="margin-bottom:12px; box-shadow: none; border-radius: 0px; overflow-x: auto; background: #ededed; border: 1.5px solid #25282b;">           
@@ -751,14 +935,14 @@ def gen_poligonos(data_target=None):
                         <td class="vol-cell" rowspan="{rowspan_actual}" style="color:#808080; font-weight:bold; text-align:center; border:1px solid #25282b; padding:5px;">
                             {contenido_volumen}
                         </td>
-                        <td class="u-manual-cell" style="background: #d3f0e5; border: 0.5px solid #25282b; padding: 2px; width: 105px;">
+                        <td class="u-manual-cell" style="background: #d3f0e5; border: 0.5px solid #25282b; padding: 2px; width: 105px; min-width: 105px; max-width: 105px;">
                             <div style="{div_flex}">
                                 <button style="{btn_s}" onclick="stepVal(this, -1, 'u')">-</button> 
                                 <span contenteditable="true" class="u-manual" oninput="manualEdit(this)" style="{span_num_u} color: #25282b !important;">0</span>
                                 <button style="{btn_s}" onclick="stepVal(this, 1, 'u')">+</button>
                             </div>
                         </td>
-                        <td class="spr-real-cell" style="background: #FFFFFF; border: 0.5px solid #25282b; padding: 2px; width: 90px;">
+                        <td class="spr-real-cell" style="background: #FFFFFF; border: 0.5px solid #25282b; padding: 2px; width: 90px; min-width: 90px; max-width: 90px;">
                             <div style="{div_flex}">
                                 <button style="{btn_s}" onclick="stepVal(this, -1, 's')">-</button>
                                 <span contenteditable="true" class="spr-real-val" oninput="manualEdit(this)" style="{span_num_spr}">0</span>
@@ -773,6 +957,7 @@ def gen_poligonos(data_target=None):
                         <td style="width: 45px; min-width: 45px; max-width: 45px; text-align: center; border: 0.5px solid #25282b;"><input type="checkbox" class="ok-check" style="transform: scale(1.7); accent-color: #9ACD32; cursor: pointer;"></td>
                     </tr>
                     {filas_extra}
+                    {""}
                     <tr style="background:#ededed; height: 32px;">
                         <td colspan="3" style="text-align:center; font-weight:bold; border: 1px solid #25282b; font-size: 14px; color:#25282b;">ESTADO:</td>
                         <td class="v-calculado-total" style="font-weight: bold; font-size: 14px; color: #d32f2f; border: 1px solid #25282b; text-align: center;">0</td>
@@ -800,19 +985,23 @@ app_html = f"""
         tr.master-row:hover, tr.calc-row:hover {{
             background-color: #fffecd !important;
             box-shadow: inset 0 0 2px #ffc107 !important;
-            transition: background-color 0.15s ease;
+            transition: background-color 0.15s ease, box-shadow 0.15s ease;
             cursor: pointer;
         }}
         tr.master-row:hover td, tr.calc-row:hover td {{ color: #000 !important; }}
 
-        body {{ font-family: sans-serif; background: #ffffff; padding: 14px; margin: 0; }}
+        body {{ font-family: sans-serif; background: #ffffff; padding: 14px; }}
 
         .meli-table {{
             width: 100% !important; 
             border-collapse: collapse !important;
+            border-spacing: 0 !important;
             table-layout: fixed;
             background: white;
             border: 1px solid #25282b;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            overflow: hidden;
         }}
 
         .meli-table th {{
@@ -823,6 +1012,7 @@ app_html = f"""
             border: 1px solid #25282b !important;
             padding: 4px 6px;
             text-align: center;
+            height: 24px;
         }}
 
         .meli-table td {{
@@ -848,6 +1038,7 @@ app_html = f"""
             border-radius: 10px !important;
             box-shadow: 0 10px 30px rgba(0,0,0,0.50) !important;
             padding: 6px !important;
+            margin: 0 !important;
         }}
 
         #google-alert {{ 
@@ -908,9 +1099,9 @@ app_html = f"""
     <div id="dos-pct-global" style="background:#f5f5f5; border:1px solid #d0d0d0; border-radius:6px; padding:6px; margin-bottom:10px; text-align:center; font-weight:bold; color:#25282b;"></div>
 
     <div id="fleet-drag-handle" style="display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap; padding: 4px 0; margin-bottom: 8px;">
-        <button id="fleet-toggle-btn" onclick="toggleFleetFloating();" style="cursor:pointer; border:none; background:#25282b; color:white; padding:4px 9px; border-radius:6px; font-weight:bold; font-size:12px; outline:none;">FLOTAR ☁️</button>
-        <button id="excel-btn" onclick="toggleExcelView()" style="cursor:pointer; background:#228B22; color:white; border:none; font-size:12px; padding:4px 9px; border-radius:6px; font-weight:bold; outline:none;">VISTA EXCEL</button>
-        <button onclick="distribuirAutomatico()" style="cursor:pointer; background: #26d4ca; color: #2e3030; border: none; font-size: 12px; padding: 4px 9px; border-radius: 6px; font-weight: bold; outline: none;">🧠 AUTO-CALCULAR</button>
+        <button id="fleet-toggle-btn" onclick="toggleFleetFloating();" style="cursor:pointer; border:none; background:#25282b; color:white; padding:4px 9px; border-radius:6px; font-weight:bold; font-size:12px; box-shadow:0 2px 0 #111213; outline:none;">FLOTAR ☁️</button>
+        <button id="excel-btn" onclick="toggleExcelView()" style="cursor:pointer; background:#228B22; color:white; border:none; font-size:12px; padding:4px 9px; border-radius:6px; font-weight:bold; box-shadow:0 2px 0 #1c6d1c; outline:none;">VISTA EXCEL</button>
+        <button onclick="distribuirAutomatico()" style="cursor:pointer; background: #26d4ca; color: #2e3030; border: none; font-size: 12px; padding: 4px 9px; border-radius: 6px; font-weight: bold; box-shadow: 0 2px 0 #2d968f; outline: none;">🧠 AUTO-CALCULAR</button>
         <button class="filter-btn" onclick="filterRows(true)" style="cursor:pointer; background: linear-gradient(180deg, #4f4f4f 0%, #25282b 100%); color: white; border: 1px solid #25282b; font-size: 12px; padding: 4px 9px; border-radius: 6px; font-weight: bold; outline: none;">ACTIVAS</button>
         <button class="filter-btn" onclick="filterRows(false)" style="cursor:pointer; background: #808080; color:white; border:none; font-size:12px; padding:4px 9px; border-radius:6px; font-weight:bold; outline: none;">TODAS</button>
     </div>
@@ -1123,7 +1314,7 @@ app_html = f"""
     </div>
 </div>
 
-<!-- LÓGICA DE JAVASCRIPT NATIVA EXACTA DEL TEMPLATE ORIGINAL -->
+<!-- LÓGICA DE JAVASCRIPT NATIVA ORIGINAL -->
 <script>
     const perfiles = {json.dumps(PERFILES)};
     const perfilActual = "{perfil_actual}";
@@ -1721,25 +1912,25 @@ app_html = f"""
 
 html(app_html, height=1200, scrolling=True)
 
-# CONSOLA RESTADOR INFERIOR (SIN IMAGEN DE MAPA DUPLICADA)
-html_limpio = """
+# CONSOLA RESTADOR INFERIOR (ÚNICA INSTANCIA COMPONENTE INFERIOR)
+html_limpio = f"""
 <style>
-    body { background-color: #25282b; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; }
-    .main-box { background: #25282b; padding: 10px; display: flex; flex-direction: column; align-items: center; }
+    body {{ background-color: #25282b; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; }}
+    .main-box {{ background: #25282b; padding: 10px; display: flex; flex-direction: column; align-items: center; }}
     
-    .unified-console {
+    .unified-console {{
         background: #25282b; border-radius: 15px; padding: 15px; 
         margin-bottom: 20px; border: 1px solid #25282b; text-align: center; width: 100%; max-width: 500px;
-    }
-    .display-screen {
+    }}
+    .display-screen {{
         background: #25282b; border-radius: 10px; padding: 10px; margin-bottom: 15px; border: 2px solid #25282b;
-    }
-    .btn-3d {
+    }}
+    .btn-3d {{
         background: linear-gradient(145deg, #1e90ff, #1c82e6);
         color: white; border: none; padding: 12px 25px; border-radius: 10px;
         font-weight: bold; cursor: pointer; box-shadow: 0 5px #0a56a3; transition: 0.1s;
-    }
-    .btn-3d:active { box-shadow: 0 2px #0a56a3; transform: translateY(3px); }
+    }}
+    .btn-3d:active {{ box-shadow: 0 2px #0a56a3; transform: translateY(3px); }}
 </style>
 
 <div class="main-box">
@@ -1761,14 +1952,14 @@ html_limpio = """
 </div>
 
 <script>
-    function ejecutarTodo() {
+    function ejecutarTodo() {{
         const mins = document.getElementById('minInput').value || 0;
         const ahora = new Date();
         const nuevaFecha = new Date(ahora.getTime() - (mins * 60000));
         const h = String(nuevaFecha.getHours()).padStart(2, '0');
         const m = String(nuevaFecha.getMinutes()).padStart(2, '0');
         document.getElementById('horaReal').innerText = h + ":" + m;
-    }
+    }}
     ejecutarTodo();
 </script>
 """
