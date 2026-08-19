@@ -1848,6 +1848,39 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     color: #66CDAA;
 }}
 
+
+.menu-ruteos-titulo {{
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #66CDAA;
+}}
+
+/* 🟢 ESTILO PARA LOS BOTONES DEL MENÚ LATERAL */
+.opcion-menu-ruteos {{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 15px;
+    margin-bottom: 9px;
+    border-radius: 7px;
+    border: 1px solid #3b3f43;
+    background: #292c30;
+    color: #e4e6e8;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}}
+
+.opcion-menu-ruteos:hover {{
+    background: #363a3f;
+    border-color: #66CDAA;
+    color: white;
+    transform: translateX(4px);
+}}
+
+
 </style> 
 </head>
 
@@ -1863,9 +1896,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <button onclick="toggleMenuLateralVisual()" style="border:none; background:transparent; color:white; font-size:21px; cursor:pointer;">✕</button>
     </div>
     
-    <div style="color: #aaa; font-size: 13px; text-align: center; margin-top: 20px;">
-        📌 Menú lateral creado con éxito (Paso 1).
-    </div>
+    <!-- 🧹 BOTÓN DE LIMPIAR PANTALLA -->
+    <button class="opcion-menu-ruteos" onclick="limpiarPantallaCompleta()">🧹 &nbsp; LIMPIAR PANTALLA</button>
 </div>
 
 <div style="display:flex; flex-direction:column; gap:20px; width:100%;">
@@ -2392,6 +2424,40 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         recalc();
     }}
 }}
+
+
+    // 🟢 FUNCIÓN LIMPIAR PANTALLA COMPLETA
+    function limpiarPantallaCompleta() {{
+        if (!confirm("¿Deseas vaciar los valores editados de la pantalla para iniciar un nuevo ruteo?")) return;
+
+        // 1. Limpiar Polígonos (Volúmenes, Unidades, SPR y Desplegables)
+        document.querySelectorAll('.v-total-val, .nodos-val, .nodos-campeche').forEach(el => el.innerText = "0");
+        document.querySelectorAll('.calc-row').forEach(row => {{
+            let uSpan = row.querySelector('.u-manual');
+            let sprSpan = row.querySelector('.spr-real-val');
+            let selectType = row.querySelector('.s-type');
+            let checkOk = row.querySelector('.ok-check');
+
+            if (uSpan) uSpan.innerText = "0";
+            if (sprSpan) sprSpan.innerText = "0";
+            if (selectType) {{
+                selectType.value = ""; 
+                if (typeof updateSelectColor === 'function') updateSelectColor(selectType); 
+            }}
+            if (checkOk) checkOk.checked = false;
+        }});
+
+        // 2. Limpiar Flota (Schedule, ORH y Ocupación)
+        document.querySelectorAll('.f-stock, .edit-orh, .edit-ocup').forEach(el => el.innerText = "0");
+        document.querySelectorAll('.orh-hora').forEach(el => el.innerText = "00:00 hs");
+
+        // 3. Reiniciar memoria de filas editadas y recalcular
+        editedRowsPlan.clear();
+        if (typeof recalc === 'function') recalc();
+        
+        // Cierra el menú al terminar
+        toggleMenuLateralVisual();
+    }}
 
 
 
