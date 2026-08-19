@@ -1386,6 +1386,10 @@ app_html = f"""
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- CDN DE SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
     <style>
       
          
@@ -2628,9 +2632,11 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     const SUPABASE_URL = "{st.secrets.get('SUPABASE_URL', '')}";
     const SUPABASE_KEY = "{st.secrets.get('SUPABASE_KEY', '')}";
     
-    const supabaseClient = (window.supabase && window.supabase.createClient && SUPABASE_URL) 
-        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) 
-        : null;
+    // Inicialización compatible con el CDN oficial
+    let supabaseClient = null;
+    if (typeof supabase !== 'undefined' && typeof supabase.createClient === 'function' && SUPABASE_URL && SUPABASE_KEY) {{
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }}
 
     function abrirModalNotasSVC() {{
         toggleMenuLateralVisual();
@@ -2654,7 +2660,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         if (!svc || !contenido) {{
             alert("⚠️ Por favor completa todos los campos.");
             return;
-        }}
+        }
 
         if (!supabaseClient) {{
             alert("⚠️ No hay conexión con la base de datos.");
