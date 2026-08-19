@@ -2663,7 +2663,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
         try {{
             // 🟢 GUARDADO EN TABLA NOTAS_SVC_2
-            const { data, error } = await supabaseClient
+            const {{ data, error }} = await supabaseClient
                 .from("notas_svc_2")
                 .upsert([{{ svc: svc, contenido: contenido }}], {{ onConflict: 'svc' }});
 
