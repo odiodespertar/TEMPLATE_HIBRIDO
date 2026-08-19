@@ -903,7 +903,7 @@ def gen_master_rows(data_dict, table_id):
 
                 <td class="orh-hora"
                     style="text-align:center; border:0.2px solid #25282b; width:60px; background:#f5f5f5; color:#141414; font-weight:bold;">
-                    00:00 hs
+                    00:00
                 </td>
 
                 <td contenteditable="true"
@@ -920,7 +920,7 @@ def gen_master_rows(data_dict, table_id):
                 # En tablas donde NO deben verse, se mantienen ocultas (como ya lo tenías)
                 celdas_orh_ocup = '''
                 <td class="edit-orh" style="display:none;">0</td>
-                <td class="orh-hora" style="display:none;">00:00 hs</td>
+                <td class="orh-hora" style="display:none;">00:00</td>
                 <td class="edit-ocup" style="display:none;">0</td>
                 '''
 
@@ -2454,7 +2454,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
         // 2. Limpiar Flota (Schedule, ORH y Ocupación)
         document.querySelectorAll('.f-stock, .edit-orh, .edit-ocup').forEach(el => el.innerText = "0");
-        document.querySelectorAll('.orh-hora').forEach(el => el.innerText = "00:00 hs");
+        document.querySelectorAll('.orh-hora').forEach(el => el.innerText = "00:00");
 
         // 3. Reiniciar memoria de filas editadas y recalcular
         editedRowsPlan.clear();
