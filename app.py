@@ -1887,7 +1887,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 <body>
 <div id="google-alert">⚠️ <span id="alert-msg"></span> [ENTER para cerrar]</div>
 
-<!-- 🟢 PASO 1: CONTENEDOR HTML DEL MENÚ LATERAL -->
+<!-- 🟢 ESTRUCTURA DEL MENÚ LATERAL -->
 <button id="btn-menu-lateral" onclick="toggleMenuLateralVisual()" title="Abrir menú">☰</button>
 
 <div id="menu-lateral-ruteos">
@@ -1896,13 +1896,14 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <button onclick="toggleMenuLateralVisual()" style="border:none; background:transparent; color:white; font-size:21px; cursor:pointer;">✕</button>
     </div>
     
-    <!-- 🧹 BOTÓN DE LIMPIAR PANTALLA -->
+    <!-- 🧹 OPCIÓN 1: LIMPIAR PANTALLA -->
     <button class="opcion-menu-ruteos" onclick="limpiarPantallaCompleta()">🧹 &nbsp; LIMPIAR PANTALLA</button>
+
+    <!-- 👁️ OPCIÓN 2: OCULTAR PLANES EXTRA -->
+    <button id="btn-ocultar-extra-menu" class="opcion-menu-ruteos" onclick="togglePlanesExtra()">👁️ &nbsp; OCULTAR PLANES EXTRA</button>
 </div>
 
 
-    <!-- 👁️ OPCIÓN OCULTAR / MOSTRAR PLANES EXTRA -->
-    <button id="btn-ocultar-extra-menu" class="opcion-menu-ruteos" onclick="togglePlanesExtra()">👁️ &nbsp; OCULTAR PLANES EXTRA</button>
 
 <div style="display:flex; flex-direction:column; gap:20px; width:100%;">
 
