@@ -61,7 +61,6 @@ if st.session_state.flotar_activo:
     """, unsafe_allow_html=True)
 
 
-
 # ==========================================
 # CSS GENERAL + ESTILO DE VENTANA FLOTANTE
 # ========================================== 
@@ -180,7 +179,7 @@ st.markdown("""
 
 
 # ==========================================
-# 🤖 ASISTENTE DE PRIORIDADES Y RESUMEN (ORIGINAL NATIVO)
+# 🤖 ASISTENTE DE PRIORIDADES Y RESUMEN
 # ==========================================
 with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
 
@@ -353,11 +352,16 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
 
                     elif paso == 5:
                         st.write("👇 **Día del ruteo:**")
-                        dia_sel = st.selectbox("Selecciona:", ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"], index=4)
+                        dia_sel = st.selectbox(
+                            "Selecciona:",
+                            ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"],
+                            index=4
+                        )
                         
                         if st.button("🚀 Generar Resumen", use_container_width=True):
                             d = st.session_state.data_resumen
                             ciclo_txt = d.get("ciclo", "C1")
+                            
                             unis = d.get("unidades_centro", [])
                             logis_tomo_todas = d.get("logis_tomo_todas", True)
                             unis_fuera = d.get("unidades_fuera", [])
@@ -395,15 +399,22 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
                                 "📌 Se cargaron las Rentals como híbridas en Centro, pero el sistema no las consideró todas como híbridas.<br>",
                                 f"{texto_unidades}<br>"
                             ]
-                            if texto_bulk: lineas_html.append(f"{texto_bulk}<br>")
+                            
+                            if texto_bulk:
+                                lineas_html.append(f"{texto_bulk}<br>")
+                                
                             lineas_html.append(f"{texto_dropeo}<br>")
-                            if texto_alchichica: lineas_html.append(f"{texto_alchichica}<br>")
+                            
+                            if texto_alchichica:
+                                lineas_html.append(f"{texto_alchichica}<br>")
+                                
                             lineas_html.append(f"📌 Se usaron los parámetros establecidos para C1 del día {dia_sel}.<br>")
                             lineas_html.append("📋 Comparto template final.")
                             lineas_html.append("</span><br><br>")
                             lineas_html.append("<b>**¡Excelente turno! 👋**</b>")
 
                             resumen_final = "".join(lineas_html)
+
                             st.session_state.flujo_resumen = False
                             st.session_state.paso_resumen = 0
                             st.session_state.paso_historial = []
@@ -422,9 +433,11 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
                 col1, col2 = st.columns(2)
                 eleccion_btn = None
                 with col1:
-                    if st.button("1️⃣ Extendido", key="btn_smx5_1", use_container_width=True): eleccion_btn = "1"
+                    if st.button("1️⃣ Extendido", key="btn_smx5_1", use_container_width=True):
+                        eleccion_btn = "1"
                 with col2:
-                    if st.button("2️⃣ Precarga", key="btn_smx5_2", use_container_width=True): eleccion_btn = "2"
+                    if st.button("2️⃣ Precarga", key="btn_smx5_2", use_container_width=True):
+                        eleccion_btn = "2"
 
                 if eleccion_btn:
                     st.session_state.esperando_subtipo_smx5 = False
@@ -453,9 +466,12 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
 
             elif st.session_state.esperando_subtipo_smx5:
                 st.session_state.esperando_subtipo_smx5 = False
-                if "extendido" in query_lower or "1" in query_lower: respuesta_main = reglas_ruteo["smx5_extendido"]
-                elif "precarga" in query_lower or "2" in query_lower: respuesta_main = reglas_ruteo["smx5_precarga"]
-                else: respuesta_main = "⚠️ Opción no válida. Consulta escribiendo **SMX5** nuevamente."
+                if "extendido" in query_lower or "1" in query_lower:
+                    respuesta_main = reglas_ruteo["smx5_extendido"]
+                elif "precarga" in query_lower or "2" in query_lower:
+                    respuesta_main = reglas_ruteo["smx5_precarga"]
+                else:
+                    respuesta_main = "⚠️ Opción no válida. Consulta escribiendo **SMX5** nuevamente."
 
             elif query_lower == "smx5":
                 st.session_state.esperando_subtipo_smx5 = True
@@ -463,6 +479,7 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
 
             else:
                 partes_respuesta = []
+
                 svc_mapa = None
                 for key in MAPA_ORIGENES.keys():
                     if key in query_lower:
@@ -472,6 +489,7 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
                 if svc_mapa:
                     info = MAPA_ORIGENES[svc_mapa]
                     origen_tag = f"<span style='background-color: #e2e8f0; color: #0f172a; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-family: monospace;'>{info['origen']}</span>"
+                    
                     bloque_mapa = (
                         f"📍 **Origen y Validación para {svc_mapa.upper()}:**\n\n"
                         f"* 🗺️ **Región:** Región {info['region']}\n"
@@ -481,7 +499,7 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
                     )
                     partes_respuesta.append(bloque_mapa)
 
-                # 🟢 BÚSQUEDA EN NOTAS SVC SUPABASE
+                # BÚSQUEDA DE NOTAS SUPABASE
                 notas_bd = obtener_notas_svc()
                 notas_matcheadas = [n for n in notas_bd if str(n.get("svc","")).lower().strip() in query_lower or query_lower in str(n.get("svc","")).lower().strip()]
                 if notas_matcheadas:
@@ -489,13 +507,37 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
                     partes_respuesta.append(bloque_notas)
 
                 coincidencias_faq = []
-                if any(w in query_lower for w in ["large van sdd", "sdd"]): coincidencias_faq.append(PREGUNTAS_FRECUENTES["large_van_sdd"])
+                
+                if any(w in query_lower for w in ["large van sdd", "sdd"]):
+                    coincidencias_faq.append(PREGUNTAS_FRECUENTES["large_van_sdd"])
+                
                 if "bulk" in query_lower:
-                    if any(w in query_lower for w in ["sja1", "centro 1", "centro 2"]): coincidencias_faq.append(PREGUNTAS_FRECUENTES["bulk_sja1"])
-                    else: coincidencias_faq.append(PREGUNTAS_FRECUENTES["bulk_general"])
-                if "alchichica" in query_lower: coincidencias_faq.append(PREGUNTAS_FRECUENTES["alchichica"])
-                if any(w in query_lower for w in ["xico", "tuzamapa"]): coincidencias_faq.append(PREGUNTAS_FRECUENTES["tuzamapa_xico"])
-                if "dropeo" in query_lower or "drop" in query_lower: coincidencias_faq.append(PREGUNTAS_FRECUENTES["dropeo_nodos_sja1"])
+                    if "sja1" in query_lower or "centro 1" in query_lower or "centro 2" in query_lower:
+                        coincidencias_faq.append(PREGUNTAS_FRECUENTES["bulk_sja1"])
+                    else:
+                        coincidencias_faq.append(PREGUNTAS_FRECUENTES["bulk_general"])
+                
+                if "alchichica" in query_lower: 
+                    coincidencias_faq.append(PREGUNTAS_FRECUENTES["alchichica"])
+                
+                if any(w in query_lower for w in ["xico", "tuzamapa"]):
+                    coincidencias_faq.append(PREGUNTAS_FRECUENTES["tuzamapa_xico"])
+                
+                if "dropeo" in query_lower or "drop" in query_lower:
+                    coincidencias_faq.append(PREGUNTAS_FRECUENTES["dropeo_nodos_sja1"])
+                
+                if "prioridad" in query_lower or "prioridades" in query_lower or "asignacion" in query_lower or "asignación" in query_lower:
+                    if "sja1" in query_lower and any(w in query_lower for w in ["foraneo", "foráneo", "foraneos", "foráneos"]):
+                        coincidencias_faq.append(PREGUNTAS_FRECUENTES["prioridades_foraneos_sja1"])
+                    elif "sja1" in query_lower:
+                        coincidencias_faq.append(PREGUNTAS_FRECUENTES["prioridades_centro_sja1"])
+                        coincidencias_faq.append(PREGUNTAS_FRECUENTES["prioridades_foraneos_sja1"])
+                    elif "smd1" in query_lower:
+                        coincidencias_faq.append(PREGUNTAS_FRECUENTES["smd1_prioridad"])
+
+                if any(w in query_lower for w in ["quitar", "quitar unidades", "ciclo 2", "pasar a ciclo 2", "orh"]):
+                    if "scp1" in query_lower or not svc_mapa:
+                        coincidencias_faq.append(PREGUNTAS_FRECUENTES["scp1_cambios"])
 
                 if coincidencias_faq:
                     partes_respuesta.append("\n\n---\n\n".join(coincidencias_faq))
@@ -506,89 +548,263 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
                         "smx2": "smx2_extendido", "smt2": "smt2_extendido", "scp1": "scp1",
                         "smd1": "smd1", "sch1": "sch1", "sja1": "sja1"
                     }
+
                     centro_encontrado = None
                     clave_regla = None
 
-                    for termino, clave in mapeo_centros.items():
-                        if termino in query_lower:
-                            centro_encontrado = termino.upper()
-                            clave_regla = clave
-                            break
+                    if "smx5" in query_lower:
+                        centro_encontrado = "SMX5"
+                        clave_regla = "smx5_precarga" if "precarga" in query_lower else "smx5_extendido"
+                    else:
+                        for termino, clave in mapeo_centros.items():
+                            if termino in query_lower:
+                                centro_encontrado = termino.upper()
+                                clave_regla = clave
+                                break
+
+                    busqueda_origen = any(w in query_lower for w in ["origen", "origenes", "orígenes", "de donde", "de dónde", "sale"])
+                    busqueda_hora = any(w in query_lower for w in ["despacho", "hora", "horario", "tiempo"])
+                    busqueda_unidad = any(w in query_lower for w in ["unidad", "unidades", "moto", "motos", "van", "crowd", "rental"])
 
                     if clave_regla and clave_regla in reglas_ruteo:
                         texto_regla = reglas_ruteo[clave_regla]
                         lineas = [l.strip() for l in texto_regla.split("\n") if l.strip()]
+
                         if svc_mapa:
                             lineas = [l for l in lineas if not any(palabra in l.lower() for palabra in ["origen", "orígenes", "📌 origen"])]
-                        res = "\n".join(lineas)
-                        partes_respuesta.append(f"📋 **Indicaciones complementarias ({centro_encontrado}):**\n\n{res}")
+
+                        lineas_filtradas = []
+                        if busqueda_hora:
+                            lineas_filtradas = [l for l in lineas if any(h in l.lower() for h in ["despacho", "pm", "am", "hora"])]
+                        elif busqueda_unidad:
+                            lineas_filtradas = [l for l in lineas if any(u in l.lower() for u in ["moto", "van", "rental", "crowd", "mlp", "cell", "small"])]
+
+                        if lineas_filtradas:
+                            res = "\n".join(lineas_filtradas)
+                            bloque_regla = f"📌 **Indicaciones específicas ({centro_encontrado}):**\n\n{res}"
+                        else:
+                            res = "\n".join(lineas)
+                            bloque_regla = f"📋 **Indicaciones complementarias ({centro_encontrado}):**\n\n{res}"
+
+                        if lineas and not (svc_mapa and busqueda_origen):
+                            partes_respuesta.append(bloque_regla)
 
                 if partes_respuesta:
                     respuesta_main = "\n\n---\n\n".join(partes_respuesta)
                 else:
-                    respuesta_main = "⚠️ No encontré esa consulta en la base de datos. Puedes consultar por un SVC (ej. SJA1, SLE1, SCP1)."
+                    if "resumen" in query_lower:
+                        respuesta_main = "Aquí tienes la opción para armar tu reporte."
+                    else:
+                        respuesta_main = "⚠️ No encontré esa consulta en la base de datos. Puedes consultar por un SVC (ej. SJA1, SLE1, SCP1) o sobre temas específicos como **Alchichica, Xico, Dropeo, Bulk, SDD, etc.**"
 
             st.session_state.main_chat_messages.append({"role": "assistant", "content": respuesta_main})
             st.rerun()
 
-# --- DATOS BASE DE UNIDADES Y PLANES ---
+
+# --- DATOS BASE ---
 u_SDE = {"Moto Car - 3": [25, 30], "Moto Car Newbie": [25, 25], "Car - 5h": [25, 30], "Car - 5 Extendida": [25, 30], "Car - 3h": [25, 28]}
-u_PREC = {"Car - 8h": [70, 75], "Small 9h Ext Car": [70, 75]}
+
+u_PREC = {      
+    "Car - 8h": [70, 75],
+    "Small 9h Ext Car": [70, 75] 
+}
+
 NOMBRES_PLANES_PREC = ["CHALCO", "COYOACÁN", "IZTAPALAPA", "MILPA ALTA", "TLAHUAC", "TLALPAN NORTE", "TLALPAN SUR", "XOCHIMILCO"]
 
-u_PREC_SMX2 = {"Car - 8h": [70, 75], "Small 9h Ext Car": [70, 75], "Car Zona Extendida": [65, 65]}
+u_PREC_SMX2 = {
+    "Car - 8h": [70, 75],
+    "Small 9h Ext Car": [70, 75],
+    "Car Zona Extendida": [65, 65]
+}
 NOMBRES_PLANES_PREG = ["CHALCO", "CHIMAS", "IXTAPALUCA VALLE CHALCO", "IZTAPALAPA 1", "IZTAPALAPA 2", "LA PAZ", "PUEBLOS", "TEXCOCO"]
 
-NOMBRES_PLANES_C1 = ["CALKINI", "CAMPECHE", "CANDELARIA", "CHAMPOTÓN", "ESCÁRCEGA", "ESCÁRCEGA EXT", "HOLPECHEN", "MAXCANUN", "SEYBAPLAYA", "PLAN 10", "PLAN 11"]
-u_C1 = {"Rental Large Van": [100, 100], "Large Van MLP": [100, 100], "Small Van MLP":[100, 100], "Delivery Cell Large Van": [1, 1], "Delivery Cell Small Van": [1, 1]}
+NOMBRES_PLANES_C1 = [
+    "CALKINI", 
+    "CAMPECHE",
+    "CANDELARIA",
+    "CHAMPOTÓN",
+    "ESCÁRCEGA",
+    "ESCÁRCEGA EXT",
+    "HOLPECHEN",
+    "MAXCANUN",
+    "SEYBAPLAYA",
+    "PLAN 10",
+    "PLAN 11"
+]
+
+u_C1 = {
+    "Rental Large Van": [100, 100], "Large Van MLP": [100, 100], "Small Van MLP":[100, 100], "Delivery Cell Large Van": [1, 1], "Delivery Cell Small Van": [1, 1]
+}
+
+u_C2 = u_C1.copy()
+u_C2["Large Van Híbrida"] = [100, 100]
 
 u_C1_SJA1 = { 
-    "Small Van MLP foráneo": [110, 120], "Large Van MLP foráneo": [110, 120], "Car MLP": [80, 100],
-    "Extra Large Van MLP H&B": [70, 70], "Rental Electric Large Van": [150, 150], "Rental Large Van": [120, 120],
-    "Rental Replacement": [120, 120], "Truck 3.5 tons MLP": [1, 1], "Delivery Cell Large Van": [1, 1],
-    "Car 8h": [70, 70], "Car Newbie": [70, 70], "Car Zona Extendida": [70, 70], "Moto 3h": [30, 30],
-    "Small Van 9h": [70, 70], "Small Van 9h Ext": [70, 70], "Small Van Newbie": [70, 70], "Media Milla SP": [1, 1]
+    "Small Van MLP foráneo": [110, 120], 
+    "Large Van MLP foráneo": [110, 120], 
+    "Car MLP": [80, 100],
+    "Extra Large Van MLP H&B": [70, 70],
+    "Rental Electric Large Van": [150, 150],
+    "Rental Large Van": [120, 120],
+    "Rental Replacement": [120, 120],
+    "Truck 3.5 tons MLP": [1, 1],
+    "Delivery Cell Large Van": [1, 1],
+    "Car 8h": [70, 70], 
+    "Car Newbie": [70, 70],
+    "Car Zona Extendida": [70, 70],
+    "Moto 3h": [30, 30],
+    "Small Van 9h": [70, 70],
+    "Small Van 9h Ext": [70, 70],
+    "Small Van Newbie": [70, 70],
+    "Media Milla SP": [1, 1]
 }
-NOMBRES_PLANES_C1_SJA1 = ["ACTOPAN", "⚠️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", "TEZUITLAN", "TLALTETELA", "TRAPICHE", "TUZAMAPA", "XICO", "CONTINGENCIA NODO", "PLAN 14", "PLAN 15", "PLAN 16", "PLAN 17"]
+
+NOMBRES_PLANES_C1_SJA1 = [
+   "ACTOPAN", "⚠️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", "TEZUITLAN", "TLALTETELA", "TRAPICHE",  
+   "TUZAMAPA", "XICO", "CONTINGENCIA NODO", "PLAN 14", "PLAN 15", "PLAN 16", "PLAN 17"
+]
 
 u_C1_SCH1 = { 
-    "Car MLP": [110, 120], "Small Van MLP": [110, 120], "Large Van MLP": [110, 120], "Small Van MLP Newbie": [110, 120],
-    "Large Van MLP Newbie": [110, 120], "Extra large Van MLP": [110, 120], "Small Van MLP XPT": [110, 120],
-    "Small Van MLP foráneo": [110, 120], "Large Van MLP foráneo": [110, 120], "Car MLP foráneo": [110, 120],
-    "Extra large Van MLP H&B": [100, 100], "Rental Car": [120, 150], "Rental Electric Large Van": [120, 150],
-    "Rental Large Van": [120, 150], "Rental Replacement": [120, 150], "Rental Small Van Electrica": [120, 150],
-    "Rental Small Van": [120, 150], "Delivery Cells Car": [1, 1], "Truck 3.5 tons MLP": [1, 1],
-    "Delivery Cell Large Van": [1, 1], "Car 8h": [70, 70], "Car Newbie": [50, 50], "Car Zona Extendida": [60, 60],
-    "Moto 3h": [30, 30], "Moto Newbie": [25, 25], "Small Van 11h Ext": [70, 70], "Small Van 9h": [70, 70],
-    "Small Van 9h Ext": [70, 70], "Small Van Newbie": [70, 70]
+    "Car MLP": [110, 120],
+    "Small Van MLP": [110, 120],
+    "Large Van MLP": [110, 120],
+    "Small Van MLP Newbie": [110, 120],
+    "Large Van MLP Newbie": [110, 120],
+    "Extra large Van MLP": [110, 120],
+    "Small Van MLP XPT": [110, 120],
+    "Small Van MLP foráneo": [110, 120],
+    "Large Van MLP foráneo": [110, 120],
+    "Car MLP foráneo": [110, 120],
+    "Extra large Van MLP H&B": [100, 100],
+    "Rental Car": [120, 150],
+    "Rental Electric Large Van": [120, 150],
+    "Rental Large Van": [120, 150],
+    "Rental Replacement": [120, 150],
+    "Rental Small Van Electrica": [120, 150],
+    "Rental Small Van": [120, 150],
+    "Delivery Cells Car": [1, 1],
+    "Truck 3.5 tons MLP": [1, 1],
+    "Delivery Cell Large Van": [1, 1],
+    "Car 8h": [70, 70],
+    "Car Newbie": [50, 50],
+    "Car Zona Extendida": [60, 60],
+    "Moto 3h": [30, 30],
+    "Moto Newbie": [25, 25],
+    "Small Van 11h Ext": [70, 70],
+    "Small Van 9h": [70, 70],
+    "Small Van 9h Ext": [70, 70],
+    "Small Van Newbie": [70, 70]
 }
-NOMBRES_PLANES_C1_SCH1 = ["AEROPUERTO", "CANTERA", "DELICIAS", "GRANJAS", "MEOQUI", "NORTE", "SUR", "CUAUHTEMOC", "PARRAL", "PLAN 10", "PLAN 11", "PLAN 12", "PLAN 13", "PLAN 14"]
+
+NOMBRES_PLANES_C1_SCH1 = [
+   "AEROPUERTO", "CANTERA", "DELICIAS", "GRANJAS", "MEOQUI", "NORTE", "SUR", "CUAUHTEMOC", "PARRAL", "PLAN 10",  
+   "PLAN 11", "PLAN 12", "PLAN 13", "PLAN 14"
+]
 
 u_C1_VACIA = { 
-    "Car MLP": [110, 120], "Small Van MLP": [110, 120], "Large Van MLP": [110, 120], "Small Van MLP Newbie": [110, 120],
-    "Large Van MLP Newbie": [110, 120], "Extra large Van MLP": [110, 120], "Small Van MLP XPT": [110, 120],
-    "Small Van MLP foráneo": [110, 120], "Large Van MLP foráneo": [110, 120], "Car MLP foráneo": [110, 120],
-    "Extra large Van MLP H&B": [100, 100], "Rental Car": [120, 150], "Rental Electric Large Van": [120, 150],
-    "Rental Large Van": [120, 150], "Rental Replacement": [120, 150], "Rental Small Van Electrica": [120, 150],
-    "Rental Small Van": [120, 150], "Delivery Cells Car": [1, 1], "Truck 3.5 tons MLP": [1, 1],
-    "Delivery Cell Large Van": [1, 1], "Car 8h": [70, 70], "Car Newbie": [50, 50], "Car Zona Extendida": [60, 60],
-    "Car 3h": [30,30], "Car 5h": [30, 30], "Moto 3h": [30, 30], "Moto Newbie": [25, 25], "Small Van 11h Ext": [70, 70],
-    "Small Van 9h": [70, 70], "Small Van 9h Ext": [70, 70], "Small Van Newbie": [70, 70]
+    "Car MLP": [110, 120],
+    "Small Van MLP": [110, 120],
+    "Large Van MLP": [110, 120],
+    "Small Van MLP Newbie": [110, 120],
+    "Large Van MLP Newbie": [110, 120],
+    "Extra large Van MLP": [110, 120],
+    "Small Van MLP XPT": [110, 120],
+    "Small Van MLP foráneo": [110, 120],
+    "Large Van MLP foráneo": [110, 120],
+    "Car MLP foráneo": [110, 120],
+    "Extra large Van MLP H&B": [100, 100],
+    "Rental Car": [120, 150],
+    "Rental Electric Large Van": [120, 150],
+    "Rental Large Van": [120, 150],
+    "Rental Replacement": [120, 150],
+    "Rental Small Van Electrica": [120, 150],
+    "Rental Small Van": [120, 150],
+    "Delivery Cells Car": [1, 1],
+    "Truck 3.5 tons MLP": [1, 1],
+    "Delivery Cell Large Van": [1, 1],
+    "Car 8h": [70, 70],
+    "Car Newbie": [50, 50],
+    "Car Zona Extendida": [60, 60],
+    "Car 3h": [30,30],
+    "Car 5h": [30, 30],
+    "Moto 3h": [30, 30],
+    "Moto Newbie": [25, 25],
+    "Small Van 11h Ext": [70, 70],
+    "Small Van 9h": [70, 70],
+    "Small Van 9h Ext": [70, 70],
+    "Small Van Newbie": [70, 70]
 }
-NOMBRES_PLANES_C1_VACIA = ["PLAN 1", "PLAN 2", "PLAN 3", "PLAN 4", "PLAN 5", "PLAN 6", "PLAN 7", "PLAN 8", "PLAN 9", "PLAN 10", "PLAN 11", "PLAN 12", "PLAN 13", "PLAN 14"]
+
+NOMBRES_PLANES_C1_VACIA = [
+   "PLAN 1", "PLAN 2", "PLAN 3", "PLAN 4", "PLAN 5", "PLAN 6", "PLAN 7", "PLAN 8", "PLAN 9", "PLAN 10",  
+   "PLAN 11", "PLAN 12", "PLAN 13", "PLAN 14"
+]
 
 u_C1_SMD1 = { 
-    "Car MLP": [110, 120], "Small Van MLP": [110, 120], "Large Van MLP": [110, 120], "Small Van MLP Newbie": [110, 120],
-    "Large Van MLP Newbie": [110, 120], "Extra large Van MLP": [110, 120], "Small Van MLP XPT": [110, 120],
-    "Small Van MLP foráneo": [110, 120], "Large Van MLP foráneo": [110, 120], "Large Van MLP Bulk": [100, 100],
-    "Extra large Van MLP H&B": [50, 50], "Rental Car": [120, 150], "Rental Electric Large Van": [120, 150],
-    "Rental Large Van": [120, 150], "Rental Replacement": [120, 150], "Rental Small Van Electrica": [120, 150],
-    "Rental Small Van": [120, 150], "Delivery Cells Car": [1, 1], "Truck 3.5 tons MLP": [1, 1],
-    "Delivery Cell Large Van": [1, 1], "Car 8h": [70, 70], "Car Newbie": [50, 50], "Car Zona Ext 10h": [70, 70],
-    "Moto 3h": [30, 30], "Moto Newbie": [25, 25], "Small Van 11h Ext": [70, 70], "Small Van 9h": [70, 70],
-    "Small Van 9h Ext": [70, 70], "Small Van Newbie": [70, 70]
+    "Car MLP": [110, 120],
+    "Small Van MLP": [110, 120],
+    "Large Van MLP": [110, 120],
+    "Small Van MLP Newbie": [110, 120],
+    "Large Van MLP Newbie": [110, 120],
+    "Extra large Van MLP": [110, 120],
+    "Small Van MLP XPT": [110, 120],
+    "Small Van MLP foráneo": [110, 120],
+    "Large Van MLP foráneo": [110, 120],
+    "Large Van MLP Bulk": [100, 100],
+    "Extra large Van MLP H&B": [50, 50],
+    "Rental Car": [120, 150],
+    "Rental Electric Large Van": [120, 150],
+    "Rental Large Van": [120, 150],
+    "Rental Replacement": [120, 150],
+    "Rental Small Van Electrica": [120, 150],
+    "Rental Small Van": [120, 150],
+    "Delivery Cells Car": [1, 1],
+    "Truck 3.5 tons MLP": [1, 1],
+    "Delivery Cell Large Van": [1, 1],
+    "Car 8h": [70, 70],
+    "Car Newbie": [50, 50],
+    "Car Zona Ext 10h": [70, 70],
+    "Moto 3h": [30, 30],
+    "Moto Newbie": [25, 25],
+    "Small Van 11h Ext": [70, 70],
+    "Small Van 9h": [70, 70],
+    "Small Van 9h Ext": [70, 70],
+    "Small Van Newbie": [70, 70]
 }
-NOMBRES_PLANES_C1_SMD1 = ["⚠️ CENTRO 1", "⚠️ CENTRO 2", "⚠️ KANASIN", "MOTUL", "MUNA", "⚠️ NORTE", "SEYE", "UMAN", "PLAN 9", "PLAN 10", "PLAN 11", "PLAN 12", "PLAN 13", "PLAN 14"]
+
+NOMBRES_PLANES_C1_SMD1 = [
+   "⚠️ CENTRO 1", "⚠️ CENTRO 2", "⚠️ KANASIN", "MOTUL", "MUNA", "⚠️ NORTE", "SEYE", "UMAN", "PLAN 9", "PLAN 10",  
+   "PLAN 11", "PLAN 12", "PLAN 13", "PLAN 14"
+]
+
+ORH_FIJOS = {
+    "Rental E. Large Van": ["500", "70"],
+    "Rental E. Small Van": ["450", "70"],
+    "Rental Large Van": ["54", "70"],
+    "Rental Small Van": ["480", "70"],
+
+    "Large Van MLP": ["500", "80"],
+    "Small Van MLP": ["487", "70"],
+    "Large Van SDD": ["487", "70"],
+    "Small Van SDD": ["487", "70"],
+
+    "Car MLP": ["300", "66"],
+    "Car Newbie 3h": ["180", "66"],
+    "Car Newbie": ["360", "83"],
+
+    "Car - 8h": ["360", "66"],
+    "Car - 8h E1": ["360", "66"],
+    "Car - 5h": ["300", "66"],
+    "Car - 3h": ["300", "66"],
+
+    "Moto - 3h": ["180", "66"],
+
+    "Small Van SDD": ["487", "70"],
+    "Car Zona Extendida": ["360", "66"],
+    "Car - 5 Extendida": ["330", "66"],
+    "Small 9h Ext Car": ["360", "66"]
+}
+
 
 def gen_master_rows(data_dict, table_id):
     rows = ""
@@ -599,19 +815,26 @@ def gen_master_rows(data_dict, table_id):
     nombres_smx2 = ["CHALCO", "CHIMAS", "IXTAPALUCA VALLE CHALCO", "IZTAPALAPA 1", "IZTAPALAPA 2", "LA PAZ", "PUEBLOS", "TEXCOCO"]
 
     mostrar_orh_ocup = (table_id in [1, 2, 6, 7, 8, 5, 9])
+
     num_filas_objetivo = 45 if table_id == "PREC" else 3
     rango_final = max(total_items, num_filas_objetivo)
 
     for i in range(1, rango_final + 1):
-        if (data_dict == u_PREC) and (i-1) < len(nombres_prec): p_name = nombres_prec[i-1]
-        elif (data_dict == u_PREC_SMX2) and (i-1) < len(nombres_smx2): p_name = nombres_smx2[i-1]
-        else: p_name = f"PLAN {i}"
+        if (data_dict == u_PREC) and (i-1) < len(nombres_prec):
+            p_name = nombres_prec[i-1]
+        elif (data_dict == u_PREC_SMX2) and (i-1) < len(nombres_smx2):
+            p_name = nombres_smx2[i-1]
+        else:
+            p_name = f"PLAN {i}"
 
-        if (i-1) < total_items: name, spr = items[i-1]
-        else: name, spr = "", [0, 0]
+        if (i-1) < total_items:
+            name, spr = items[i-1]
+        else:
+            name, spr = "", [0, 0]
 
         if "---" in name:
             colspan = 8 if mostrar_orh_ocup else 5
+
             rows += f'''
             <tr class="es-divisor" style="background: #25282b !important; color: #25282b; height: 28px;">
                 <td colspan="{colspan}" style="text-align: center; font-weight: bold; font-size: 13px; letter-spacing: 3px; border: none; pointer-events: none;"> 
@@ -625,13 +848,31 @@ def gen_master_rows(data_dict, table_id):
                 <td class="f-stock" style="display:none;">0</td>
                 <td class="f-left" style="display:none;">0</td>
             </tr>'''
+
         else:
             st_base = "background: #ebebeb; color: #969696;" if not name else ""
+
+            celdas_orh_ocup = ""
             if mostrar_orh_ocup:
                 celdas_orh_ocup = f'''
-                <td contenteditable="true" class="edit-orh" oninput="recalc()" style="text-align:center; border:0.2px solid #25282b; width:45px; background:#ffffff; color:#141414;">0</td>
-                <td class="orh-hora" style="text-align:center; border:0.2px solid #25282b; width:60px; background:#f5f5f5; color:#141414; font-weight:bold;">00:00 hs</td>
-                <td contenteditable="true" class="edit-ocup" oninput="recalc()" style="text-align:center; border:0.2px solid #25282b; width:70px; background:#ffffff; color:#25282b;">0</td>
+                <td contenteditable="true"
+                    class="edit-orh"
+                    oninput="recalc()"
+                    style="text-align:center; border:0.2px solid #25282b; width:45px; background:#ffffff; color:#141414;">
+                    0
+                </td>
+
+                <td class="orh-hora"
+                    style="text-align:center; border:0.2px solid #25282b; width:60px; background:#f5f5f5; color:#141414; font-weight:bold;">
+                    00:00 hs
+                </td>
+
+                <td contenteditable="true"
+                    class="edit-ocup"
+                    oninput="recalc()"
+                    style="text-align:center; border:0.2px solid #25282b; width:70px; background:#ffffff; color:#25282b;">
+                    0
+                </td>
                 '''
             else:
                 celdas_orh_ocup = '''
@@ -642,31 +883,94 @@ def gen_master_rows(data_dict, table_id):
 
             rows += f'''
             <tr class="master-row" style="{st_base}">
-                <td contenteditable="true" class="edit-name" oninput="recalc()" style="font-weight: bold; text-align: left; padding-left: 10px; border: 0.2px solid #25282b; width: 150px; color: #25282b;">{name}</td>
+                <td contenteditable="true" class="edit-name" oninput="recalc()"
+                    style="font-weight: bold; text-align: left; padding-left: 10px; border: 0.2px solid #25282b; width: 150px; color: #25282b;">
+                    {name}
+                </td>
+
                 {celdas_orh_ocup}
-                <td contenteditable="true" class="edit-spr-min" oninput="recalc()" style="text-align: center; border: 0.2px solid #25282b; width: 45px; background-color: #25282b; color: #ffffff;">{spr[0]}</td>
-                <td contenteditable="true" class="edit-spr-max" oninput="recalc()" style="text-align: center; border: 0.2px solid #25282b; width: 45px; background-color: #25282b; color: #ffffff;">{spr[1]}</td>
-                <td contenteditable="true" class="f-stock" oninput="recalc()" style="text-align: center; border: 0.2px solid #25282b; width: 55px; font-weight: bold; font-size: 13px;">0</td>
-                <td class="f-ruteadas" style="text-align: center; border: 0.2px solid #25282b; width: 55px; background-color: #ffffff; font-weight: bold;">0</td>
-                <td class="f-left" style="text-align:center; border:0.2px solid #25282b; width:45px; font-weight:bold; color:#25282b; border-radius:2px;">0</td>
+
+                <td contenteditable="true" class="edit-spr-min" oninput="recalc()"
+                    style="text-align: center; border: 0.2px solid #25282b; width: 45px; background-color: #25282b; color: #ffffff;">
+                    {spr[0]}
+                </td>
+
+                <td contenteditable="true" class="edit-spr-max" oninput="recalc()"
+                    style="text-align: center; border: 0.2px solid #25282b; width: 45px; background-color: #25282b; color: #ffffff;">
+                    {spr[1]}
+                </td>
+
+                <td contenteditable="true" class="f-stock" oninput="recalc()"
+                    style="text-align: center; border: 0.2px solid #25282b; width: 55px; font-weight: bold; font-size: 13px;">
+                    0
+                </td>
+
+                <td class="f-ruteadas" 
+                    style="text-align: center; border: 0.2px solid #25282b; width: 55px; background-color: #ffffff; font-weight: bold;">
+                    0
+                </td>
+
+                <td class="f-left"
+                    style="text-align:center; border:0.2px solid #25282b; width:45px; font-weight:bold; color:#25282b; border-radius:2px;">
+                    0
+                </td>
             </tr>'''
     return rows
 
+
+def export_c1_csv():
+    data = []
+    for unidad, spr in u_C1.items():
+        data.append({
+            "PLAN": "C1",
+            "UNIDAD": unidad,
+            "SPR_MIN": spr[0],
+            "SPR_MAX": spr[1]
+        })
+
+    df_c1 = pd.DataFrame(data)
+    csv = df_c1.to_csv(index=False).encode("utf-8")
+    return csv
+
+
 def gen_poligonos(data_target=None):
     polys = ""
+ 
     btn_s = "cursor:pointer; border:none; background:rgba(0,0,0,0.08); color:#25282b; font-weight:bold; width:24px; min-width:24px; max-width:24px; height:24px; min-height:24px; max-height:24px; border-radius:4px; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center;"
     
     nombres_prec = ["CHALCO", "COYOACÁN", "IZTAPALAPA", "MILPA ALTA", "TLAHUAC", "TLALPAN NORTE", "TLALPAN SUR", "XOCHIMILCO"]
     nombres_smx2 = ["CHALCO", "CHIMAS", "IXTAPALUCA VALLE CHALCO", "IZTAPALAPA 1", "IZTAPALAPA 2", "LA PAZ", "PUEBLOS", "TEXCOCO"]
-
-    es_c1 = data_target in (u_C1, u_C1_SJA1, u_C1_SCH1, u_C1_SMD1, u_C1_VACIA)
+    nombres_c1 = ["ESCÁRCEGA", "CAMPECHE", "ESCÁRCEGA EXT", "MAXCANUN", "CANDELARIA", "SEYBAPLAYA", "CHAMPOTÓN", "HOLPECHEN"]  
+   
+    es_c1 = data_target in (
+        u_C1,
+        u_C1_SJA1,
+        u_C1_SCH1,
+        u_C1_SMD1,
+        u_C1_VACIA,
+    )
     es_sde = (data_target == u_SDE)
     es_prec = (data_target == u_PREC)
+    es_prec_smx2 = (data_target == u_PREC_SMX2)
 
     div_flex = "display: flex; align-items: center; justify-content: space-between; padding: 2px 4px; width: 100%; min-width: 100%; max-width: 100%; box-sizing: border-box;"
     span_num_u = "font-weight: bold; display: inline-block; text-align: center; width: 28px; min-width: 28px; max-width: 28px; flex-shrink: 0;"
     span_num_spr = "font-weight: bold; display: inline-block; text-align: center; width: 38px; min-width: 38px; max-width: 43px; flex-shrink: 0;"
     select_style = "width:160px; max-width: 160px; border:none; background:transparent; font-weight:600; font-size:14px; color:#25282b; padding: 4px; cursor: pointer;"
+
+    fila_nodos = '''
+<tr class="fila-nodos">
+    <td style="background:#ededed; border:0.5px solid #25282b; text-align:center; font-weight:bold; color:#FF6347;">
+        NODOS
+    </td>
+    <td contenteditable="true"
+        class="nodos-val"
+        style="border:1.0px solid #25282b; text-align:center; font-weight:bold;">
+        0
+    </td>
+    <td colspan="2" style="border:0.5px solid #25282b;"></td>
+</tr>
+'''
 
     fila_inner = f'''
     <tr class="calc-row">
@@ -692,54 +996,172 @@ def gen_poligonos(data_target=None):
         <td style="width: 45px; min-width: 45px; max-width: 45px; text-align: center; border: 0.5px solid #25282b;"><input type="checkbox" class="ok-check" style="transform: scale(1.7); accent-color: #9ACD32; cursor: pointer;"></td>
     </tr>'''
 
-    campo_volumen_normal = '''<div style="text-align:center;"><span class="v-total-val" contenteditable="true" oninput="recalc()" style="display:inline-block; min-width:55px; padding:2px 8px; border:none; border-radius:4px; background:#ededed; font-size:22px; font-weight:bold; color:#808080; text-align:center;">0</span></div>'''
+    campo_volumen_normal = '''
+<div style="text-align:center;">
+    <span class="v-total-val"
+            contenteditable="true"
+            oninput="recalc()"
+            style="
+            display:inline-block;
+            min-width:55px;
+            padding:2px 8px;
+            border:none;
+            border-radius:4px;
+            background:#ededed;
+            font-size:22px;
+            font-weight:bold;
+            color:#808080;
+            text-align:center;
+          ">
+        0
+    </span>
+</div>
+'''
 
     campo_volumen_c1 = '''
-<div style="text-align:center;"><span class="v-total-val" contenteditable="true" oninput="recalc()" style="display:inline-block; min-width:55px; padding:2px 8px; border:none; border-radius:4px; background:#ededed; font-size:22px; font-weight:bold; color:#808080; text-align:center;">0</span></div>
+<div style="text-align:center;">
+    <span class="v-total-val"
+          contenteditable="true"
+          oninput="recalc()"
+          style="
+            display:inline-block;
+            min-width:55px;
+            padding:2px 8px;
+            border:none;
+            border-radius:4px;
+            background:#ededed;
+            font-size:22px;
+            font-weight:bold;
+            color:#808080;
+            text-align:center;
+          ">
+        0
+    </span>
+</div>
+
 <hr style="margin:4px 0; border:none; border-top:2px solid #999;">
+
 <div style="font-size:12px; font-weight:bold; color:#25282b; text-align:center;">
     <div>Nodos:</div>
-    <span class="nodos-val" contenteditable="true" style="display:inline-block; min-width:28px; text-align:center; border:none; border-radius:4px; background:#ededed; font-size:16px; font-weight:bold; color:#FF6347; padding:0 4px; margin-top:2px;">0</span>
+    <span class="nodos-val"
+      contenteditable="true"
+      style="
+        display:inline-block;
+        min-width:28px;
+        text-align:center;
+        border:none;
+        border-radius:4px;
+        background:#ededed;
+        font-size:16px;
+        font-weight:bold;
+        color:#FF6347;
+        padding:0 4px;
+        margin-top:2px;
+      ">
+        0
+    </span>
 </div>
 '''
 
     campo_campeche = '''
-<div style="text-align:center;"><span class="v-total-val" contenteditable="true" oninput="recalc()" style="display:inline-block; min-width:55px; padding:2px 8px; border:none; border-radius:4px; background:#ededed; font-size:22px; font-weight:bold; color:#808080; text-align:center;">0</span></div>
+<div style="text-align:center;">
+    <span class="v-total-val"
+          contenteditable="true"
+          oninput="recalc()"
+          style="
+            display:inline-block;
+            min-width:55px;
+            padding:2px 8px;
+            border:none;
+            border-radius:4px;
+            background:#ededed;
+            font-size:22px;
+            font-weight:bold;
+            color:#808080;
+            text-align:center;
+          ">
+        0
+    </span>
+</div>
+
 <hr style="margin:4px 0; border:none; border-top:1px solid #999;">
-<div style="font-size:13px; font-weight:bold; color:#25282b; text-align:center;">Nodos:
-    <div style="margin-top:2px;"><span class="nodos-campeche" contenteditable="true" style="display:inline-block; min-width:28px; text-align:center; border:none; border-radius:4px; background:#ededed; font-size:16px; font-weight:bold; color:#FF6347; padding:0 4px;">0</span></div>
+
+<div style="font-size:13px; font-weight:bold; color:#25282b; text-align:center;">
+    Nodos:
+    <div style="margin-top:2px;">
+        <span class="nodos-campeche"
+              contenteditable="true"
+              style="
+                display:inline-block;
+                min-width:28px;
+                text-align:center;
+                border:none;
+                border-radius:4px;
+                background:#ededed;
+                font-size:16px;
+                font-weight:bold;
+                color:#FF6347;
+                padding:0 4px;
+              ">
+            0
+        </span>
+    </div>
 </div>
 '''
 
-    if data_target == u_C1_SJA1: limite_tablas = len(NOMBRES_PLANES_C1_SJA1) + 1
-    elif data_target in (u_C1_SCH1, u_C1_VACIA): limite_tablas = 16
-    elif data_target == u_C1_SMD1: limite_tablas = 20
-    elif es_sde: limite_tablas = 5
-    else: limite_tablas = 20
+    if data_target == u_C1_SJA1:
+        limite_tablas = len(NOMBRES_PLANES_C1_SJA1) + 1
+    elif data_target in (u_C1_SCH1, u_C1_VACIA):
+        limite_tablas = 16
+    elif data_target == u_C1_SMD1:
+        limite_tablas = 20
+    elif es_sde:
+        limite_tablas = 5
+    else:
+        limite_tablas = 20
     
     for i in range(1, limite_tablas): 
-        if data_target == u_C1_VACIA and (i-1) < len(NOMBRES_PLANES_C1_VACIA): nombre_final = NOMBRES_PLANES_C1_VACIA[i-1]
-        elif data_target == u_PREC and (i-1) < len(nombres_prec): nombre_final = nombres_prec[i-1]
-        elif data_target == u_PREC_SMX2 and (i-1) < len(nombres_smx2): nombre_final = nombres_smx2[i-1]
-        elif data_target == u_C1 and (i-1) < len(NOMBRES_PLANES_C1): nombre_final = NOMBRES_PLANES_C1[i-1]
-        elif data_target == u_C1_SJA1 and (i-1) < len(NOMBRES_PLANES_C1_SJA1): nombre_final = NOMBRES_PLANES_C1_SJA1[i-1]
-        elif data_target == u_C1_SCH1 and (i-1) < len(NOMBRES_PLANES_C1_SCH1): nombre_final = NOMBRES_PLANES_C1_SCH1[i-1]
-        elif data_target == u_C1_SMD1 and (i-1) < len(NOMBRES_PLANES_C1_SMD1): nombre_final = NOMBRES_PLANES_C1_SMD1[i-1]
-        else: nombre_final = f"PLAN {i}"
+        if data_target == u_C1_VACIA and (i-1) < len(NOMBRES_PLANES_C1_VACIA):
+            nombre_final = NOMBRES_PLANES_C1_VACIA[i-1]
+        elif data_target == u_PREC and (i-1) < len(nombres_prec):
+            nombre_final = nombres_prec[i-1]
+        elif data_target == u_PREC_SMX2 and (i-1) < len(nombres_smx2):
+            nombre_final = nombres_smx2[i-1]
+        elif data_target == u_C1 and (i-1) < len(NOMBRES_PLANES_C1):
+            nombre_final = NOMBRES_PLANES_C1[i-1]
+        elif data_target == u_C1_SJA1 and (i-1) < len(NOMBRES_PLANES_C1_SJA1):
+            nombre_final = NOMBRES_PLANES_C1_SJA1[i-1]
+        elif data_target == u_C1_SCH1 and (i-1) < len(NOMBRES_PLANES_C1_SCH1):
+            nombre_final = NOMBRES_PLANES_C1_SCH1[i-1]
+        elif data_target == u_C1_SMD1 and (i-1) < len(NOMBRES_PLANES_C1_SMD1):
+            nombre_final = NOMBRES_PLANES_C1_SMD1[i-1]
+        else:
+            nombre_final = f"PLAN {i}"
 
-        if nombre_final == "CAMPECHE": contenido_volumen = campo_campeche
-        elif es_c1: contenido_volumen = campo_volumen_c1
-        else: contenido_volumen = campo_volumen_normal
+        if nombre_final == "CAMPECHE":
+            contenido_volumen = campo_campeche
+        elif es_c1:
+            contenido_volumen = campo_volumen_c1
+        else:
+            contenido_volumen = campo_volumen_normal
 
-        if es_sde or es_prec: rowspan_actual = 3
-        elif data_target == u_C1_SJA1: rowspan_actual = 8 if nombre_final == "⚠️ CENTRO 1" else 5
-        elif data_target in (u_C1_SMD1, u_C1_VACIA): rowspan_actual = 5
-        else: rowspan_actual = 3
+        if es_sde or es_prec:
+            rowspan_actual = 3
+        elif data_target == u_C1_SJA1:
+            rowspan_actual = 8 if nombre_final == "⚠️ CENTRO 1" else 5
+        elif data_target in (u_C1_SMD1, u_C1_VACIA):
+            rowspan_actual = 5
+        else:
+            rowspan_actual = 3
 
-        if es_sde or es_prec: filas_extra = fila_inner * 2
-        elif data_target == u_C1_SJA1: filas_extra = fila_inner * 7 if nombre_final == "⚠️ CENTRO 1" else fila_inner * 4
-        elif data_target in (u_C1_SMD1, u_C1_VACIA): filas_extra = fila_inner * 4
-        else: filas_extra = fila_inner * 2
+        if es_sde or es_prec:
+            filas_extra = fila_inner * 2
+        elif data_target == u_C1_SJA1:
+            filas_extra = fila_inner * 7 if nombre_final == "⚠️ CENTRO 1" else fila_inner * 4
+        elif data_target in (u_C1_SMD1, u_C1_VACIA):
+            filas_extra = fila_inner * 4
+        else:
+            filas_extra = fila_inner * 2
 
         polys += f'''
         <div class="poligono-bloque" style="margin-bottom:12px; box-shadow: none; border-radius: 0px; overflow-x: auto; background: #ededed; border: 1.5px solid #25282b;">           
@@ -800,7 +1222,11 @@ def gen_poligonos(data_target=None):
 PERFILES = {}
 perfil_actual = "LUNES"
 
-# 🟢 RENDERIZADO DEL HTML NATIVO EXACTO DE TU CÓDIGO FUENTE
+reglas_json = json.dumps(reglas_ruteo)
+mapa_origenes_json = json.dumps(MAPA_ORIGENES)
+preguntas_faq_json = json.dumps(PREGUNTAS_FRECUENTES)
+notas_svc_json = json.dumps(obtener_notas_svc())
+
 app_html = f"""
 <!DOCTYPE html>
 <html>
@@ -925,7 +1351,7 @@ app_html = f"""
         <button class="filter-btn" onclick="filterRows(false)" style="cursor:pointer; background: #808080; color:white; border:none; font-size:12px; padding:4px 9px; border-radius:6px; font-weight:bold; outline: none;">TODAS</button>
     </div>
 
-    <!-- CONTENEDOR DE TABLAS DE DISPONIBILIDAD CON SELECTOR -->
+    <!-- CONTENEDOR DE TABLAS DE DISPONIBILIDAD CON SELECTOR NATIVO -->
     <div id="fleet-sticky" class="fleet-normal">
         <div id="handle-moverse-flotante" onpointerdown="iniciarArrastreFlotante(event)" style="display:none; width:100%; height:28px; background:#343a40; color:#ffffff; font-size:11px; font-weight:bold; line-height:28px; border-radius:6px 6px 0 0; margin:-6px -6px 6px -6px; cursor:grab; user-select:none; z-index:9999999; position:relative; padding:0 8px; box-sizing:border-box; touch-action:none;">
             <span style="float:left;">:: CLIC Y ARRASTRA AQUÍ PARA MOVER ::</span>
@@ -1133,7 +1559,7 @@ app_html = f"""
     </div>
 </div>
 
-<!-- LÓGICA DE JAVASCRIPT NATIVA EXACTA DE TU TEMPLATE -->
+<!-- LÓGICA DE JAVASCRIPT NATIVA EXACTA DEL TEMPLATE ORIGINAL -->
 <script>
     const perfiles = {json.dumps(PERFILES)};
     const perfilActual = "{perfil_actual}";
@@ -1300,9 +1726,25 @@ app_html = f"""
             if (!nameCell) return;
             let name = nameCell.innerText.trim();
             let sch = parseInt(row.querySelector('.f-stock').innerText) || 0;
-            let ma = row.querySelector('.edit-spr-max');
+            let mi = row.querySelector('.edit-spr-min'), ma = row.querySelector('.edit-spr-max'), fs = row.querySelector('.f-stock');
             
-            if(name !== "" && name !== "IGNORAR") {{
+            if(sch > 0) {{
+                row.style.background = "white"; 
+                fs.style.background = "#fcf8cc"; 
+                mi.style.background = "#ffffff"; mi.style.color = "#25282b"; mi.style.fontWeight = "bold";
+                ma.style.background = "#ffffff"; ma.style.color = "#25282b"; ma.style.fontWeight = "bold";
+                nameCell.style.color = "#25282b";
+                nameCell.style.fontWeight = "bold";
+            }} else {{
+                row.style.background = "#DCDCDC"; 
+                fs.style.background = "#FFFF00"; 
+                mi.style.background = "#dcdcdc"; mi.style.color = "#969696"; mi.style.fontWeight = "normal";
+                ma.style.background = "#dcdcdc"; ma.style.color = "#969696"; ma.style.fontWeight = "normal";
+                nameCell.style.color = "#969696";
+                nameCell.style.fontWeight = "normal";
+            }}
+            
+            if(name !== "" && name !== "NUEVA UNIDAD") {{
                 fleet[name] = {{ max: parseFloat(ma?.innerText)||0, stock: sch, used: 0 }};
             }}
         }});
@@ -1403,10 +1845,8 @@ app_html = f"""
         }}
     }}
 
-
-    // 🟢 DISTRIBUCIÓN AUTOMÁTICA RESTAURADA Y CORREGIDA
+    // 🟢 DISTRIBUCIÓN AUTOMÁTICA NATIVA CORREGIDA
     function distribuirAutomatico() {{
-        // 1. Leer disponibilidad de la flota activa
         let fleet = [];
         document.querySelectorAll('#body-' + currentTab + ' tr.master-row').forEach(row => {{
             let nombre = row.querySelector('.edit-name')?.innerText.trim();
@@ -1414,18 +1854,10 @@ app_html = f"""
             let stock = parseInt(row.querySelector('.f-stock')?.innerText) || 0;
 
             if (nombre && nombre !== "IGNORAR" && stock > 0) {{
-                fleet.push({{
-                    nombre: nombre,
-                    spr: sprMax,
-                    stock: stock,
-                    restante: stock
-                }});
+                fleet.push({{ nombre: nombre, spr: sprMax, stock: stock, restante: stock }});
             }}
         }});
 
-        if (fleet.length === 0) return;
-
-        // Descontar lo ya asignado manualmente
         document.querySelectorAll('#polys-' + currentTab + ' .calc-row').forEach(r => {{
             let tipo = r.querySelector('.s-type')?.value;
             let unidades = parseInt(r.querySelector('.u-manual')?.innerText) || 0;
@@ -1444,12 +1876,10 @@ app_html = f"""
             if (volumen > 0) polys.push({{ bloque: bl, volumen: volumen }});
         }});
 
-        // 2. Asignar unidades a polígonos
         polys.forEach(poly => {{
             let bloque = poly.bloque;
             let objetivo = parseFloat(bloque.querySelector('.v-total-val')?.innerText) || 0;
             let yaAsignado = 0;
-            
             bloque.querySelectorAll('.calc-row').forEach(r => {{
                 yaAsignado += (parseInt(r.querySelector('.u-manual')?.innerText) || 0) * (parseFloat(r.querySelector('.spr-real-val')?.innerText) || 0);
             }});
@@ -1468,11 +1898,21 @@ app_html = f"""
                 if (!unidad) break;
 
                 let necesarias = Math.ceil(restante / unidad.spr);
-                let usar = Math.min(necesarias, unidad.restante);
+                
+                // 🟢 REGLA DE CAR/MLP (PERMITE EXCESO SI SE AGOTA EL PATIO)
+                let permiteExceso = unidad.nombre.toLowerCase().includes("car") || unidad.nombre.toLowerCase().includes("mlp");
+                let usar;
+                if (unidad.restante > 0) {{
+                    usar = Math.min(necesarias, unidad.restante);
+                }} else if (permiteExceso) {{
+                    usar = necesarias;
+                }} else {{
+                    usar = 0;
+                }}
 
                 if (usar <= 0) continue;
 
-                // 🟢 PASO CLAVE: Poblar las opciones del <select> para que la unidad exista y se pueda seleccionar
+                // 🟢 INYECTAR OPCIONES, SELECCIONAR UNIDAD Y DESPARAR EVENTO DE CAMBIO
                 let selectElem = fila.querySelector('.s-type');
                 if (selectElem) {{
                     let htmlOpciones = '<option value="">Seleccionar...</option>';
@@ -1480,20 +1920,18 @@ app_html = f"""
                         htmlOpciones += `<option value="${{f.nombre}}">${{f.nombre}}</option>`;
                     }});
                     selectElem.innerHTML = htmlOpciones;
-                    
-                    // Asignar el valor de la unidad
                     selectElem.value = unidad.nombre;
-                    if (typeof updateSelectColor === 'function') {{
+                    
+                    // Invocar sincronizador nativo
+                    if (typeof resetRow === 'function') {{
+                        resetRow(selectElem);
+                    }} else {{
                         updateSelectColor(selectElem);
                     }}
                 }}
 
-                // Asignar cantidades y SPR
-                let uSpan = fila.querySelector('.u-manual');
-                let sprSpan = fila.querySelector('.spr-real-val');
-                if (uSpan) uSpan.innerText = usar;
-                if (sprSpan) sprSpan.innerText = unidad.spr;
-
+                fila.querySelector('.u-manual').innerText = usar;
+                fila.querySelector('.spr-real-val').innerText = unidad.spr;
                 editedRowsPlan.add(fila);
 
                 unidad.restante -= usar;
@@ -1501,12 +1939,8 @@ app_html = f"""
             }}
         }});
 
-        // 3. Forzar el recálculo y sincronización de toda la pantalla
-        if (typeof recalc === 'function') {{
-            recalc();
-        }}
+        recalc();
     }}
-    
 
     function toggleExcelView() {{
         const isExcel = !document.body.classList.contains("excel-view");
@@ -1598,7 +2032,7 @@ app_html = f"""
     actualizarRelojRuteos();
 </script>
 
-<!-- MENÚ LATERAL -->
+<!-- MENÚ LATERAL MINIMALISTA -->
 <style>
     #btn-menu-lateral {{
         position: fixed;
@@ -1767,7 +2201,7 @@ app_html = f"""
 
 html(app_html, height=1200, scrolling=True)
 
-# CONSOLA RESTADOR INFERIOR (SIN IMAGEN DE MAPA DUPLICADA)
+# CONSOLA RESTADOR INFERIOR
 html_limpio = """
 <style>
     body { background-color: #25282b; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; }
