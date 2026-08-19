@@ -5050,42 +5050,28 @@ html(app_html, height=1200, scrolling=True)
 import streamlit as st
 import streamlit.components.v1 as components
 
-# 1. ENLACE DE IMAGEN (Mapa de regiones)
-ID_IMAGEN = "1M4GLEwFzhLrZjV-zmvGrdTQhC6IjwxOJ"
-url_final = f"https://drive.google.com/thumbnail?id={ID_IMAGEN}&sz=w1000"
-
-# HTML/CSS: SOLO RELOJ RESTADOR E IMAGEN DE MAPA
-html_limpio = f"""
+# 🟢 CONSOLA RESTADOR INFERIOR (SIN EL MAPA DUPLICADO ABAJO)
+html_limpio = """
 <style>
-    body {{ background-color: #25282b; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; }}
-    .main-box {{ background: #25282b; padding: 10px; display: flex; flex-direction: column; align-items: center; }}
+    body { background-color: #25282b; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; }
+    .main-box { background: #25282b; padding: 10px; display: flex; flex-direction: column; align-items: center; }
     
-    .unified-console {{
+    .unified-console {
         background: #25282b; border-radius: 15px; padding: 15px; 
         margin-bottom: 20px; border: 1px solid #25282b; text-align: center; width: 100%; max-width: 500px;
-    }}
-    .display-screen {{
+    }
+    .display-screen {
         background: #25282b; border-radius: 10px; padding: 10px; margin-bottom: 15px; border: 2px solid #25282b;
-    }}
-    .btn-3d {{
+    }
+    .btn-3d {
         background: linear-gradient(145deg, #1e90ff, #1c82e6);
         color: white; border: none; padding: 12px 25px; border-radius: 10px;
         font-weight: bold; cursor: pointer; box-shadow: 0 5px #0a56a3; transition: 0.1s;
-    }}
-    .btn-3d:active {{ box-shadow: 0 2px #0a56a3; transform: translateY(3px); }}
-    
-    /* Contenedor del Mapa */
-    .map-container {{
-        background: #1e1e1e; border-radius: 12px; padding: 15px; 
-        width: 100%; max-width: 900px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }}
-    .map-container img {{
-        max-width: 100%; height: auto; border-radius: 8px; border: 2px solid #444;
-    }}
+    }
+    .btn-3d:active { box-shadow: 0 2px #0a56a3; transform: translateY(3px); }
 </style>
 
 <div class="main-box">
-    <!-- Reloj Restador / Consola -->
     <div class="unified-console"> 
         <div class="display-screen">
             <div style="color: #ffffff; font-size: 10px; margin-bottom: 5px;">HORA / RESTADOR / CONVERTIDOR</div>
@@ -5100,27 +5086,20 @@ html_limpio = f"""
             <button class="btn-3d" onclick="ejecutarTodo()">CALCULAR</button>
         </div>
     </div>
-
-    <!-- Imagen del Mapa -->
-    <div class="map-container">
-        <h3 style="color: #1E90FF; margin-top: 0; margin-bottom: 15px;">🗺️ MAPA OPERATIVO</h3>
-        <img src="{url_final}" alt="Mapa de regiones">
-    </div>
 </div>
 
 <script>
-    function ejecutarTodo() {{
+    function ejecutarTodo() {
         const mins = document.getElementById('minInput').value || 0;
         const ahora = new Date();
         const nuevaFecha = new Date(ahora.getTime() - (mins * 60000));
         const h = String(nuevaFecha.getHours()).padStart(2, '0');
         const m = String(nuevaFecha.getMinutes()).padStart(2, '0');
         document.getElementById('horaReal').innerText = h + ":" + m;
-    }}
+    }
     ejecutarTodo();
 </script>
 """
 
-# RENDERIZADO EN STREAMLIT
 st.markdown("---")
-components.html(html_limpio, height=850, scrolling=True)
+html(html_limpio, height=220, scrolling=False)
