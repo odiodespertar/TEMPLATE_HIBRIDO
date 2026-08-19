@@ -4,9 +4,33 @@ import pandas as pd
 import io
 from streamlit.components.v1 import html  
 from reglas import reglas_ruteo, MAPA_ORIGENES, PREGUNTAS_FRECUENTES
+from supabase import create_client
 
 st.set_page_config(page_title="Monitor Logístico - Liliana García", layout="wide", initial_sidebar_state="expanded")
 
+
+# ==========================================
+# CONEXIÓN A SUPABASE (TABLA NOTAS_SVC_2)
+# ==========================================
+@st.cache_resource
+def init_supabase():
+    try:
+        url = st.secrets["SUPABASE_URL"]
+        key = st.secrets["SUPABASE_KEY"]
+        return create_client(url, key)
+    except Exception:
+        return None
+
+supabase = init_supabase()
+
+def obtener_notas_svc():
+    if not supabase:
+        return []
+    try:
+        response = supabase.table("notas_svc_2").select("*").execute()
+        return response.data
+    except Exception:
+        return []
 
 
 # ==========================================
@@ -506,6 +530,14 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
                     if key in query_lower:
                         svc_mapa = key
                         break
+
+                # 🟢 BÚSQUEDA EN SUPABASE (TABLA NOTAS_SVC_2)
+                notas_bd = obtener_notas_svc()
+                notas_matcheadas = [n for n in notas_bd if str(n.get("svc","")).lower().strip() in query_lower or query_lower in str(n.get("svc","")).lower().strip()]
+                if notas_matcheadas:
+                    bloque_notas = "📝 **Notas adicionales registradas:**\n\n" + "\n".join([f"• {n['contenido']}" for n in notas_matcheadas])
+                    partes_respuesta.append(bloque_notas)
+                
 
                 if svc_mapa:
                     info = MAPA_ORIGENES[svc_mapa]
@@ -1907,7 +1939,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     <!-- 🗺️ OPCIÓN 3: MAPA DE EXTENDIDO -->
     <button class="opcion-menu-ruteos" onclick="toggleMapaOperativo()">🗺️ &nbsp; MAPA DE EXTENDIDO</button>
 
-    <!-- CONTENEDOR DEL MAPA CON ZOOM (DENTRO DEL MENÚ) -->
+    <!-- CONTENEDOR DEL MAPA CON ZOOM -->
     <div id="panel-mapa-operativo" style="display: none; margin-top: 10px; padding: 10px; background: #17191b; border: 1px solid #34383d; border-radius: 12px; text-align: center;">
         <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 8px;">
             <button onclick="aplicarZoomMapa(1.2)" style="background: #25282b; color: white; border: 1px solid #555; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">🔍 +</button>
@@ -1920,12 +1952,43 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             <img id="img-mapa-operativo" src="https://drive.google.com/thumbnail?id=1M4GLEwFzhLrZjV-zmvGrdTQhC6IjwxOJ&sz=w1000" alt="Mapa Operativo" onclick="abrirMapaPantallaCompleta()" style="width: 100%; transition: transform 0.2s ease; transform-origin: top left; cursor: zoom-in;" title="Haz clic para abrir en pantalla completa" />
         </div>
     </div>
+
+    <!-- 📝 AQUÍ VA EL NUEVO BOTÓN: OPCIÓN 4 AGREGAR NOTA SVC -->
+    <button class="opcion-menu-ruteos" onclick="abrirModalNotasSVC()" style="margin-top: 10px;">📝 &nbsp; AGREGAR NOTA SVC</button>
+
 </div> <!-- 👈 AQUÍ SE CIERRA CORRECTAMENTE EL MENÚ LATERAL -->
 
-<!-- MODAL PANTALLA COMPLETA SUPERPUESTO (AFUERA DEL MENÚ) -->
+<!-- MODAL MAPA PANTALLA COMPLETA SUPERPUESTO -->
 <div id="modal-mapa-fullscreen" onclick="cerrarMapaPantallaCompleta()" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.85); z-index: 99999999; justify-content: center; align-items: center; cursor: zoom-out;">
     <span style="position: absolute; top: 15px; right: 25px; color: white; font-size: 35px; font-weight: bold;">✕</span>
     <img src="https://drive.google.com/thumbnail?id=1M4GLEwFzhLrZjV-zmvGrdTQhC6IjwxOJ&sz=w1000" style="max-width: 90%; max-height: 90%; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.8);" />
+</div>
+
+<!-- 📝 AQUÍ VA EL NUEVO MODAL EMERGENTE DE NOTAS SVC -->
+<div id="modal-notas-svc" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 15, 18, 0.96); z-index: 9999999; padding: 25px; box-sizing: border-box; font-family: sans-serif;">
+    <div style="max-width: 600px; margin: 50px auto; background: #25282b; border: 2px solid #20B2AA; border-radius: 12px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #444; padding-bottom: 12px; margin-bottom: 20px;">
+            <h2 style="color: #20B2AA; margin: 0; font-size: 20px; display: flex; align-items: center; gap: 8px;">📝 AGREGAR INFORMACIÓN DE SVC</h2>
+            <button onclick="cerrarModalNotasSVC()" style="cursor: pointer; background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-weight: bold;">✕ CERRAR</button>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <div>
+                <label style="color: #d0d0d0; font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px;">SVC / Estación:</label>
+                <input type="text" id="input-nota-svc" placeholder="Ej. SJA1" style="width: 100%; box-sizing: border-box; padding: 10px; border-radius: 6px; border: 1px solid #555; background: #141414; color: white; font-size: 14px; font-weight: bold;">
+            </div>
+
+            <div>
+                <label style="color: #d0d0d0; font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px;">Información Adicional:</label>
+                <textarea id="input-contenido-nota-svc" placeholder="Escribe aquí la información adicional que se debe considerar..." rows="4" style="width: 100%; box-sizing: border-box; padding: 10px; border-radius: 6px; border: 1px solid #555; background: #141414; color: white; font-size: 14px; resize: vertical;"></textarea>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                <button onclick="cerrarModalNotasSVC()" style="cursor: pointer; background: #555; color: white; border: none; padding: 8px 16px; font-weight: bold; border-radius: 6px;">Cancelar</button>
+                <button onclick="guardarNotaDesdeBot()" style="cursor: pointer; background: #20B2AA; color: white; border: none; padding: 8px 20px; font-weight: bold; border-radius: 6px;">💾 GUARDAR INFORMACIÓN</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div style="display:flex; flex-direction:column; gap:20px; width:100%;">
@@ -2558,6 +2621,64 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     function cerrarMapaPantallaCompleta() {{
         const modal = document.getElementById("modal-mapa-fullscreen");
         if (modal) modal.style.display = "none";
+    }}
+
+
+    // 🟢 FUNCIONES DE NOTAS SVC (APUNTANDO A NOTAS_SVC_2)
+    const SUPABASE_URL = "{st.secrets.get('SUPABASE_URL', '')}";
+    const SUPABASE_KEY = "{st.secrets.get('SUPABASE_KEY', '')}";
+    
+    const supabaseClient = (window.supabase && window.supabase.createClient && SUPABASE_URL) 
+        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) 
+        : null;
+
+    function abrirModalNotasSVC() {{
+        toggleMenuLateralVisual();
+        let modal = document.getElementById("modal-notas-svc");
+        if (modal) modal.style.display = "block";
+    }}
+
+    function cerrarModalNotasSVC() {{
+        let modal = document.getElementById("modal-notas-svc");
+        if (modal) modal.style.display = "none";
+    }}
+
+    async function guardarNotaDesdeBot() {{
+        const inputSvc = document.getElementById("input-nota-svc");
+        const inputNota = document.getElementById("input-contenido-nota-svc");
+        if (!inputSvc || !inputNota) return;
+
+        const svc = inputSvc.value.trim().toUpperCase();
+        const contenido = inputNota.value.trim();
+
+        if (!svc || !contenido) {{
+            alert("⚠️ Por favor completa todos los campos.");
+            return;
+        }}
+
+        if (!supabaseClient) {{
+            alert("⚠️ No hay conexión con la base de datos.");
+            return;
+        }}
+
+        try {{
+            // 🟢 GUARDADO EN TABLA NOTAS_SVC_2
+            const { data, error } = await supabaseClient
+                .from("notas_svc_2")
+                .upsert([{ svc: svc, contenido: contenido }}], { onConflict: 'svc' });
+
+            if (error) {{
+                alert("❌ Error al guardar: " + error.message);
+                return;
+            }}
+
+            inputSvc.value = "";
+            inputNota.value = "";
+            alert("✅ Información guardada correctamente para " + svc);
+            cerrarModalNotasSVC();
+        }} catch (err) {{
+            alert("❌ Error al procesar la solicitud.");
+        }}
     }}
 
 
