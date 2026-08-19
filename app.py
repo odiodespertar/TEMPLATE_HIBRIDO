@@ -3,34 +3,9 @@ import streamlit as st
 import pandas as pd
 import io
 from streamlit.components.v1 import html  
-from supabase import create_client
 from reglas import reglas_ruteo, MAPA_ORIGENES, PREGUNTAS_FRECUENTES
 
 st.set_page_config(page_title="Monitor Logístico - Liliana García", layout="wide", initial_sidebar_state="expanded")
-
-# ==========================================
-# CONEXIÓN A SUPABASE (ÚNICAMENTE NOTAS SVC)
-# ==========================================
-@st.cache_resource
-def init_supabase():
-    try:
-        url = st.secrets["SUPABASE_URL"]
-        key = st.secrets["SUPABASE_KEY"]
-        return create_client(url, key)
-    except Exception:
-        return None
-
-supabase = init_supabase()
-
-def obtener_notas_svc():
-    if not supabase:
-        return []
-    try:
-        response = supabase.table("notas_svc").select("*").execute()
-        return response.data
-    except Exception:
-        return []
-
 
 # ==========================================
 # ESTADO Y CONTROL DEL MODO FLOTANTE
@@ -97,7 +72,7 @@ st.markdown("""
             zoom: 0.95; 
         }
     }
-    /* --- VENTANA FLOTANTE BOT --- */
+    /* --- VENTANA FLOTANTE AJUSTADA Y ORDENADA --- */
     div[data-testid="stExpander"] {
         position: fixed !important;
         bottom: 15px !important;
@@ -479,12 +454,6 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
                     )
                     partes_respuesta.append(bloque_mapa)
 
-                notas_bd = obtener_notas_svc()
-                notas_matcheadas = [n for n in notas_bd if str(n.get("svc","")).lower().strip() in query_lower or query_lower in str(n.get("svc","")).lower().strip()]
-                if notas_matcheadas:
-                    bloque_notas = "📝 **Notas adicionales registradas:**\n\n" + "\n".join([f"• {n['contenido']}" for n in notas_matcheadas])
-                    partes_respuesta.append(bloque_notas)
-
                 coincidencias_faq = []
                 if any(w in query_lower for w in ["large van sdd", "sdd"]): coincidencias_faq.append(PREGUNTAS_FRECUENTES["large_van_sdd"])
                 if "bulk" in query_lower:
@@ -797,12 +766,11 @@ def gen_poligonos(data_target=None):
 PERFILES = {}
 perfil_actual = "LUNES"
 
-# 🟢 RENDERIZADO DEL HTML NATIVO EXACTO DE TU CÓDIGO BASE
+# 🟢 HTML NATIVO 100% FIEL A TU CÓDIGO CON SOLO EL CONTENEDOR VISUAL DEL MENÚ LATERAL
 app_html = f"""
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         tr.master-row:hover, tr.calc-row:hover {{
             background-color: #fffecd !important;
@@ -866,11 +834,85 @@ app_html = f"""
 
         body.excel-view #fleet-float, body.excel-view #ruteo-float {{ display: none !important; }}
         body.excel-view .meli-table td {{ padding: 2px 3px !important; font-size: 14px !important; }}
+
+        /* 🟢 ESTILOS VISUALES DEL MENÚ LATERAL (PASO 1) */
+        #btn-menu-lateral {{
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 9999999;
+            width: 42px;
+            height: 42px;
+            border: 1px solid #444;
+            border-radius: 6px;
+            background: #25282b;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.45);
+        }}
+
+        #btn-menu-lateral:hover {{
+            background: #34383c;
+        }}
+
+        #menu-lateral-ruteos {{
+            position: fixed;
+            top: 0;
+            left: -520px;
+            width: 500px;
+            height: 100vh;
+            background: #1e2022;
+            z-index: 9999998;
+            border-radius: 0 18px 18px 0;
+            box-shadow: 8px 0 20px rgba(0, 0, 0, 0.65);
+            transition: left 0.3s ease;
+            padding: 20px 15px;
+            box-sizing: border-box;
+            color: white;
+            overflow-y: auto;
+        }}
+
+        #menu-lateral-ruteos.abierto {{
+            left: 0;
+        }}
+
+        .menu-ruteos-header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #444;
+        }}
+
+        .menu-ruteos-titulo {{
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #66CDAA;
+        }}
     </style> 
 </head>
 
 <body>
 <div id="google-alert">⚠️ <span id="alert-msg"></span> [ENTER para cerrar]</div>
+
+<!-- 🟢 PASO 1: ESTRUCTURA HTML DEL MENÚ LATERAL -->
+<button id="btn-menu-lateral" onclick="toggleMenuLateralVisual()" title="Abrir menú">☰</button>
+
+<div id="menu-lateral-ruteos">
+    <div class="menu-ruteos-header">
+        <span class="menu-ruteos-titulo">MENÚ PRINCIPAL</span>
+        <button onclick="toggleMenuLateralVisual()" style="border:none; background:transparent; color:white; font-size:21px; cursor:pointer;">✕</button>
+    </div>
+    
+    <div style="color: #aaa; font-size: 13px; text-align: center; margin-top: 20px;">
+        📌 Menú lateral cargado correctamente. Listo para agregar las funciones paso a paso.
+    </div>
+</div>
+
 <div style="display:flex; flex-direction:column; gap:20px; width:100%;">
 
 <!-- PANEL SUPERIOR -->
@@ -922,7 +964,7 @@ app_html = f"""
         <button class="filter-btn" onclick="filterRows(false)" style="cursor:pointer; background: #808080; color:white; border:none; font-size:12px; padding:4px 9px; border-radius:6px; font-weight:bold; outline: none;">TODAS</button>
     </div>
 
-    <!-- CONTENEDOR DE TABLAS DE DISPONIBILIDAD CON SELECTOR -->
+    <!-- CONTENEDOR DE TABLAS DE DISPONIBILIDAD CON SELECTOR NATIVO -->
     <div id="fleet-sticky" class="fleet-normal">
         <div id="handle-moverse-flotante" onpointerdown="iniciarArrastreFlotante(event)" style="display:none; width:100%; height:28px; background:#343a40; color:#ffffff; font-size:11px; font-weight:bold; line-height:28px; border-radius:6px 6px 0 0; margin:-6px -6px 6px -6px; cursor:grab; user-select:none; z-index:9999999; position:relative; padding:0 8px; box-sizing:border-box; touch-action:none;">
             <span style="float:left;">:: CLIC Y ARRASTRA AQUÍ PARA MOVER ::</span>
@@ -1103,38 +1145,8 @@ app_html = f"""
     <div id="polys-9" class="p-content" style="display:none;">{gen_poligonos(u_C1_VACIA)}</div>
 </div>
 
-<!-- MODAL: NOTAS SVC -->
-<div id="modal-notas-svc" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 15, 18, 0.96); z-index: 9999999; padding: 25px; box-sizing: border-box; font-family: sans-serif;">
-    <div style="max-width: 600px; margin: 50px auto; background: #25282b; border: 2px solid #20B2AA; border-radius: 12px; padding: 25px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #444; padding-bottom: 12px; margin-bottom: 20px;">
-            <h2 style="color: #20B2AA; margin: 0; font-size: 20px;">📝 AGREGAR INFORMACIÓN DE SVC</h2>
-            <button onclick="cerrarModalNotasSVC()" style="cursor: pointer; background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-weight: bold;">✕ CERRAR</button>
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 15px;">
-            <div>
-                <label style="color: #d0d0d0; font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px;">SVC / Estación:</label>
-                <input type="text" id="input-nota-svc" placeholder="Ej. SJA1" style="width: 100%; box-sizing: border-box; padding: 10px; border-radius: 6px; border: 1px solid #555; background: #141414; color: white; font-size: 14px; font-weight: bold;">
-            </div>
-
-            <div>
-                <label style="color: #d0d0d0; font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px;">Información Adicional:</label>
-                <textarea id="input-contenido-nota-svc" placeholder="Escribe aquí la información adicional..." rows="4" style="width: 100%; box-sizing: border-box; padding: 10px; border-radius: 6px; border: 1px solid #555; background: #141414; color: white; font-size: 14px;"></textarea>
-            </div>
-
-            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
-                <button onclick="cerrarModalNotasSVC()" style="cursor: pointer; background: #555; color: white; border: none; padding: 8px 16px; font-weight: bold; border-radius: 6px;">Cancelar</button>
-                <button onclick="guardarNotaDesdeBot()" style="cursor: pointer; background: #20B2AA; color: white; border: none; padding: 8px 20px; font-weight: bold; border-radius: 6px;">💾 GUARDAR INFORMACIÓN</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- LÓGICA DE JAVASCRIPT NATIVA ORIGINAL DE TU CÓDIGO BASE -->
+<!-- LÓGICA DE JAVASCRIPT NATIVA ORIGINAL INTEGRA DE TU CÓDIGO -->
 <script>
-    // 🟢 DESTRUCCIÓN PREVENTIVA DE LOCALSTORAGE PARA EVITAR CONFLICTOS CON COOKIES VIEJAS
-    try {{ localStorage.clear(); }} catch(e) {{}}
-
     const perfiles = {json.dumps(PERFILES)};
     const perfilActual = "{perfil_actual}";
 
@@ -1146,12 +1158,16 @@ app_html = f"""
     let elapsedTime = 0;
     let estadoPaquetesAntesDeExcel = "none";
 
-    const SUPABASE_URL = "{st.secrets.get('SUPABASE_URL', '')}";
-    const SUPABASE_KEY = "{st.secrets.get('SUPABASE_KEY', '')}";
-    
-    const supabaseClient = (window.supabase && window.supabase.createClient && SUPABASE_URL) 
-        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) 
-        : null;
+    // 🟢 PASO 1: FUNCIÓN PARA ABRIR Y CERRAR EL MENÚ LATERAL
+    function toggleMenuLateralVisual() {{
+        const menu = document.getElementById("menu-lateral-ruteos");
+        const boton = document.getElementById("btn-menu-lateral");
+        if (!menu) return;
+        menu.classList.toggle("abierto");
+        if (boton) {{
+            boton.style.display = menu.classList.contains("abierto") ? "none" : "block";
+        }}
+    }}
 
     // SELECCIÓN DE TEXTO AL ENTRAR A CELDAS
     document.addEventListener("focusin", function(e) {{
@@ -1166,54 +1182,6 @@ app_html = f"""
         }}, 0);
     }});
 
-    function abrirModalNotasSVC() {{
-        cerrarMenuRuteos();
-        let modal = document.getElementById("modal-notas-svc");
-        if (modal) modal.style.display = "block";
-    }}
-
-    function cerrarModalNotasSVC() {{
-        let modal = document.getElementById("modal-notas-svc");
-        if (modal) modal.style.display = "none";
-    }}
-
-    async function guardarNotaDesdeBot() {{
-        const inputSvc = document.getElementById("input-nota-svc");
-        const inputNota = document.getElementById("input-contenido-nota-svc");
-        if (!inputSvc || !inputNota) return;
-
-        const svc = inputSvc.value.trim().toUpperCase();
-        const contenido = inputNota.value.trim();
-
-        if (!svc || !contenido) {{
-            alert("⚠️ Por favor completa todos los campos.");
-            return;
-        }}
-
-        if (!supabaseClient) {{
-            alert("⚠️ No hay conexión con la base de datos.");
-            return;
-        }}
-
-        try {{
-            const {{ data, error }} = await supabaseClient
-                .from("notas_svc")
-                .upsert([{{ svc: svc, contenido: contenido }}], {{ onConflict: 'svc' }});
-
-            if (error) {{
-                alert("❌ Error al guardar: " + error.message);
-                return;
-            }}
-
-            inputSvc.value = "";
-            inputNota.value = "";
-            alert("✅ Información guardada para " + svc);
-            cerrarModalNotasSVC();
-        }} catch (err) {{
-            alert("❌ Error al procesar la solicitud.");
-        }}
-    }}
-
     function cambiarCiclo(valorTab) {{
         document.querySelectorAll('.t-content').forEach(el => el.style.display = 'none');
         const tablaActiva = document.getElementById('tab-' + valorTab);
@@ -1225,29 +1193,6 @@ app_html = f"""
 
         currentTab = parseInt(valorTab);
         if (typeof recalc === 'function') recalc();
-    }}
-
-    function limpiarPantallaCompleta() {{
-        if (!confirm("¿Deseas vaciar los valores editados de la pantalla para iniciar un nuevo ruteo?")) return;
-        
-        try {{ localStorage.clear(); }} catch(e) {{}}
-
-        document.querySelectorAll('.v-total-val, .nodos-val, .nodos-campeche').forEach(el => el.innerText = "0");
-        document.querySelectorAll('.calc-row').forEach(row => {{
-            let uSpan = row.querySelector('.u-manual');
-            let sprSpan = row.querySelector('.spr-real-val');
-            let selectType = row.querySelector('.s-type');
-            let checkOk = row.querySelector('.ok-check');
-
-            if (uSpan) uSpan.innerText = "0";
-            if (sprSpan) sprSpan.innerText = "0";
-            if (selectType) {{ selectType.value = ""; updateSelectColor(selectType); }}
-            if (checkOk) checkOk.checked = false;
-        }});
-
-        document.querySelectorAll('.f-stock').forEach(el => el.innerText = "0");
-        if (typeof recalc === 'function') recalc();
-        cerrarMenuRuteos();
     }}
 
     function stepVal(btn, delta, type) {{
@@ -1422,7 +1367,7 @@ app_html = f"""
         }}
     }}
 
-    // 🟢 DISTRIBUCIÓN AUTOMÁTICA NATIVA EXACTA DE TU CÓDIGO BASE
+    // DISTRIBUCIÓN AUTOMÁTICA NATIVA INTACTA
     function distribuirAutomatico() {{
         let fleet = [];
         document.querySelectorAll('#body-' + currentTab + ' tr.master-row').forEach(row => {{
@@ -1475,16 +1420,7 @@ app_html = f"""
                 if (!unidad) break;
 
                 let necesarias = Math.ceil(restante / unidad.spr);
-                
-                let permiteExceso = unidad.nombre.toLowerCase().includes("car") || unidad.nombre.toLowerCase().includes("mlp");
-                let usar;
-                if (unidad.restante > 0) {{
-                    usar = Math.min(necesarias, unidad.restante);
-                }} else if (permiteExceso) {{
-                    usar = necesarias;
-                }} else {{
-                    usar = 0;
-                }}
+                let usar = Math.min(necesarias, unidad.restante);
 
                 if (usar <= 0) continue;
 
@@ -1597,158 +1533,6 @@ app_html = f"""
     }}
     setInterval(actualizarRelojRuteos, 1000);
     actualizarRelojRuteos();
-</script>
-
-<!-- MENÚ LATERAL -->
-<style>
-    #btn-menu-lateral {{
-        position: fixed;
-        top: 0px;
-        left: 5px;
-        z-index: 9999999;
-        width: 42px;
-        height: 42px;
-        border: 1px solid #444;
-        border-radius: 6px;
-        background: #25282b;
-        color: white;
-        font-size: 22px;
-        font-weight: bold;
-        cursor: pointer;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.45);
-    }}
-
-    #btn-menu-lateral:hover {{
-        background: #34383c;
-    }}
-
-    #menu-lateral-ruteos {{
-       position: fixed;
-       top: 0;
-       left: -520px;
-       width: 500px;
-       height: 100vh;
-       background: #1e2022;
-       z-index: 9999998;
-       border-radius: 0 18px 18px 0;
-       box-shadow: 8px 0 20px rgba(0, 0, 0, 0.65), 2px 0 5px rgba(255, 255, 255, 0.05);
-       transition: left 0.3s ease;
-       padding: 20px 15px;
-       box-sizing: border-box;
-       color: white;
-       overflow-y: auto;
-   }}
-
-    #menu-lateral-ruteos.abierto {{
-        left: 0;
-    }}
-
-    .menu-ruteos-header {{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-bottom: 15px;
-        margin-bottom: 20px;
-        border-bottom: 1px solid #444;
-    }}
-
-    .menu-ruteos-titulo {{
-        font-size: 15px;
-        font-weight: bold;
-        letter-spacing: 1px;
-        color: #66CDAA;
-    }}
-
-    .opcion-menu-ruteos {{
-        width: 100%;
-        box-sizing: border-box;
-        padding: 13px 15px;
-        margin-bottom: 9px;
-        border-radius: 7px;
-        border: 1px solid #3b3f43;
-        background: #292c30;
-        color: #e4e6e8;
-        font-size: 14px;
-        font-weight: 600;
-        text-align: left;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }}
-
-    .opcion-menu-ruteos:hover {{
-        background: #363a3f;
-        border-color: #66CDAA;
-        color: white;
-        transform: translateX(4px);
-    }}
-</style>
-
-<button id="btn-menu-lateral" onclick="abrirCerrarMenuRuteos()" title="Abrir menú">☰</button>
-
-<div id="menu-lateral-ruteos">
-    <div class="menu-ruteos-header">
-        <span class="menu-ruteos-titulo">MENÚ PRINCIPAL</span>
-        <button id="cerrar-menu-ruteos" onclick="abrirCerrarMenuRuteos()" style="border:none; background:transparent; color:white; font-size:21px; cursor:pointer;">✕</button>
-    </div>
-
-    <!-- 1. LIMPIAR PANTALLA -->
-    <button class="opcion-menu-ruteos" onclick="limpiarPantallaCompleta()">🧹 &nbsp; LIMPIAR PANTALLA</button>
-
-    <!-- 2. OCULTAR / MOSTRAR PLANES EXTRA -->
-    <button id="btn-ocultar-extra-menu" class="opcion-menu-ruteos" onclick="togglePlanesExtra()">👁️ &nbsp; OCULTAR PLANES EXTRA</button>
-
-    <!-- 3. MAPA OPERATIVO EXTENDIDO -->
-    <button class="opcion-menu-ruteos" onclick="toggleMapaOperativo()">🗺️ &nbsp; MAPA DE EXTENDIDO</button>
-
-    <div id="panel-mapa-operativo" style="display: none; margin-top: 10px; padding: 10px; background: #17191b; border: 1px solid #34383d; border-radius: 12px; text-align: center;">
-        <img id="img-mapa-operativo" src="https://drive.google.com/thumbnail?id=1M4GLEwFzhLrZjV-zmvGrdTQhC6IjwxOJ&sz=w1000" style="width: 100%; border-radius: 8px;" />
-    </div>
-
-    <!-- 4. AGREGAR NOTA SVC -->
-    <button class="opcion-menu-ruteos" onclick="abrirModalNotasSVC()">📝 &nbsp; AGREGAR NOTA SVC</button>
-</div>
-
-<script>
-    function abrirCerrarMenuRuteos() {{
-        const menu = document.getElementById("menu-lateral-ruteos");
-        const boton = document.getElementById("btn-menu-lateral");
-        if (!menu) return;
-        menu.classList.toggle("abierto");
-        if (boton) boton.style.display = menu.classList.contains("abierto") ? "none" : "block";
-    }}
-
-    function cerrarMenuRuteos() {{
-        const menu = document.getElementById("menu-lateral-ruteos");
-        const boton = document.getElementById("btn-menu-lateral");
-        if (menu) menu.classList.remove("abierto");
-        if (boton) boton.style.display = "block";
-    }}
-
-    function toggleMapaOperativo() {{
-        const panel = document.getElementById("panel-mapa-operativo");
-        if (!panel) return;
-        panel.style.display = (panel.style.display === "none" || panel.style.display === "") ? "block" : "none";
-    }}
-
-    let planesExtraOcultos = false;
-    function togglePlanesExtra() {{
-        planesExtraOcultos = !planesExtraOcultos;
-        const btnMenu = document.getElementById("btn-ocultar-extra-menu");
-
-        document.querySelectorAll(".poligono-bloque").forEach(bloque => {{
-            const tdPlan = bloque.querySelector("td.plan-cell");
-            if (tdPlan) {{
-                const nombrePlan = tdPlan.innerText.trim().toUpperCase();
-                if (/^PLAN\s+\d+$/i.test(nombrePlan)) {{
-                    bloque.style.display = planesExtraOcultos ? "none" : "block";
-                }}
-            }}
-        }});
-
-        if (btnMenu) {{
-            btnMenu.innerHTML = planesExtraOcultos ? "👁️ &nbsp; MOSTRAR PLANES EXTRA" : "👁️ &nbsp; OCULTAR PLANES EXTRA";
-        }}
-    }}
 </script>
 </body>
 </html>
