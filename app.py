@@ -1403,19 +1403,29 @@ app_html = f"""
         }}
     }}
 
-    // 🟢 DISTRIBUCIÓN AUTOMÁTICA RESTAURADA NATIVA
+
+    // 🟢 DISTRIBUCIÓN AUTOMÁTICA RESTAURADA Y CORREGIDA
     function distribuirAutomatico() {{
+        // 1. Leer disponibilidad de la flota activa
         let fleet = [];
-        document.querySelectorAll('#body-' + currentTab + ' tr').forEach(row => {{
+        document.querySelectorAll('#body-' + currentTab + ' tr.master-row').forEach(row => {{
             let nombre = row.querySelector('.edit-name')?.innerText.trim();
             let sprMax = parseFloat(row.querySelector('.edit-spr-max')?.innerText) || 0;
             let stock = parseInt(row.querySelector('.f-stock')?.innerText) || 0;
 
             if (nombre && nombre !== "IGNORAR" && stock > 0) {{
-                fleet.push({{ nombre: nombre, spr: sprMax, stock: stock, restante: stock }});
+                fleet.push({{
+                    nombre: nombre,
+                    spr: sprMax,
+                    stock: stock,
+                    restante: stock
+                }});
             }}
         }});
 
+        if (fleet.length === 0) return;
+
+        // Descontar lo ya asignado manualmente
         document.querySelectorAll('#polys-' + currentTab + ' .calc-row').forEach(r => {{
             let tipo = r.querySelector('.s-type')?.value;
             let unidades = parseInt(r.querySelector('.u-manual')?.innerText) || 0;
@@ -1434,10 +1444,12 @@ app_html = f"""
             if (volumen > 0) polys.push({{ bloque: bl, volumen: volumen }});
         }});
 
+        // 2. Asignar unidades a polígonos
         polys.forEach(poly => {{
             let bloque = poly.bloque;
             let objetivo = parseFloat(bloque.querySelector('.v-total-val')?.innerText) || 0;
             let yaAsignado = 0;
+            
             bloque.querySelectorAll('.calc-row').forEach(r => {{
                 yaAsignado += (parseInt(r.querySelector('.u-manual')?.innerText) || 0) * (parseFloat(r.querySelector('.spr-real-val')?.innerText) || 0);
             }});
@@ -1460,15 +1472,28 @@ app_html = f"""
 
                 if (usar <= 0) continue;
 
-                // 🟢 SE ASIGNA EL TIPO DE UNIDAD AL SELECTOR
+                // 🟢 PASO CLAVE: Poblar las opciones del <select> para que la unidad exista y se pueda seleccionar
                 let selectElem = fila.querySelector('.s-type');
                 if (selectElem) {{
+                    let htmlOpciones = '<option value="">Seleccionar...</option>';
+                    fleet.forEach(f => {{
+                        htmlOpciones += `<option value="${{f.nombre}}">${{f.nombre}}</option>`;
+                    }});
+                    selectElem.innerHTML = htmlOpciones;
+                    
+                    // Asignar el valor de la unidad
                     selectElem.value = unidad.nombre;
-                    updateSelectColor(selectElem);
+                    if (typeof updateSelectColor === 'function') {{
+                        updateSelectColor(selectElem);
+                    }}
                 }}
 
-                fila.querySelector('.u-manual').innerText = usar;
-                fila.querySelector('.spr-real-val').innerText = unidad.spr;
+                // Asignar cantidades y SPR
+                let uSpan = fila.querySelector('.u-manual');
+                let sprSpan = fila.querySelector('.spr-real-val');
+                if (uSpan) uSpan.innerText = usar;
+                if (sprSpan) sprSpan.innerText = unidad.spr;
+
                 editedRowsPlan.add(fila);
 
                 unidad.restante -= usar;
@@ -1476,8 +1501,12 @@ app_html = f"""
             }}
         }});
 
-        recalc();
+        // 3. Forzar el recálculo y sincronización de toda la pantalla
+        if (typeof recalc === 'function') {{
+            recalc();
+        }}
     }}
+    
 
     function toggleExcelView() {{
         const isExcel = !document.body.classList.contains("excel-view");
