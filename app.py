@@ -9,7 +9,7 @@ from reglas import reglas_ruteo, MAPA_ORIGENES, PREGUNTAS_FRECUENTES
 st.set_page_config(page_title="Monitor Logístico - Liliana García", layout="wide", initial_sidebar_state="expanded")
 
 # ==========================================
-# CONEXIÓN ANÓNIMA A SUPABASE PARA NOTAS SVC
+# CONEXIÓN A SUPABASE (ÚNICAMENTE NOTAS SVC)
 # ==========================================
 @st.cache_resource
 def init_supabase():
@@ -30,6 +30,7 @@ def obtener_notas_svc():
         return response.data
     except Exception:
         return []
+
 
 # ==========================================
 # ESTADO Y CONTROL DEL MODO FLOTANTE
@@ -58,6 +59,7 @@ if st.session_state.flotar_activo:
             }
         </style>
     """, unsafe_allow_html=True)
+
 
 # ==========================================
 # CSS GENERAL + ESTILO DE VENTANA FLOTANTE
@@ -95,6 +97,7 @@ st.markdown("""
             zoom: 0.95; 
         }
     }
+    /* --- VENTANA FLOTANTE BOT --- */
     div[data-testid="stExpander"] {
         position: fixed !important;
         bottom: 15px !important;
@@ -174,10 +177,12 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+
 # ==========================================
 # 🤖 ASISTENTE DE PRIORIDADES Y RESUMEN
 # ==========================================
 with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
+
     st.markdown("""
     <style>
         div[data-testid="stExpander"] button {
@@ -792,6 +797,7 @@ def gen_poligonos(data_target=None):
 PERFILES = {}
 perfil_actual = "LUNES"
 
+# 🟢 RENDERIZADO DEL HTML NATIVO EXACTO DE TU CÓDIGO BASE
 app_html = f"""
 <!DOCTYPE html>
 <html>
@@ -1126,6 +1132,9 @@ app_html = f"""
 
 <!-- LÓGICA DE JAVASCRIPT NATIVA ORIGINAL DE TU CÓDIGO BASE -->
 <script>
+    // 🟢 DESTRUCCIÓN PREVENTIVA DE LOCALSTORAGE PARA EVITAR CONFLICTOS CON COOKIES VIEJAS
+    try {{ localStorage.clear(); }} catch(e) {{}}
+
     const perfiles = {json.dumps(PERFILES)};
     const perfilActual = "{perfil_actual}";
 
@@ -1221,7 +1230,6 @@ app_html = f"""
     function limpiarPantallaCompleta() {{
         if (!confirm("¿Deseas vaciar los valores editados de la pantalla para iniciar un nuevo ruteo?")) return;
         
-        // 🟢 AUTO-LIMPIEZA DE LOCALSTORAGE PARA EVITAR CONFLICTOS
         try {{ localStorage.clear(); }} catch(e) {{}}
 
         document.querySelectorAll('.v-total-val, .nodos-val, .nodos-campeche').forEach(el => el.innerText = "0");
@@ -1417,7 +1425,7 @@ app_html = f"""
     // 🟢 DISTRIBUCIÓN AUTOMÁTICA NATIVA EXACTA DE TU CÓDIGO BASE
     function distribuirAutomatico() {{
         let fleet = [];
-        document.querySelectorAll('#body-' + currentTab + ' tr').forEach(row => {{
+        document.querySelectorAll('#body-' + currentTab + ' tr.master-row').forEach(row => {{
             let nombre = row.querySelector('.edit-name')?.innerText.trim();
             let sprMax = parseFloat(row.querySelector('.edit-spr-max')?.innerText) || 0;
             let stock = parseInt(row.querySelector('.f-stock')?.innerText) || 0;
@@ -1467,11 +1475,19 @@ app_html = f"""
                 if (!unidad) break;
 
                 let necesarias = Math.ceil(restante / unidad.spr);
-                let usar = Math.min(necesarias, unidad.restante);
+                
+                let permiteExceso = unidad.nombre.toLowerCase().includes("car") || unidad.nombre.toLowerCase().includes("mlp");
+                let usar;
+                if (unidad.restante > 0) {{
+                    usar = Math.min(necesarias, unidad.restante);
+                }} else if (permiteExceso) {{
+                    usar = necesarias;
+                }} else {{
+                    usar = 0;
+                }}
 
                 if (usar <= 0) continue;
 
-                // 🟢 RELLENAR EL DESPLEGABLE Y ELEGIR LA UNIDAD
                 let selectElem = fila.querySelector('.s-type');
                 if (selectElem) {{
                     let optHtml = '<option value="">Seleccionar...</option>';
