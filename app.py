@@ -2660,7 +2660,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         if (!svc || !contenido) {{
             alert("⚠️ Por favor completa todos los campos.");
             return;
-        }
+        }}
 
         if (!supabaseClient) {{
             alert("⚠️ No hay conexión con la base de datos.");
