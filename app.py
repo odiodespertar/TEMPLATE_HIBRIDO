@@ -1900,6 +1900,11 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     <button class="opcion-menu-ruteos" onclick="limpiarPantallaCompleta()">🧹 &nbsp; LIMPIAR PANTALLA</button>
 </div>
 
+
+    <!-- 👁️ OPCIÓN OCULTAR / MOSTRAR PLANES EXTRA -->
+    <button id="btn-ocultar-extra-menu" class="opcion-menu-ruteos" onclick="togglePlanesExtra()">👁️ &nbsp; OCULTAR PLANES EXTRA</button>
+</div>
+
 <div style="display:flex; flex-direction:column; gap:20px; width:100%;">
 
 
@@ -2458,6 +2463,41 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         // Cierra el menú al terminar
         toggleMenuLateralVisual();
     }}
+
+
+    // 🟢 FUNCIÓN OCULTAR / MOSTRAR PLANES EXTRA (GENÉRICOS)
+    let planesExtraOcultos = false;
+
+    function togglePlanesExtra() {{
+        planesExtraOcultos = !planesExtraOcultos;
+        const btnMenu = document.getElementById("btn-ocultar-extra-menu");
+
+        // Recorrer todos los bloques de polígonos en pantalla
+        document.querySelectorAll(".poligono-bloque").forEach(bloque => {{
+            const tdPlan = bloque.querySelector("td.plan-cell");
+            if (tdPlan) {{
+                const nombrePlan = tdPlan.innerText.trim().toUpperCase();
+
+                // Expresión regular que detecta nombres genéricos tipo PLAN 1, PLAN 2, PLAN 10, etc.
+                const esPlanGenerico = /^PLAN\s+\d+$/i.test(nombrePlan);
+
+                if (esPlanGenerico) {{
+                    bloque.style.display = planesExtraOcultos ? "none" : "block";
+                }}
+            }}
+        }});
+
+        // Actualizar el texto del botón en el menú
+        if (btnMenu) {{
+            btnMenu.innerHTML = planesExtraOcultos 
+                ? "👁️ &nbsp; MOSTRAR PLANES EXTRA" 
+                : "👁️ &nbsp; OCULTAR PLANES EXTRA";
+        }}
+
+        // Cierra el menú al ejecutar la acción
+        toggleMenuLateralVisual();
+    }}
+    
 
 
 
