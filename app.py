@@ -2665,7 +2665,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             // 🟢 GUARDADO EN TABLA NOTAS_SVC_2
             const { data, error } = await supabaseClient
                 .from("notas_svc_2")
-                .upsert([{ svc: svc, contenido: contenido }}], { onConflict: 'svc' });
+                .upsert([{{ svc: svc, contenido: contenido }}], {{ onConflict: 'svc' }});
 
             if (error) {{
                 alert("❌ Error al guardar: " + error.message);
