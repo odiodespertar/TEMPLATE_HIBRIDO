@@ -23,7 +23,7 @@ def init_supabase():
 
 supabase = init_supabase()
 
-def obtener_notas_svc():
+def obtener_notas_svc_2():
     if not supabase:
         return []
     try:
@@ -532,7 +532,7 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
                         break
 
                 # 🟢 BÚSQUEDA EN SUPABASE (TABLA NOTAS_SVC_2)
-                notas_bd = obtener_notas_svc()
+                notas_bd = obtener_notas_svc_2()
                 notas_matcheadas = [n for n in notas_bd if str(n.get("svc","")).lower().strip() in query_lower or query_lower in str(n.get("svc","")).lower().strip()]
                 if notas_matcheadas:
                     bloque_notas = "📝 **Notas adicionales registradas:**\n\n" + "\n".join([f"• {n['contenido']}" for n in notas_matcheadas])
