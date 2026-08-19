@@ -1903,7 +1903,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
     <!-- 👁️ OPCIÓN OCULTAR / MOSTRAR PLANES EXTRA -->
     <button id="btn-ocultar-extra-menu" class="opcion-menu-ruteos" onclick="togglePlanesExtra()">👁️ &nbsp; OCULTAR PLANES EXTRA</button>
-</div>
 
 <div style="display:flex; flex-direction:column; gap:20px; width:100%;">
 
