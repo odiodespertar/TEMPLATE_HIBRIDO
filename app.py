@@ -9,7 +9,7 @@ from reglas import reglas_ruteo, MAPA_ORIGENES, PREGUNTAS_FRECUENTES
 st.set_page_config(page_title="Monitor Logístico - Liliana García", layout="wide", initial_sidebar_state="expanded")
 
 # ==========================================
-# CONEXIÓN A SUPABASE (ÚNICAMENTE NOTAS SVC)
+# CONEXIÓN ANÓNIMA A SUPABASE PARA NOTAS SVC
 # ==========================================
 @st.cache_resource
 def init_supabase():
@@ -59,7 +59,6 @@ if st.session_state.flotar_activo:
         </style>
     """, unsafe_allow_html=True)
 
-
 # ==========================================
 # CSS GENERAL + ESTILO DE VENTANA FLOTANTE
 # ========================================== 
@@ -96,7 +95,6 @@ st.markdown("""
             zoom: 0.95; 
         }
     }
-    /* --- VENTANA FLOTANTE BOT --- */
     div[data-testid="stExpander"] {
         position: fixed !important;
         bottom: 15px !important;
@@ -176,12 +174,10 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-
 # ==========================================
 # 🤖 ASISTENTE DE PRIORIDADES Y RESUMEN
 # ==========================================
-with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
-
+with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
     st.markdown("""
     <style>
         div[data-testid="stExpander"] button {
@@ -478,7 +474,6 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                     )
                     partes_respuesta.append(bloque_mapa)
 
-                # BÚSQUEDA EN SUPABASE NOTAS
                 notas_bd = obtener_notas_svc()
                 notas_matcheadas = [n for n in notas_bd if str(n.get("svc","")).lower().strip() in query_lower or query_lower in str(n.get("svc","")).lower().strip()]
                 if notas_matcheadas:
@@ -797,10 +792,6 @@ def gen_poligonos(data_target=None):
 PERFILES = {}
 perfil_actual = "LUNES"
 
-reglas_json = json.dumps(reglas_ruteo)
-mapa_origenes_json = json.dumps(MAPA_ORIGENES)
-preguntas_faq_json = json.dumps(PREGUNTAS_FRECUENTES)
-
 app_html = f"""
 <!DOCTYPE html>
 <html>
@@ -925,7 +916,7 @@ app_html = f"""
         <button class="filter-btn" onclick="filterRows(false)" style="cursor:pointer; background: #808080; color:white; border:none; font-size:12px; padding:4px 9px; border-radius:6px; font-weight:bold; outline: none;">TODAS</button>
     </div>
 
-    <!-- CONTENEDOR DE TABLAS DE DISPONIBILIDAD CON SELECTOR NATIVO -->
+    <!-- CONTENEDOR DE TABLAS DE DISPONIBILIDAD CON SELECTOR -->
     <div id="fleet-sticky" class="fleet-normal">
         <div id="handle-moverse-flotante" onpointerdown="iniciarArrastreFlotante(event)" style="display:none; width:100%; height:28px; background:#343a40; color:#ffffff; font-size:11px; font-weight:bold; line-height:28px; border-radius:6px 6px 0 0; margin:-6px -6px 6px -6px; cursor:grab; user-select:none; z-index:9999999; position:relative; padding:0 8px; box-sizing:border-box; touch-action:none;">
             <span style="float:left;">:: CLIC Y ARRASTRA AQUÍ PARA MOVER ::</span>
@@ -1133,7 +1124,7 @@ app_html = f"""
     </div>
 </div>
 
-<!-- LÓGICA DE JAVASCRIPT NATIVA EXACTA DEL TEMPLATE ORIGINAL -->
+<!-- LÓGICA DE JAVASCRIPT NATIVA ORIGINAL DE TU CÓDIGO BASE -->
 <script>
     const perfiles = {json.dumps(PERFILES)};
     const perfilActual = "{perfil_actual}";
@@ -1229,6 +1220,10 @@ app_html = f"""
 
     function limpiarPantallaCompleta() {{
         if (!confirm("¿Deseas vaciar los valores editados de la pantalla para iniciar un nuevo ruteo?")) return;
+        
+        // 🟢 AUTO-LIMPIEZA DE LOCALSTORAGE PARA EVITAR CONFLICTOS
+        try {{ localStorage.clear(); }} catch(e) {{}}
+
         document.querySelectorAll('.v-total-val, .nodos-val, .nodos-campeche').forEach(el => el.innerText = "0");
         document.querySelectorAll('.calc-row').forEach(row => {{
             let uSpan = row.querySelector('.u-manual');
@@ -1281,89 +1276,7 @@ app_html = f"""
         recalc();
     }}
 
-    function resetRow(sel) {{
-        let r = sel.closest('tr');
-        if (!r) return;
-        let table = sel.closest('table');
-        if (!table) return;
-
-        let tbody = table.querySelector('tbody');
-        let unidadSeleccionada = sel.value;
-
-        if (unidadSeleccionada === "") {{
-            r.querySelector('.u-manual').innerText = "0";
-            r.querySelector('.spr-real-val').innerText = "0";
-            editedRowsPlan.delete(r);
-            recalc();
-            return;
-        }}
-
-        let volTotalSpan = table.querySelector('.v-total-val');
-        let volumenTotal = volTotalSpan ? parseFloat(volTotalSpan.textContent) || 0 : 0;
-
-        let sprEncontrado = 0;
-        let stockInicialFlota = 0;
-        let totalUnidadesUsadasEnEstaPestana = 0;
-        
-        let filasFlota = document.querySelectorAll('#body-' + currentTab + ' .master-row');
-        for (let filaFlota of filasFlota) {{
-            let celdaNombre = filaFlota.querySelector('.edit-name');
-            if (celdaNombre && celdaNombre.innerText.trim() === unidadSeleccionada.trim()) {{
-                let celdaSprMax = filaFlota.querySelector('.edit-spr-max');
-                let celdaStock = filaFlota.querySelector('.f-stock');
-                
-                if (celdaSprMax) sprEncontrado = parseFloat(celdaSprMax.innerText) || 0;
-                if (celdaStock) stockInicialFlota = parseInt(celdaStock.innerText) || 0;
-                break;
-            }}
-        }}
-
-        let spanS = r.querySelector('.spr-real-val');
-        if (spanS) {{
-            spanS.innerText = sprEncontrado;
-        }}
-
-        let volumenYaCubierto = 0;
-        let todasLasFilasPlan = tbody.querySelectorAll('tr.calc-row');
-        
-        todasLasFilasPlan.forEach(filaPlan => {{
-            if (filaPlan !== r) {{
-                let u = parseInt(filaPlan.querySelector('.u-manual').innerText) || 0;
-                let spr = parseFloat(filaPlan.querySelector('.spr-real-val').innerText) || 0;
-                volumenYaCubierto += (u * spr);
-            }}
-        }});
-
-        let volumenRestantePlan = volumenTotal - volumenYaCubierto;
-        if (volumenRestantePlan < 0) volumenRestantePlan = 0;
-
-        document.querySelectorAll('#polys-' + currentTab + ' .calc-row').forEach(fGlobal => {{
-            if (fGlobal !== r) {{
-                let t = fGlobal.querySelector('.s-type')?.value || "";
-                if (t.trim() === unidadSeleccionada.trim()) {{
-                    totalUnidadesUsadasEnEstaPestana += parseInt(fGlobal.querySelector('.u-manual').innerText) || 0;
-                }}
-            }}
-        }});
-
-        let inventarioDisponibleReal = stockInicialFlota - totalUnidadesUsadasEnEstaPestana;
-        if (inventarioDisponibleReal < 0) inventarioDisponibleReal = 0;
-
-        let unidadesCalculadas = 0;
-        if (unidadSeleccionada.trim() === "Delivery Cell Large Van") {{
-            unidadesCalculadas = 1;
-        }} else if (volumenRestantePlan > 0 && sprEncontrado > 0) {{
-            unidadesCalculadas = Math.ceil(volumenRestantePlan / sprEncontrado);
-        }}
-
-        let spanU = r.querySelector('.u-manual');
-        if (spanU) {{
-            spanU.innerText = unidadesCalculadas;
-        }}
-
-        updateSelectColor(sel);
-        recalc();
-    }}
+    function resetRow(sel) {{ updateSelectColor(sel); recalc(); }}
 
     function updateSelectColor(selectElement) {{
         if (selectElement.value === "") {{
@@ -1501,10 +1414,10 @@ app_html = f"""
         }}
     }}
 
-    // 🟢 DISTRIBUCIÓN AUTOMÁTICA NATIVA CORREGIDA
+    // 🟢 DISTRIBUCIÓN AUTOMÁTICA NATIVA EXACTA DE TU CÓDIGO BASE
     function distribuirAutomatico() {{
         let fleet = [];
-        document.querySelectorAll('#body-' + currentTab + ' tr.master-row').forEach(row => {{
+        document.querySelectorAll('#body-' + currentTab + ' tr').forEach(row => {{
             let nombre = row.querySelector('.edit-name')?.innerText.trim();
             let sprMax = parseFloat(row.querySelector('.edit-spr-max')?.innerText) || 0;
             let stock = parseInt(row.querySelector('.f-stock')?.innerText) || 0;
@@ -1554,33 +1467,18 @@ app_html = f"""
                 if (!unidad) break;
 
                 let necesarias = Math.ceil(restante / unidad.spr);
-                
-                let permiteExceso = unidad.nombre.toLowerCase().includes("car") || unidad.nombre.toLowerCase().includes("mlp");
-                let usar;
-                if (unidad.restante > 0) {{
-                    usar = Math.min(necesarias, unidad.restante);
-                }} else if (permiteExceso) {{
-                    usar = necesarias;
-                }} else {{
-                    usar = 0;
-                }}
+                let usar = Math.min(necesarias, unidad.restante);
 
                 if (usar <= 0) continue;
 
+                // 🟢 RELLENAR EL DESPLEGABLE Y ELEGIR LA UNIDAD
                 let selectElem = fila.querySelector('.s-type');
                 if (selectElem) {{
-                    let htmlOpciones = '<option value="">Seleccionar...</option>';
-                    fleet.forEach(f => {{
-                        htmlOpciones += `<option value="${{f.nombre}}">${{f.nombre}}</option>`;
-                    }});
-                    selectElem.innerHTML = htmlOpciones;
+                    let optHtml = '<option value="">Seleccionar...</option>';
+                    fleet.forEach(f => {{ optHtml += `<option value="${{f.nombre}}">${{f.nombre}}</option>`; }});
+                    selectElem.innerHTML = optHtml;
                     selectElem.value = unidad.nombre;
-                    
-                    if (typeof resetRow === 'function') {{
-                        resetRow(selectElem);
-                    }} else {{
-                        updateSelectColor(selectElem);
-                    }}
+                    updateSelectColor(selectElem);
                 }}
 
                 fila.querySelector('.u-manual').innerText = usar;
