@@ -2083,6 +2083,11 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         TODAS
     </button>
 
+    <!-- NUEVOS BOTONES DE REDUCCIÓN DE HORAS -->
+    <button onclick="reducirHoras()" style="cursor:pointer; background: #dc3545; color:white; border:none; font-size:12px; padding:4px 9px; border-radius:6px; font-weight:bold; outline: none;" title="Reducir 1 hora">
+         ➖ 1h
+    </button>
+
     <button id="excel-btn" onclick="toggleExcelView()" title="VISTA EXCEL"
             style="cursor:pointer; background:#228B22; color:white; border:none; font-size:12px; padding:4px 9px; border-radius:6px; font-weight:bold; box-shadow:0 2px 0 #1c6d1c; outline:none;">
             VISTA EXCEL
