@@ -33,6 +33,18 @@ def obtener_notas_svc_2():
         return []
 
 
+def guardar_nota_bd(svc, contenido):
+    if not supabase:
+        return False
+    try:
+        supabase.table("notas_svc_2").upsert({
+            "svc": svc.upper().strip(), 
+            "contenido": contenido.strip()
+        }, on_conflict="svc").execute()
+        return True
+    except Exception as e:
+        return False
+
 # ==========================================
 # ESTADO Y CONTROL DEL MODO FLOTANTE
 # ==========================================
@@ -5359,3 +5371,28 @@ html_limpio = """
 
 st.markdown("---")
 html(html_limpio, height=220, scrolling=False)
+
+# ==========================================
+# 📝 VENTANA EMERGENTE PARA NOTAS SVC
+# ==========================================
+@st.dialog("📝 AGREGAR INFORMACIÓN DE SVC")
+def abrir_modal_notas():
+    st.write("Escribe el SVC y la nota adicional que debe considerar el asistente.")
+    input_svc = st.text_input("SVC / Estación:", placeholder="Ej. SJA1")
+    input_nota = st.text_area("Información Adicional:", placeholder="Escribe la información aquí...")
+    
+    if st.button("💾 GUARDAR EN BASE DE DATOS", use_container_width=True):
+        if not input_svc or not input_nota:
+            st.warning("⚠️ Completa todos los campos antes de guardar.")
+        else:
+            exito = guardar_nota_bd(input_svc, input_nota)
+            if exito:
+                st.success(f"✅ ¡Guardado exitosamente para {input_svc.upper()}!")
+                st.rerun()
+            else:
+                st.error("❌ Error al guardar en Supabase. Verifica la conexión.")
+
+# Botón en la barra lateral izquierda de Streamlit
+with st.sidebar:
+    if st.button("📝 AGREGAR NOTA SVC", use_container_width=True):
+        abrir_modal_notas()
