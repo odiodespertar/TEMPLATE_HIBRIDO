@@ -228,14 +228,6 @@ st.markdown("""
         margin: 6px 0 !important;
     }
 
-    /* 🔥 FORZAR A TODOS LOS ELEMENTOS HIJOS (párrafos, listas, viñetas, negritas, spans) */
-    div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) *,
-    div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) * {
-        color-scheme: light !important;
-        color: #000000 !important;
-    }
-
-  
 
     /* Cuando el panel está flotando, oculta los botones y la barra de pestañas */
     .fleet-floating .vista-excel-btn,
@@ -486,130 +478,98 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
 
 
     /* =========================================================
-       🎯 BOTONES DEL ASISTENTE — HOVER SIEMPRE LEGIBLE
+       🎯 OPCIONES DEL ASISTENTE
+       TEXTO GRIS — NUNCA BLANCO
        ========================================================= */
 
-    /* Texto normal */
-    div[data-testid="stExpander"] button {
-        color: #ffffff !important;
-        -webkit-text-fill-color: #ffffff !important;
-    }
+    /* ---------------------------------------------------------
+       BOTONES DEL CUESTIONARIO
+       --------------------------------------------------------- */
 
-    /* Al pasar el mouse */
-    div[data-testid="stExpander"] button:hover {
-        color: #ffffff !important;
-        -webkit-text-fill-color: #ffffff !important;
-    }
-
-    /* Elementos internos del botón */
-    div[data-testid="stExpander"] button:hover *,
-    div[data-testid="stExpander"] button:focus *,
-    div[data-testid="stExpander"] button:active * {
-        color: #ffffff !important;
-        -webkit-text-fill-color: #ffffff !important;
-    }
-
-    /* Botones deshabilitados */
-    div[data-testid="stExpander"] button:disabled {
+    div[data-testid="stExpander"] div[data-testid="stButton"] button,
+    div[data-testid="stExpander"] div[data-testid="stButton"] button *,
+    div[data-testid="stExpander"] div[data-testid="stButton"] button p,
+    div[data-testid="stExpander"] div[data-testid="stButton"] button span,
+    div[data-testid="stExpander"] div[data-testid="stButton"] button div {
         color: #475569 !important;
         -webkit-text-fill-color: #475569 !important;
+        text-shadow: none !important;
+    }
+
+
+    /* ---------------------------------------------------------
+       HOVER
+       --------------------------------------------------------- */
+
+    div[data-testid="stExpander"] div[data-testid="stButton"] button:hover,
+    div[data-testid="stExpander"] div[data-testid="stButton"] button:hover *,
+    div[data-testid="stExpander"] div[data-testid="stButton"] button:hover p,
+    div[data-testid="stExpander"] div[data-testid="stButton"] button:hover span,
+    div[data-testid="stExpander"] div[data-testid="stButton"] button:hover div {
+        color: #475569 !important;
+        -webkit-text-fill-color: #475569 !important;
+        text-shadow: none !important;
+    }
+
+
+    /* ---------------------------------------------------------
+       FOCUS / ACTIVE / FOCUS VISIBLE
+       --------------------------------------------------------- */
+
+    div[data-testid="stExpander"] div[data-testid="stButton"] button:focus,
+    div[data-testid="stExpander"] div[data-testid="stButton"] button:focus *,
+    div[data-testid="stExpander"] div[data-testid="stButton"] button:focus-visible,
+    div[data-testid="stExpander"] div[data-testid="stButton"] button:focus-visible *,
+    div[data-testid="stExpander"] div[data-testid="stButton"] button:active,
+    div[data-testid="stExpander"] div[data-testid="stButton"] button:active * {
+        color: #475569 !important;
+        -webkit-text-fill-color: #475569 !important;
+        text-shadow: none !important;
+    }
+
+
+    /* ---------------------------------------------------------
+       DESHABILITADOS
+       --------------------------------------------------------- */
+
+    div[data-testid="stExpander"] div[data-testid="stButton"] button:disabled,
+    div[data-testid="stExpander"] div[data-testid="stButton"] button:disabled *,
+    div[data-testid="stExpander"] div[data-testid="stButton"] button:disabled p,
+    div[data-testid="stExpander"] div[data-testid="stButton"] button:disabled span {
+        color: #64748b !important;
+        -webkit-text-fill-color: #64748b !important;
         opacity: 1 !important;
+        text-shadow: none !important;
     }
 
-    div[data-testid="stExpander"] button:disabled * {
+
+    /* =========================================================
+       ☑️ CHECKBOXES
+       ========================================================= */
+
+    div[data-testid="stExpander"] div[data-testid="stCheckbox"] label,
+    div[data-testid="stExpander"] div[data-testid="stCheckbox"] label *,
+    div[data-testid="stExpander"] div[data-testid="stCheckbox"] label p,
+    div[data-testid="stExpander"] div[data-testid="stCheckbox"] label span {
         color: #475569 !important;
         -webkit-text-fill-color: #475569 !important;
+        text-shadow: none !important;
     }
 
 
+    /* ---------------------------------------------------------
+       CHECKBOX HOVER / FOCUS
+       --------------------------------------------------------- */
 
+    div[data-testid="stExpander"] div[data-testid="stCheckbox"] label:hover,
+    div[data-testid="stExpander"] div[data-testid="stCheckbox"] label:hover *,
+    div[data-testid="stExpander"] div[data-testid="stCheckbox"] label:focus *,
+    div[data-testid="stExpander"] div[data-testid="stCheckbox"] label:active * {
+        color: #475569 !important;
+        -webkit-text-fill-color: #475569 !important;
+        text-shadow: none !important;
+    }
 
-        /* =========================================================
-           🎨 CONTRASTE DE BOTONES DEL ASISTENTE
-           Se adapta automáticamente a modo claro / oscuro
-           ========================================================= */
-
-        /* ☀️ MODO CLARO */
-        @media (prefers-color-scheme: light) {
-
-            /* Botones del cuestionario */
-            div[data-testid="stButton"] button {
-                color: #1e293b !important;
-            }
-
-            div[data-testid="stButton"] button p,
-            div[data-testid="stButton"] button span {
-                color: #1e293b !important;
-            }
-
-            /* Checkboxes */
-            div[data-testid="stCheckbox"] label,
-            div[data-testid="stCheckbox"] label p,
-            div[data-testid="stCheckbox"] label span {
-                color: #334155 !important;
-            }
-
-            /* Texto de los botones cuando se pasa el mouse */
-            div[data-testid="stButton"] button:hover,
-            div[data-testid="stButton"] button:hover p,
-            div[data-testid="stButton"] button:hover span {
-                color: #0f172a !important;
-            }
-        }
-
-
-        /* 🌙 MODO OSCURO */
-        @media (prefers-color-scheme: dark) {
-
-            /* Botones del cuestionario */
-            div[data-testid="stButton"] button {
-                color: #ffffff !important;
-            }
-
-            div[data-testid="stButton"] button p,
-            div[data-testid="stButton"] button span {
-                color: #ffffff !important;
-            }
-
-            /* Checkboxes */
-            div[data-testid="stCheckbox"] label,
-            div[data-testid="stCheckbox"] label p,
-            div[data-testid="stCheckbox"] label span {
-                color: #e5e7eb !important;
-            }
-
-            /* Hover */
-            div[data-testid="stButton"] button:hover,
-            div[data-testid="stButton"] button:hover p,
-            div[data-testid="stButton"] button:hover span {
-                color: #ffffff !important;
-            }
-        }
-
-
-        /* =========================================================
-           🎨 TEXTO DE OPCIONES — GRIS FIJO
-           ========================================================= */
-
-        div[data-testid="stButton"] button,
-        div[data-testid="stButton"] button p,
-        div[data-testid="stButton"] button span,
-        div[data-testid="stButton"] button div {
-            color: #64748b !important;
-        }
-
-        div[data-testid="stButton"] button:hover,
-        div[data-testid="stButton"] button:hover p,
-        div[data-testid="stButton"] button:hover span,
-        div[data-testid="stButton"] button:hover div {
-            color: #475569 !important;
-        }
-
-        div[data-testid="stCheckbox"] label,
-        div[data-testid="stCheckbox"] label p,
-        div[data-testid="stCheckbox"] label span {
-            color: #64748b !important;
-        }
 
     </style>
     """, unsafe_allow_html=True)
