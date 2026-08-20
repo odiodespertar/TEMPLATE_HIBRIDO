@@ -33,6 +33,37 @@ def obtener_notas_svc_2():
         return []
 
 
+def guardar_nota_bd(svc, contenido):
+    if not supabase:
+        return False
+    try:
+        supabase.table("notas_svc_2").upsert({
+            "svc": svc.upper().strip(), 
+            "contenido": contenido.strip()
+        }, on_conflict="svc").execute()
+        return True
+    except Exception:
+        return False
+
+# 🟢 DIÁLOGO NATIVO DE STREAMLIT (SEGURIDAD Y CONEXIÓN DIRECTA)
+@st.dialog("📝 AGREGAR INFORMACIÓN DE SVC")
+def abrir_modal_notas():
+    st.write("Escribe el SVC y la nota adicional que debe considerar el asistente.")
+    input_svc = st.text_input("SVC / Estación:", placeholder="Ej. SJA1")
+    input_nota = st.text_area("Información Adicional:", placeholder="Escribe la información aquí...")
+    
+    if st.button("💾 GUARDAR EN BASE DE DATOS", use_container_width=True):
+        if not input_svc or not input_nota:
+            st.warning("⚠️ Completa todos los campos antes de guardar.")
+        else:
+            exito = guardar_nota_bd(input_svc, input_nota)
+            if exito:
+                st.success(f"✅ ¡Guardado exitosamente para {input_svc.upper()}!")
+                st.rerun()
+            else:
+                st.error("❌ Error al conectar con Supabase.")
+
+
 # ==========================================
 # ESTADO Y CONTROL DEL MODO FLOTANTE
 # ==========================================
@@ -2693,10 +2724,10 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         }}
 
         try {{
-            // Guardar o actualizar registro en notas_svc_2
+            // Guardado en la tabla notas_svc_2 en Supabase
             const {{ data, error }} = await supabaseClient
                 .from("notas_svc_2")
-                .upsert({{ svc: svc, contenido: contenido }}, {{ onConflict: 'svc' }});
+                .upsert([{{ svc: svc, contenido: contenido }}], {{ onConflict: 'svc' }});
 
             if (error) {{
                 alert("❌ Error al guardar en BD: " + error.message);
@@ -2708,7 +2739,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             alert("✅ Información guardada correctamente para " + svc);
             cerrarModalNotasSVC();
         }} catch (err) {{
-            alert("❌ Ocurrió un error al procesar la solicitud.");
+            alert("❌ Error al procesar la solicitud.");
         }}
     }}
 
