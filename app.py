@@ -498,9 +498,9 @@ div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p {
 
     div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p {
 
-        color: #cbd5e1 !important;
+        color: #839396 !important;
 
-        -webkit-text-fill-color: #cbd5e1 !important;
+        -webkit-text-fill-color: #839396 !important;
     }
 
 
