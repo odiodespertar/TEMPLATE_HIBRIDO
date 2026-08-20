@@ -586,6 +586,31 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
             }
         }
 
+
+        /* =========================================================
+           🎨 TEXTO DE OPCIONES — GRIS FIJO
+           ========================================================= */
+
+        div[data-testid="stButton"] button,
+        div[data-testid="stButton"] button p,
+        div[data-testid="stButton"] button span,
+        div[data-testid="stButton"] button div {
+            color: #64748b !important;
+        }
+
+        div[data-testid="stButton"] button:hover,
+        div[data-testid="stButton"] button:hover p,
+        div[data-testid="stButton"] button:hover span,
+        div[data-testid="stButton"] button:hover div {
+            color: #475569 !important;
+        }
+
+        div[data-testid="stCheckbox"] label,
+        div[data-testid="stCheckbox"] label p,
+        div[data-testid="stCheckbox"] label span {
+            color: #64748b !important;
+        }
+
     </style>
     """, unsafe_allow_html=True)
     
