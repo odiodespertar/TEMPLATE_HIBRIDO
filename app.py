@@ -2821,7 +2821,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
   <!-- Barrita con evento pointerdown nativo para soltado perfecto -->
   <div id="handle-moverse-flotante" 
        onpointerdown="iniciarArrastreFlotante(event)"
-       style="display:none; width:100%; height:20px; background:#343a40; color:#ffffff; font-size:11px; font-weight:bold; line-height:28px; border-radius:6px 6px 0 0; margin:-6px -6px 6px -6px; cursor:grab; user-select:none; z-index:9999999; position:relative; padding:0 8px; box-sizing:border-box; touch-action:none;">
+       style="display:none; width:100%; height:28px; background:#343a40; color:#ffffff; font-size:11px; font-weight:bold; line-height:28px; border-radius:6px 6px 0 0; margin:-6px -6px 6px -6px; cursor:grab; user-select:none; z-index:9999999; position:relative; padding:0 8px; box-sizing:border-box; touch-action:none;">
     
     <span style="float:left;">:: CLIC Y ARRASTRA AQUÍ PARA MOVER ::</span>
     
