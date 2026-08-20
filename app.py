@@ -2692,6 +2692,48 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     }}
 
 
+    // ==============================================================================
+    // 💾 REDUCIR ORH
+    // ==============================================================================
+
+    function reducirHoras() {{
+        const filas = document.querySelectorAll("tr");
+    
+        filas.forEach(fila => {{
+            let celdaOrh = fila.querySelector(".edit-orh");
+            let celdaHora = fila.querySelector(".orh-hora");
+        
+            if (celdaOrh && !fila.classList.contains("es-divisor")) {{
+                // Limpiamos cualquier texto o espacios para quedarnos solo con el número puro
+                let textoLimpio = celdaOrh.innerText.replace(/[^0-9.]/g, '');
+                let orhActual = parseFloat(textoLimpio) || 0;
+            
+                // Si la celda tiene valor, obligatoriamente RESTAMOS 60 (1 hora)
+                if (orhActual > 0) {{
+                    let nuevoOrh = orhActual - 60;
+                    if (nuevoOrh < 0) nuevoOrh = 0;
+                
+                    // Actualizamos el ORH con el valor restado
+                    celdaOrh.innerText = nuevoOrh;
+                
+                    // Calculamos la hora correspondiente de forma exacta
+                    let horasNuevas = nuevoOrh / 60;
+                    if (celdaHora) {{
+                        let hInt = Math.floor(horasNuevas);
+                        let mInt = Math.round((horasNuevas - hInt) * 60);
+                        celdaHora.innerText = (hInt < 10 ? "0" + hInt : hInt) + ":" + (mInt < 10 ? "0" + mInt : mInt);
+                    }}
+                }}
+            }}
+        }});
+
+        // Disparar tu función de recálculo existente
+        if (typeof recalc === "function") {{
+            recalc();
+        }}
+    }}
+
+
 
     function aplicarPerfil() {{
 
