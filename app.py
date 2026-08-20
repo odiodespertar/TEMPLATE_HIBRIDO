@@ -190,11 +190,10 @@ st.markdown("""
 
 
 
-
 # ==========================================
 # 🤖 ASISTENTE DE PRIORIDADES Y RESUMEN
 # ==========================================
-with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
+with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
 
     # 🎨 FORZAR COLORES CLAROS Y LEGIBLES EN COMPONENTES NATIVOS
     st.markdown("""
@@ -456,8 +455,6 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
                             st.session_state.main_chat_messages.append({"role": "assistant", "content": resumen_final})
                             st.rerun()
 
-                    
-
                     # 🔙 BOTÓN DE VOLVER / CORREGIR PASO ANTERIOR
                     if len(st.session_state.paso_historial) > 0 and paso > 1:
                         st.markdown("---")
@@ -524,17 +521,16 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
             else:
                 partes_respuesta = []
 
-                # 🟢 1. BÚSQUEDA DE NOTAS EN SUPABASE (TABLA NOTAS_SVC_2)
+                # 🟢 1. BÚSQUEDA EN SUPABASE (TABLA NOTAS_SVC_2)
                 notas_bd = obtener_notas_svc_2()
                 if notas_bd:
-                    # Filtra si el término buscado coincide con el SVC guardado o si el SVC está en la pregunta
                     notas_matcheadas = [
                         n for n in notas_bd 
                         if str(n.get("svc", "")).lower().strip() in query_lower 
                         or query_lower in str(n.get("svc", "")).lower().strip()
                     ]
                     if notas_matcheadas:
-                        bloque_notas = "📝 **Notas adicionales registradas en BD:**\n\n" + "\n".join([f"• **{n['svc']}:** {n['contenido']}" for n in notas_matcheadas])
+                        bloque_notas = "📝 **Notas adicionales registradas:**\n\n" + "\n".join([f"• **{n['svc']}:** {n['contenido']}" for n in notas_matcheadas])
                         partes_respuesta.append(bloque_notas)
 
                 # 2. BÚSQUEDA EN MAPA OPERATIVO (ORIGEN Y VALIDACIÓN)
@@ -643,123 +639,6 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEOS? Te ayudo", expanded=False):
                             partes_respuesta.append(bloque_regla)
 
                 # 5. MONTAJE DE LA RESPUESTA FINAL
-                if partes_respuesta:
-                    respuesta_main = "\n\n---\n\n".join(partes_respuesta)
-                else:
-                    if "resumen" in query_lower:
-                        respuesta_main = "Aquí tienes la opción para armar tu reporte."
-                    else:
-                        respuesta_main = "⚠️ No encontré esa consulta en la base de datos. Puedes consultar por un SVC (ej. SJA1, SLE1, SCP1) o sobre temas específicos como **Alchichica, Xico, Dropeo, Bulk, SDD, etc.**"
-
-
-                
-                # 🟢 BÚSQUEDA EN SUPABASE (TABLA NOTAS_SVC_2)
-                notas_bd = obtener_notas_svc_2()
-                notas_matcheadas = [n for n in notas_bd if str(n.get("svc","")).lower().strip() in query_lower or query_lower in str(n.get("svc","")).lower().strip()]
-                if notas_matcheadas:
-                    bloque_notas = "📝 **Notas adicionales registradas:**\n\n" + "\n".join([f"• {n['contenido']}" for n in notas_matcheadas])
-                    partes_respuesta.append(bloque_notas)
-                
-
-                if svc_mapa:
-                    info = MAPA_ORIGENES[svc_mapa]
-                    origen_tag = f"<span style='background-color: #e2e8f0; color: #0f172a; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-family: monospace;'>{info['origen']}</span>"
-                    
-                    bloque_mapa = (
-                        f"📍 **Origen y Validación para {svc_mapa.upper()}:**\n\n"
-                        f"* 🗺️ **Región:** Región {info['region']}\n"
-                        f"* 🏢 **Origen(es) On Way:** {origen_tag}\n"
-                        f"* ✅ **Validación requerida:** {info['val']}\n\n"
-                        f"*(Nota: Si el SVC solicita agregar blancos, se anexan)*"
-                    )
-                    partes_respuesta.append(bloque_mapa)
-
-                # 2. BÚSQUEDA EN PREGUNTAS FRECUENTES
-                coincidencias_faq = []
-                
-                if any(w in query_lower for w in ["large van sdd", "sdd"]):
-                    coincidencias_faq.append(PREGUNTAS_FRECUENTES["large_van_sdd"])
-                
-                if "bulk" in query_lower:
-                    if "sja1" in query_lower or "centro 1" in query_lower or "centro 2" in query_lower:
-                        coincidencias_faq.append(PREGUNTAS_FRECUENTES["bulk_sja1"])
-                    else:
-                        coincidencias_faq.append(PREGUNTAS_FRECUENTES["bulk_general"])
-                
-                if "alchichica" in query_lower: 
-                    coincidencias_faq.append(PREGUNTAS_FRECUENTES["alchichica"])
-                
-                if any(w in query_lower for w in ["xico", "tuzamapa"]):
-                    coincidencias_faq.append(PREGUNTAS_FRECUENTES["tuzamapa_xico"])
-                
-                if "dropeo" in query_lower or "drop" in query_lower:
-                    coincidencias_faq.append(PREGUNTAS_FRECUENTES["dropeo_nodos_sja1"])
-                
-                if "prioridad" in query_lower or "prioridades" in query_lower or "asignacion" in query_lower or "asignación" in query_lower:
-                    if "sja1" in query_lower and any(w in query_lower for w in ["foraneo", "foráneo", "foraneos", "foráneos"]):
-                        coincidencias_faq.append(PREGUNTAS_FRECUENTES["prioridades_foraneos_sja1"])
-                    elif "sja1" in query_lower:
-                        coincidencias_faq.append(PREGUNTAS_FRECUENTES["prioridades_centro_sja1"])
-                        coincidencias_faq.append(PREGUNTAS_FRECUENTES["prioridades_foraneos_sja1"])
-                    elif "smd1" in query_lower:
-                        coincidencias_faq.append(PREGUNTAS_FRECUENTES["smd1_prioridad"])
-
-                if any(w in query_lower for w in ["quitar", "quitar unidades", "ciclo 2", "pasar a ciclo 2", "orh"]):
-                    if "scp1" in query_lower or not svc_mapa:
-                        coincidencias_faq.append(PREGUNTAS_FRECUENTES["scp1_cambios"])
-
-                if coincidencias_faq:
-                    partes_respuesta.append("\n\n---\n\n".join(coincidencias_faq))
-
-                # 3. BÚSQUEDA EN REGLAS DE RUTEO TRADICIONALES
-                if not coincidencias_faq:
-                    mapeo_centros = {
-                        "smx9": "smx9_extendido", "sgd2": "sgd2_extendido", "smx4": "smx4_extendido",
-                        "smx2": "smx2_extendido", "smt2": "smt2_extendido", "scp1": "scp1",
-                        "smd1": "smd1", "sch1": "sch1", "sja1": "sja1"
-                    }
-
-                    centro_encontrado = None
-                    clave_regla = None
-
-                    if "smx5" in query_lower:
-                        centro_encontrado = "SMX5"
-                        clave_regla = "smx5_precarga" if "precarga" in query_lower else "smx5_extendido"
-                    else:
-                        for termino, clave in mapeo_centros.items():
-                            if termino in query_lower:
-                                centro_encontrado = termino.upper()
-                                clave_regla = clave
-                                break
-
-                    busqueda_origen = any(w in query_lower for w in ["origen", "origenes", "orígenes", "de donde", "de dónde", "sale"])
-                    busqueda_hora = any(w in query_lower for w in ["despacho", "hora", "horario", "tiempo"])
-                    busqueda_unidad = any(w in query_lower for w in ["unidad", "unidades", "moto", "motos", "van", "crowd", "rental"])
-
-                    if clave_regla and clave_regla in reglas_ruteo:
-                        texto_regla = reglas_ruteo[clave_regla]
-                        lineas = [l.strip() for l in texto_regla.split("\n") if l.strip()]
-
-                        if svc_mapa:
-                            lineas = [l for l in lineas if not any(palabra in l.lower() for palabra in ["origen", "orígenes", "📌 origen"])]
-
-                        lineas_filtradas = []
-                        if busqueda_hora:
-                            lineas_filtradas = [l for l in lineas if any(h in l.lower() for h in ["despacho", "pm", "am", "hora"])]
-                        elif busqueda_unidad:
-                            lineas_filtradas = [l for l in lineas if any(u in l.lower() for u in ["moto", "van", "rental", "crowd", "mlp", "cell", "small"])]
-
-                        if lineas_filtradas:
-                            res = "\n".join(lineas_filtradas)
-                            bloque_regla = f"📌 **Indicaciones específicas ({centro_encontrado}):**\n\n{res}"
-                        else:
-                            res = "\n".join(lineas)
-                            bloque_regla = f"📋 **Indicaciones complementarias ({centro_encontrado}):**\n\n{res}"
-
-                        if lineas and not (svc_mapa and busqueda_origen):
-                            partes_respuesta.append(bloque_regla)
-
-                # 4. MONTAJE DE LA RESPUESTA FINAL
                 if partes_respuesta:
                     respuesta_main = "\n\n---\n\n".join(partes_respuesta)
                 else:
