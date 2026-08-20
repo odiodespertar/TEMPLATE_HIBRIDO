@@ -201,16 +201,9 @@ st.markdown("""
     div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) * {
         color-scheme: light !important;
         color: #000000 !important;
-        font-weight: 600 !important;
     }
 
-    /* Altura fija del bloque de mensajes */
-    div[data-testid="stExpander"] div[data-testid="stVerticalBlock"] {
-        max-height: 760px !important;
-        overflow-y: auto !important;
-        display: flex !important;
-        flex-direction: column !important;
-    }
+  
 
     /* Cuando el panel está flotando, oculta los botones y la barra de pestañas */
     .fleet-floating .vista-excel-btn,
