@@ -232,7 +232,7 @@ div[data-testid="stExpander"] summary {
     background: linear-gradient(
         135deg,
         #1c2a39,
-        #132326
+        #192f33
     ) !important;
 
     padding: 15px 18px !important;
