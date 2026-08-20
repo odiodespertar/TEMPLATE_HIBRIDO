@@ -1116,10 +1116,11 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                         
                         # Compara si el SVC (ej: "smx2", "sja1") está en la pregunta del usuario
                         if svc_bd and (svc_bd in query_lower or query_lower in svc_bd):
-                            notas_encontradas.append(f"• **{n.get('svc', '').upper()}:** {contenido_bd}")
+                            contenido_formateado = contenido_bd.replace('\n', '<br>')
+                            notas_encontradas.append(f"• **{n.get('svc', '').upper()}:**<br>{contenido_formateado}"
                     
                     if notas_encontradas:
-                        bloque_notas = "📝 **Notas adicionales registradas en BD:**\n\n" + "\n".join(notas_encontradas)
+                        bloque_notas = "📝 **Notas adicionales registradas en BD:**<br><br>" + "<br><br>".join(notas_encontradas)
                         partes_respuesta.append(bloque_notas)
 
                 # 2. BÚSQUEDA EN MAPA OPERATIVO (ORIGEN Y VALIDACIÓN)
