@@ -2008,8 +2008,45 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     margin-bottom:10px;
 ">
 
-        <div style="background-color: #25282b; color: white; padding: 10px; border-radius: 2px; font-weight: bold; text-align: center; margin-bottom: 10px;">🚚 🚚 DISPONIBILIDAD DE FLOTA 🚛 🚛</div>
-    
+
+    <!-- 📌 RUTEO EN PANTALLA (ESTILO IMAGEN 1) -->
+        <div style="
+            background-color: #26292b; 
+            padding: 8px 15px; 
+            border-radius: 8px; 
+            text-align: center; 
+            margin-bottom: 12px; 
+            border: 1px solid #383d42;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        ">
+            <div style="font-size: 10px; color: #ff5252; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 2px;">
+                📌 RUTEO EN PANTALLA
+            </div>
+
+            <select id="ciclo-selector" onchange="cambiarCiclo(this.value)" style="
+                background: transparent;
+                color: #FFFFFF;
+                border: none;
+                font-size: 22px;
+                font-weight: 900;
+                outline: none;
+                cursor: pointer;
+                width: 100%;
+                max-width: 350px;
+                text-align-last: center;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            ">
+                <option value="2" style="background:#25282b; color:white;">🟢 C1 SCP1</option>
+                <option value="6" style="background:#25282b; color:white;">🔴 C1 SJA1</option>
+                <option value="7" style="background:#25282b; color:white;">🔴 C1 SCH1</option>
+                <option value="8" style="background:#25282b; color:white;">🔴 C1 SMD1</option>
+                <option value="1" style="background:#25282b; color:white;">🟡 PREC SMX5</option>
+                <option value="5" style="background:#25282b; color:white;">🟡 PREC SMX2</option>
+                <option value="4" selected style="background:#25282b; color:white;">🟢 EXTENDIDO</option>
+                <option value="9" style="background:#25282b; color:white;">🟣 C1 VACÍA</option>
+            </select>
+        </div>
 
 
 <div id="panel-control-unico" style="display: flex; gap: 20px; background: #25282b; padding: 15px; border-radius: 10px; color: white; justify-content: center; align-items: center; margin: 20px 0;">
