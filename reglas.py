@@ -1,4 +1,4 @@
-# ==========================================
+um# ==========================================
 # 📚 BASE DE CONOCIMIENTO Y REGLAS DE RUTEO
 # ==========================================
 
@@ -198,10 +198,7 @@ PREGUNTAS_FRECUENTES = {
         "🚛 **Plan Alchichica ND (SJA1):**\n\n"
         "* Se carga en **AM0** (Next Day).\n"
         "* Se le asignan **2 unidades Small Van MLP** (en Logis aparecen como *Small Van SDD*).\n"
-        "* Si el sistema bota una unidad por bajo volumen, déjala así.\n"
-        "* 📏 **Requisitos obligatorios (debe cumplir al menos 1):**\n"
-        "  1. Tener **65 IDs** por cada unidad.\n"
-        "  2. Tener un **ORH de 300 minutos (5 hrs)**."
+        "** Todo el volumen debe irse.**\n"      
     ),
     "scp1_cambios": (
         "🔄 **Ajustes y Quitar Unidades en SCP1:**\n\n"
