@@ -261,128 +261,243 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
     st.markdown("""
     <style>
 
-        /* =====================================================
-           🤖 ASISTENTE DE RUTEO — VENTANA FLOTANTE
-           ===================================================== */
+    /* =========================================================
+       🤖 ASISTENTE DE RUTEO — DISEÑO MODERNO ADAPTATIVO
+       ========================================================= */
 
-        /* VENTANA COMPLETA */
+    /* ---------- VENTANA PRINCIPAL ---------- */
+
+    div[data-testid="stExpander"] {
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 20px !important;
+        overflow: hidden !important;
+
+        background: #f8fafc !important;
+
+        box-shadow:
+            0 20px 45px rgba(15, 23, 42, 0.18),
+            0 4px 12px rgba(15, 23, 42, 0.10) !important;
+
+        transition:
+            background 0.25s ease,
+            border 0.25s ease,
+            box-shadow 0.25s ease !important;
+    }
+
+
+    /* ---------- ENCABEZADO ---------- */
+
+    div[data-testid="stExpander"] summary {
+        background: linear-gradient(
+            135deg,
+            #0f766e,
+            #14b8a6
+        ) !important;
+
+        padding: 15px 18px !important;
+
+        border-radius: 20px !important;
+
+        min-height: 54px !important;
+
+        box-shadow:
+            0 4px 12px rgba(15, 118, 110, 0.20) !important;
+    }
+
+
+    /* ---------- TÍTULO ---------- */
+
+    div[data-testid="stExpander"] summary p,
+    div[data-testid="stExpander"] summary span,
+    div[data-testid="stExpander"] summary div {
+        color: #ffffff !important;
+
+        font-weight: 800 !important;
+
+        font-size: 1.05rem !important;
+
+        letter-spacing: 0.1px !important;
+    }
+
+
+    /* ---------- ICONO ---------- */
+
+    div[data-testid="stExpander"] summary svg {
+        color: #ffffff !important;
+
+        fill: #ffffff !important;
+    }
+
+
+    /* =========================================================
+       ☀️ MODO CLARO
+       ========================================================= */
+
+    @media (prefers-color-scheme: light) {
+
         div[data-testid="stExpander"] {
-            position: fixed !important;
-            right: 20px !important;
-            bottom: 20px !important;
+            background: #f8fafc !important;
 
-            width: 430px !important;
-            max-width: calc(100vw - 40px) !important;
+            border: 1px solid #cbd5e1 !important;
 
-            z-index: 999999 !important;
-
-            border: 1px solid #99f6e4 !important;
-            border-radius: 16px !important;
-
-            box-shadow: 0 10px 35px rgba(0,0,0,0.25) !important;
-
-            background: #ffffff !important;
-
-            overflow: hidden !important;
+            box-shadow:
+                0 20px 45px rgba(15, 23, 42, 0.18),
+                0 4px 12px rgba(15, 23, 42, 0.10) !important;
         }
 
 
-        /* =====================================================
-           ENCABEZADO
-           ===================================================== */
+        /* Área interna */
 
-        div[data-testid="stExpander"] summary {
-            background: linear-gradient(
-                135deg,
-                #0f766e,
-                #14b8a6
-            ) !important;
-
-            padding: 14px 16px !important;
-
-            border-radius: 16px !important;
-
-            min-height: 54px !important;
-
-            box-sizing: border-box !important;
+        div[data-testid="stExpander"] > div {
+            background: #f8fafc !important;
         }
 
 
-        /* =====================================================
-           TÍTULO
-           ===================================================== */
+        /* Texto */
 
-        div[data-testid="stExpander"] summary p,
-        div[data-testid="stExpander"] summary span {
-            color: #1e1d1f !important;
-
-            font-weight: 800 !important;
-
-            font-size: 1.05rem !important;
-        }
-
-
-        /* =====================================================
-           ICONO DEL EXPANDER
-           ===================================================== */
-
-        div[data-testid="stExpander"] summary svg {
-            color: #ffffff !important;
-            fill: #ffffff !important;
-        }
-
-
-        /* =====================================================
-           CONTENIDO INTERNO
-           ===================================================== */
-
-        div[data-testid="stExpander"] > div[role="group"] {
-            max-height: 75vh !important;
-
-            overflow-y: auto !important;
-
-            background: #ffffff !important;
-        }
-
-
-        /* TEXTO INTERNO */
         div[data-testid="stExpander"]
         div[data-testid="stMarkdownContainer"] p {
+
             color: #334155 !important;
+
+        }
+
+
+        /* Tarjeta de presentación */
+
+        .asistente-card {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffffff,
+                    #f0fdfa
+                ) !important;
+
+            border: 1px solid #99f6e4 !important;
+
+            box-shadow:
+                0 6px 18px rgba(15, 118, 110, 0.08) !important;
         }
 
 
-        /* =====================================================
-           📱 PANTALLAS PEQUEÑAS
-           ===================================================== */
-
-        @media (max-width: 700px) {
-
-            div[data-testid="stExpander"] {
-                right: 10px !important;
-                bottom: 10px !important;
-
-                width: calc(100vw - 20px) !important;
-                max-width: calc(100vw - 20px) !important;
-            }
-
+        .asistente-card-title {
+            color: #134e4a !important;
         }
+
+
+        .asistente-card-subtitle {
+            color: #64748b !important;
+        }
+    }
+
+
+    /* =========================================================
+       🌙 MODO OSCURO
+       ========================================================= */
+
+    @media (prefers-color-scheme: dark) {
+
+        div[data-testid="stExpander"] {
+
+            background: #171a1f !important;
+
+            border: 1px solid #475569 !important;
+
+            box-shadow:
+                0 24px 55px rgba(0, 0, 0, 0.55),
+                0 5px 16px rgba(0, 0, 0, 0.35) !important;
+        }
+
+
+        /* Área interna */
+
+        div[data-testid="stExpander"] > div {
+
+            background: #171a1f !important;
+        }
+
+
+        /* Texto general */
+
+        div[data-testid="stExpander"]
+        div[data-testid="stMarkdownContainer"] p {
+
+            color: #e2e8f0 !important;
+        }
+
+
+        /* Tarjeta de presentación */
+
+        .asistente-card {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #1e293b,
+                    #172f31
+                ) !important;
+
+            border: 1px solid #0f766e !important;
+
+            box-shadow:
+                0 8px 22px rgba(0, 0, 0, 0.30) !important;
+        }
+
+
+        .asistente-card-title {
+
+            color: #ccfbf1 !important;
+        }
+
+
+        .asistente-card-subtitle {
+
+            color: #94a3b8 !important;
+        }
+    }
+
+
+    /* =========================================================
+       💬 MENSAJES DEL ASISTENTE
+       ========================================================= */
+
+    div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) {
+
+        border-radius: 14px !important;
+
+        box-shadow:
+            0 3px 10px rgba(15, 23, 42, 0.08) !important;
+
+        margin: 8px 0 !important;
+
+        padding: 10px !important;
+    }
+
+
+    /* =========================================================
+       ✨ BARRA DE CONSULTA
+       ========================================================= */
+
+    div[data-testid="stChatInput"] {
+
+        border-radius: 14px !important;
+    }
+
 
     </style>
     """, unsafe_allow_html=True)
+    
     
     # ==========================================
     # 🤖 TARJETA DE PRESENTACIÓN DEL ASISTENTE
     # ==========================================
 
     st.html("""
-    <div style="
-        background: linear-gradient(135deg, #f0fdfa, #ecfeff);
-        border: 1px solid #99f6e4;
+    <div class="asistente-card" style="
         border-radius: 14px;
         padding: 14px 16px;
         margin-bottom: 12px;
-        box-shadow: 0 4px 14px rgba(15,118,110,0.08);
     ">
 
         <div style="
@@ -396,30 +511,37 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                 height: 42px;
                 min-width: 42px;
                 border-radius: 12px;
-                background: linear-gradient(135deg, #0f766e, #14b8a6);
+
+                background: linear-gradient(
+                    135deg,
+                    #0f766e,
+                    #14b8a6
+                );
+
                 display: flex;
                 align-items: center;
                 justify-content: center;
+
                 font-size: 22px;
-                box-shadow: 0 4px 10px rgba(15,118,110,0.20);
+
+                box-shadow:
+                    0 4px 10px rgba(15,118,110,0.20);
             ">
                 🤖
             </div>
 
             <div>
 
-                <div style="
+                <div class="asistente-card-title" style="
                     font-size: 15px;
                     font-weight: 800;
-                    color: #134e4a;
                     line-height: 1.2;
                 ">
                     Asistente de Ruteo
                 </div>
 
-                <div style="
+                <div class="asistente-card-subtitle" style="
                     font-size: 11px;
-                    color: #64748b;
                     margin-top: 4px;
                 ">
                     SVC · Prioridades · Indicaciones · Resúmenes
