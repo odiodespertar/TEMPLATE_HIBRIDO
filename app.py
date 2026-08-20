@@ -91,7 +91,7 @@ if st.session_state.flotar_activo:
             }
 
             table, div[data-testid="stTable"], .js-plotly-plot {
-                max-height: 250px !important;
+                max-height: 380px !important;
                 overflow-y: auto !important;
                 display: block !important;
             }
