@@ -2115,7 +2115,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 </div>
 
 <style>
-    .custom-option {
+    .custom-option {{
         padding: 10px 16px;
         font-size: 15px;
         font-weight: 700;
@@ -2124,47 +2124,46 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         cursor: pointer;
         transition: background 0.15s ease, color 0.15s ease;
         border-bottom: 1px solid #2e3237;
-    }
-    .custom-option:last-child {
+    }}
+    .custom-option:last-child {{
         border-bottom: none;
-    }
-    .custom-option:hover {
+    }}
+    .custom-option:hover {{
         background: #20B2AA;
         color: #ffffff;
-    }
+    }}
 </style>
 
 <script>
-    function toggleCustomDropdown() {
+    function toggleCustomDropdown() {{
         const menu = document.getElementById("custom-dropdown-menu");
         const arrow = document.getElementById("dropdown-arrow");
         const visible = menu.style.display === "block";
         
         menu.style.display = visible ? "none" : "block";
         arrow.style.transform = visible ? "rotate(0deg)" : "rotate(180deg)";
-    }
+    }}
 
-    function seleccionarOpcionCustom(valor, texto) {
+    function seleccionarOpcionCustom(valor, texto) {{
         document.getElementById("custom-dropdown-selected").innerHTML = texto;
         toggleCustomDropdown();
         
-        if (typeof cambiarCiclo === "function") {
+        if (typeof cambiarCiclo === "function") {{
             cambiarCiclo(valor);
-        }
-    }
+        }}
+    }}
 
     // Cierra el menú si se hace clic fuera de él
-    document.addEventListener("click", function(event) {
+    document.addEventListener("click", function(event) {{
         const dropdown = document.getElementById("custom-dropdown-btn");
         const menu = document.getElementById("custom-dropdown-menu");
-        if (dropdown && menu && !dropdown.contains(event.target) && !menu.contains(event.target)) {
+        if (dropdown && menu && !dropdown.contains(event.target) && !menu.contains(event.target)) {{
             menu.style.display = "none";
             const arrow = document.getElementById("dropdown-arrow");
             if (arrow) arrow.style.transform = "rotate(0deg)";
-        }
-    });
+        }}
+    }});
 </script>
-    
 
 
 <div id="panel-control-unico" style="display: flex; gap: 20px; background: #25282b; padding: 15px; border-radius: 10px; color: white; justify-content: center; align-items: center; margin: 20px 0;">
