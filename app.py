@@ -528,8 +528,7 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                     for n in notas_bd:
                         svc_bd = str(n.get("svc", "")).strip().lower()
                         contenido_bd = str(n.get("contenido", "")).strip()
-                        
-                        # Verifica coincidencia de SVC con lo que escribió el usuario
+                        # Compara en minúsculas para ignorar mayúsculas/minúsculas
                         if svc_bd and (svc_bd in query_lower or query_lower in svc_bd):
                             notas_matcheadas.append(f"• **{n.get('svc', '').upper()}:** {contenido_bd}")
                     
@@ -595,51 +594,52 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                     partes_respuesta.append("\n\n---\n\n".join(coincidencias_faq))
 
                 # 4. BÚSQUEDA EN REGLAS DE RUTEO TRADICIONALES
-                mapeo_centros = {
-                    "smx9": "smx9_extendido", "sgd2": "sgd2_extendido", "smx4": "smx4_extendido",
-                    "smx2": "smx2_extendido", "smt2": "smt2_extendido", "scp1": "scp1",
-                    "smd1": "smd1", "sch1": "sch1", "sja1": "sja1"
-                }
+                if not coincidencias_faq:
+                    mapeo_centros = {
+                        "smx9": "smx9_extendido", "sgd2": "sgd2_extendido", "smx4": "smx4_extendido",
+                        "smx2": "smx2_extendido", "smt2": "smt2_extendido", "scp1": "scp1",
+                        "smd1": "smd1", "sch1": "sch1", "sja1": "sja1"
+                    }
 
-                centro_encontrado = None
-                clave_regla = None
+                    centro_encontrado = None
+                    clave_regla = None
 
-                if "smx5" in query_lower:
-                    centro_encontrado = "SMX5"
-                    clave_regla = "smx5_precarga" if "precarga" in query_lower else "smx5_extendido"
-                else:
-                    for termino, clave in mapeo_centros.items():
-                        if termino in query_lower:
-                            centro_encontrado = termino.upper()
-                            clave_regla = clave
-                            break
-
-                busqueda_origen = any(w in query_lower for w in ["origen", "origenes", "orígenes", "de donde", "de dónde", "sale"])
-                busqueda_hora = any(w in query_lower for w in ["despacho", "hora", "horario", "tiempo"])
-                busqueda_unidad = any(w in query_lower for w in ["unidad", "unidades", "moto", "motos", "van", "crowd", "rental"])
-
-                if clave_regla and clave_regla in reglas_ruteo:
-                    texto_regla = reglas_ruteo[clave_regla]
-                    lineas = [l.strip() for l in texto_regla.split("\n") if l.strip()]
-
-                    if svc_mapa:
-                        lineas = [l for l in lineas if not any(palabra in l.lower() for palabra in ["origen", "orígenes", "📌 origen"])]
-
-                    lineas_filtradas = []
-                    if busqueda_hora:
-                        lineas_filtradas = [l for l in lineas if any(h in l.lower() for h in ["despacho", "pm", "am", "hora"])]
-                    elif busqueda_unidad:
-                        lineas_filtradas = [l for l in lineas if any(u in l.lower() for u in ["moto", "van", "rental", "crowd", "mlp", "cell", "small"])]
-
-                    if lineas_filtradas:
-                        res = "\n".join(lineas_filtradas)
-                        bloque_regla = f"📌 **Indicaciones específicas ({centro_encontrado}):**\n\n{res}"
+                    if "smx5" in query_lower:
+                        centro_encontrado = "SMX5"
+                        clave_regla = "smx5_precarga" if "precarga" in query_lower else "smx5_extendido"
                     else:
-                        res = "\n".join(lineas)
-                        bloque_regla = f"📋 **Indicaciones complementarias ({centro_encontrado}):**\n\n{res}"
+                        for termino, clave in mapeo_centros.items():
+                            if termino in query_lower:
+                                centro_encontrado = termino.upper()
+                                clave_regla = clave
+                                break
 
-                    if lineas and not (svc_mapa and busqueda_origen):
-                        partes_respuesta.append(bloque_regla)
+                    busqueda_origen = any(w in query_lower for w in ["origen", "origenes", "orígenes", "de donde", "de dónde", "sale"])
+                    busqueda_hora = any(w in query_lower for w in ["despacho", "hora", "horario", "tiempo"])
+                    busqueda_unidad = any(w in query_lower for w in ["unidad", "unidades", "moto", "motos", "van", "crowd", "rental"])
+
+                    if clave_regla and clave_regla in reglas_ruteo:
+                        texto_regla = reglas_ruteo[clave_regla]
+                        lineas = [l.strip() for l in texto_regla.split("\n") if l.strip()]
+
+                        if svc_mapa:
+                            lineas = [l for l in lineas if not any(palabra in l.lower() for palabra in ["origen", "orígenes", "📌 origen"])]
+
+                        lineas_filtradas = []
+                        if busqueda_hora:
+                            lineas_filtradas = [l for l in lineas if any(h in l.lower() for h in ["despacho", "pm", "am", "hora"])]
+                        elif busqueda_unidad:
+                            lineas_filtradas = [l for l in lineas if any(u in l.lower() for u in ["moto", "van", "rental", "crowd", "mlp", "cell", "small"])]
+
+                        if lineas_filtradas:
+                            res = "\n".join(lineas_filtradas)
+                            bloque_regla = f"📌 **Indicaciones específicas ({centro_encontrado}):**\n\n{res}"
+                        else:
+                            res = "\n".join(lineas)
+                            bloque_regla = f"📋 **Indicaciones complementarias ({centro_encontrado}):**\n\n{res}"
+
+                        if lineas and not (svc_mapa and busqueda_origen):
+                            partes_respuesta.append(bloque_regla)
 
                 # 5. MONTAJE DE LA RESPUESTA FINAL
                 if partes_respuesta:
@@ -2693,13 +2693,13 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         }}
 
         try {{
-            // 🟢 GUARDADO EN TABLA NOTAS_SVC_2
+            // Guardar o actualizar registro en notas_svc_2
             const {{ data, error }} = await supabaseClient
                 .from("notas_svc_2")
-                .upsert([{{ svc: svc, contenido: contenido }}], {{ onConflict: 'svc' }});
+                .upsert({{ svc: svc, contenido: contenido }}, {{ onConflict: 'svc' }});
 
             if (error) {{
-                alert("❌ Error al guardar: " + error.message);
+                alert("❌ Error al guardar en BD: " + error.message);
                 return;
             }}
 
@@ -2708,7 +2708,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             alert("✅ Información guardada correctamente para " + svc);
             cerrarModalNotasSVC();
         }} catch (err) {{
-            alert("❌ Error al procesar la solicitud.");
+            alert("❌ Ocurrió un error al procesar la solicitud.");
         }}
     }}
 
