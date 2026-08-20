@@ -175,7 +175,7 @@ table {
 div[data-testid="stExpander"] {
     position: fixed !important;
 
-    bottom: 5px !important;
+    bottom: 3px !important;
     right: 15px !important;
     left: auto !important;
     top: auto !important;
