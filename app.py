@@ -488,7 +488,7 @@ div[data-testid="stExpander"] div[data-testid="stChatInput"] {
 /* Área contenedor del input (Formulario) */
 div[data-testid="stExpander"] div[data-testid="stChatInput"] form {
     background: #f8fafc !important;
-    border: 2px solid #20B2AA !important; /* 👈 AQUÍ CAMBIAS EL COLOR DEL CONTORNO */
+    border: 2px solid #0a0a0a !important; /* 👈 AQUÍ CAMBIAS EL COLOR DEL CONTORNO */
     border-radius: 12px !important;       /* Redondeo de las esquinas */
     box-shadow: 0 0 10px rgba(32, 178, 170, 0.3) !important; /* Resplandor sutil opcional */
 }
@@ -504,7 +504,7 @@ div[data-testid="stExpander"] div[data-testid="stChatInput"] form:focus-within {
     div[data-testid="stExpander"] div[data-testid="stChatInput"],
     div[data-testid="stExpander"] div[data-testid="stChatInput"] form {
         background: #171a1f !important;
-        border-color: #20B2AA !important; /* 👈 Color del contorno en modo oscuro */
+        border-color: #0a0a0a !important; /* 👈 Color del contorno en modo oscuro */
     }
 }
 
