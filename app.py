@@ -231,8 +231,8 @@ div[data-testid="stExpander"] > div[role="group"] {
 div[data-testid="stExpander"] summary {
     background: linear-gradient(
         135deg,
-        #1a484f,
-        #008B8B
+        #070808,
+        #202121
     ) !important;
 
     padding: 15px 18px !important;
