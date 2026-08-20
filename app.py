@@ -473,54 +473,40 @@ div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p {
 
 
 /* ============================================================
-   📌 BUSCADOR FIJO DEL ASISTENTE
-   SIEMPRE VISIBLE AL HACER SCROLL
+   📌 BUSCADOR FIJO DEL ASISTENTE Y CONTORNO PERSONALIZADO
    ============================================================ */
 
 div[data-testid="stExpander"] div[data-testid="stChatInput"] {
-
     position: sticky !important;
-
     bottom: 0 !important;
-
     z-index: 99999 !important;
-
     background: #f8fafc !important;
-
     padding-top: 10px !important;
-
     padding-bottom: 6px !important;
-
 }
 
-
-/* Fondo del área del buscador */
-
+/* Área contenedor del input (Formulario) */
 div[data-testid="stExpander"] div[data-testid="stChatInput"] form {
-
     background: #f8fafc !important;
-
+    border: 2px solid #20B2AA !important; /* 👈 AQUÍ CAMBIAS EL COLOR DEL CONTORNO */
+    border-radius: 12px !important;       /* Redondeo de las esquinas */
+    box-shadow: 0 0 10px rgba(32, 178, 170, 0.3) !important; /* Resplandor sutil opcional */
 }
 
+/* Estado al hacer clic/focus en la caja de texto */
+div[data-testid="stExpander"] div[data-testid="stChatInput"] form:focus-within {
+    border-color: #0f766e !important;    /* Color del contorno al escribir */
+    box-shadow: 0 0 12px rgba(15, 118, 110, 0.5) !important;
+}
 
-/* MODO OSCURO */
-
+/* Ajuste para MODO OSCURO si aplica */
 @media (prefers-color-scheme: dark) {
-
-    div[data-testid="stExpander"] div[data-testid="stChatInput"] {
-
-        background: #171a1f !important;
-
-    }
-
+    div[data-testid="stExpander"] div[data-testid="stChatInput"],
     div[data-testid="stExpander"] div[data-testid="stChatInput"] form {
-
         background: #171a1f !important;
-
+        border-color: #20B2AA !important; /* 👈 Color del contorno en modo oscuro */
     }
-
 }
-
 
 
 /* ============================================================
@@ -529,13 +515,9 @@ div[data-testid="stExpander"] div[data-testid="stChatInput"] form {
    ============================================================ */
 
 @media (prefers-color-scheme: dark) {
-
     div[data-testid="stExpander"] {
-
         background: #171a1f !important;
-
         border: 1px solid #475569 !important;
-
         box-shadow:
             0 24px 55px rgba(0, 0, 0, 0.55),
             0 5px 16px rgba(0, 0, 0, 0.35) !important;
@@ -543,25 +525,17 @@ div[data-testid="stExpander"] div[data-testid="stChatInput"] form {
 
 
     div[data-testid="stExpander"] > div[role="group"] {
-
         background: #171a1f !important;
     }
 
-
     /* Texto fuera del globo */
-
     div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p {
-
         color: #747778 !important;
-
         -webkit-text-fill-color: #747778 !important;
     }
 
-
     /* Tarjeta */
-
     .asistente-card {
-
         background: linear-gradient(
             135deg,
             #1e293b,
@@ -569,20 +543,16 @@ div[data-testid="stExpander"] div[data-testid="stChatInput"] form {
         ) !important;
 
         border: 1px solid #0f766e !important;
-
         box-shadow:
             0 8px 22px rgba(0, 0, 0, 0.30) !important;
     }
 
 
     .asistente-card-title {
-
         color: #ccfbf1 !important;
     }
 
-
     .asistente-card-subtitle {
-
         color: #94a3b8 !important;
     }
 
@@ -596,9 +566,7 @@ div[data-testid="stExpander"] div[data-testid="stChatInput"] form {
     div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) {
 
         background: #ffffff !important;
-
         color: #334155 !important;
-
         color-scheme: light !important;
     }
 
