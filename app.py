@@ -376,9 +376,9 @@ div[data-testid="stExpander"] div[data-testid="stButton"] button p,
 div[data-testid="stExpander"] div[data-testid="stButton"] button span,
 div[data-testid="stExpander"] div[data-testid="stButton"] button div {
 
-    color: #475569 !important;
+    color: #53637a !important;
 
-    -webkit-text-fill-color: #475569 !important;
+    -webkit-text-fill-color: #53637a !important;
 
     text-shadow: none !important;
 }
