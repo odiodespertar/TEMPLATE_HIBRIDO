@@ -1111,13 +1111,18 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                 if notas_bd:
                     notas_encontradas = []
                     for n in notas_bd:
-                        svc_bd = str(n.get("svc", "")).strip().lower()
-                        contenido_bd = str(n.get("contenido", "")).strip()
+                        svc_raw = n.get("svc", "") or ""
+                        svc_bd = str(svc_raw).strip().lower()
+                        contenido_bd = str(n.get("contenido", "") or "").strip()
                         
                         # Compara si el SVC (ej: "smx2", "sja1") está en la pregunta del usuario
                         if svc_bd and (svc_bd in query_lower or query_lower in svc_bd):
-                            contenido_formateado = contenido_bd.replace('\n', '<br>')
-                            notas_encontradas.append(f"• **{n.get('svc', '').upper()}:**<br>{contenido_formateado}"
+                            svc_nombre = str(svc_raw).upper()
+                            contenido_formateado = contenido_bd.replace("\n", "<br>")
+                            
+                            # Línea con paréntesis cerrado al final
+                            texto_nota = f"• **{svc_nombre}:**<br>{contenido_formateado}"
+                            notas_encontradas.append(texto_nota)
                     
                     if notas_encontradas:
                         bloque_notas = "📝 **Notas adicionales registradas en BD:**<br><br>" + "<br><br>".join(notas_encontradas)
