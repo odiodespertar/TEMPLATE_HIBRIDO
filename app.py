@@ -2546,9 +2546,16 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             if (checkOk) checkOk.checked = false;
         }});
 
-        // 2. Limpiar Flota (Schedule, ORH y Ocupación)
+        // 2. Limpiar Flota (Schedule, ORH, Ocupación y Memoria de Reducción)
         document.querySelectorAll('.f-stock, .edit-orh, .edit-ocup').forEach(el => el.innerText = "0");
         document.querySelectorAll('.orh-hora').forEach(el => el.innerText = "00:00");
+
+        // 🟢 LIMPIAR MEMORIA DE REDUCCIÓN DE HORAS
+        document.querySelectorAll('tr').forEach(fila => {{
+            if (fila.hasAttribute("data-orh-original")) {{
+                fila.removeAttribute("data-orh-original");
+            }}
+        }});
 
         // 3. Reiniciar memoria de filas editadas y recalcular
         editedRowsPlan.clear();
@@ -2696,6 +2703,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     // 💾 REDUCIR ORH
     // ==============================================================================
 
+    // 🟢 FUNCIÓN REDUCIR ORH EN 1 HORA (60 MINUTOS)
     function reducirHoras() {{
         const filas = document.querySelectorAll("tr");
     
@@ -2704,19 +2712,20 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             let celdaHora = fila.querySelector(".orh-hora");
         
             if (celdaOrh && !fila.classList.contains("es-divisor")) {{
-                // Limpiamos cualquier texto o espacios para quedarnos solo con el número puro
                 let textoLimpio = celdaOrh.innerText.replace(/[^0-9.]/g, '');
                 let orhActual = parseFloat(textoLimpio) || 0;
             
-                // Si la celda tiene valor, obligatoriamente RESTAMOS 60 (1 hora)
                 if (orhActual > 0) {{
+                    // Guardar valor original si no se ha guardado antes
+                    if (!fila.hasAttribute("data-orh-original")) {{
+                        fila.setAttribute("data-orh-original", orhActual);
+                    }}
+
                     let nuevoOrh = orhActual - 60;
                     if (nuevoOrh < 0) nuevoOrh = 0;
                 
-                    // Actualizamos el ORH con el valor restado
                     celdaOrh.innerText = nuevoOrh;
                 
-                    // Calculamos la hora correspondiente de forma exacta
                     let horasNuevas = nuevoOrh / 60;
                     if (celdaHora) {{
                         let hInt = Math.floor(horasNuevas);
@@ -2727,7 +2736,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             }}
         }});
 
-        // Disparar tu función de recálculo existente
         if (typeof recalc === "function") {{
             recalc();
         }}
