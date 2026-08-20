@@ -294,9 +294,8 @@ div[data-testid="stChatMessage"]:has([data-testid*="User"]) {
 div[data-testid="stChatMessage"]:has(div[aria-label="user"]) *,
 div[data-testid="stChatMessage"]:has([data-testid*="User"]) * {
 
-    color: #ffffff !important;
-
-    -webkit-text-fill-color: #ffffff !important;
+    color: #a7abaa !important;
+    -webkit-text-fill-color: #a7abaa !important;
 }
 
 
