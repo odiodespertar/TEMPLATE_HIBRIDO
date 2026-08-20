@@ -136,20 +136,7 @@ st.markdown("""
             zoom: 0.95; 
         }
     }
-    /* --- VENTANA FLOTANTE AJUSTADA Y ORDENADA --- */
-    div[data-testid="stExpander"] {
-        position: fixed !important;
-        bottom: 15px !important;
-        right: 15px !important;
-        width: 550px !important;
-        max-height: 100vh !important; /* Limitado al alto de la pantalla */
-        z-index: 999999 !important;
-        background-color: #fcf1b6 !important;
-        border-radius: 12px !important;
-        border: 4px solid #FFD700 !important;
-        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.7) !important;
-        overflow: hidden !important;
-    }
+    
     
     /* 🔥 TÍTULO DEL BOT ("🤖 BOT prioridades") EN NEGRO OSCURO BIEN VISIBLE */
     div[data-testid="stExpander"] summary,
@@ -266,11 +253,11 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
     </style>
     """, unsafe_allow_html=True)
 
-        # ==========================================
-    # 🤖 TARJETA DE PRESENTACIÓN DEL ASISTENTE
-    # ==========================================
+ # ==========================================
+# 🤖 TARJETA DE PRESENTACIÓN DEL ASISTENTE
+# ==========================================
 
-    st.markdown("""
+st.html("""
 <div style="
     background: linear-gradient(135deg, #f0fdfa, #ecfeff);
     border: 1px solid #99f6e4;
@@ -325,14 +312,14 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
     </div>
 
 </div>
-""", unsafe_allow_html=True)
+""")
 
     st.markdown(
         "<div style='font-size:13px; color:#475569; font-weight:600; margin-bottom:8px;'>"
         "🔎 Consulta un SVC o escribe una indicación"
         "</div>",
         unsafe_allow_html=True
-    )
+)
 
     # Inicialización de Estados
     if "main_chat_messages" not in st.session_state:
