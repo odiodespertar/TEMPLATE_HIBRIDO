@@ -830,7 +830,7 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
     if "data_resumen" not in st.session_state:
         st.session_state.data_resumen = {}
 
-    with st.container():
+    with st.container(height=480):
         # 1. MOSTRAR HISTORIAL DE MENSAJES
         for idx, msg in enumerate(st.session_state.main_chat_messages):
             with st.chat_message(msg["role"]):
