@@ -485,6 +485,43 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
     }
 
 
+    /* =========================================================
+       🎯 BOTONES DEL ASISTENTE — HOVER SIEMPRE LEGIBLE
+       ========================================================= */
+
+    /* Texto normal */
+    div[data-testid="stExpander"] button {
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+    }
+
+    /* Al pasar el mouse */
+    div[data-testid="stExpander"] button:hover {
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+    }
+
+    /* Elementos internos del botón */
+    div[data-testid="stExpander"] button:hover *,
+    div[data-testid="stExpander"] button:focus *,
+    div[data-testid="stExpander"] button:active * {
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+    }
+
+    /* Botones deshabilitados */
+    div[data-testid="stExpander"] button:disabled {
+        color: #475569 !important;
+        -webkit-text-fill-color: #475569 !important;
+        opacity: 1 !important;
+    }
+
+    div[data-testid="stExpander"] button:disabled * {
+        color: #475569 !important;
+        -webkit-text-fill-color: #475569 !important;
+    }
+
+
     </style>
     """, unsafe_allow_html=True)
     
