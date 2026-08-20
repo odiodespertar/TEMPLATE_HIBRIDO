@@ -225,9 +225,7 @@ st.markdown("""
 # ==========================================
 with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
 
-    # ============================================================
-    # 🎨 DISEÑO MODERNO DEL ASISTENTE
-    # ============================================================
+   
     st.markdown("""
     <style>
 
@@ -268,53 +266,66 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
     </style>
     """, unsafe_allow_html=True)
 
-    # PRESENTACIÓN DEL ASISTENTE
+        # ==========================================
+    # 🤖 TARJETA DE PRESENTACIÓN DEL ASISTENTE
+    # ==========================================
+
     st.markdown("""
+<div style="
+    background: linear-gradient(135deg, #f0fdfa, #ecfeff);
+    border: 1px solid #99f6e4;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 14px rgba(15,118,110,0.08);
+">
+
     <div style="
-        background: linear-gradient(135deg, #f0fdfa, #ecfeff);
-        border: 1px solid #99f6e4;
-        border-radius: 12px;
-        padding: 12px 14px;
-        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
     ">
+
         <div style="
+            width: 42px;
+            height: 42px;
+            min-width: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #0f766e, #14b8a6);
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 10px rgba(15,118,110,0.20);
         ">
-            <div style="
-                width: 38px;
-                height: 38px;
-                border-radius: 11px;
-                background: #0f766e;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 20px;
-            ">
-                🤖
-            </div>
-
-            <div>
-                <div style="
-                    font-size: 14px;
-                    font-weight: 800;
-                    color: #134e4a;
-                ">
-                    Asistente de Ruteo
-                </div>
-
-                <div style="
-                    font-size: 11px;
-                    color: #64748b;
-                    margin-top: 2px;
-                ">
-                    SVC · Prioridades · Indicaciones · Resúmenes
-                </div>
-            </div>
+            🤖
         </div>
+
+        <div>
+
+            <div style="
+                font-size: 15px;
+                font-weight: 800;
+                color: #134e4a;
+                line-height: 1.2;
+            ">
+                Asistente de Ruteo
+            </div>
+
+            <div style="
+                font-size: 11px;
+                color: #64748b;
+                margin-top: 4px;
+            ">
+                SVC · Prioridades · Indicaciones · Resúmenes
+            </div>
+
+        </div>
+
     </div>
-    """, unsafe_allow_html=True)
+
+</div>
+""", unsafe_allow_html=True)
 
     st.markdown(
         "<div style='font-size:13px; color:#475569; font-weight:600; margin-bottom:8px;'>"
