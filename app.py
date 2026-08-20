@@ -473,7 +473,7 @@ div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p {
 
 
 /* ============================================================
-   📌 BUSCADOR FIJO DEL ASISTENTE Y CONTORNO PERSONALIZADO
+   📌 BUSCADOR FIJO DEL ASISTENTE 
    ============================================================ */
 
 div[data-testid="stExpander"] div[data-testid="stChatInput"] {
@@ -481,7 +481,7 @@ div[data-testid="stExpander"] div[data-testid="stChatInput"] {
     bottom: 0 !important;
     z-index: 99999 !important;
     background: #f8fafc !important;
-    padding-top: 10px !important;
+    padding-top: 5px !important;
     padding-bottom: 6px !important;
 }
 
