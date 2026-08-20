@@ -473,7 +473,7 @@ div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p {
 
 
 /* ============================================================
-   📌 BUSCADOR FIJO Y ESTILO DE CAJA DE TEXTO (ADIÓS ROJO)
+   📌 BUSCADOR FIJO DEL ASISTENTE Y CONTORNO PERSONALIZADO
    ============================================================ */
 
 div[data-testid="stExpander"] div[data-testid="stChatInput"] {
@@ -485,33 +485,26 @@ div[data-testid="stExpander"] div[data-testid="stChatInput"] {
     padding-bottom: 6px !important;
 }
 
-/* 1. Cambia el contorno rojo al hacer clic / escribir */
-div[data-testid="stChatInput"] div:focus-within {
-    border-color: #20B2AA !important; /* 👈 Color del borde (Turquesa) */
-    box-shadow: 0 0 0 1px #FF6347 !important; /* 👈 Elimina el resplandor rojo */
+/* Área contenedor del input (Formulario) */
+div[data-testid="stExpander"] div[data-testid="stChatInput"] form {
+    background: #f8fafc !important;
+    border: 2px solid #0a0a0a !important; /* 👈 AQUÍ CAMBIAS EL COLOR DEL CONTORNO */
+    border-radius: 12px !important;       /* Redondeo de las esquinas */
+    box-shadow: 0 0 10px rgba(32, 178, 170, 0.3) !important; /* Resplandor sutil opcional */
 }
 
-/* 2. Cambia el fondo rojo del botón de enviar (la flechita) */
-div[data-testid="stChatInput"] button {
-    background-color: #20B2AA !important; /* 👈 Fondo del botón (Turquesa) */
-    border-color: #20B2AA !important;
+/* Estado al hacer clic/focus en la caja de texto */
+div[data-testid="stExpander"] div[data-testid="stChatInput"] form:focus-within {
+    border-color: #0f766e !important;    /* Color del contorno al escribir */
+    box-shadow: 0 0 12px rgba(15, 118, 110, 0.5) !important;
 }
 
-/* Hover del botón de enviar */
-div[data-testid="stChatInput"] button:hover {
-    background-color: #0f766e !important;
-}
-
-/* Color blanco para la flecha dentro del botón */
-div[data-testid="stChatInput"] button svg {
-    fill: #ffffff !important;
-    color: #ffffff !important;
-}
-
-/* MODO OSCURO: Mantener el fondo correcto al hacer scroll */
+/* Ajuste para MODO OSCURO si aplica */
 @media (prefers-color-scheme: dark) {
-    div[data-testid="stExpander"] div[data-testid="stChatInput"] {
+    div[data-testid="stExpander"] div[data-testid="stChatInput"],
+    div[data-testid="stExpander"] div[data-testid="stChatInput"] form {
         background: #171a1f !important;
+        border-color: #0a0a0a !important; /* 👈 Color del contorno en modo oscuro */
     }
 }
 
