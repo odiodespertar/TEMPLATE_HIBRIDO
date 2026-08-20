@@ -2064,7 +2064,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     margin-left: auto;
     margin-right: auto;
 ">
-    <div style="font-size: 10px; color: #ff5252; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;">
+    <div style="font-size: 10px; color: #d0d0d0; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;">
         📌 RUTEO EN PANTALLA
     </div>
 
