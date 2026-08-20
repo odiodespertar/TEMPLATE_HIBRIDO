@@ -232,28 +232,103 @@ st.markdown("""
 # ==========================================
 with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
 
-    # 🎨 FORZAR COLORES CLAROS Y LEGIBLES EN COMPONENTES NATIVOS
+    # ============================================================
+    # 🎨 DISEÑO MODERNO DEL ASISTENTE
+    # ============================================================
     st.markdown("""
     <style>
-        div[data-testid="stExpander"] button {
-            background-color: #f1f5f9 !important;
-            color: #0f172a !important;
-            border: 1px solid #cbd5e1 !important;
-            font-weight: 600 !important;
+
+        /* CONTENEDOR PRINCIPAL DEL ASISTENTE */
+        div[data-testid="stExpander"] {
+            border: 1px solid #d1d5db !important;
+            border-radius: 16px !important;
+            overflow: hidden !important;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.10) !important;
         }
-        div[data-testid="stExpander"] button:hover {
-            background-color: #e2e8f0 !important;
-            color: #0284c7 !important;
-            border-color: #0284c7 !important;
+
+        /* ENCABEZADO DEL EXPANDER */
+        div[data-testid="stExpander"] summary {
+            background: linear-gradient(135deg, #0f766e, #14b8a6) !important;
+            padding: 14px 16px !important;
+            border-radius: 16px !important;
         }
-        div[data-testid="stExpander"] label p {
-            color: #0f172a !important;
-            font-weight: 600 !important;
+
+        /* TÍTULO */
+        div[data-testid="stExpander"] summary p,
+        div[data-testid="stExpander"] summary span {
+            color: #ffffff !important;
+            font-weight: 800 !important;
+            font-size: 1.05rem !important;
         }
+
+        /* ICONO DEL EXPANDER */
+        div[data-testid="stExpander"] summary svg {
+            color: #ffffff !important;
+            fill: #ffffff !important;
+        }
+
+        /* TEXTO INTERNO */
+        div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p {
+            color: #334155 !important;
+        }
+
     </style>
     """, unsafe_allow_html=True)
 
-    st.write("👉 Consulta un SVC para indicaciones 🔍")
+    # PRESENTACIÓN DEL ASISTENTE
+    st.markdown("""
+    <div style="
+        background: linear-gradient(135deg, #f0fdfa, #ecfeff);
+        border: 1px solid #99f6e4;
+        border-radius: 12px;
+        padding: 12px 14px;
+        margin-bottom: 10px;
+    ">
+        <div style="
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        ">
+            <div style="
+                width: 38px;
+                height: 38px;
+                border-radius: 11px;
+                background: #0f766e;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 20px;
+            ">
+                🤖
+            </div>
+
+            <div>
+                <div style="
+                    font-size: 14px;
+                    font-weight: 800;
+                    color: #134e4a;
+                ">
+                    Asistente de Ruteo
+                </div>
+
+                <div style="
+                    font-size: 11px;
+                    color: #64748b;
+                    margin-top: 2px;
+                ">
+                    SVC · Prioridades · Indicaciones · Resúmenes
+                </div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown(
+        "<div style='font-size:13px; color:#475569; font-weight:600; margin-bottom:8px;'>"
+        "🔎 Consulta un SVC o escribe una indicación"
+        "</div>",
+        unsafe_allow_html=True
+    )
 
     # Inicialización de Estados
     if "main_chat_messages" not in st.session_state:
