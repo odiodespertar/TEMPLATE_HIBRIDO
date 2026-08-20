@@ -136,6 +136,51 @@ st.markdown("""
             zoom: 0.95; 
         }
     }
+
+
+    /* ============================================================
+       🤖 ASISTENTE DE RUTEO — VENTANA FLOTANTE
+       ============================================================ */
+
+    div[data-testid="stExpander"] {
+        position: fixed !important;
+
+        bottom: 15px !important;
+        right: 15px !important;
+        left: auto !important;
+        top: auto !important;
+
+        width: 550px !important;
+        max-width: 550px !important;
+
+        margin: 0 !important;
+        z-index: 999999 !important;
+
+        border-radius: 16px !important;
+        overflow: hidden !important;
+
+        box-shadow: 0 8px 30px rgba(0,0,0,0.30) !important;
+    }
+
+
+    /* CONTENIDO INTERNO DEL ASISTENTE */
+    div[data-testid="stExpander"] > div[role="group"] {
+        max-height: calc(90vh - 60px) !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+
+    /* EN PANTALLAS PEQUEÑAS */
+    @media (max-width: 700px) {
+        div[data-testid="stExpander"] {
+            width: calc(100vw - 20px) !important;
+            max-width: calc(100vw - 20px) !important;
+            right: 10px !important;
+            bottom: 10px !important;
+        }
+    }
+
     
     
     /* 🔥 TÍTULO DEL BOT ("🤖 BOT prioridades") EN NEGRO OSCURO BIEN VISIBLE */
@@ -216,38 +261,111 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
     st.markdown("""
     <style>
 
-        /* CONTENEDOR PRINCIPAL DEL ASISTENTE */
+        /* =====================================================
+           🤖 ASISTENTE DE RUTEO — VENTANA FLOTANTE
+           ===================================================== */
+
+        /* VENTANA COMPLETA */
         div[data-testid="stExpander"] {
-            border: 1px solid #d1d5db !important;
+            position: fixed !important;
+            right: 20px !important;
+            bottom: 20px !important;
+
+            width: 430px !important;
+            max-width: calc(100vw - 40px) !important;
+
+            z-index: 999999 !important;
+
+            border: 1px solid #99f6e4 !important;
             border-radius: 16px !important;
+
+            box-shadow: 0 10px 35px rgba(0,0,0,0.25) !important;
+
+            background: #ffffff !important;
+
             overflow: hidden !important;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.10) !important;
         }
 
-        /* ENCABEZADO DEL EXPANDER */
+
+        /* =====================================================
+           ENCABEZADO
+           ===================================================== */
+
         div[data-testid="stExpander"] summary {
-            background: linear-gradient(135deg, #0f766e, #14b8a6) !important;
+            background: linear-gradient(
+                135deg,
+                #0f766e,
+                #14b8a6
+            ) !important;
+
             padding: 14px 16px !important;
+
             border-radius: 16px !important;
+
+            min-height: 54px !important;
+
+            box-sizing: border-box !important;
         }
 
-        /* TÍTULO */
+
+        /* =====================================================
+           TÍTULO
+           ===================================================== */
+
         div[data-testid="stExpander"] summary p,
         div[data-testid="stExpander"] summary span {
-            color: #ffffff !important;
+            color: #1e1d1f !important;
+
             font-weight: 800 !important;
+
             font-size: 1.05rem !important;
         }
 
-        /* ICONO DEL EXPANDER */
+
+        /* =====================================================
+           ICONO DEL EXPANDER
+           ===================================================== */
+
         div[data-testid="stExpander"] summary svg {
             color: #ffffff !important;
             fill: #ffffff !important;
         }
 
+
+        /* =====================================================
+           CONTENIDO INTERNO
+           ===================================================== */
+
+        div[data-testid="stExpander"] > div[role="group"] {
+            max-height: 75vh !important;
+
+            overflow-y: auto !important;
+
+            background: #ffffff !important;
+        }
+
+
         /* TEXTO INTERNO */
-        div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p {
+        div[data-testid="stExpander"]
+        div[data-testid="stMarkdownContainer"] p {
             color: #334155 !important;
+        }
+
+
+        /* =====================================================
+           📱 PANTALLAS PEQUEÑAS
+           ===================================================== */
+
+        @media (max-width: 700px) {
+
+            div[data-testid="stExpander"] {
+                right: 10px !important;
+                bottom: 10px !important;
+
+                width: calc(100vw - 20px) !important;
+                max-width: calc(100vw - 20px) !important;
+            }
+
         }
 
     </style>
