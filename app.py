@@ -252,74 +252,76 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
 
     </style>
     """, unsafe_allow_html=True)
+    
+    # ==========================================
+    # 🤖 TARJETA DE PRESENTACIÓN DEL ASISTENTE
+    # ==========================================
 
- # ==========================================
-# 🤖 TARJETA DE PRESENTACIÓN DEL ASISTENTE
-# ==========================================
-
-st.html("""
-<div style="
-    background: linear-gradient(135deg, #f0fdfa, #ecfeff);
-    border: 1px solid #99f6e4;
-    border-radius: 14px;
-    padding: 14px 16px;
-    margin-bottom: 12px;
-    box-shadow: 0 4px 14px rgba(15,118,110,0.08);
-">
-
+    st.html("""
     <div style="
-        display: flex;
-        align-items: center;
-        gap: 12px;
+        background: linear-gradient(135deg, #f0fdfa, #ecfeff);
+        border: 1px solid #99f6e4;
+        border-radius: 14px;
+        padding: 14px 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 4px 14px rgba(15,118,110,0.08);
     ">
 
         <div style="
-            width: 42px;
-            height: 42px;
-            min-width: 42px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #0f766e, #14b8a6);
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            box-shadow: 0 4px 10px rgba(15,118,110,0.20);
+            gap: 12px;
         ">
-            🤖
-        </div>
-
-        <div>
 
             <div style="
-                font-size: 15px;
-                font-weight: 800;
-                color: #134e4a;
-                line-height: 1.2;
+                width: 42px;
+                height: 42px;
+                min-width: 42px;
+                border-radius: 12px;
+                background: linear-gradient(135deg, #0f766e, #14b8a6);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 22px;
+                box-shadow: 0 4px 10px rgba(15,118,110,0.20);
             ">
-                Asistente de Ruteo
+                🤖
             </div>
 
-            <div style="
-                font-size: 11px;
-                color: #64748b;
-                margin-top: 4px;
-            ">
-                SVC · Prioridades · Indicaciones · Resúmenes
+            <div>
+
+                <div style="
+                    font-size: 15px;
+                    font-weight: 800;
+                    color: #134e4a;
+                    line-height: 1.2;
+                ">
+                    Asistente de Ruteo
+                </div>
+
+                <div style="
+                    font-size: 11px;
+                    color: #64748b;
+                    margin-top: 4px;
+                ">
+                    SVC · Prioridades · Indicaciones · Resúmenes
+                </div>
+
             </div>
 
         </div>
 
     </div>
-
-</div>
-""")
+    """)
 
     st.markdown(
         "<div style='font-size:13px; color:#475569; font-weight:600; margin-bottom:8px;'>"
         "🔎 Consulta un SVC o escribe una indicación"
         "</div>",
         unsafe_allow_html=True
-)
+    )
+
+    # Inicialización de Estados
 
     # Inicialización de Estados
     if "main_chat_messages" not in st.session_state:
