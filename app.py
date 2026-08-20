@@ -202,9 +202,13 @@ div[data-testid="stExpander"] {
 /* CONTENIDO INTERNO */
 
 div[data-testid="stExpander"] > div[role="group"] {
+
     max-height: calc(90vh - 60px) !important;
-    overflow-y: auto !important;
+
     overflow-x: hidden !important;
+
+    overflow-y: hidden !important;
+
 }
 
 
@@ -470,68 +474,51 @@ div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p {
 
 /* ============================================================
    📌 BUSCADOR FIJO DEL ASISTENTE
-   SIEMPRE VISIBLE AUNQUE SE HAGA SCROLL
+   SIEMPRE VISIBLE AL HACER SCROLL
    ============================================================ */
 
-/* El contenido del asistente funciona como referencia */
-div[data-testid="stExpander"] {
-    position: fixed !important;
-}
-
-/* Área que contiene el historial */
-div[data-testid="stExpander"] > div[role="group"] {
-    position: relative !important;
-    padding-bottom: 75px !important;
-}
-
-/* BUSCADOR */
 div[data-testid="stExpander"] div[data-testid="stChatInput"] {
 
-    position: absolute !important;
+    position: sticky !important;
 
-    left: 0 !important;
-    right: 0 !important;
     bottom: 0 !important;
 
-    z-index: 999999 !important;
+    z-index: 99999 !important;
 
     background: #f8fafc !important;
 
-    padding: 10px 12px 8px 12px !important;
+    padding-top: 10px !important;
 
-    margin: 0 !important;
+    padding-bottom: 6px !important;
 
-    box-sizing: border-box !important;
 }
 
-/* Formulario del buscador */
+
+/* Fondo del área del buscador */
+
 div[data-testid="stExpander"] div[data-testid="stChatInput"] form {
 
     background: #f8fafc !important;
 
-    border-radius: 14px !important;
 }
 
 
-/* ============================================================
-   🌙 MODO OSCURO
-   ============================================================ */
+/* MODO OSCURO */
 
 @media (prefers-color-scheme: dark) {
-
-    div[data-testid="stExpander"] > div[role="group"] {
-        padding-bottom: 75px !important;
-    }
 
     div[data-testid="stExpander"] div[data-testid="stChatInput"] {
 
         background: #171a1f !important;
+
     }
 
     div[data-testid="stExpander"] div[data-testid="stChatInput"] form {
 
         background: #171a1f !important;
+
     }
+
 }
 
 
