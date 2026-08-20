@@ -2050,7 +2050,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     margin-bottom:10px;
 ">
 
-<!-- 📌 RUTEO EN PANTALLA (DROPDOWN MODERNO Y ESTILIZADO CON RESPALDO OCULTO) -->
+<!-- 📌 RUTEO EN PANTALLA (DROPDOWN MODERNO CENTRADO) -->
 <div style="
     background-color: #1e2022; 
     padding: 10px 18px; 
@@ -2091,13 +2091,14 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         cursor: pointer;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: center;
+        position: relative;
         border: 1px solid #42474e;
         transition: all 0.2s ease;
         user-select: none;
     ">
-        <span id="custom-dropdown-selected">🟢 EXTENDIDO</span>
-        <span style="font-size: 12px; color: #888; transition: transform 0.2s;" id="dropdown-arrow">▼</span>
+        <span id="custom-dropdown-selected" style="text-align: center; width: 100%;">🟢 EXTENDIDO</span>
+        <span style="font-size: 12px; color: #888; transition: transform 0.2s; position: absolute; right: 16px;" id="dropdown-arrow">▼</span>
     </div>
 
     <!-- Lista desplegable estilizada -->
@@ -2132,7 +2133,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         font-size: 15px;
         font-weight: 700;
         color: #e0e0e0;
-        text-align: left;
+        text-align: center;
         cursor: pointer;
         transition: background 0.15s ease, color 0.15s ease;
         border-bottom: 1px solid #2e3237;
@@ -2180,7 +2181,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         }}
     }});
 </script>
-
 
 <div id="panel-control-unico" style="display: flex; gap: 20px; background: #25282b; padding: 15px; border-radius: 10px; color: white; justify-content: center; align-items: center; margin: 20px 0;">
     <div style="text-align: center;">
