@@ -28,9 +28,15 @@ def obtener_notas_svc_2():
         return []
     try:
         response = supabase.table("notas_svc_2").select("*").execute()
-        return response.data
-    except Exception:
+        return response.data if response.data else []
+    except Exception as e:
+        st.error(f"Error Supabase: {e}")
         return []
+
+
+# 🟢 PRUEBA DE CONEXIÓN Y LECTURA DIRECTA
+notas_test = obtener_notas_svc_2()
+st.sidebar.write("🔍 **Prueba BD Supabase:**", notas_test)
 
 
 def guardar_nota_bd(svc, contenido):
@@ -552,7 +558,7 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
             else:
                 partes_respuesta = []
 
-                # 🟢 1. CONSULTA A SUPABASE (SE EJECUTA SIEMPRE PRIMERO)
+                # 🟢 1. CONSULTA A SUPABASE (TABLA NOTAS_SVC_2)
                 notas_bd = obtener_notas_svc_2()
                 if notas_bd:
                     notas_encontradas = []
