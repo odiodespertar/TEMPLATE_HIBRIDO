@@ -102,144 +102,567 @@ if st.session_state.flotar_activo:
 
 # ==========================================
 # CSS GENERAL + ESTILO DE VENTANA FLOTANTE
-# ========================================== 
+# ==========================================
+
 st.markdown("""
-    <style>
-    .block-container {padding: 0rem !important;}
-    footer, #MainMenu, header {visibility: hidden;}
-    body { background-color: #25282b; }
+<style>
+
+.block-container {
+    padding: 0rem !important;
+}
+
+footer,
+#MainMenu,
+header {
+    visibility: hidden;
+}
+
+body {
+    background-color: #25282b;
+}
+
+.poligono-bloque {
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+    zoom: 0.95;
+}
+
+#contenedor-padre {
+    display: flex;
+    flex-direction: column;
+}
+
+.delta {
+    display: none !important;
+}
+
+#visor {
+    padding-right: 210px !important;
+    box-sizing: border-box;
+}
+
+.tabla-flota-reducida {
+    max-width: 80% !important;
+    margin-left: 0 !important;
+    margin-right: auto;
+}
+
+table {
+    table-layout: fixed;
+    width: 100%;
+    word-wrap: break-word;
+}
+
+@media (max-width: 1200px) {
+    .calc-row td,
+    .calc-row select,
+    .calc-row span {
+        font-size: 12px !important;
+    }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
     .poligono-bloque {
-        letter-spacing: -0.2px; 
-        white-space: nowrap;    
-        zoom: 0.95; 
+        zoom: 0.95;
     }
-    #contenedor-padre { display: flex; flex-direction: column; }
-    .delta { display: none !important; }
-    #visor { padding-right: 210px !important; box-sizing: border-box; }
-    .tabla-flota-reducida {
-        max-width: 80% !important;
-        margin-left: 0 !important;
-        margin-right: auto;
-    }
-    table {
-        table-layout: fixed;
-        width: 100%;
-        word-wrap: break-word;
-    }
-    @media (max-width: 1200px) {
-        .calc-row td, .calc-row select, .calc-row span {
-            font-size: 12px !important;
-        }
-    }
-    @media screen and (-webkit-min-device-pixel-ratio:0) {
-        .poligono-bloque {
-            zoom: 0.95; 
-        }
-    }
+}
 
 
-    /* ============================================================
-       🤖 ASISTENTE DE RUTEO — VENTANA FLOTANTE
-       ============================================================ */
+/* ============================================================
+   🤖 ASISTENTE DE RUTEO — VENTANA FLOTANTE
+   ============================================================ */
+
+div[data-testid="stExpander"] {
+    position: fixed !important;
+
+    bottom: 15px !important;
+    right: 15px !important;
+    left: auto !important;
+    top: auto !important;
+
+    width: 550px !important;
+    max-width: 550px !important;
+
+    margin: 0 !important;
+    z-index: 999999 !important;
+
+    border-radius: 20px !important;
+    overflow: hidden !important;
+
+    background: #f8fafc !important;
+
+    border: 1px solid #cbd5e1 !important;
+
+    box-shadow:
+        0 20px 45px rgba(15, 23, 42, 0.18),
+        0 4px 12px rgba(15, 23, 42, 0.10) !important;
+}
+
+
+/* CONTENIDO INTERNO */
+
+div[data-testid="stExpander"] > div[role="group"] {
+    max-height: calc(90vh - 60px) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+
+/* ============================================================
+   📱 PANTALLAS PEQUEÑAS
+   ============================================================ */
+
+@media (max-width: 700px) {
 
     div[data-testid="stExpander"] {
-        position: fixed !important;
+        width: calc(100vw - 20px) !important;
+        max-width: calc(100vw - 20px) !important;
 
-        bottom: 15px !important;
-        right: 15px !important;
-        left: auto !important;
-        top: auto !important;
+        right: 10px !important;
+        bottom: 10px !important;
+    }
+}
 
-        width: 550px !important;
-        max-width: 550px !important;
 
-        margin: 0 !important;
-        z-index: 999999 !important;
+/* ============================================================
+   🤖 ENCABEZADO DEL ASISTENTE
+   ============================================================ */
 
-        border-radius: 16px !important;
-        overflow: hidden !important;
+div[data-testid="stExpander"] summary {
+    background: linear-gradient(
+        135deg,
+        #0f766e,
+        #14b8a6
+    ) !important;
 
-        box-shadow: 0 8px 30px rgba(0,0,0,0.30) !important;
+    padding: 15px 18px !important;
+
+    border-radius: 20px !important;
+
+    min-height: 54px !important;
+
+    box-shadow:
+        0 4px 12px rgba(15, 118, 110, 0.20) !important;
+}
+
+
+/* TEXTO DEL ENCABEZADO */
+
+div[data-testid="stExpander"] summary,
+div[data-testid="stExpander"] summary p,
+div[data-testid="stExpander"] summary span,
+div[data-testid="stExpander"] summary div {
+
+    color: #ffffff !important;
+
+    -webkit-text-fill-color: #ffffff !important;
+
+    font-weight: 800 !important;
+
+    font-size: 1.05rem !important;
+}
+
+
+/* ICONO */
+
+div[data-testid="stExpander"] summary svg {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+
+/* ============================================================
+   💬 MENSAJE DEL USUARIO
+   ============================================================ */
+
+div[data-testid="stChatMessage"]:has(div[aria-label="user"]),
+div[data-testid="stChatMessage"]:has([data-testid*="User"]) {
+
+    background-color: #FFD700 !important;
+
+    border-radius: 10px !important;
+
+    padding: 8px !important;
+
+    margin: 6px 0 !important;
+
+    box-shadow:
+        0 2px 5px rgba(0,0,0,0.20) !important;
+}
+
+
+div[data-testid="stChatMessage"]:has(div[aria-label="user"]) *,
+div[data-testid="stChatMessage"]:has([data-testid*="User"]) * {
+
+    color: #ffffff !important;
+
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+
+/* ============================================================
+   🤖 MENSAJE DEL ASISTENTE
+   IMPORTANTE:
+   EL MENSAJE SIEMPRE ES BLANCO Y EL TEXTO OSCURO
+   ============================================================ */
+
+div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]),
+div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) {
+
+    background: #ffffff !important;
+
+    color: #334155 !important;
+
+    color-scheme: light !important;
+
+    border: 2px solid #FFD700 !important;
+
+    border-radius: 14px !important;
+
+    padding: 10px !important;
+
+    margin: 8px 0 !important;
+
+    box-shadow:
+        0 3px 10px rgba(15, 23, 42, 0.08) !important;
+}
+
+
+/* ============================================================
+   🔒 CONTENIDO DEL MENSAJE DEL ASISTENTE
+   ESTO EVITA QUE EL MODO OSCURO LO VUELVA BLANCO
+   ============================================================ */
+
+div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) p,
+div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) span,
+div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) div,
+div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) li,
+div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) label,
+
+div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) p,
+div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) span,
+div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) div,
+div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) li,
+div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) label {
+
+    color: #334155 !important;
+
+    -webkit-text-fill-color: #334155 !important;
+
+    text-shadow: none !important;
+}
+
+
+/* NEGRITAS */
+
+div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) strong,
+div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) b,
+div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) strong,
+div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) b {
+
+    color: #1e293b !important;
+
+    -webkit-text-fill-color: #1e293b !important;
+}
+
+
+/* ============================================================
+   🎯 BOTONES DEL CUESTIONARIO
+   SIEMPRE GRIS OSCURO
+   ============================================================ */
+
+div[data-testid="stExpander"] div[data-testid="stButton"] button,
+div[data-testid="stExpander"] div[data-testid="stButton"] button *,
+div[data-testid="stExpander"] div[data-testid="stButton"] button p,
+div[data-testid="stExpander"] div[data-testid="stButton"] button span,
+div[data-testid="stExpander"] div[data-testid="stButton"] button div {
+
+    color: #475569 !important;
+
+    -webkit-text-fill-color: #475569 !important;
+
+    text-shadow: none !important;
+}
+
+
+/* HOVER */
+
+div[data-testid="stExpander"] div[data-testid="stButton"] button:hover,
+div[data-testid="stExpander"] div[data-testid="stButton"] button:hover *,
+div[data-testid="stExpander"] div[data-testid="stButton"] button:hover p,
+div[data-testid="stExpander"] div[data-testid="stButton"] button:hover span,
+div[data-testid="stExpander"] div[data-testid="stButton"] button:hover div {
+
+    color: #334155 !important;
+
+    -webkit-text-fill-color: #334155 !important;
+}
+
+
+/* FOCUS / ACTIVE */
+
+div[data-testid="stExpander"] div[data-testid="stButton"] button:focus,
+div[data-testid="stExpander"] div[data-testid="stButton"] button:focus *,
+div[data-testid="stExpander"] div[data-testid="stButton"] button:focus-visible,
+div[data-testid="stExpander"] div[data-testid="stButton"] button:focus-visible *,
+div[data-testid="stExpander"] div[data-testid="stButton"] button:active,
+div[data-testid="stExpander"] div[data-testid="stButton"] button:active * {
+
+    color: #334155 !important;
+
+    -webkit-text-fill-color: #334155 !important;
+}
+
+
+/* DESHABILITADOS */
+
+div[data-testid="stExpander"] div[data-testid="stButton"] button:disabled,
+div[data-testid="stExpander"] div[data-testid="stButton"] button:disabled * {
+
+    color: #64748b !important;
+
+    -webkit-text-fill-color: #64748b !important;
+
+    opacity: 1 !important;
+}
+
+
+/* ============================================================
+   ☑️ CHECKBOXES
+   ============================================================ */
+
+div[data-testid="stExpander"] div[data-testid="stCheckbox"] label,
+div[data-testid="stExpander"] div[data-testid="stCheckbox"] label *,
+div[data-testid="stExpander"] div[data-testid="stCheckbox"] label p,
+div[data-testid="stExpander"] div[data-testid="stCheckbox"] label span {
+
+    color: #475569 !important;
+
+    -webkit-text-fill-color: #475569 !important;
+
+    text-shadow: none !important;
+}
+
+
+/* CHECKBOX HOVER */
+
+div[data-testid="stExpander"] div[data-testid="stCheckbox"] label:hover,
+div[data-testid="stExpander"] div[data-testid="stCheckbox"] label:hover *,
+div[data-testid="stExpander"] div[data-testid="stCheckbox"] label:focus *,
+div[data-testid="stExpander"] div[data-testid="stCheckbox"] label:active * {
+
+    color: #334155 !important;
+
+    -webkit-text-fill-color: #334155 !important;
+}
+
+
+/* ============================================================
+   ✨ TEXTO INDICATIVO
+   ============================================================ */
+
+div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p {
+
+    color: #334155 !important;
+
+    font-weight: 600 !important;
+}
+
+
+/* ============================================================
+   🌙 MODO OSCURO
+   EL PANEL EXTERIOR CAMBIA, PERO EL CHAT BLANCO NO
+   ============================================================ */
+
+@media (prefers-color-scheme: dark) {
+
+    div[data-testid="stExpander"] {
+
+        background: #171a1f !important;
+
+        border: 1px solid #475569 !important;
+
+        box-shadow:
+            0 24px 55px rgba(0, 0, 0, 0.55),
+            0 5px 16px rgba(0, 0, 0, 0.35) !important;
     }
 
 
-    /* CONTENIDO INTERNO DEL ASISTENTE */
     div[data-testid="stExpander"] > div[role="group"] {
-        max-height: calc(90vh - 60px) !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
+
+        background: #171a1f !important;
     }
 
 
-    /* EN PANTALLAS PEQUEÑAS */
-    @media (max-width: 700px) {
-        div[data-testid="stExpander"] {
-            width: calc(100vw - 20px) !important;
-            max-width: calc(100vw - 20px) !important;
-            right: 10px !important;
-            bottom: 10px !important;
-        }
-    }
+    /* Texto fuera del globo */
 
-    
-    
-    /* 🔥 TÍTULO DEL BOT ("🤖 BOT prioridades") EN NEGRO OSCURO BIEN VISIBLE */
-    div[data-testid="stExpander"] summary,
-    div[data-testid="stExpander"] summary p, 
-    div[data-testid="stExpander"] summary span,
-    div[data-testid="stExpander"] summary div,
-    div[data-testid="stExpander"] summary svg {
-        color: #1e1d1f !important;
-        fill: #19191a !important;
-        font-weight: 800 !important;
-        font-size: 1.1rem !important;
-    }
-
-    /* 🔥 TEXTO INDICATIVO INTERNO ("👉 Escribe el SVC a consultar.🔍") EN NEGRO */
     div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p {
-        color: #19191a !important;
-        font-weight: bold !important;
+
+        color: #cbd5e1 !important;
+
+        -webkit-text-fill-color: #cbd5e1 !important;
     }
 
-    /* --- MENSAJE DEL USUARIO (Lila eléctrico con texto blanco) --- */
-    div[data-testid="stChatMessage"]:has(div[aria-label="user"]),
-    div[data-testid="stChatMessage"]:has([data-testid*="User"]) {
-        background-color: #FFD700 !important;
-        border-radius: 10px !important;
-        padding: 8px !important;
-        margin: 6px 0 !important;
-        box-shadow: 0px 2px 5px rgba(0,0,0,0.2) !important;
+
+    /* Tarjeta */
+
+    .asistente-card {
+
+        background: linear-gradient(
+            135deg,
+            #1e293b,
+            #172f31
+        ) !important;
+
+        border: 1px solid #0f766e !important;
+
+        box-shadow:
+            0 8px 22px rgba(0, 0, 0, 0.30) !important;
     }
 
-    div[data-testid="stChatMessage"]:has(div[aria-label="user"]) *,
-    div[data-testid="stChatMessage"]:has([data-testid*="User"]) * {
-        color: #FFFFFF !important;
+
+    .asistente-card-title {
+
+        color: #ccfbf1 !important;
     }
 
-    /* --- MENSAJE DEL BOT / ASISTENTE (Fondo Blanco Puro y Esquema Claro) --- */
+
+    .asistente-card-subtitle {
+
+        color: #94a3b8 !important;
+    }
+
+
+    /* ========================================================
+       🔒 IMPORTANTE:
+       VOLVEMOS A FIJAR EL GLOBO DEL ASISTENTE
+       ======================================================== */
+
     div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]),
     div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) {
-        color-scheme: light !important; /* 🔥 Bloquea la inversión del modo oscuro del navegador */
-        background-color: #FFFFFF !important;
-        color: #000000 !important;
-        border: 2px solid #FFD700 !important;
-        border-radius: 10px !important;
-        padding: 8px !important;
-        margin: 6px 0 !important;
+
+        background: #ffffff !important;
+
+        color: #334155 !important;
+
+        color-scheme: light !important;
     }
 
 
-    /* Cuando el panel está flotando, oculta los botones y la barra de pestañas */
-    .fleet-floating .vista-excel-btn,
-    .fleet-floating .autocalcular-btn,
-    .fleet-floating .activas-btn,
-    .fleet-floating .todas-btn,
-    .fleet-floating .pestanas-container {
-        display: none !important;
+    div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) p,
+    div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) span,
+    div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) div,
+    div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) li,
+    div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) label,
+
+    div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) p,
+    div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) span,
+    div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) div,
+    div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) li,
+    div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) label {
+
+        color: #334155 !important;
+
+        -webkit-text-fill-color: #334155 !important;
     }
 
-    
-    </style>
+
+    div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) strong,
+    div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) b,
+    div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) strong,
+    div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) b {
+
+        color: #1e293b !important;
+
+        -webkit-text-fill-color: #1e293b !important;
+    }
+
+
+    /* Botones también siguen grises */
+
+    div[data-testid="stExpander"] div[data-testid="stButton"] button,
+    div[data-testid="stExpander"] div[data-testid="stButton"] button * {
+
+        color: #475569 !important;
+
+        -webkit-text-fill-color: #475569 !important;
+    }
+
+
+    /* Checkboxes */
+
+    div[data-testid="stExpander"] div[data-testid="stCheckbox"] label,
+    div[data-testid="stExpander"] div[data-testid="stCheckbox"] label * {
+
+        color: #475569 !important;
+
+        -webkit-text-fill-color: #475569 !important;
+    }
+}
+
+
+/* ============================================================
+   ☀️ MODO CLARO
+   ============================================================ */
+
+@media (prefers-color-scheme: light) {
+
+    div[data-testid="stExpander"] {
+
+        background: #f8fafc !important;
+
+        border: 1px solid #cbd5e1 !important;
+    }
+
+
+    div[data-testid="stExpander"] > div[role="group"] {
+
+        background: #f8fafc !important;
+    }
+
+
+    .asistente-card {
+
+        background: linear-gradient(
+            135deg,
+            #ffffff,
+            #f0fdfa
+        ) !important;
+
+        border: 1px solid #99f6e4 !important;
+
+        box-shadow:
+            0 6px 18px rgba(15, 118, 110, 0.08) !important;
+    }
+
+
+    .asistente-card-title {
+
+        color: #134e4a !important;
+    }
+
+
+    .asistente-card-subtitle {
+
+        color: #64748b !important;
+    }
+}
+
+
+/* ============================================================
+   🚛 OCULTAR CONTROLES CUANDO EL PANEL ESTÁ FLOTANDO
+   ============================================================ */
+
+.fleet-floating .vista-excel-btn,
+.fleet-floating .autocalcular-btn,
+.fleet-floating .activas-btn,
+.fleet-floating .todas-btn,
+.fleet-floating .pestanas-container {
+
+    display: none !important;
+}
+
+</style>
 """, unsafe_allow_html=True)
 
 
@@ -250,329 +673,6 @@ st.markdown("""
 with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
 
    
-    st.markdown("""
-    <style>
-
-    /* =========================================================
-       🤖 ASISTENTE DE RUTEO — DISEÑO MODERNO ADAPTATIVO
-       ========================================================= */
-
-    /* ---------- VENTANA PRINCIPAL ---------- */
-
-    div[data-testid="stExpander"] {
-        border: 1px solid #cbd5e1 !important;
-        border-radius: 20px !important;
-        overflow: hidden !important;
-
-        background: #f8fafc !important;
-
-        box-shadow:
-            0 20px 45px rgba(15, 23, 42, 0.18),
-            0 4px 12px rgba(15, 23, 42, 0.10) !important;
-
-        transition:
-            background 0.25s ease,
-            border 0.25s ease,
-            box-shadow 0.25s ease !important;
-    }
-
-
-    /* ---------- ENCABEZADO ---------- */
-
-    div[data-testid="stExpander"] summary {
-        background: linear-gradient(
-            135deg,
-            #0f766e,
-            #14b8a6
-        ) !important;
-
-        padding: 15px 18px !important;
-
-        border-radius: 20px !important;
-
-        min-height: 54px !important;
-
-        box-shadow:
-            0 4px 12px rgba(15, 118, 110, 0.20) !important;
-    }
-
-
-    /* ---------- TÍTULO ---------- */
-
-    div[data-testid="stExpander"] summary p,
-    div[data-testid="stExpander"] summary span,
-    div[data-testid="stExpander"] summary div {
-        color: #ffffff !important;
-
-        font-weight: 800 !important;
-
-        font-size: 1.05rem !important;
-
-        letter-spacing: 0.1px !important;
-    }
-
-
-    /* ---------- ICONO ---------- */
-
-    div[data-testid="stExpander"] summary svg {
-        color: #ffffff !important;
-
-        fill: #ffffff !important;
-    }
-
-
-    /* =========================================================
-       ☀️ MODO CLARO
-       ========================================================= */
-
-    @media (prefers-color-scheme: light) {
-
-        div[data-testid="stExpander"] {
-            background: #f8fafc !important;
-
-            border: 1px solid #cbd5e1 !important;
-
-            box-shadow:
-                0 20px 45px rgba(15, 23, 42, 0.18),
-                0 4px 12px rgba(15, 23, 42, 0.10) !important;
-        }
-
-
-        /* Área interna */
-
-        div[data-testid="stExpander"] > div {
-            background: #f8fafc !important;
-        }
-
-
-        /* Texto */
-
-        div[data-testid="stExpander"]
-        div[data-testid="stMarkdownContainer"] p {
-
-            color: #334155 !important;
-
-        }
-
-
-        /* Tarjeta de presentación */
-
-        .asistente-card {
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #ffffff,
-                    #f0fdfa
-                ) !important;
-
-            border: 1px solid #99f6e4 !important;
-
-            box-shadow:
-                0 6px 18px rgba(15, 118, 110, 0.08) !important;
-        }
-
-
-        .asistente-card-title {
-            color: #134e4a !important;
-        }
-
-
-        .asistente-card-subtitle {
-            color: #64748b !important;
-        }
-    }
-
-
-    /* =========================================================
-       🌙 MODO OSCURO
-       ========================================================= */
-
-    @media (prefers-color-scheme: dark) {
-
-        div[data-testid="stExpander"] {
-
-            background: #171a1f !important;
-
-            border: 1px solid #475569 !important;
-
-            box-shadow:
-                0 24px 55px rgba(0, 0, 0, 0.55),
-                0 5px 16px rgba(0, 0, 0, 0.35) !important;
-        }
-
-
-        /* Área interna */
-
-        div[data-testid="stExpander"] > div {
-
-            background: #171a1f !important;
-        }
-
-
-        /* Texto general */
-
-        div[data-testid="stExpander"]
-        div[data-testid="stMarkdownContainer"] p {
-
-            color: #e2e8f0 !important;
-        }
-
-
-        /* Tarjeta de presentación */
-
-        .asistente-card {
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #1e293b,
-                    #172f31
-                ) !important;
-
-            border: 1px solid #0f766e !important;
-
-            box-shadow:
-                0 8px 22px rgba(0, 0, 0, 0.30) !important;
-        }
-
-
-        .asistente-card-title {
-
-            color: #ccfbf1 !important;
-        }
-
-
-        .asistente-card-subtitle {
-
-            color: #94a3b8 !important;
-        }
-    }
-
-
-    /* =========================================================
-       💬 MENSAJES DEL ASISTENTE
-       ========================================================= */
-
-    div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) {
-
-        border-radius: 14px !important;
-
-        box-shadow:
-            0 3px 10px rgba(15, 23, 42, 0.08) !important;
-
-        margin: 8px 0 !important;
-
-        padding: 10px !important;
-    }
-
-
-    /* =========================================================
-       ✨ BARRA DE CONSULTA
-       ========================================================= */
-
-    div[data-testid="stChatInput"] {
-
-        border-radius: 14px !important;
-    }
-
-
-    /* =========================================================
-       🎯 OPCIONES DEL ASISTENTE
-       TEXTO GRIS — NUNCA BLANCO
-       ========================================================= */
-
-    /* ---------------------------------------------------------
-       BOTONES DEL CUESTIONARIO
-       --------------------------------------------------------- */
-
-    div[data-testid="stExpander"] div[data-testid="stButton"] button,
-    div[data-testid="stExpander"] div[data-testid="stButton"] button *,
-    div[data-testid="stExpander"] div[data-testid="stButton"] button p,
-    div[data-testid="stExpander"] div[data-testid="stButton"] button span,
-    div[data-testid="stExpander"] div[data-testid="stButton"] button div {
-        color: #475569 !important;
-        -webkit-text-fill-color: #475569 !important;
-        text-shadow: none !important;
-    }
-
-
-    /* ---------------------------------------------------------
-       HOVER
-       --------------------------------------------------------- */
-
-    div[data-testid="stExpander"] div[data-testid="stButton"] button:hover,
-    div[data-testid="stExpander"] div[data-testid="stButton"] button:hover *,
-    div[data-testid="stExpander"] div[data-testid="stButton"] button:hover p,
-    div[data-testid="stExpander"] div[data-testid="stButton"] button:hover span,
-    div[data-testid="stExpander"] div[data-testid="stButton"] button:hover div {
-        color: #475569 !important;
-        -webkit-text-fill-color: #475569 !important;
-        text-shadow: none !important;
-    }
-
-
-    /* ---------------------------------------------------------
-       FOCUS / ACTIVE / FOCUS VISIBLE
-       --------------------------------------------------------- */
-
-    div[data-testid="stExpander"] div[data-testid="stButton"] button:focus,
-    div[data-testid="stExpander"] div[data-testid="stButton"] button:focus *,
-    div[data-testid="stExpander"] div[data-testid="stButton"] button:focus-visible,
-    div[data-testid="stExpander"] div[data-testid="stButton"] button:focus-visible *,
-    div[data-testid="stExpander"] div[data-testid="stButton"] button:active,
-    div[data-testid="stExpander"] div[data-testid="stButton"] button:active * {
-        color: #475569 !important;
-        -webkit-text-fill-color: #475569 !important;
-        text-shadow: none !important;
-    }
-
-
-    /* ---------------------------------------------------------
-       DESHABILITADOS
-       --------------------------------------------------------- */
-
-    div[data-testid="stExpander"] div[data-testid="stButton"] button:disabled,
-    div[data-testid="stExpander"] div[data-testid="stButton"] button:disabled *,
-    div[data-testid="stExpander"] div[data-testid="stButton"] button:disabled p,
-    div[data-testid="stExpander"] div[data-testid="stButton"] button:disabled span {
-        color: #64748b !important;
-        -webkit-text-fill-color: #64748b !important;
-        opacity: 1 !important;
-        text-shadow: none !important;
-    }
-
-
-    /* =========================================================
-       ☑️ CHECKBOXES
-       ========================================================= */
-
-    div[data-testid="stExpander"] div[data-testid="stCheckbox"] label,
-    div[data-testid="stExpander"] div[data-testid="stCheckbox"] label *,
-    div[data-testid="stExpander"] div[data-testid="stCheckbox"] label p,
-    div[data-testid="stExpander"] div[data-testid="stCheckbox"] label span {
-        color: #475569 !important;
-        -webkit-text-fill-color: #475569 !important;
-        text-shadow: none !important;
-    }
-
-
-    /* ---------------------------------------------------------
-       CHECKBOX HOVER / FOCUS
-       --------------------------------------------------------- */
-
-    div[data-testid="stExpander"] div[data-testid="stCheckbox"] label:hover,
-    div[data-testid="stExpander"] div[data-testid="stCheckbox"] label:hover *,
-    div[data-testid="stExpander"] div[data-testid="stCheckbox"] label:focus *,
-    div[data-testid="stExpander"] div[data-testid="stCheckbox"] label:active * {
-        color: #475569 !important;
-        -webkit-text-fill-color: #475569 !important;
-        text-shadow: none !important;
-    }
-
-
-    </style>
-    """, unsafe_allow_html=True)
     
     
     # ==========================================
