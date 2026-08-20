@@ -2050,45 +2050,121 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     margin-bottom:10px;
 ">
 
+<!-- 📌 RUTEO EN PANTALLA (DROPDOWN MODERNO Y ESTILIZADO) -->
+<div style="
+    background-color: #1e2022; 
+    padding: 10px 18px; 
+    border-radius: 12px; 
+    text-align: center; 
+    margin-bottom: 12px; 
+    border: 1px solid #34383d;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    position: relative;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+">
+    <div style="font-size: 10px; color: #ff5252; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;">
+        📌 RUTEO EN PANTALLA
+    </div>
 
-    <!-- 📌 RUTEO EN PANTALLA (ESTILO IMAGEN 1) -->
-        <div style="
-            background-color: #26292b; 
-            padding: 8px 15px; 
-            border-radius: 8px; 
-            text-align: center; 
-            margin-bottom: 12px; 
-            border: 1px solid #383d42;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        ">
-            <div style="font-size: 10px; color: #ff5252; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 2px;">
-                📌 RUTEO EN PANTALLA
-            </div>
+    <!-- Botón visible del Dropdown -->
+    <div id="custom-dropdown-btn" onclick="toggleCustomDropdown()" style="
+        background: #282c30;
+        color: #ffffff;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: 800;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid #42474e;
+        transition: all 0.2s ease;
+        user-select: none;
+    ">
+        <span id="custom-dropdown-selected">🟢 EXTENDIDO</span>
+        <span style="font-size: 12px; color: #888; transition: transform 0.2s;" id="dropdown-arrow">▼</span>
+    </div>
 
-            <select id="ciclo-selector" onchange="cambiarCiclo(this.value)" style="
-                background: transparent;
-                color: #FFFFFF;
-                border: none;
-                font-size: 22px;
-                font-weight: 900;
-                outline: none;
-                cursor: pointer;
-                width: 100%;
-                max-width: 350px;
-                text-align-last: center;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-            ">
-                <option value="2" style="background:#25282b; color:white;">🟢 C1 SCP1</option>
-                <option value="6" style="background:#25282b; color:white;">🔴 C1 SJA1</option>
-                <option value="7" style="background:#25282b; color:white;">🔴 C1 SCH1</option>
-                <option value="8" style="background:#25282b; color:white;">🔴 C1 SMD1</option>
-                <option value="1" style="background:#25282b; color:white;">🟡 PREC SMX5</option>
-                <option value="5" style="background:#25282b; color:white;">🟡 PREC SMX2</option>
-                <option value="4" selected style="background:#25282b; color:white;">🟢 EXTENDIDO</option>
-                <option value="9" style="background:#25282b; color:white;">🟣 C1 VACÍA</option>
-            </select>
-        </div>
+    <!-- Lista desplegable estilizada -->
+    <div id="custom-dropdown-menu" style="
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #25282c;
+        border: 1px solid #42474e;
+        border-radius: 10px;
+        margin-top: 6px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+        z-index: 99999;
+        overflow: hidden;
+    ">
+        <div class="custom-option" onclick="seleccionarOpcionCustom('2', '🟢 C1 SCP1')">🟢 C1 SCP1</div>
+        <div class="custom-option" onclick="seleccionarOpcionCustom('6', '🔴 C1 SJA1')">🔴 C1 SJA1</div>
+        <div class="custom-option" onclick="seleccionarOpcionCustom('7', '🔴 C1 SCH1')">🔴 C1 SCH1</div>
+        <div class="custom-option" onclick="seleccionarOpcionCustom('8', '🔴 C1 SMD1')">🔴 C1 SMD1</div>
+        <div class="custom-option" onclick="seleccionarOpcionCustom('1', '🟡 PREC SMX5')">🟡 PREC SMX5</div>
+        <div class="custom-option" onclick="seleccionarOpcionCustom('5', '🟡 PREC SMX2')">🟡 PREC SMX2</div>
+        <div class="custom-option" onclick="seleccionarOpcionCustom('4', '🟢 EXTENDIDO')">🟢 EXTENDIDO</div>
+        <div class="custom-option" onclick="seleccionarOpcionCustom('9', '🟣 C1 VACÍA')">🟣 C1 VACÍA</div>
+    </div>
+</div>
+
+<style>
+    .custom-option {
+        padding: 10px 16px;
+        font-size: 15px;
+        font-weight: 700;
+        color: #e0e0e0;
+        text-align: left;
+        cursor: pointer;
+        transition: background 0.15s ease, color 0.15s ease;
+        border-bottom: 1px solid #2e3237;
+    }
+    .custom-option:last-child {
+        border-bottom: none;
+    }
+    .custom-option:hover {
+        background: #20B2AA;
+        color: #ffffff;
+    }
+</style>
+
+<script>
+    function toggleCustomDropdown() {
+        const menu = document.getElementById("custom-dropdown-menu");
+        const arrow = document.getElementById("dropdown-arrow");
+        const visible = menu.style.display === "block";
+        
+        menu.style.display = visible ? "none" : "block";
+        arrow.style.transform = visible ? "rotate(0deg)" : "rotate(180deg)";
+    }
+
+    function seleccionarOpcionCustom(valor, texto) {
+        document.getElementById("custom-dropdown-selected").innerHTML = texto;
+        toggleCustomDropdown();
+        
+        if (typeof cambiarCiclo === "function") {
+            cambiarCiclo(valor);
+        }
+    }
+
+    // Cierra el menú si se hace clic fuera de él
+    document.addEventListener("click", function(event) {
+        const dropdown = document.getElementById("custom-dropdown-btn");
+        const menu = document.getElementById("custom-dropdown-menu");
+        if (dropdown && menu && !dropdown.contains(event.target) && !menu.contains(event.target)) {
+            menu.style.display = "none";
+            const arrow = document.getElementById("dropdown-arrow");
+            if (arrow) arrow.style.transform = "rotate(0deg)";
+        }
+    });
+</script>
+    
 
 
 <div id="panel-control-unico" style="display: flex; gap: 20px; background: #25282b; padding: 15px; border-radius: 10px; color: white; justify-content: center; align-items: center; margin: 20px 0;">
