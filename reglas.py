@@ -198,7 +198,7 @@ PREGUNTAS_FRECUENTES = {
         "🚛 **Plan Alchichica ND (SJA1):**\n\n"
         "* Se carga en **AM0** (Next Day).\n"
         "* Se le asignan **2 unidades Small Van MLP** (en Logis aparecen como *Small Van SDD*).\n"
-        "* Todo el volumen debe irse.*"
+        "**Todo el volumen debe irse.*"
     ),
     "scp1_cambios": (
         "🔄 **Ajustes y Quitar Unidades en SCP1:**\n\n"
