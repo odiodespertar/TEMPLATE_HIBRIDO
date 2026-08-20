@@ -552,19 +552,20 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
             else:
                 partes_respuesta = []
 
-                # 🟢 1. BÚSQUEDA DE NOTAS EN SUPABASE (TABLA NOTAS_SVC_2)
+                # 🟢 1. CONSULTA A SUPABASE (SE EJECUTA SIEMPRE PRIMERO)
                 notas_bd = obtener_notas_svc_2()
                 if notas_bd:
-                    notas_matcheadas = []
+                    notas_encontradas = []
                     for n in notas_bd:
                         svc_bd = str(n.get("svc", "")).strip().lower()
                         contenido_bd = str(n.get("contenido", "")).strip()
-                        # Compara en minúsculas para ignorar mayúsculas/minúsculas
+                        
+                        # Compara si el SVC (ej: "smx2", "sja1") está en la pregunta del usuario
                         if svc_bd and (svc_bd in query_lower or query_lower in svc_bd):
-                            notas_matcheadas.append(f"• **{n.get('svc', '').upper()}:** {contenido_bd}")
+                            notas_encontradas.append(f"• **{n.get('svc', '').upper()}:** {contenido_bd}")
                     
-                    if notas_matcheadas:
-                        bloque_notas = "📝 **Notas adicionales registradas en BD:**\n\n" + "\n".join(notas_matcheadas)
+                    if notas_encontradas:
+                        bloque_notas = "📝 **Notas adicionales registradas en BD:**\n\n" + "\n".join(notas_encontradas)
                         partes_respuesta.append(bloque_notas)
 
                 # 2. BÚSQUEDA EN MAPA OPERATIVO (ORIGEN Y VALIDACIÓN)
