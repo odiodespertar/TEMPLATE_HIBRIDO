@@ -2050,7 +2050,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     margin-bottom:10px;
 ">
 
-<!-- 📌 RUTEO EN PANTALLA (DROPDOWN MODERNO Y ESTILIZADO) -->
+<!-- 📌 RUTEO EN PANTALLA (DROPDOWN MODERNO Y ESTILIZADO CON RESPALDO OCULTO) -->
 <div style="
     background-color: #1e2022; 
     padding: 10px 18px; 
@@ -2067,6 +2067,18 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     <div style="font-size: 10px; color: #ff5252; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;">
         📌 RUTEO EN PANTALLA
     </div>
+
+    <!-- Select nativo oculto para mantener compatibilidad con las funciones de tu app -->
+    <select id="ciclo-selector" onchange="cambiarCiclo(this.value)" style="display: none !important;">
+        <option value="2">🟢 C1 SCP1</option>
+        <option value="6">🔴 C1 SJA1</option>
+        <option value="7">🔴 C1 SCH1</option>
+        <option value="8">🔴 C1 SMD1</option>
+        <option value="1">🟡 PREC SMX5</option>
+        <option value="5">🟡 PREC SMX2</option>
+        <option value="4" selected>🟢 EXTENDIDO</option>
+        <option value="9">🟣 C1 VACÍA</option>
+    </select>
 
     <!-- Botón visible del Dropdown -->
     <div id="custom-dropdown-btn" onclick="toggleCustomDropdown()" style="
@@ -2148,12 +2160,16 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         document.getElementById("custom-dropdown-selected").innerHTML = texto;
         toggleCustomDropdown();
         
+        const selNative = document.getElementById("ciclo-selector");
+        if (selNative) {{
+            selNative.value = valor;
+        }}
+
         if (typeof cambiarCiclo === "function") {{
             cambiarCiclo(valor);
         }}
     }}
 
-    // Cierra el menú si se hace clic fuera de él
     document.addEventListener("click", function(event) {{
         const dropdown = document.getElementById("custom-dropdown-btn");
         const menu = document.getElementById("custom-dropdown-menu");
