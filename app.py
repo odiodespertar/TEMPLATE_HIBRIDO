@@ -202,9 +202,13 @@ div[data-testid="stExpander"] {
 /* CONTENIDO INTERNO */
 
 div[data-testid="stExpander"] > div[role="group"] {
+
     max-height: calc(90vh - 60px) !important;
-    overflow-y: auto !important;
+
     overflow-x: hidden !important;
+
+    overflow-y: hidden !important;
+
 }
 
 
@@ -466,6 +470,57 @@ div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p {
 
     font-weight: 600 !important;
 }
+
+
+/* ============================================================
+   📌 BUSCADOR FIJO DEL ASISTENTE
+   SIEMPRE VISIBLE AL HACER SCROLL
+   ============================================================ */
+
+div[data-testid="stExpander"] div[data-testid="stChatInput"] {
+
+    position: sticky !important;
+
+    bottom: 0 !important;
+
+    z-index: 99999 !important;
+
+    background: #f8fafc !important;
+
+    padding-top: 10px !important;
+
+    padding-bottom: 6px !important;
+
+}
+
+
+/* Fondo del área del buscador */
+
+div[data-testid="stExpander"] div[data-testid="stChatInput"] form {
+
+    background: #f8fafc !important;
+
+}
+
+
+/* MODO OSCURO */
+
+@media (prefers-color-scheme: dark) {
+
+    div[data-testid="stExpander"] div[data-testid="stChatInput"] {
+
+        background: #171a1f !important;
+
+    }
+
+    div[data-testid="stExpander"] div[data-testid="stChatInput"] form {
+
+        background: #171a1f !important;
+
+    }
+
+}
+
 
 
 /* ============================================================
