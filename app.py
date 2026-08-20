@@ -522,6 +522,70 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
     }
 
 
+
+
+        /* =========================================================
+           🎨 CONTRASTE DE BOTONES DEL ASISTENTE
+           Se adapta automáticamente a modo claro / oscuro
+           ========================================================= */
+
+        /* ☀️ MODO CLARO */
+        @media (prefers-color-scheme: light) {
+
+            /* Botones del cuestionario */
+            div[data-testid="stButton"] button {
+                color: #1e293b !important;
+            }
+
+            div[data-testid="stButton"] button p,
+            div[data-testid="stButton"] button span {
+                color: #1e293b !important;
+            }
+
+            /* Checkboxes */
+            div[data-testid="stCheckbox"] label,
+            div[data-testid="stCheckbox"] label p,
+            div[data-testid="stCheckbox"] label span {
+                color: #334155 !important;
+            }
+
+            /* Texto de los botones cuando se pasa el mouse */
+            div[data-testid="stButton"] button:hover,
+            div[data-testid="stButton"] button:hover p,
+            div[data-testid="stButton"] button:hover span {
+                color: #0f172a !important;
+            }
+        }
+
+
+        /* 🌙 MODO OSCURO */
+        @media (prefers-color-scheme: dark) {
+
+            /* Botones del cuestionario */
+            div[data-testid="stButton"] button {
+                color: #ffffff !important;
+            }
+
+            div[data-testid="stButton"] button p,
+            div[data-testid="stButton"] button span {
+                color: #ffffff !important;
+            }
+
+            /* Checkboxes */
+            div[data-testid="stCheckbox"] label,
+            div[data-testid="stCheckbox"] label p,
+            div[data-testid="stCheckbox"] label span {
+                color: #e5e7eb !important;
+            }
+
+            /* Hover */
+            div[data-testid="stButton"] button:hover,
+            div[data-testid="stButton"] button:hover p,
+            div[data-testid="stButton"] button:hover span {
+                color: #ffffff !important;
+            }
+        }
+
     </style>
     """, unsafe_allow_html=True)
     
