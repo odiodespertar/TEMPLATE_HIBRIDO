@@ -230,49 +230,58 @@ div[data-testid="stExpander"] > div[role="group"] {
 
 
 /* ============================================================
-   🤖 ENCABEZADO DEL ASISTENTE
+   🤖 ENCABEZADO DEL ASISTENTE (ESTILO CIENCIA FICCIÓN / HOLOGRÁFICO)
    ============================================================ */
 
 div[data-testid="stExpander"] summary {
     background: linear-gradient(
         135deg,
         #070808,
-        #202121
+        #112225
     ) !important;
 
     padding: 15px 18px !important;
-
     border-radius: 20px !important;
-
     min-height: 54px !important;
-
+    
+    /* Resplandor exterior futurista alrededor de toda la barra */
+    border: 1px solid rgba(20, 184, 166, 0.4) !important;
     box-shadow:
-        0 4px 12px rgba(15, 118, 110, 0.20) !important;
+        0 4px 15px rgba(20, 184, 166, 0.25),
+        inset 0 0 10px rgba(20, 184, 166, 0.15) !important;
 }
 
 
-/* TEXTO DEL ENCABEZADO */
+/* TEXTO DEL ENCABEZADO CON EFECTO NEÓN HOLOGRÁFICO */
 
 div[data-testid="stExpander"] summary,
 div[data-testid="stExpander"] summary p,
 div[data-testid="stExpander"] summary span,
 div[data-testid="stExpander"] summary div {
 
-    color: #ffffff !important;
-
-    -webkit-text-fill-color: #ffffff !important;
+    /* Color base muy claro para que siempre resalte */
+    color: #ccfbf1 !important; 
+    -webkit-text-fill-color: #ccfbf1 !important;
 
     font-weight: 800 !important;
-
     font-size: 1.05rem !important;
+    letter-spacing: 1.5px !important; /* Espaciado estilo terminal */
+
+    /* Capas de resplandor (Text Shadow) estilo interfaz alien / holograma */
+    text-shadow: 
+        0 0 4px rgba(45, 212, 191, 0.8),
+        0 0 10px rgba(20, 184, 166, 0.6),
+        0 0 20px rgba(13, 148, 136, 0.4),
+        0 0 35px rgba(15, 118, 110, 0.3) !important;
 }
 
 
-/* ICONO */
+/* ICONO CON RESPLANDOR */
 
 div[data-testid="stExpander"] summary svg {
-    color: #ffffff !important;
-    fill: #ffffff !important;
+    color: #2dd4bf !important;
+    fill: #2dd4bf !important;
+    filter: drop-shadow(0 0 6px rgba(45, 212, 191, 0.8)) !important;
 }
 
 
@@ -770,7 +779,6 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
         unsafe_allow_html=True
     )
 
-    # Inicialización de Estados
 
     # Inicialización de Estados
     if "main_chat_messages" not in st.session_state:
