@@ -230,60 +230,58 @@ div[data-testid="stExpander"] > div[role="group"] {
 
 
 /* ============================================================
-   🤖 ENCABEZADO DEL ASISTENTE (ESTILO CIENCIA FICCIÓN / HOLOGRÁFICO)
+   🤖 ENCABEZADO DEL ASISTENTE (FORZADO CIENCIA FICCIÓN)
    ============================================================ */
 
 div[data-testid="stExpander"] summary {
     background: linear-gradient(
         135deg,
-        #070808,
-        #112225
+        #030712,
+        #042f2e
     ) !important;
 
     padding: 15px 18px !important;
     border-radius: 20px !important;
     min-height: 54px !important;
     
-    /* Resplandor exterior futurista alrededor de toda la barra */
-    border: 1px solid rgba(20, 184, 166, 0.4) !important;
+    border: 1px solid #2dd4bf !important;
     box-shadow:
-        0 4px 15px rgba(20, 184, 166, 0.25),
-        inset 0 0 10px rgba(20, 184, 166, 0.15) !important;
+        0 0 15px rgba(45, 212, 191, 0.4),
+        inset 0 0 10px rgba(45, 212, 191, 0.2) !important;
 }
 
 
-/* TEXTO DEL ENCABEZADO CON EFECTO NEÓN HOLOGRÁFICO */
+/* TEXTO DEL ENCABEZADO - ALTA DEFINICIÓN NEÓN */
 
 div[data-testid="stExpander"] summary,
 div[data-testid="stExpander"] summary p,
 div[data-testid="stExpander"] summary span,
 div[data-testid="stExpander"] summary div {
 
-    /* Color base blanco puro para que el centro de la letra no se opaque */
     color: #ffffff !important; 
     -webkit-text-fill-color: #ffffff !important;
 
-    font-weight: 800 !important;
+    font-weight: 900 !important;
     font-size: 1.05rem !important;
-    letter-spacing: 1.5px !important;
+    letter-spacing: 2px !important;
 
-    /* Resplandor dual: un brillo interno nítido y un halo exterior estilo neón */
+    /* Sombra dura de contraste + Resplandor cian brillante */
     text-shadow: 
-        0 0 2px rgba(255, 255, 255, 0.9), /* Núcleo brillante */
-        0 0 6px rgba(45, 212, 191, 0.8),  /* Brillo turquesa medio */
-        0 0 14px rgba(20, 184, 166, 0.6), /* Expansión */
-        0 0 25px rgba(13, 148, 136, 0.4) !important; /* Halo exterior */
+        0 0 1px #ffffff,
+        0 0 2px #ffffff,
+        0 0 8px #2dd4bf,
+        0 0 15px #14b8a6,
+        0 0 25px #0d9488 !important;
 }
 
 
-/* ICONO CON RESPLANDOR */
+/* ICONO */
 
 div[data-testid="stExpander"] summary svg {
     color: #2dd4bf !important;
     fill: #2dd4bf !important;
-    filter: drop-shadow(0 0 6px rgba(45, 212, 191, 0.8)) !important;
+    filter: drop-shadow(0 0 8px #2dd4bf) !important;
 }
-
 
 /* ============================================================
    💬 MENSAJE DEL USUARIO
