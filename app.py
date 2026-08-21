@@ -70,6 +70,13 @@ def abrir_modal_notas():
                 st.error("❌ Error al conectar con Supabase.")
 
 
+# 🟢 DIÁLOGO EN PANTALLA COMPLETA PARA GOLDEN RULES
+@st.dialog("📜 GOLDEN RULES DE ROUTING LM")
+def ver_golden_rules_modal():
+    url_imagen_golden = "https://drive.google.com/thumbnail?id=1qGgyPVp5_t0Kd69ut9oIQEt0CmuFzjY7&sz=w1000"
+    st.image(url_imagen_golden, use_container_width=True)
+
+
 # ==========================================
 # ESTADO Y CONTROL DEL MODO FLOTANTE
 # ==========================================
@@ -1119,30 +1126,23 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                 # 3. BÚSQUEDA EN PREGUNTAS FRECUENTES
                 coincidencias_faq = []
 
-                # 📜 BÚSQUEDA DE GOLDEN RULES (AMPLIABLE DENTRO DEL CHAT)
+                # 📜 BÚSQUEDA DE GOLDEN RULES (DISPARA DIÁLOGO EN PANTALLA COMPLETA)
                 if any(w in query_lower for w in ["golden rules", "golden rule", "reglas de oro", "reglas oro"]):
-                    url_imagen_golden = "https://drive.google.com/thumbnail?id=1qGgyPVp5_t0Kd69ut9oIQEt0CmuFzjY7&sz=w1000"
+                    ver_golden_rules_modal() # 👈 Abre la imagen gigante en el centro de la pantalla
                     
                     texto_golden = (
-                        "📜 **GOLDEN RULES DE ROUTING LM**<br><br>"
-                        "1. **Horario:** Iniciar el ruteo únicamente con el *Routing Clock*. No esperar autorizaciones ni 'GO'.<br>"
-                        "2. **Volumen:** Rutear solo volumen de *Logistics* y *Forms* hasta 1 min antes. Cero fuentes externas (WhatsApp).<br>"
-                        "3. **Flota:** Usar exclusivamente la flota cargada en *Schedule* (o del mismo día de la semana pasada si está vacío).<br>"
-                        "4. **Capacidad:** No superar la capacidad de *OUTR*. Si falta:<br>"
-                        "   • **OTR** $\\rightarrow$ *sideline* con fecha futura.<br>"
-                        "   • **UTR** $\\rightarrow$ descartar un *Linehaul*.<br>"
-                        "5. **Bitácora:** Llenar la bitácora inmediatamente después de cada ruteo.<br>"
-                        "6. **Comunicación:** Notificar inicio y fin únicamente por el grupo de Google Chat del SVC.<br>"
-                        "7. **Playbook:** Cumplir siempre parámetros, restricciones, polígonos y prioridades.<br>"
-                        "8. **Callouts:** Avisar de inmediato al supervisor directo si surge un problema.<br><br>"
-                        "<details style='background: #1e2022; padding: 8px; border-radius: 8px; border: 1px solid #34383d; margin-top: 10px; cursor: pointer;'>"
-                        "  <summary style='color: #20B2AA; font-weight: bold; font-size: 13px; outline: none; display: flex; align-items: center; gap: 6px;'>"
-                        "    🖼️ <span>Ver / Ampliar Infografía Completa</span>"
-                        "  </summary>"
-                        "  <div style='text-align: center; margin-top: 10px; overflow-x: auto;'>"
-                        f"    <img src='{url_imagen_golden}' style='width: 100%; border-radius: 8px; border: 1px solid #444;' />"
-                        "  </div>"
-                        "</details>"
+                        "📜 **GOLDEN RULES DE ROUTING LM**\n\n"
+                        "1. **Horario:** Iniciar el ruteo únicamente con el *Routing Clock*. No esperar autorizaciones ni 'GO'.\n"
+                        "2. **Volumen:** Rutear solo volumen de *Logistics* y *Forms* hasta 1 min antes. Cero fuentes externas (WhatsApp).\n"
+                        "3. **Flota:** Usar exclusivamente la flota cargada en *Schedule* (o del mismo día de la semana pasada si está vacío).\n"
+                        "4. **Capacidad:** No superar la capacidad de *OUTR*. Si falta:\n"
+                        "   • **OTR** -> *sideline* con fecha futura.\n"
+                        "   • **UTR** -> descartar un *Linehaul*.\n"
+                        "5. **Bitácora:** Llenar la bitácora inmediatamente después de cada ruteo.\n"
+                        "6. **Comunicación:** Notificar inicio y fin únicamente por el grupo de Google Chat del SVC.\n"
+                        "7. **Playbook:** Cumplir siempre parámetros, restricciones, polígonos y prioridades.\n"
+                        "8. **Callouts:** Avisar de inmediato al supervisor directo si surge un problema.\n\n"
+                        "💡 *Se ha desplegado la infografía en pantalla completa.*"
                     )
                     coincidencias_faq.append(texto_golden)
 
