@@ -258,8 +258,8 @@ div[data-testid="stExpander"] summary p,
 div[data-testid="stExpander"] summary span,
 div[data-testid="stExpander"] summary div {
 
-    color: #ffffff !important; 
-    -webkit-text-fill-color: #ffffff !important;
+    color: #20B2AA !important; 
+    -webkit-text-fill-color: #20B2AA !important;
 
     font-weight: 900 !important;
     font-size: 1.05rem !important;
