@@ -268,8 +268,8 @@ div[data-testid="stExpander"] summary div {
     /* Sombra dura de contraste + Resplandor cian brillante */
     text-shadow: 
         0 0 1px #ffffff,
-        0 0 2px #00FFFF,
-        0 0 8px #2dd4bf,
+        0 0 1px #00FFFF,
+        0 0 6px #2dd4bf,
         0 0 15px #14b8a6,
         0 0 25px #203a3b !important;
 }
