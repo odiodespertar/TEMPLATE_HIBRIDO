@@ -269,8 +269,8 @@ div[data-testid="stExpander"] summary div {
     text-shadow: 
         0 0 1px #ffffff,
         0 0 1px #00FFFF,
-        0 0 6px #2dd4bf,
-        0 0 12px #14b8a6;
+        0 0 5px #2dd4bf,
+        0 0 10px #14b8a6;
 }
 
 
