@@ -1119,26 +1119,33 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                 # 3. BÚSQUEDA EN PREGUNTAS FRECUENTES
                 coincidencias_faq = []
 
-                # 📜 BÚSQUEDA DE GOLDEN RULES (TEXTO + IMAGEN DE GOOGLE DRIVE)
+                # 📜 BÚSQUEDA DE GOLDEN RULES (TEXTO + IMAGEN AMPLIABLE)
                 if any(w in query_lower for w in ["golden rules", "golden rule", "reglas de oro", "reglas oro"]):
-                    # 🔥 ID extraído de tu enlace transformado a vista previa directa
                     url_imagen_golden = "https://drive.google.com/thumbnail?id=1qGgyPVp5_t0Kd69ut9oIQEt0CmuFzjY7&sz=w1000"
                     
                     texto_golden = (
-                        "📜 **GOLDEN RULES DE ROUTING LM**\n\n"
-                        "1. **Horario:** Iniciar el ruteo únicamente con el *Routing Clock*. No esperar autorizaciones ni 'GO'.\n"
-                        "2. **Volumen:** Rutear solo volumen de *Logistics* y *Forms* hasta 1 min antes. Cero fuentes externas (WhatsApp).\n"
-                        "3. **Flota:** Usar exclusivamente la flota cargada en *Schedule* (o del mismo día de la semana pasada si está vacío).\n"
-                        "4. **Capacidad:** No superar la capacidad de *OUTR*. Si falta:\n"
-                        "   • **OTR** -> *sideline* con fecha futura.\n"
-                        "   • **UTR** -> descartar un *Linehaul*.\n"
-                        "5. **Bitácora:** Llenar la bitácora inmediatamente después de cada ruteo.\n"
-                        "6. **Comunicación:** Notificar inicio y fin únicamente por el grupo de Google Chat del SVC.\n"
-                        "7. **Playbook:** Cumplir siempre parámetros, restricciones, polígonos y prioridades.\n"
-                        "8. **Callouts:** Avisar de inmediato al supervisor directo si surge un problema.\n\n"
-                        f"![Golden Rules]({url_imagen_golden})"
+                        "📜 **GOLDEN RULES DE ROUTING LM**<br><br>"
+                        "1. **Horario:** Iniciar el ruteo únicamente con el *Routing Clock*. No esperar autorizaciones ni 'GO'.<br>"
+                        "2. **Volumen:** Rutear solo volumen de *Logistics* y *Forms* hasta 1 min antes. Cero fuentes externas (WhatsApp).<br>"
+                        "3. **Flota:** Usar exclusivamente la flota cargada en *Schedule* (o del mismo día de la semana pasada si está vacío).<br>"
+                        "4. **Capacidad:** No superar la capacidad de *OUTR*. Si falta:<br>"
+                        "   • **OTR** $\\rightarrow$ *sideline* con fecha futura.<br>"
+                        "   • **UTR** $\\rightarrow$ descartar un *Linehaul*.<br>"
+                        "5. **Bitácora:** Llenar la bitácora inmediatamente después de cada ruteo.<br>"
+                        "6. **Comunicación:** Notificar inicio y fin únicamente por el grupo de Google Chat del SVC.<br>"
+                        "7. **Playbook:** Cumplir siempre parámetros, restricciones, polígonos y prioridades.<br>"
+                        "8. **Callouts:** Avisar de inmediato al supervisor directo si surge un problema.<br><br>"
+                        f"<div style='text-align: center; margin-top: 10px;'>"
+                        f"  <img src='{url_imagen_golden}' "
+                        f"       onclick=\"document.getElementById('modal-mapa-fullscreen').style.display='flex'; document.getElementById('modal-mapa-fullscreen').querySelector('img').src='{url_imagen_golden}';\" "
+                        f"       style='width: 100%; max-width: 450px; border-radius: 10px; cursor: zoom-in; border: 1px solid #ddd;' "
+                        f"       title='Haz clic para ampliar la imagen' />"
+                        f"  <div style='font-size: 11px; color: #888; margin-top: 4px;'>🔍 Haz clic en la imagen para verla en pantalla completa</div>"
+                        f"</div>"
                     )
                     coincidencias_faq.append(texto_golden)
+
+                
                 
                 if any(w in query_lower for w in ["large van sdd", "sdd"]):
                     coincidencias_faq.append(PREGUNTAS_FRECUENTES["large_van_sdd"])
