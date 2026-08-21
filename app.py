@@ -1118,6 +1118,27 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
 
                 # 3. BÚSQUEDA EN PREGUNTAS FRECUENTES
                 coincidencias_faq = []
+
+                # 📜 BÚSQUEDA DE GOLDEN RULES (TEXTO + IMAGEN)
+                if any(w in query_lower for w in ["golden rules", "golden rule", "reglas de oro", "reglas oro"]):
+                    # Reemplaza la URL por el enlace directo de tu imagen guardada en Google Drive o imgur
+                    url_imagen_golden = "https://drive.google.com/file/d/1qGgyPVp5_t0Kd69ut9oIQEt0CmuFzjY7/view?usp=sharing"
+                    
+                    texto_golden = (
+                        "📜 **GOLDEN RULES DE ROUTING LM**<br><br>"
+                        "1. **Horario:** Iniciar el ruteo únicamente con el *Routing Clock*. No esperar autorizaciones ni 'GO'.<br>"
+                        "2. **Volumen:** Rutear solo volumen de *Logistics* y *Forms* hasta 1 min antes. Cero fuentes externas (WhatsApp).<br>"
+                        "3. **Flota:** Usar exclusivamente la flota cargada en *Schedule* (o del mismo día de la semana pasada si está vacío).<br>"
+                        "4. **Capacidad:** No superar la capacidad de *OUTR*. Si falta:<br>"
+                        "   • **OTR** $\\rightarrow$ *sideline* con fecha futura.<br>"
+                        "   • **UTR** $\\rightarrow$ descartar un *Linehaul*.<br>"
+                        "5. **Bitácora:** Llenar la bitácora inmediatamente después de cada ruteo.<br>"
+                        "6. **Comunicación:** Notificar inicio y fin únicamente por el grupo de Google Chat del SVC.<br>"
+                        "7. **Playbook:** Cumplir siempre parámetros, restricciones, polígonos y prioridades.<br>"
+                        "8. **Callouts:** Avisar de inmediato al supervisor directo si surge un problema.<br><br>"
+                        f"<img src='{url_imagen_golden}' style='width:100%; border-radius:10px; margin-top:10px;'>"
+                    )
+                    coincidencias_faq.append(texto_golden)
                 
                 if any(w in query_lower for w in ["large van sdd", "sdd"]):
                     coincidencias_faq.append(PREGUNTAS_FRECUENTES["large_van_sdd"])
