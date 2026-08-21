@@ -259,20 +259,20 @@ div[data-testid="stExpander"] summary p,
 div[data-testid="stExpander"] summary span,
 div[data-testid="stExpander"] summary div {
 
-    /* Color base muy claro para que siempre resalte */
-    color: #ccfbf1 !important; 
-    -webkit-text-fill-color: #ccfbf1 !important;
+    /* Color base blanco puro para que el centro de la letra no se opaque */
+    color: #ffffff !important; 
+    -webkit-text-fill-color: #ffffff !important;
 
     font-weight: 800 !important;
     font-size: 1.05rem !important;
-    letter-spacing: 1.5px !important; /* Espaciado estilo terminal */
+    letter-spacing: 1.5px !important;
 
-    /* Capas de resplandor (Text Shadow) estilo interfaz alien / holograma */
+    /* Resplandor dual: un brillo interno nítido y un halo exterior estilo neón */
     text-shadow: 
-        0 0 4px rgba(45, 212, 191, 0.8),
-        0 0 10px rgba(20, 184, 166, 0.6),
-        0 0 20px rgba(13, 148, 136, 0.4),
-        0 0 35px rgba(15, 118, 110, 0.3) !important;
+        0 0 2px rgba(255, 255, 255, 0.9), /* Núcleo brillante */
+        0 0 6px rgba(45, 212, 191, 0.8),  /* Brillo turquesa medio */
+        0 0 14px rgba(20, 184, 166, 0.6), /* Expansión */
+        0 0 25px rgba(13, 148, 136, 0.4) !important; /* Halo exterior */
 }
 
 
