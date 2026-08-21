@@ -1119,7 +1119,7 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                 # 3. BÚSQUEDA EN PREGUNTAS FRECUENTES
                 coincidencias_faq = []
 
-                # 📜 BÚSQUEDA DE GOLDEN RULES (TEXTO + IMAGEN AMPLIABLE)
+                # 📜 BÚSQUEDA DE GOLDEN RULES (TEXTO + IMAGEN CON ENLACE DE AMPLIACIÓN)
                 if any(w in query_lower for w in ["golden rules", "golden rule", "reglas de oro", "reglas oro"]):
                     url_imagen_golden = "https://drive.google.com/thumbnail?id=1qGgyPVp5_t0Kd69ut9oIQEt0CmuFzjY7&sz=w1000"
                     
@@ -1136,11 +1136,14 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                         "7. **Playbook:** Cumplir siempre parámetros, restricciones, polígonos y prioridades.<br>"
                         "8. **Callouts:** Avisar de inmediato al supervisor directo si surge un problema.<br><br>"
                         f"<div style='text-align: center; margin-top: 10px;'>"
-                        f"  <img src='{url_imagen_golden}' "
-                        f"       onclick=\"document.getElementById('modal-mapa-fullscreen').style.display='flex'; document.getElementById('modal-mapa-fullscreen').querySelector('img').src='{url_imagen_golden}';\" "
-                        f"       style='width: 100%; max-width: 450px; border-radius: 10px; cursor: zoom-in; border: 1px solid #ddd;' "
-                        f"       title='Haz clic para ampliar la imagen' />"
-                        f"  <div style='font-size: 11px; color: #888; margin-top: 4px;'>🔍 Haz clic en la imagen para verla en pantalla completa</div>"
+                        f"  <a href='{url_imagen_golden}' target='_blank' title='Clic para ver en tamaño completo'>"
+                        f"      <img src='{url_imagen_golden}' style='width: 100%; max-width: 450px; border-radius: 10px; border: 1px solid #ccc;' />"
+                        f"  </a>"
+                        f"  <div style='margin-top: 5px;'>"
+                        f"      <a href='{url_imagen_golden}' target='_blank' style='font-size: 12px; color: #008B8B; font-weight: bold; text-decoration: none;'>"
+                        f"          🔍 Ver o ampliar imagen en pantalla completa ↗"
+                        f"      </a>"
+                        f"  </div>"
                         f"</div>"
                     )
                     coincidencias_faq.append(texto_golden)
