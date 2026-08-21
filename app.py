@@ -2550,6 +2550,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
         <div id="contenedor-img-scroll" style="overflow: auto; max-height: 400px; border-radius: 8px; border: 1px solid #222;">
             <img id="img-mapa-operativo" src="https://drive.google.com/thumbnail?id=1M4GLEwFzhLrZjV-zmvGrdTQhC6IjwxOJ&sz=w1000" alt="Mapa Operativo" onclick="abrirMapaPantallaCompleta()" style="width: 100%; transition: transform 0.2s ease; transform-origin: top left; cursor: zoom-in;" title="Haz clic para abrir en pantalla completa" />
+        </div>
 
     <!-- 📝 AQUÍ VA EL NUEVO BOTÓN: OPCIÓN 4 AGREGAR NOTA SVC -->
     <button class="opcion-menu-ruteos" onclick="abrirModalNotasSVC()" style="margin-top: 10px;">📝 &nbsp; AGREGAR NOTA SVC</button>
