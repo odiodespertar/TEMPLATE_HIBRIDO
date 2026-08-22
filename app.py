@@ -252,31 +252,24 @@ div[data-testid="stExpander"] summary {
 
 
 /* ============================================================
-   🤖 TEXTO DEL ENCABEZADO - CIAN NEÓN VÍVIDO (SIN BLANCO)
+   🤖 TEXTO DEL ENCABEZADO - DEFINITIVO (CIENCIA FICCIÓN LIMPIO)
    ============================================================ */
 
-div[data-testid="stExpander"] summary,
 div[data-testid="stExpander"] summary p,
 div[data-testid="stExpander"] summary span,
-div[data-testid="stExpander"] summary div {
-
-    /* Tono cian-turquesa brillante y eléctrico */
-    color: #5eead4 !important; 
-    -webkit-text-fill-color: #5eead4 !important;
-
-    font-weight: 900 !important;
+div[data-testid="stExpander"] summary div,
+div[data-testid="stExpander"] summary {
+    color: #00ffff !important;
+    -webkit-text-fill-color: #00ffff !important;
+    font-weight: 800 !important;
     font-size: 1.05rem !important;
-    letter-spacing: 2px !important;
+    letter-spacing: 1.5px !important;
     opacity: 1 !important;
-    mix-blend-mode: normal !important;
-
-    /* Capas densas de luz para dar cuerpo al neón sin volverse blanco */
+    
+    /* Neón limpio y definido sin manchar el centro */
     text-shadow: 
-        0 0 2px rgba(45, 212, 191, 0.9),
-        0 0 6px rgba(20, 184, 166, 0.8),
-        0 0 12px rgba(13, 148, 136, 0.7),
-        0 0 22px rgba(15, 118, 110, 0.5),
-        0 0 35px rgba(20, 184, 166, 0.3) !important;
+        0 0 8px rgba(0, 255, 255, 0.8),
+        0 0 20px rgba(0, 206, 209, 0.5) !important;
 }
 
 
