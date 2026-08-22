@@ -230,7 +230,7 @@ div[data-testid="stExpander"] > div[role="group"] {
 
 
 /* ============================================================
-   🤖 ENCABEZADO — ESTILO MINIMALISTA CYBERPUNK (NÍTIDO Y LIMPIO)
+   🤖 ENCABEZADO — MINIMALISTA LIMPIO (SIN NINGÚN BRILLO)
    ============================================================ */
 
 div[data-testid="stExpander"] summary,
@@ -243,8 +243,8 @@ div[data-testid="stExpander"] summary div {
     font-size: 1.02rem !important;
     letter-spacing: 1.5px !important;
     
-    /* Sin sombras difusas que ensucien: solo una línea de luz precisa y limpia */
-    text-shadow: 0 0 1px rgba(94, 234, 212, 0.6) !important;
+    /* Sin sombras ni efectos de luz para garantizar máxima nitidez */
+    text-shadow: none !important;
 }
 
 
