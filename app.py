@@ -258,19 +258,21 @@ div[data-testid="stExpander"] summary p,
 div[data-testid="stExpander"] summary span,
 div[data-testid="stExpander"] summary div {
 
-    color: #48D1CC !important; 
-    -webkit-text-fill-color: #48D1CC !important;
+    color: #ffffff !important; /* Blanco puro en el núcleo para que no se apague */
+    -webkit-text-fill-color: #ffffff !important;
 
     font-weight: 900 !important;
     font-size: 1.05rem !important;
     letter-spacing: 2px !important;
+    opacity: 1 !important;
+    mix-blend-mode: normal !important;
 
     /* Sombra dura de contraste + Resplandor cian brillante */
     text-shadow: 
-        0 0 1px #00FFFF,
-        0 0 1px #00CED1,
-        0 0 5px #2dd4bf,
-        0 0 10px #14b8a6;
+        0 0 2px #ffffff,
+        0 0 6px #00FFFF,
+        0 0 12px #2dd4bf,
+        0 0 22px #14b8a6 !important;
 }
 
 
