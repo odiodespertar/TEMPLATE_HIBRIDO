@@ -252,7 +252,7 @@ div[data-testid="stExpander"] summary {
 
 
 /* ============================================================
-   🤖 TEXTO DEL ENCABEZADO - DEFINITIVO (CIENCIA FICCIÓN LIMPIO)
+   🤖 TEXTO DEL ENCABEZADO - MÁXIMA NITIDEZ CIENCIA FICCIÓN
    ============================================================ */
 
 div[data-testid="stExpander"] summary p,
@@ -261,15 +261,15 @@ div[data-testid="stExpander"] summary div,
 div[data-testid="stExpander"] summary {
     color: #00ffff !important;
     -webkit-text-fill-color: #00ffff !important;
-    font-weight: 800 !important;
+    font-weight: 900 !important;
     font-size: 1.05rem !important;
     letter-spacing: 1.5px !important;
     opacity: 1 !important;
     
-    /* Neón limpio y definido sin manchar el centro */
+    /* Sombra muy corta y precisa para dar nitidez vectorial tipo HUD */
     text-shadow: 
-        0 0 8px rgba(0, 255, 255, 0.8),
-        0 0 20px rgba(0, 206, 209, 0.5) !important;
+        0 0 2px rgba(0, 255, 255, 0.9),
+        0 0 6px rgba(0, 206, 209, 0.6) !important;
 }
 
 
