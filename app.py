@@ -251,15 +251,18 @@ div[data-testid="stExpander"] summary {
 }
 
 
-/* TEXTO DEL ENCABEZADO - ALTA DEFINICIÓN NEÓN */
+/* ============================================================
+   🤖 TEXTO DEL ENCABEZADO - CIAN NEÓN VÍVIDO (SIN BLANCO)
+   ============================================================ */
 
 div[data-testid="stExpander"] summary,
 div[data-testid="stExpander"] summary p,
 div[data-testid="stExpander"] summary span,
 div[data-testid="stExpander"] summary div {
 
-    color: #ffffff !important; /* Blanco puro en el núcleo para que no se apague */
-    -webkit-text-fill-color: #ffffff !important;
+    /* Tono cian-turquesa brillante y eléctrico */
+    color: #5eead4 !important; 
+    -webkit-text-fill-color: #5eead4 !important;
 
     font-weight: 900 !important;
     font-size: 1.05rem !important;
@@ -267,12 +270,13 @@ div[data-testid="stExpander"] summary div {
     opacity: 1 !important;
     mix-blend-mode: normal !important;
 
-    /* Sombra dura de contraste + Resplandor cian brillante */
+    /* Capas densas de luz para dar cuerpo al neón sin volverse blanco */
     text-shadow: 
-        0 0 2px #ffffff,
-        0 0 6px #00FFFF,
-        0 0 12px #2dd4bf,
-        0 0 22px #14b8a6 !important;
+        0 0 2px rgba(45, 212, 191, 0.9),
+        0 0 6px rgba(20, 184, 166, 0.8),
+        0 0 12px rgba(13, 148, 136, 0.7),
+        0 0 22px rgba(15, 118, 110, 0.5),
+        0 0 35px rgba(20, 184, 166, 0.3) !important;
 }
 
 
