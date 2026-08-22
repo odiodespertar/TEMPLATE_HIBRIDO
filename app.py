@@ -237,7 +237,7 @@ div[data-testid="stExpander"] summary {
     background: linear-gradient(
         135deg,
         #030712,
-        #042f2e
+        #2a2b2b
     ) !important;
 
     padding: 15px 18px !important;
@@ -258,8 +258,8 @@ div[data-testid="stExpander"] summary p,
 div[data-testid="stExpander"] summary span,
 div[data-testid="stExpander"] summary div {
 
-    color: #20B2AA !important; 
-    -webkit-text-fill-color: #20B2AA !important;
+    color: #48D1CC !important; 
+    -webkit-text-fill-color: #48D1CC !important;
 
     font-weight: 900 !important;
     font-size: 1.05rem !important;
@@ -268,7 +268,7 @@ div[data-testid="stExpander"] summary div {
     /* Sombra dura de contraste + Resplandor cian brillante */
     text-shadow: 
         0 0 1px #ffffff,
-        0 0 0.5px #00FFFF,
+        0 0 1px #00CED1,
         0 0 5px #2dd4bf,
         0 0 10px #14b8a6;
 }
