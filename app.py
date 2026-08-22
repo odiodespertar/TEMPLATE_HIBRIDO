@@ -230,7 +230,7 @@ div[data-testid="stExpander"] > div[role="group"] {
 
 
 /* ============================================================
-   🤖 ENCABEZADO — ESTILO MINIMALISTA CYBERPUNK (NÍTIDO Y LIMPIO)
+   🤖 ENCABEZADO — MINIMALISTA LIMPIO (SIN NINGÚN BRILLO)
    ============================================================ */
 
 div[data-testid="stExpander"] summary,
@@ -243,30 +243,8 @@ div[data-testid="stExpander"] summary div {
     font-size: 1.02rem !important;
     letter-spacing: 1.5px !important;
     
-    /* Sin sombras difusas que ensucien: solo una línea de luz precisa y limpia */
-    text-shadow: 0 0 1px rgba(94, 234, 212, 0.6) !important;
-}
-
-
-/* ============================================================
-   🤖 TEXTO DEL ENCABEZADO - MÁXIMA NITIDEZ CIENCIA FICCIÓN
-   ============================================================ */
-
-div[data-testid="stExpander"] summary p,
-div[data-testid="stExpander"] summary span,
-div[data-testid="stExpander"] summary div,
-div[data-testid="stExpander"] summary {
-    color: #00ffff !important;
-    -webkit-text-fill-color: #00ffff !important;
-    font-weight: 900 !important;
-    font-size: 1.05rem !important;
-    letter-spacing: 1.5px !important;
-    opacity: 1 !important;
-    
-    /* Sombra muy corta y precisa para dar nitidez vectorial tipo HUD */
-    text-shadow: 
-        0 0 2px rgba(0, 255, 255, 0.9),
-        0 0 6px rgba(0, 206, 209, 0.6) !important;
+    /* Sin sombras ni efectos de luz para garantizar máxima nitidez */
+    text-shadow: none !important;
 }
 
 
