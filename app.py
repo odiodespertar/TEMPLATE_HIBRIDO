@@ -230,24 +230,21 @@ div[data-testid="stExpander"] > div[role="group"] {
 
 
 /* ============================================================
-   🤖 ENCABEZADO DEL ASISTENTE (FORZADO CIENCIA FICCIÓN)
+   🤖 ENCABEZADO — ESTILO MINIMALISTA CYBERPUNK (NÍTIDO Y LIMPIO)
    ============================================================ */
 
-div[data-testid="stExpander"] summary {
-    background: linear-gradient(
-        135deg,
-        #030712,
-        #2a2b2b
-    ) !important;
-
-    padding: 15px 18px !important;
-    border-radius: 20px !important;
-    min-height: 54px !important;
+div[data-testid="stExpander"] summary,
+div[data-testid="stExpander"] summary p,
+div[data-testid="stExpander"] summary span,
+div[data-testid="stExpander"] summary div {
+    color: #e2e8f0 !important;
+    -webkit-text-fill-color: #e2e8f0 !important;
+    font-weight: 700 !important;
+    font-size: 1.02rem !important;
+    letter-spacing: 1.5px !important;
     
-    border: 1px solid #2dd4bf !important;
-    box-shadow:
-        0 0 15px rgba(45, 212, 191, 0.4),
-        inset 0 0 10px rgba(45, 212, 191, 0.2) !important;
+    /* Sin sombras difusas que ensucien: solo una línea de luz precisa y limpia */
+    text-shadow: 0 0 1px rgba(94, 234, 212, 0.6) !important;
 }
 
 
