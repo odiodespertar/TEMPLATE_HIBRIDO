@@ -267,11 +267,11 @@ div[data-testid="stExpander"] summary div {
 
     /* Sombra dura de contraste + Resplandor cian brillante */
     text-shadow: 
-        0 0 1px #ffffff,
-        0 0 2px #ffffff,
-        0 0 8px #2dd4bf,
-        0 0 15px #14b8a6,
-        0 0 25px #0d9488 !important;
+        0 0 1px rgba(255, 255, 255, 0.9),
+        0 0 2px rgba(255, 255, 255, 0.6),
+        0 0 8px rgba(45, 212, 191, 0.4),   /* Turquesa con 40% de opacidad */
+        0 0 15px rgba(20, 184, 166, 0.25), /* Turquesa más difuso con 25% */
+        0 0 25px rgba(13, 148, 136, 0.1) !important;  /* Halo muy sutil con 10% */
 }
 
 
