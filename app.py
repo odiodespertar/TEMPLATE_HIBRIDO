@@ -237,7 +237,7 @@ div[data-testid="stExpander"] summary {
     background: linear-gradient(
         135deg,
         #030712,
-        #042f2e
+        #2f3030
     ) !important;
 
     padding: 15px 18px !important;
@@ -251,7 +251,9 @@ div[data-testid="stExpander"] summary {
 }
 
 
-/* TEXTO DEL ENCABEZADO - ALTA DEFINICIÓN NEÓN */
+/* ============================================================
+   🤖 TEXTO DEL ENCABEZADO - BLANCO SÓLIDO Y NÍTIDO
+   ============================================================ */
 
 div[data-testid="stExpander"] summary,
 div[data-testid="stExpander"] summary p,
@@ -264,14 +266,18 @@ div[data-testid="stExpander"] summary div {
     font-weight: 900 !important;
     font-size: 1.05rem !important;
     letter-spacing: 2px !important;
+    
+    /* Bloquea cualquier atenuación del modo oscuro */
+    opacity: 1 !important;
+    mix-blend-mode: normal !important;
 
-    /* Sombra dura de contraste + Resplandor cian brillante */
+    /* Sombra interna sólida para el centro blanco + resplandor sutil */
     text-shadow: 
-        0 0 1px rgba(255, 255, 255, 0.9),
-        0 0 2px rgba(255, 255, 255, 0.6),
-        0 0 8px rgba(45, 212, 191, 0.4),   /* Turquesa con 40% de opacidad */
-        0 0 15px rgba(20, 184, 166, 0.25), /* Turquesa más difuso con 25% */
-        0 0 25px rgba(13, 148, 136, 0.1) !important;  /* Halo muy sutil con 10% */
+        0 0 1px #ffffff,
+        0 0 2px #ffffff,
+        0 0 8px rgba(45, 212, 191, 0.4),
+        0 0 15px rgba(20, 184, 166, 0.25),
+        0 0 25px rgba(13, 148, 136, 0.1) !important;
 }
 
 
