@@ -230,21 +230,31 @@ div[data-testid="stExpander"] > div[role="group"] {
 
 
 /* ============================================================
-   🤖 ENCABEZADO — MINIMALISTA LIMPIO (SIN NINGÚN BRILLO)
+   🤖 TEXTO DEL ENCABEZADO - CIAN NEÓN VÍVIDO (SIN BLANCO)
    ============================================================ */
 
 div[data-testid="stExpander"] summary,
 div[data-testid="stExpander"] summary p,
 div[data-testid="stExpander"] summary span,
 div[data-testid="stExpander"] summary div {
-    color: #00CED1 !important;
-    -webkit-text-fill-color: #00CED1 !important;
-    font-weight: 700 !important;
-    font-size: 1.02rem !important;
-    letter-spacing: 1.5px !important;
-    
-    /* Sin sombras ni efectos de luz para garantizar máxima nitidez */
-    text-shadow: none !important;
+
+    /* Tono cian-turquesa brillante y eléctrico */
+    color: #5eead4 !important; 
+    -webkit-text-fill-color: #5eead4 !important;
+
+    font-weight: 900 !important;
+    font-size: 1.05rem !important;
+    letter-spacing: 2px !important;
+    opacity: 1 !important;
+    mix-blend-mode: normal !important;
+
+    /* Capas densas de luz para dar cuerpo al neón sin volverse blanco */
+    text-shadow: 
+        0 0 2px rgba(45, 212, 191, 0.9),
+        0 0 6px rgba(20, 184, 166, 0.8),
+        0 0 12px rgba(13, 148, 136, 0.7),
+        0 0 22px rgba(15, 118, 110, 0.5),
+        0 0 35px rgba(20, 184, 166, 0.3) !important;
 }
 
 
