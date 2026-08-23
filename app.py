@@ -1133,7 +1133,7 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                 coincidencias_faq = []
 
                 # 📜 BÚSQUEDA DE GOLDEN RULES (TEXTO + ENLACE DIRECTO A NUEVA PESTAÑA)
-                if any(w in query_lower for w in ["golden rules", "golden rule", "reglas de oro", "reglas oro"]):
+                if any(w in query_lower for w in ["golden rules", "golden rule", "golden", "reglas de oro", "reglas oro"]):
                     url_imagen_golden = "https://drive.google.com/thumbnail?id=1qGgyPVp5_t0Kd69ut9oIQEt0CmuFzjY7&sz=w1000"
                     
                     texto_golden = (
@@ -1160,6 +1160,38 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                         f"</div>"
                     )
                     coincidencias_faq.append(texto_golden)
+
+
+                
+                 # 📜 BÚSQUEDA DE RUTEO MANUAL
+                if any(w in query_lower for w in ["ruteo manual", "ruteo manual", "sistémico ruteo manual", "reglas ruteo manual"]):
+                    url_imagen_manual = "https://drive.google.com/thumbnail?id=1zo-BPUx1_7Pa-gxldX3Z714iIHwSpDb5&sz=w1000"
+                    
+                    texto_manual = (
+                        "📜 **SISTÉMICO: RUTEO MANUAL**<br><br>"
+                        "1. **Voluminosos:** Correr query de IDs voluminosos, validar y guardar archivo CSV.<br>"
+                        "2. **Inicio:** Notificar inicio en G-Chat enviando capturas de Schedule y LH Plan.<br>"
+                        "3. **Configuración:** Elegir ciclo, segregar data según LH Plan y subir archivo de voluminosos/XPT-ND.<br>"
+                        "4. **Flota:** Asignar la flota que sugiere la herramienta. Prohibido cambiar DMs o parámetros (salvo lluvia o zonas extendidas).<br>"
+                        "5. **Optimización:** Mantener dropeo $< 2\%$ y cumplir ORH/ocupación. Si hay SPR o paradas excesivas: frena, escala al TL y no ajustes solo.<br>"
+                        "6. **Carga:** Validar al 100%, cargar planes y verificar que no marque error.<br>"
+                        "7. **Cierre:** Reportar fin de ruteo sin incidencias en G-Chat.<br>"
+                        f"<div style='text-align: center; margin-top: 10px;'>"
+                        f"  <a href='{url_imagen_manual}' target='_blank' title='Clic para ver en tamaño completo'>"
+                        f"      <img src='{url_imagen_manual}' style='width: 100%; max-width: 450px; border-radius: 10px; border: 1px solid #ccc;' />"
+                        f"  </a>"
+                        f"  <div style='margin-top: 5px;'>"
+                        f"      <a href='{url_imagen_manual}' target='_blank' style='font-size: 12px; color: #008B8B; font-weight: bold; text-decoration: none;'>"
+                        f"          🔍 Ver o ampliar imagen en pantalla completa ↗"
+                        f"      </a>"
+                        f"  </div>"
+                        f"</div>"
+                    )
+                    coincidencias_faq.append(texto_manual)
+
+
+           
+
 
                 
                 
