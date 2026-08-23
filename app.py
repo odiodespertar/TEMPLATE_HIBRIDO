@@ -55,7 +55,7 @@ def guardar_nota_bd(svc, contenido):
 @st.dialog("📝 AGREGAR INFORMACIÓN DE SVC")
 def abrir_modal_notas():
     st.write("Escribe el SVC y la nota adicional que debe considerar el asistente.")
-    input_svc = st.text_input("SVC / Estación:", placeholder="Ej. SJA1")
+    input_svc = st.text_input("SVC / Tema:", placeholder="Ej. SJA1")
     input_nota = st.text_area("Información Adicional:", placeholder="Escribe la información aquí...")
     
     if st.button("💾 GUARDAR EN BASE DE DATOS", use_container_width=True):
