@@ -252,7 +252,7 @@ div[data-testid="stExpander"] summary {
 
 
 /* ============================================================
-   🤖 TEXTO DEL ENCABEZADO - BLANCO SÓLIDO Y NÍTIDO
+   🤖 TEXTO DEL ENCABEZADO - RESPLANDOR SCI-FI SUTIL
    ============================================================ */
 
 div[data-testid="stExpander"] summary,
@@ -263,21 +263,17 @@ div[data-testid="stExpander"] summary div {
     color: #ffffff !important; 
     -webkit-text-fill-color: #ffffff !important;
 
-    font-weight: 900 !important;
+    font-weight: 800 !important;
     font-size: 1.05rem !important;
-    letter-spacing: 2px !important;
+    letter-spacing: 1px !important;
     
-    /* Bloquea cualquier atenuación del modo oscuro */
     opacity: 1 !important;
     mix-blend-mode: normal !important;
 
-    /* Sombra interna sólida para el centro blanco + resplandor sutil */
+    /* 🟢 Resplandor suave equilibrado */
     text-shadow: 
-        0 0 1px #ffffff,
-        0 0 2px #ffffff,
-        0 0 8px rgba(45, 212, 191, 0.4),
-        0 0 15px rgba(20, 184, 166, 0.25),
-        0 0 25px rgba(13, 148, 136, 0.1) !important;
+        0 0 3px rgba(255, 255, 255, 0.8),
+        0 0 8px rgba(45, 212, 191, 0.4) !important;
 }
 
 
