@@ -1169,13 +1169,6 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                     
                     texto_manual = (
                         "📜 **SISTÉMICO: RUTEO MANUAL**<br><br>"
-                        "1. **Voluminosos:** Correr query de IDs voluminosos, validar y guardar archivo CSV.<br>"
-                        "2. **Inicio:** Notificar inicio en G-Chat enviando capturas de Schedule y LH Plan.<br>"
-                        "3. **Configuración:** Elegir ciclo, segregar data según LH Plan y subir archivo de voluminosos/XPT-ND.<br>"
-                        "4. **Flota:** Asignar la flota que sugiere la herramienta. Prohibido cambiar DMs o parámetros (salvo lluvia o zonas extendidas).<br>"
-                        "5. **Optimización:** Mantener dropeo $< 2\%$ y cumplir ORH/ocupación. Si hay SPR o paradas excesivas: frena, escala al TL y no ajustes solo.<br>"
-                        "6. **Carga:** Validar al 100%, cargar planes y verificar que no marque error.<br>"
-                        "7. **Cierre:** Reportar fin de ruteo sin incidencias en G-Chat.<br>"
                         f"<div style='text-align: center; margin-top: 10px;'>"
                         f"  <a href='{url_imagen_manual}' target='_blank' title='Clic para ver en tamaño completo'>"
                         f"      <img src='{url_imagen_manual}' style='width: 100%; max-width: 450px; border-radius: 10px; border: 1px solid #ccc;' />"
