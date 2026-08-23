@@ -2619,7 +2619,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
         <div style="display: flex; flex-direction: column; gap: 15px;">
             <div>
-                <label style="color: #d0d0d0; font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px;">SVC / Estación:</label>
+                <label style="color: #d0d0d0; font-size: 13px; font-weight: bold; display: block; margin-bottom: 5px;">SVC / Tema:</label>
                 <input type="text" id="input-nota-svc" placeholder="Ej. SJA1" style="width: 100%; box-sizing: border-box; padding: 10px; border-radius: 6px; border: 1px solid #555; background: #141414; color: white; font-size: 14px; font-weight: bold;">
             </div>
 
