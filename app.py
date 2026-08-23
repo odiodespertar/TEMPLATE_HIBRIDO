@@ -248,9 +248,9 @@ div[data-testid="stExpander"] summary {
 
     /* 🟢 RESPLANDOR AZUL/TURQUESA MÁS POTENTE */
     box-shadow:
-        0 0 10px #2dd4bf,
-        0 0 25px rgba(45, 212, 191, 0.7),
-        0 0 40px rgba(45, 212, 191, 0.4),
+        0 0 8px #2dd4bf,
+        0 0 22px rgba(45, 212, 191, 0.7),
+        0 0 37px rgba(45, 212, 191, 0.4),
         inset 0 0 12px rgba(45, 212, 191, 0.3) !important;
 }
 
