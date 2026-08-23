@@ -525,7 +525,7 @@ div[data-testid="stExpander"] div[data-testid="stChatInput"] form:focus-within {
 
 /* ============================================================
    🌙 MODO OSCURO
-   EL PANEL EXTERIOR CAMBIA, PERO EL CHAT BLANCO NO
+   EL PANEL EXTERIOR CAMBIA, PERO EL CHAT Y EL ENCABEZADO NO
    ============================================================ */
 
 @media (prefers-color-scheme: dark) {
@@ -537,13 +537,23 @@ div[data-testid="stExpander"] div[data-testid="stChatInput"] form:focus-within {
             0 5px 16px rgba(0, 0, 0, 0.35) !important;
     }
 
-
     div[data-testid="stExpander"] > div[role="group"] {
         background: #171a1f !important;
     }
 
-    /* Texto fuera del globo */
-    div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p {
+    /* 🟢 FORZAR TEXTO DEL ENCABEZADO BLANCO SÓLIDO EN MODO OSCURO */
+    div[data-testid="stExpander"] summary,
+    div[data-testid="stExpander"] summary p,
+    div[data-testid="stExpander"] summary span,
+    div[data-testid="stExpander"] summary div {
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        opacity: 1 !important;
+        text-shadow: none !important;
+    }
+
+    /* Texto regular fuera de las tarjetas */
+    div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p:not(summary p) {
         color: #747778 !important;
         -webkit-text-fill-color: #747778 !important;
     }
@@ -560,7 +570,6 @@ div[data-testid="stExpander"] div[data-testid="stChatInput"] form:focus-within {
         box-shadow:
             0 8px 22px rgba(0, 0, 0, 0.30) !important;
     }
-
 
     .asistente-card-title {
         color: #ccfbf1 !important;
