@@ -230,7 +230,7 @@ div[data-testid="stExpander"] > div[role="group"] {
 
 
 /* ============================================================
-   🤖 ENCABEZADO DEL ASISTENTE (FORZADO CIENCIA FICCIÓN)
+   🤖 ENCABEZADO DEL ASISTENTE (RESPLANDOR POTENCIADO)
    ============================================================ */
 
 div[data-testid="stExpander"] summary {
@@ -244,10 +244,14 @@ div[data-testid="stExpander"] summary {
     border-radius: 20px !important;
     min-height: 54px !important;
     
-    border: 1px solid #2dd4bf !important;
+    border: 2px solid #2dd4bf !important; /* 👈 Grosor del borde */
+
+    /* 🟢 RESPLANDOR AZUL/TURQUESA MÁS POTENTE */
     box-shadow:
-        0 0 15px rgba(45, 212, 191, 0.4),
-        inset 0 0 10px rgba(45, 212, 191, 0.2) !important;
+        0 0 10px #2dd4bf,
+        0 0 25px rgba(45, 212, 191, 0.7),
+        0 0 40px rgba(45, 212, 191, 0.4),
+        inset 0 0 12px rgba(45, 212, 191, 0.3) !important;
 }
 
 
