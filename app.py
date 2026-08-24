@@ -2219,7 +2219,7 @@ body {{ font-family: sans-serif; background: #ffffff; padding: 14px; }}
   left: 50% !important;
   transform: translateX(-50%);
   width: min(1050px, 92vw) !important;
-  max-height: 320px !important;
+  max-height: 370px !important;
   overflow: hidden !important;
   z-index: 999999 !important;
   background: #ffffff !important;
@@ -2237,7 +2237,7 @@ body {{ font-family: sans-serif; background: #ffffff; padding: 14px; }}
 
 /* Muestra la tabla limpia con scroll y oculta botones que estén dentro de las celdas */
 #fleet-sticky.fleet-floating .t-content {{
-  max-height: 260px !important;
+  max-height: 280px !important;
   overflow: auto !important;
 }}
 
