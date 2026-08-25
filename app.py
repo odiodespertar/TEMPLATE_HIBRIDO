@@ -6086,4 +6086,4 @@ html_limpio = """
 """
 
 st.markdown("---")
-html(html_limpio, height=300, scrolling=False)
+html(html_limpio, height=280, scrolling=False)
