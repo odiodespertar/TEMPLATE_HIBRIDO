@@ -6042,7 +6042,7 @@ html_limpio = """
     
     .unified-console {
         background: #25282b; border-radius: 15px; padding: 15px; 
-        margin-bottom: 20px; border: 1px solid #25282b; text-align: center; width: 100%; max-width: 500px;
+        margin-bottom: 60px; border: 1px solid #25282b; text-align: center; width: 100%; max-width: 500px;
     }
     .display-screen {
         background: #25282b; border-radius: 10px; padding: 10px; margin-bottom: 15px; border: 2px solid #25282b;
