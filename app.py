@@ -717,9 +717,7 @@ div[data-testid="stExpander"] div[data-testid="stChatInput"] form:focus-within {
 # ==========================================
 with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
 
-   
-    
-    
+      
     # ==========================================
     # 🤖 TARJETA DE PRESENTACIÓN DEL ASISTENTE
     # ==========================================
@@ -1314,6 +1312,21 @@ u_PREC_SMX2 = {
 NOMBRES_PLANES_PREG = ["CHALCO", "CHIMAS", "IXTAPALUCA VALLE CHALCO", "IZTAPALAPA 1", "IZTAPALAPA 2", "LA PAZ", "PUEBLOS", "TEXCOCO"]
 
 
+# --- DATOS PARA PREC SMX8 (TAB 10) ---
+u_PREC_SMX8 = {
+    "Car - 8h": [70, 75],
+    "Car Zona Extendida -8h": [65, 65],
+    "Small 9h Ext Car": [70, 75]
+}
+
+NOMBRES_PLANES_PREC_SMX8 = [
+    "ACOLMAN", "ECATEPEC CERRO", "OTUMBA", "TECAMAC", "TEMASCALAPA",
+    "TEXCOCO", "ZUMPANGO", "PLAN 8", "PLAN 9", "PLAN 10"
+]
+
+
+
+
 NOMBRES_PLANES_C1 = [
     "CALKINI", 
     "CAMPECHE",
@@ -1523,7 +1536,7 @@ def gen_master_rows(data_dict, table_id):
     nombres_smx2 = ["CHALCO", "CHIMAS", "IXTAPALUCA VALLE CHALCO", "IZTAPALAPA 1", "IZTAPALAPA 2", "LA PAZ", "PUEBLOS", "TEXCOCO"]
 
     # ✅ Mostrar ORH/OCUPACIÓN solo en C1 y PREC SMX5 (ajusta si tu id real de PREC SMX5 es otro)
-    mostrar_orh_ocup = (table_id in [1, 2, 6, 7, 8, 5, 9])
+    mostrar_orh_ocup = (table_id in [1, 2, 6, 7, 8, 5, 9, 10])
 
     num_filas_objetivo = 45 if table_id == "PREC" else 3
     rango_final = max(total_items, num_filas_objetivo)
@@ -1533,6 +1546,9 @@ def gen_master_rows(data_dict, table_id):
             p_name = nombres_prec[i-1]
         elif (data_dict == u_PREC_SMX2) and (i-1) < len(nombres_smx2):
             p_name = nombres_smx2[i-1]
+        elif (data_dict == u_PREC_SMX8) and (i-1) < len(NOMBRES_PLANES_PREC_SMX8):
+            p_name = NOMBRES_PLANES_PREC_SMX8[i-1]
+        
         else:
             p_name = f"PLAN {i}"
 
@@ -1678,6 +1694,7 @@ def gen_poligonos(data_target=None):
     es_sde = (data_target == u_SDE)
     es_prec = (data_target == u_PREC)
     es_prec_smx2 = (data_target == u_PREC_SMX2)
+    es_prec_smx8 = (data_target == u_PREC_SMX8)
 
     
     # Contenedor flex con ancho bloqueado al 100% de la celda
@@ -1880,6 +1897,9 @@ def gen_poligonos(data_target=None):
         elif data_target == u_PREC_SMX2 and (i-1) < len(nombres_smx2):
             nombre_final = nombres_smx2[i-1]
 
+        elif data_target == u_PREC_SMX8 and (i-1) < len(NOMBRES_PLANES_PREC_SMX8):
+            nombre_final = NOMBRES_PLANES_PREC_SMX8[i-1]
+
         elif data_target == u_C1 and (i-1) < len(NOMBRES_PLANES_C1):
             nombre_final = NOMBRES_PLANES_C1[i-1]
             
@@ -1910,16 +1930,15 @@ def gen_poligonos(data_target=None):
             rowspan_actual = 3
         elif es_prec:
             rowspan_actual = 3
-        
+        elif es_prec_smx8:  # 🟢 Opción para SMX8
+            rowspan_actual = 3
         elif data_target == u_C1_SJA1:
             if nombre_final == "⚠️ CENTRO 1":
                 rowspan_actual = 8
             else:
                 rowspan_actual = 5
-        
         elif data_target in (u_C1_SMD1, u_C1_VACIA):
-            rowspan_actual = 5  # 👈 CORREGIDO: 5 filas por tabla para C1 VACÍA
-            
+            rowspan_actual = 5
         else:
             rowspan_actual = 3
 
@@ -1928,13 +1947,15 @@ def gen_poligonos(data_target=None):
             filas_extra = fila_inner * 2
         elif es_prec:
             filas_extra = fila_inner * 2
+        elif es_prec_smx8:  # 🟢 AQUÍ AÑADES LAS FILAS EXTRA PARA SMX8
+            filas_extra = fila_inner * 2
         elif data_target == u_C1_SJA1:
             if nombre_final == "⚠️ CENTRO 1":
                 filas_extra = fila_inner * 7
             else:
                 filas_extra = fila_inner * 4
         elif data_target in (u_C1_SMD1, u_C1_VACIA):
-            filas_extra = fila_inner * 4  # 👈 CORREGIDO: 4 filas extra (5 en total con la principal)
+            filas_extra = fila_inner * 4
         else:
             filas_extra = fila_inner * 2
 
@@ -2677,6 +2698,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <option value="5">🟡 PREC SMX2</option>
         <option value="4" selected>🟢 EXTENDIDO</option>
         <option value="9">🟣 C1 VACÍA</option>
+        <option value="10">🟡 PREC SMX8</option>
     </select>
 
     <!-- Botón visible del Dropdown -->
@@ -2723,6 +2745,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <div class="custom-option" onclick="seleccionarOpcionCustom('5', '🟡 PREC SMX2')">🟡 PREC SMX2</div>
         <div class="custom-option" onclick="seleccionarOpcionCustom('4', '🟢 EXTENDIDO')">🟢 EXTENDIDO</div>
         <div class="custom-option" onclick="seleccionarOpcionCustom('9', '🟣 C1 VACÍA')">🟣 C1 VACÍA</div>
+        <div class="custom-option" onclick="seleccionarOpcionCustom('10', '🟡 PREC SMX8')">🟡 PREC SMX8</div>
     </div>
 </div>
 
@@ -3100,6 +3123,35 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 </div>
 
 
+
+<!-- TABLA FLOTA PREC SMX8 (ID 10) -->
+<div id="tab-10" class="t-content" style="display:none;">
+    <table class="meli-table" style="width: 100%; table-layout: fixed; border-collapse: collapse;">
+        <thead>
+            <tr style="background: linear-gradient(180deg, #0a2e42 0%, #25282b 100%); color: white;">
+                <th style="border-right: 0.5px solid #25282b; padding: 4px 8px; font-size: 14px; color: #25282b !important;">UNIDAD</th>
+                <th colspan="2" style="border-right: 0.5px solid #25282b; padding: 2px; font-size: 11px; color: #25282b !important; width: 105px;">ORH</th>
+                <th style="border-right: 0.5px solid #25282b; padding: 2px; font-size: 11px; color: #25282b !important; width: 45px;">% OCUP</th>
+                <th style="border-right: 0.5px solid #25282b; padding: 2px; font-size: 11px; color: #25282b !important; width: 45px;">SPR<br>MIN</th>
+                <th style="border-right: 0.5px solid #25282b; padding: 2px; font-size: 11px; color: #25282b !important; width: 45px;">SPR<br>MAX</th>
+                <th style="border-right:0.5px solid #25282b; padding:4px 8px; font-size:11px; color:#25282b !important; width:60px;">SCHEDULE</th>
+                <th style="border-right:0.7px solid #25282b; padding:4px 9px; font-size:11px; color:#25282b !important; width:57px; text-align:center; display:table-cell; vertical-align:middle;">USADAS</th>
+                <th style="border-right:0.5px solid #25282b; padding:4px 8px; font-size:11px; color:#25282b !important; width:50px;">DELTA</th>
+            </tr>
+        </thead>
+        <tbody id="body-10">{gen_master_rows(u_PREC_SMX8, 10)}</tbody>
+        <tfoot class="fila-total">
+            <tr class="fila-total">
+                <td style="border:none;"></td>
+                <td colspan="6" style="padding:6px; text-align:right;">🚛 TOTAL RUTEADAS</td>
+                <td id="total-ruteadas-10" style="text-align:center; color:#3CB371; font-size:16px; font-weight:bold;">0</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+
 </div> <!-- CIERRE CORRECTO DEL PANEL FLOTANTE FLEET-STICKY -->
 
         
@@ -3174,6 +3226,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <div id="polys-5" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX2)}</div>
         <div id="polys-4" class="p-content">{gen_poligonos(u_SDE)}</div>
         <div id="polys-9" class="p-content" style="display:none;">{gen_poligonos(u_C1_VACIA)}</div>
+        <div id="polys-10" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX8)}</div>
+
 
 
         <div id="excel-polys" style="display:none; margin-top:10px;">
@@ -3794,7 +3848,7 @@ function showTab(n, btn) {{
         // ==============================================================================
         const excelBtn = document.getElementById('excel-btn');
         if (excelBtn) {{
-            if (n === 2 || n === 6 || n === 7 || n === 8 || n === 9) {{ // 🟢 Añadido "n === 9"
+            if (n === 2 || n === 6 || n === 7 || n === 8 || n === 9 || n === 10) {{ // 🟢 Añadido "n === 9"
                 excelBtn.style.setProperty('display', 'inline-block', 'important');
             }} else {{
                 excelBtn.style.setProperty('display', 'none', 'important');
@@ -4768,7 +4822,8 @@ function toggleExcelView() {{
         "total-no-car-8", "total-car-schedule-8", "total-car-real-8",
         "total-no-car-1", "total-car-schedule-1", "total-car-real-1",
         "total-no-car-9", "total-car-schedule-9", "total-car-real-9",
-        "total-no-car-5", "total-car-schedule-5", "total-car-real-5"
+        "total-no-car-5", "total-car-schedule-5", "total-car-real-5",
+        "total-no-car-10", "total-car-schedule-10", "total-car-real-10"
     ];
     if (isExcel) {{
         // --- MODO EXCEL: OCULTAR ---
@@ -4781,7 +4836,7 @@ function toggleExcelView() {{
         btn.innerHTML = "VISTA NORMAL";
         if(excel) excel.style.display = "block";
         
-        ["polys-1", "polys-2", "polys-4", "polys-5", "polys-6", "polys-7", "polys-8", "polys-9"].forEach(id => {{
+        ["polys-1", "polys-2", "polys-4", "polys-5", "polys-6", "polys-7", "polys-8", "polys-9", "polys-10"].forEach(id => {{
             let el = document.getElementById(id);
             if(el) el.style.display = "none";
         }});
