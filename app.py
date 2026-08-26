@@ -5392,7 +5392,7 @@ function distribuirAutomatico() {{
                             unidad = fleet.find(f => f.nombre.includes(opt));
                             if (unidad) break;
                         }}
-                    }} else if (currentTab == 8) {{ // C1 SMD2
+                    }} else if (currentTab == 8) {{ // C1 SMD1
                         let options = ["Car - 8h"];
                         for (let opt of options) {{
                             unidad = fleet.find(f => f.nombre.includes(opt));
@@ -5404,11 +5404,33 @@ function distribuirAutomatico() {{
                             unidad = fleet.find(f => f.nombre.includes(opt));
                             if (unidad) break;
                         }}
-                    }} else if (currentTab == 1 || currentTab == 5) {{ // PRECARGAS
+                    }} else if (currentTab == 1 || currentTab == 5 || currentTab == 10) {{ // 🟢 PRECARGAS (SMX5, SMX2 y SMX8)
+                        // Si se agota la flota declarada, se le asigna Car - 8h obligatoria para cubrir el resto
                         let options = ["Car - 8h", "Car - 5h"];
+                        
+                        // 1. Busca si existe en el array de fleet
                         for (let opt of options) {{
-                            unidad = fleet.find(f => f.nombre.includes(opt));
+                            unidad = fleet.find(f => f.nombre.toLowerCase().includes(opt.toLowerCase()));
                             if (unidad) break;
+                        }}
+
+                        // 2. Si no estaba cargada en fleet (porque tenía 0 en Schedule), la creamos al vuelo
+                        if (!unidad) {{
+                            let sprAux = 75; // SPR máximo por defecto
+                            
+                            // Buscar el SPR real en la tabla superior de la pantalla si está disponible
+                            let fRows = Array.from(document.querySelectorAll('#body-' + currentTab + ' tr'));
+                            let fRowCar = fRows.find(r => r.querySelector('.edit-name')?.innerText.toLowerCase().includes("car - 8h"));
+                            if (fRowCar) {{
+                                sprAux = parseFloat(fRowCar.querySelector('.edit-spr-max')?.innerText) || 75;
+                            }}
+
+                            unidad = {{
+                                nombre: "Car - 8h",
+                                spr: sprAux,
+                                stock: 0,
+                                restante: 0
+                            }};
                         }}
                     }}
                     if (!unidad) break;
