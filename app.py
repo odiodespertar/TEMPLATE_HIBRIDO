@@ -1307,7 +1307,7 @@ NOMBRES_PLANES_PREC = ["CHALCO", "COYOACÁN", "IZTAPALAPA", "MILPA ALTA", "TLAHU
 u_PREC_SMX2 = {
     "Car - 8h": [70, 75],
     "Small 9h Ext Car": [70, 75],
-    "Car Zona Extendida": [65, 65]
+    "Car Zona Extendida": [70, 75]
 }
 NOMBRES_PLANES_PREG = ["CHALCO", "CHIMAS", "IXTAPALUCA VALLE CHALCO", "IZTAPALAPA 1", "IZTAPALAPA 2", "LA PAZ", "PUEBLOS", "TEXCOCO"]
 
@@ -1315,13 +1315,13 @@ NOMBRES_PLANES_PREG = ["CHALCO", "CHIMAS", "IXTAPALUCA VALLE CHALCO", "IZTAPALAP
 # --- DATOS PARA PREC SMX8 (TAB 10) ---
 u_PREC_SMX8 = {
     "Car - 8h": [70, 75],
-    "Car Zona Extendida -8h": [65, 65],
+    "Car Zona Extendida -8h": [70, 75],
     "Small 9h Ext Car": [70, 75]
 }
 
 NOMBRES_PLANES_PREC_SMX8 = [
     "ACOLMAN", "ECATEPEC CERRO", "OTUMBA", "TECAMAC", "TEMASCALAPA",
-    "TEXCOCO", "ZUMPANGO", "PLAN 8", "PLAN 9", "PLAN 10"
+    "TEXCOCO", "ZUMPANGO", "PLAN 8", "PLAN 9", "PLAN 10", "PLAN 11"
 ]
 
 
@@ -1882,6 +1882,9 @@ def gen_poligonos(data_target=None):
     elif es_sde:
         limite_tablas = 5
 
+    elif es_prec_smx8:  # 🟢 LIMITE PARA SMX8: 7 reales + 4 extra = 11 tablas (12 - 1)
+        limite_tablas = 12
+        
     else:
         limite_tablas = 20
     
