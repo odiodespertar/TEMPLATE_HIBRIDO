@@ -25,6 +25,8 @@ reglas_ruteo = {
         "* 👀 OJO: con indicaciones de reducción de ORH en Xochimilco (u otro polígono)\n"
         "* 👉 Resto de planes asignar Car 8h y Extendidas\n"
         "* 👉 Revisar si mandan ids a agregar del origen 10\n"
+        "* 👉MLP LV y MLP SV en los polígonos de Tlapan Sur y Xochimilco\n"
+        "* 👉 Motos - Coyoacán\n"
         "* 👉 **Cercanía de SVC:** Coyoacán, Iztapalapa, Tláhuac, Tlalpan nte, Tlalpan sur, Xochi, Chalco y Milpa Alta"
     ),
     "smx5_extendido": (
