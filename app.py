@@ -5094,10 +5094,9 @@ function distribuirAutomatico() {{
 
                 let restante = objetivo - yaAsignado;
                 
-                // Calculamos cuántas entran por volumen, o si es el último plan de la lista le forzamos lo que quede
                 let usar = Math.min(Math.ceil(restante / smallVanMLP.spr), smallVanMLP.restante);
                 if (nombrePlanBuscado === "XOCHIMILCO" && smallVanMLP.restante > 0 && usar < smallVanMLP.restante) {{
-                    usar = smallVanMLP.restante; // 🔥 Fuerza a agotar hasta la última Small Van MLP
+                    usar = smallVanMLP.restante;
                 }}
 
                 if (usar <= 0) return;
@@ -5156,7 +5155,7 @@ function distribuirAutomatico() {{
         if (motoObj) {{
             let polyCoyoacan = polys.find(p => (p.bloque.querySelector('td[rowspan]')?.innerText?.trim()?.toUpperCase() || "") === "COYOACÁN");
             if (polyCoyoacan) {{
-                let usarMotos = motoObj.restante; // 🔥 Asigna el 100% de las motos declaradas
+                let usarMotos = motoObj.restante;
 
                 let filaLibre = Array.from(polyCoyoacan.bloque.querySelectorAll('.calc-row')).find(f => {{
                     let tipo = f.querySelector('.s-type')?.value?.trim() || "";
@@ -5169,13 +5168,13 @@ function distribuirAutomatico() {{
                     filaLibre.querySelector('.u-manual').innerText = usarMotos;
                     filaLibre.querySelector('.spr-real-val').innerText = motoObj.spr;
                     editedRowsPlan.add(filaLibre);
-                    motoObj.restante = 0; // Se agotan las motos completamente
+                    motoObj.restante = 0;
                 }}
             }}
         }}
 
         // 4️⃣ REGLA: RESTO DE PLANES -> CAR - 8H Y SMALL VAN 9H
-        polys.forEach(polyPlan => {
+        polys.forEach(polyPlan => {{
             let objetivo = parseFloat(polyPlan.bloque.querySelector('.v-total-val')?.innerText) || 0;
             let yaAsignado = 0;
             polyPlan.bloque.querySelectorAll('.calc-row').forEach(r => {{
@@ -5209,7 +5208,6 @@ function distribuirAutomatico() {{
             }}
         }});
     }}
-
 
     // --- 🟡 CARRIL PESTAÑA 5: PREC SMX2 ---
     if (currentTab == 5) {{
