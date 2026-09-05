@@ -22,7 +22,7 @@ reglas_ruteo = {
         "**Prioridades SMX5 (PRECARGA):**\n\n"
         "* 📌 Origen: MXCD09 + onway\n"
         "* 👉 Small Van- Chalco y Tlalpan sur (revisado con Hellen)\n"
-        "* 👉 Car 5h Extendida - Xochimilco \n"
+        "* 👉 Car 5h Extendida - Xochimilco\n"
         "* 👉 Motos - Coyoacán\n"
         "* 👉 Resto de planes - Car 8h y Small van 9h ext\n"
         "* 👀 OJO: Reducción de ORH en ciertos planes (revisar archivo)\n"
