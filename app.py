@@ -1297,7 +1297,10 @@ u_SDE = {"Moto Car - 3": [25, 30], "Moto Car Newbie": [25, 25], "Car - 5h": [25,
 
 u_PREC = {      
     "Car - 8h": [70, 75],
-    "Small 9h Ext Car": [70, 75] 
+    "Small Van 9h": [70, 75],
+    "Car 5h Extendida": [70, 75],
+    "Moto 3h": [30, 30],
+    "Small Van MLP": [80, 100]
 }
 
 NOMBRES_PLANES_PREC = ["CHALCO", "COYOACÁN", "IZTAPALAPA", "MILPA ALTA", "TLAHUAC", "TLALPAN NORTE", "TLALPAN SUR", "XOCHIMILCO"]
@@ -5069,78 +5072,91 @@ function distribuirAutomatico() {{
     // 🚚 SECCIÓN 2: BLOQUE DE PREASIGNACIONES ESPECÍFICAS (PASO 1 DEL MOTOR)
     // ==============================================================================
     
-    // --- 🟢 CARRIL PESTAÑA 1: PREC SMX5 ---
+    // --- 🟢 CARRIL PESTAÑA 1: PREC SMX5 (PRIORIDADES EXACTAS) ---
     if (currentTab == 1) {{
-        let small9h = fleet.find(f => f.nombre === "Small 9h Ext Car");
-        if (small9h && small9h.restante > 0) {{
-            let planesPrioridad = ["IZTAPALAPA", "COYOACÁN"];
-            planesPrioridad.forEach(nombreBuscado => {{
-                let polyPlan = polys.find(p => (p.bloque.querySelector('td[rowspan]')?.innerText?.trim()?.toUpperCase() || "") === nombreBuscado);
-                if (!polyPlan) return;
+        
+        let asignarPlanEspecial = (nombrePlanBuscado, nombreUnidadExacto) => {{
+            let polyPlan = polys.find(p => (p.bloque.querySelector('td[rowspan]')?.innerText?.trim()?.toUpperCase() || "") === nombrePlanBuscado.toUpperCase());
+            if (!polyPlan) return;
 
-                let objetivo = parseFloat(polyPlan.bloque.querySelector('.v-total-val')?.innerText) || 0;
-                let yaAsignado = 0;
-                polyPlan.bloque.querySelectorAll('.calc-row').forEach(r => {{
-                    yaAsignado += (parseInt(r.querySelector('.u-manual')?.innerText) || 0) * (parseFloat(r.querySelector('.spr-real-val')?.innerText) || 0);
-                }});
+            let unidadObj = fleet.find(f => f.restante > 0 && f.nombre.toLowerCase().includes(nombreUnidadExacto.toLowerCase()));
+            if (!unidadObj) return;
 
-                let restante = objetivo - yaAsignado;
-                if (restante <= 0) return;
-
-                let usar = Math.min(Math.ceil(restante / small9h.spr), small9h.restante);
-                if (usar <= 0) return;
-
-                let filaLibre = Array.from(polyPlan.bloque.querySelectorAll('.calc-row')).find(f => {{
-                    let tipo = f.querySelector('.s-type')?.value?.trim() || "";
-                    let unidades = parseInt(f.querySelector('.u-manual')?.innerText) || 0;
-                    return unidades === 0 && (tipo === "" || tipo === "Seleccionar...");
-                }});
-
-                if (filaLibre) {{
-                    filaLibre.querySelector('.s-type').value = small9h.nombre;
-                    filaLibre.querySelector('.u-manual').innerText = usar;
-                    filaLibre.querySelector('.spr-real-val').innerText = small9h.spr;
-                    editedRowsPlan.add(filaLibre);
-                    small9h.restante -= usar;
-                }}
+            let objetivo = parseFloat(polyPlan.bloque.querySelector('.v-total-val')?.innerText) || 0;
+            let yaAsignado = 0;
+            polyPlan.bloque.querySelectorAll('.calc-row').forEach(r => {{
+                yaAsignado += (parseInt(r.querySelector('.u-manual')?.innerText) || 0) * (parseFloat(r.querySelector('.spr-real-val')?.innerText) || 0);
             }});
 
-            // Asignación de stock sobrante a Tláhuac
-            if (small9h.restante > 0) {{
-                polys.forEach(polyPlan => {{
-                    if (small9h.restante <= 0) return;
-                    let nombrePlan = polyPlan.bloque.querySelector('td[rowspan]')?.innerText?.trim()?.toUpperCase() || "";
-                    if (nombrePlan !== "TLAHUAC") return;
+            let restante = objetivo - yaAsignado;
+            if (restante <= 0) return;
 
-                    let objetivo = parseFloat(polyPlan.bloque.querySelector('.v-total-val')?.innerText) || 0;
-                    let yaAsignado = 0;
-                    polyPlan.bloque.querySelectorAll('.calc-row').forEach(r => {{
-                        yaAsignado += (parseInt(r.querySelector('.u-manual')?.innerText) || 0) * (parseFloat(r.querySelector('.spr-real-val')?.innerText) || 0);
-                    }});
+            let usar = Math.min(Math.ceil(restante / unidadObj.spr), unidadObj.restante);
+            if (usar <= 0) return;
 
-                    let restante = objetivo - yaAsignado;
-                    if (restante <= 0) return;
+            let filaLibre = Array.from(polyPlan.bloque.querySelectorAll('.calc-row')).find(f => {{
+                let tipo = f.querySelector('.s-type')?.value?.trim() || "";
+                let unidades = parseInt(f.querySelector('.u-manual')?.innerText) || 0;
+                return unidades === 0 && (tipo === "" || tipo === "Seleccionar...");
+            }});
 
-                    let usar = Math.min(Math.ceil(restante / small9h.spr), small9h.restante);
-                    if (usar <= 0) return;
-
-                    let filaLibre = Array.from(polyPlan.bloque.querySelectorAll('.calc-row')).find(f => {{
-                        let tipo = f.querySelector('.s-type')?.value?.trim() || "";
-                        let unidades = parseInt(f.querySelector('.u-manual')?.innerText) || 0;
-                        return unidades === 0 && (tipo === "" || tipo === "Seleccionar...");
-                    }});
-
-                    if (filaLibre) {{
-                        filaLibre.querySelector('.s-type').value = small9h.nombre;
-                        filaLibre.querySelector('.u-manual').innerText = usar;
-                        filaLibre.querySelector('.spr-real-val').innerText = small9h.spr;
-                        editedRowsPlan.add(filaLibre);
-                        small9h.restante -= usar;
-                    }}
-                }});
+            if (filaLibre) {{
+                filaLibre.querySelector('.s-type').value = unidadObj.nombre;
+                filaLibre.querySelector('.u-manual').innerText = usar;
+                filaLibre.querySelector('.spr-real-val').innerText = unidadObj.spr;
+                editedRowsPlan.add(filaLibre);
+                unidadObj.restante -= usar;
             }}
-        }}
+        }};
+
+        // 1️⃣ Small Van MLP -> Chalco y Tlalpan Sur
+        asignarPlanEspecial("CHALCO", "Small Van MLP");
+        asignarPlanEspecial("TLALPAN SUR", "Small Van MLP");
+
+        // 2️⃣ Car 5h Extendida -> Xochimilco
+        asignarPlanEspecial("XOCHIMILCO", "Car 5h Extendida");
+
+        // 3️⃣ Motos -> Coyoacán
+        asignarPlanEspecial("COYOACÁN", "Moto 3h");
+
+        // 4️⃣ Resto de planes -> Car - 8h y Small Van 9h
+        polys.forEach(polyPlan => {{
+            let objetivo = parseFloat(polyPlan.bloque.querySelector('.v-total-val')?.innerText) || 0;
+            let yaAsignado = 0;
+            polyPlan.bloque.querySelectorAll('.calc-row').forEach(r => {{
+                yaAsignado += (parseInt(r.querySelector('.u-manual')?.innerText) || 0) * (parseFloat(r.querySelector('.spr-real-val')?.innerText) || 0);
+            }});
+
+            let restante = objetivo - yaAsignado;
+            if (restante <= 0) return;
+
+            // Busca primero Car - 8h o Small Van 9h
+            let unidadGeneral = fleet.find(f => f.restante > 0 && (
+                f.nombre.toLowerCase().includes("car - 8h") || 
+                f.nombre.toLowerCase().includes("small van 9h")
+            ));
+            if (!unidadGeneral) return;
+
+            let usar = Math.min(Math.ceil(restante / unidadGeneral.spr), unidadGeneral.restante);
+            if (usar <= 0) return;
+
+            let filaLibre = Array.from(polyPlan.bloque.querySelectorAll('.calc-row')).find(f => {{
+                let tipo = f.querySelector('.s-type')?.value?.trim() || "";
+                let unidades = parseInt(f.querySelector('.u-manual')?.innerText) || 0;
+                return unidades === 0 && (tipo === "" || tipo === "Seleccionar...");
+            }});
+
+            if (filaLibre) {{
+                filaLibre.querySelector('.s-type').value = unidadGeneral.nombre;
+                filaLibre.querySelector('.u-manual').innerText = usar;
+                filaLibre.querySelector('.spr-real-val').innerText = unidadGeneral.spr;
+                editedRowsPlan.add(filaLibre);
+                unidadGeneral.restante -= usar;
+            }}
+        }});
     }}
+
+
 
     // --- 🟡 CARRIL PESTAÑA 5: PREC SMX2 ---
     if (currentTab == 5) {{
