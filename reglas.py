@@ -21,10 +21,10 @@ reglas_ruteo = {
     "smx5_precarga": (
         "**Prioridades SMX5 (PRECARGA):**\n\n"
         "* 📌 Origen: MXCD09 + onway\n"
-        "* 👉 Small Van- Chalco y Tlalpan sur (revisado con Hellen)\n"
+        "* 👉 Small Van MLP - Chalco, Tlalpan sur y Xochimilco\n"
         "* 👉 Car 5h Extendida - Xochimilco\n"
-        "* 👉 Motos - Coyoacán\n"
-        "* 👉 Resto de planes - Car 8h y Small van 9h ext\n"
+        "* 👉 Motos - Coyoacán (todas las motos van aquí)\n"
+        "* 👉 Resto de planes - Car - 8h y Small van 9h\n"
         "* 👀 OJO: Reducción de ORH en ciertos planes (revisar archivo)\n"
         "* 📌 Revisar si mandan ids a agregar del origen 10\n"
         "* 👉 **Cercanía de SVC:** Coyoacán, Iztapalapa, Tláhuac, Tlalpan nte, Tlalpan sur, Xochi, Chalco y Milpa Alta"
