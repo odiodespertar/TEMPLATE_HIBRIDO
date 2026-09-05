@@ -5106,7 +5106,7 @@ function distribuirAutomatico() {{
                     let tipo = f.querySelector('.s-type')?.value?.trim() || "";
                     let unidades = parseInt(f.querySelector('.u-manual')?.innerText) || 0;
                     return unidades === 0 && (tipo === "" || tipo === "Seleccionar...");
-                });
+                }});
 
                 if (filaLibre) {{
                     filaLibre.querySelector('.s-type').value = smallVanMLP.nombre;
