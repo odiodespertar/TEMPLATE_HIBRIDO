@@ -6048,6 +6048,11 @@ const ruteos = [
         nombre:"SMT2",
         hora:"18:40"
     }},
+
+    {{
+        nombre:"SMX8",
+        hora:"21:30"
+    }},
     
     {{
         nombre:"SJA1 C1",
