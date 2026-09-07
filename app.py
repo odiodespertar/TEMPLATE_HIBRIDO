@@ -5291,6 +5291,9 @@ function distribuirAutomatico() {{
         // 👉 Ixtapaluca - Small Van MLP / Car Zona Ext
         asignarPlanEspecialSMX2("IXTAPALUCA VALLE CHALCO", ["Small Van MLP", "Car Zona Extendida"]);
 
+        // 👉 Iztacalco - Car Zona Ext
+        asignarPlanEspecialSMX2("IZTACALCO", ["Car Zona Extendida"]);
+
         // 👉 Iztapalapa 2 - Car newbie - 6h / Car Zona Ext
         asignarPlanEspecialSMX2("IZTAPALAPA 2", ["Car newbie - 6h", "Car Zona Extendida"]);
 
@@ -5303,7 +5306,7 @@ function distribuirAutomatico() {{
         // 👉 Texcoco - Car Zona Ext
         asignarPlanEspecialSMX2("TEXCOCO", ["Car Zona Extendida"]);
 
-        // 👉 Resto de volumen en cualquier plan (incluyendo Iztapalapa 1) -> Car - 8h / Small 9h Ext Car
+        // 👉 Resto de volumen en cualquier plan -> Car - 8h / Small 9h Ext Car
         polys.forEach(polyPlan => {{
             let objetivo = parseFloat(polyPlan.bloque.querySelector('.v-total-val')?.innerText) || 0;
             let yaAsignado = 0;
