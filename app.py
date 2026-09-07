@@ -5399,6 +5399,11 @@ function distribuirAutomatico() {{
         polys.forEach(poly => {{
             procesarAsignacionUnidadSJA1(poly);
         }});
+    }} else if (currentTab == 8) {{
+        // 🍊 CARRIL SMD1
+        polys.forEach(poly => {{
+            procesarAsignacionUnidadSMD1(poly);
+        }});
     }} else {{
         // 🔴 OPERACIÓN ORIGINAL PARA EL RESTO DE LAS PESTAÑAS (C1 SCP1, SDE, PREC)
         polys.forEach(poly => {{
@@ -5663,6 +5668,78 @@ function procesarAsignacionUnidadSJA1(poly) {{
         restante -= (usar * unidad.spr);
     }}
 }}
+
+
+// ==============================================================================
+// 🍊 SECCIÓN 4.1: MOTOR EXCLUSIVO CON NUEVAS PRIORIDADES PARA C1 SMD1 (TAB 8)
+// ==============================================================================
+function procesarAsignacionUnidadSMD1(poly) {{
+    let bloque = poly.bloque;
+    let nombrePlan = bloque.querySelector('td[rowspan]')?.innerText?.toUpperCase()?.trim() || "";
+    let objetivo = parseFloat(bloque.querySelector('.v-total-val')?.innerText) || 0;
+
+    let yaAsignado = 0;
+    bloque.querySelectorAll('.calc-row').forEach(r => {{
+        let unidades = parseInt(r.querySelector('.u-manual')?.innerText) || 0;
+        let spr = parseFloat(r.querySelector('.spr-real-val')?.innerText) || 0;
+        yaAsignado += (unidades * spr);
+    }});
+
+    let restante = objetivo - yaAsignado;
+    if (restante <= 0) return;
+
+    let filas = Array.from(bloque.querySelectorAll('.calc-row'));
+
+    // Lista de prioridades según el tipo de plan
+    let prioridadesPlan = [];
+
+    if (nombrePlan === "⚠️ CENTRO 1" || nombrePlan === "⚠️ CENTRO 2") {{
+        // 🔴 Centro: Rentals / H&B / Bulk / Cars / Vans
+        prioridadesPlan = [
+            "Rental Electric Large Van", "Rental Large Van", "Rental Replacement",
+            "Extra large Van MLP H&B", "Large Van MLP Bulk",
+            "Car Newbie", "Car 8h", "Small Van Newbie",
+            "Large Van MLP foráneo", "Small Van MLP foráneo"
+        ];
+    }} else if (nombrePlan === "⚠️ NORTE") {{
+        // 🟠 Norte: Car Zona Ext 10h / Large Van MLP foráneo
+        prioridadesPlan = ["Car Zona Ext 10h", "Large Van MLP foráneo"];
+    }} else if (nombrePlan === "⚠️ KANASIN") {{
+        // 🟡 Kanasin: Car 8h, Car Newbie, Small Van Newbie, y respaldo foráneo
+        prioridadesPlan = ["Car 8h", "Car Newbie", "Small Van Newbie", "Large Van MLP foráneo"];
+    }} else {{
+        // 🟣 Resto de planes: Large Van MLP foráneo / Small Van MLP foráneo
+        prioridadesPlan = ["Large Van MLP foráneo", "Small Van MLP foráneo", "Extra large Van MLP"];
+    }}
+
+    for (let pref of prioridadesPlan) {{
+        if (restante <= 0) break;
+
+        let unidad = fleet.find(f => f.restante > 0 && f.nombre.toLowerCase().includes(pref.toLowerCase()));
+        if (!unidad) continue;
+
+        let necesarias = Math.ceil(restante / unidad.spr);
+        let usar = Math.min(necesarias, unidad.restante);
+
+        if (usar <= 0) continue;
+
+        let filaLibre = filas.find(f => {{
+            let tipo = f.querySelector('.s-type')?.value?.trim() || "";
+            let u = parseInt(f.querySelector('.u-manual')?.innerText) || 0;
+            return u === 0 && (tipo === "" || tipo === "Seleccionar...");
+        }});
+
+        if (filaLibre) {{
+            filaLibre.querySelector('.s-type').value = unidad.nombre;
+            filaLibre.querySelector('.u-manual').innerText = usar;
+            filaLibre.querySelector('.spr-real-val').innerText = unidad.spr;
+            editedRowsPlan.add(filaLibre);
+            unidad.restante -= usar;
+            restante -= (usar * unidad.spr);
+        }}
+    }}
+}}
+
 
 
 
