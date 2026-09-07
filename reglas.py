@@ -43,6 +43,18 @@ reglas_ruteo = {
         "* 👉 Fecha promesa + onway\n"
         "* 🏍️ Motos SPR 30"
     ),
+    "smx2_precarga": (
+        "**Prioridades SMX2 (PRECARGA):**\n\n"
+        "* 📌 Orígenes: 02 (corte hasta 16 hrs), 09 (Corte hasta 14 hrs) y 10 (corte hasta 21:00 hrs) + onway\n"
+        "* 👉 Chalco y La Paz - Small Van MLP\n"
+        "* 👉 Chimas - Car Zona Ext\n"
+        "* 👉 Ixtapaluca - Car Zona Ext/Small Van MLP\n"
+        "* 👉 Iztacalco - Car Zona Ext\n"
+        "* 👉 Iztapalapa 2 - Car Newbie 6 hrs/Car Zona Ext\n"
+        "* 👉 La Paz - Motos 3h/Small Van MLP/Car Zona Ext\n"
+        "* 👉 Pueblos - Car Zona Ext\n"
+        "* 👉 Texcoco - Car Zona Ext"
+    ),
     "smx2_extendido": (
         "**Prioridades SMX2:**\n\n"
         "* 📌 Orígenes: MXCD02, MXCD06\n"
