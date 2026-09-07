@@ -796,6 +796,8 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
         st.session_state.main_chat_messages = []
     if "esperando_subtipo_smx5" not in st.session_state:
         st.session_state.esperando_subtipo_smx5 = False
+    if "esperando_subtipo_smx2" not in st.session_state:
+        st.session_state.esperando_subtipo_smx2 = False
     if "flujo_resumen" not in st.session_state:
         st.session_state.flujo_resumen = False
     if "paso_resumen" not in st.session_state:
@@ -997,7 +999,6 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                             # Bulk
                             texto_bulk = "📦 Se asignó H&B para el volumen Bulk." if d.get("hubo_bulk", False) else ""
 
-                            # HTML con contenedor de peso normal para contrarrestar el CSS global
                             lineas_html = [
                                 f"**Queda publicado {ciclo_txt} team**:<br><br>",
                                 '<span style="font-weight: normal;">',
@@ -1058,6 +1059,29 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                         st.session_state.main_chat_messages.append({"role": "assistant", "content": reglas_ruteo["smx5_precarga"]})
                     st.rerun()
 
+        # 2.1 OPCIONES INTERACTIVAS SMX2
+        if st.session_state.esperando_subtipo_smx2:
+            with st.chat_message("assistant"):
+                st.write("👇 **Selecciona una opción o escribe 1 ó 2:**")
+                col1, col2 = st.columns(2)
+                eleccion_btn_smx2 = None
+                with col1:
+                    if st.button("1️⃣ Extendido", key="btn_smx2_1", use_container_width=True):
+                        eleccion_btn_smx2 = "1"
+                with col2:
+                    if st.button("2️⃣ Precarga", key="btn_smx2_2", use_container_width=True):
+                        eleccion_btn_smx2 = "2"
+
+                if eleccion_btn_smx2:
+                    st.session_state.esperando_subtipo_smx2 = False
+                    if eleccion_btn_smx2 == "1":
+                        st.session_state.main_chat_messages.append({"role": "user", "content": "1️⃣ Extendido"})
+                        st.session_state.main_chat_messages.append({"role": "assistant", "content": reglas_ruteo.get("smx2_extendido", "Sin información para SMX2 Extendido.")})
+                    else:
+                        st.session_state.main_chat_messages.append({"role": "user", "content": "2️⃣ Precarga"})
+                        st.session_state.main_chat_messages.append({"role": "assistant", "content": reglas_ruteo.get("smx2_precarga", "Sin información para SMX2 Precarga.")})
+                    st.rerun()
+
         # 3. CAMPO DE ENTRADA AL FINAL
         if query_main := st.chat_input("✏️ Escribe tu consulta...", key="main_chat_input"):
             st.session_state.main_chat_messages.append({"role": "user", "content": query_main})
@@ -1085,6 +1109,16 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                 else:
                     respuesta_main = "⚠️ Opción no válida. Consulta escribiendo **SMX5** nuevamente."
 
+            # B.1) FLUJO INTERACTIVO SMX2
+            elif st.session_state.esperando_subtipo_smx2:
+                st.session_state.esperando_subtipo_smx2 = False
+                if "extendido" in query_lower or "1" in query_lower:
+                    respuesta_main = reglas_ruteo.get("smx2_extendido", "Sin información para SMX2 Extendido.")
+                elif "precarga" in query_lower or "2" in query_lower:
+                    respuesta_main = reglas_ruteo.get("smx2_precarga", "Sin información para SMX2 Precarga.")
+                else:
+                    respuesta_main = "⚠️ Opción no válida. Consulta escribiendo **SMX2** nuevamente."
+
             # C) DETECCION ESPECIFICA SMX5
             elif query_lower == "smx5":
                 st.session_state.esperando_subtipo_smx5 = True
@@ -1092,12 +1126,9 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
 
             # C.1) DETECCION ESPECIFICA SMX2
             elif query_lower == "smx2":
-                if "smx2_precarga" in reglas_ruteo:
-                    respuesta_main = reglas_ruteo["smx2_precarga"]
-                else:
-                    respuesta_main = reglas_ruteo.get("smx2_extendido", "Sin información para SMX2")
+                st.session_state.esperando_subtipo_smx2 = True
+                respuesta_main = "🔍 Detecté **SMX2**. ¿De cuál requieres las prioridades?\n\n1️⃣ **Extendido**\n2️⃣ **Precarga**\n\n*(Elige dando clic en los botones superiores o escribe 1 ó 2)*"
 
-            
             # D) BUSCADOR INTELIGENTE LOCAL CON NOTAS DE SUPABASE
             else:
                 partes_respuesta = []
@@ -1111,12 +1142,9 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                         svc_bd = str(svc_raw).strip().lower()
                         contenido_bd = str(n.get("contenido", "") or "").strip()
                         
-                        # Compara si el SVC (ej: "smx2", "sja1") está en la pregunta del usuario
                         if svc_bd and (svc_bd in query_lower or query_lower in svc_bd):
                             svc_nombre = str(svc_raw).upper()
                             contenido_formateado = contenido_bd.replace("\n", "<br>")
-                            
-                            # Línea con paréntesis cerrado al final
                             texto_nota = f"• **{svc_nombre}:**<br>{contenido_formateado}"
                             notas_encontradas.append(texto_nota)
                     
@@ -1147,10 +1175,8 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                 # 3. BÚSQUEDA EN PREGUNTAS FRECUENTES
                 coincidencias_faq = []
 
-                # 📜 BÚSQUEDA DE GOLDEN RULES (TEXTO + ENLACE DIRECTO A NUEVA PESTAÑA)
                 if any(w in query_lower for w in ["golden rules", "golden rule", "golden", "reglas de oro", "reglas oro"]):
                     url_imagen_golden = "https://drive.google.com/thumbnail?id=1qGgyPVp5_t0Kd69ut9oIQEt0CmuFzjY7&sz=w1000"
-                    
                     texto_golden = (
                         "📜 **GOLDEN RULES DE ROUTING LM**<br><br>"
                         "1. **Horario:** Iniciar el ruteo únicamente con el *Routing Clock*. No esperar autorizaciones ni 'GO'.<br>"
@@ -1176,12 +1202,8 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                     )
                     coincidencias_faq.append(texto_golden)
 
-
-                
-                 # 📜 BÚSQUEDA DE RUTEO MANUAL
-                if any(w in query_lower for w in ["ruteo manual", "ruteo manual", "sistémico ruteo manual", "reglas ruteo manual"]):
+                if any(w in query_lower for w in ["ruteo manual", "sistémico ruteo manual", "reglas ruteo manual"]):
                     url_imagen_manual = "https://drive.google.com/thumbnail?id=1zo-BPUx1_7Pa-gxldX3Z714iIHwSpDb5&sz=w1000"
-                    
                     texto_manual = (
                         "📜 **SISTÉMICO: RUTEO MANUAL**<br><br>"
                         f"<div style='text-align: center; margin-top: 10px;'>"
@@ -1197,12 +1219,6 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                     )
                     coincidencias_faq.append(texto_manual)
 
-
-           
-
-
-                
-                
                 if any(w in query_lower for w in ["large van sdd", "sdd"]):
                     coincidencias_faq.append(PREGUNTAS_FRECUENTES["large_van_sdd"])
                 
@@ -1252,6 +1268,9 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                     if "smx5" in query_lower:
                         centro_encontrado = "SMX5"
                         clave_regla = "smx5_precarga" if "precarga" in query_lower else "smx5_extendido"
+                    elif "smx2" in query_lower:
+                        centro_encontrado = "SMX2"
+                        clave_regla = "smx2_precarga" if "precarga" in query_lower else "smx2_extendido"
                     else:
                         for termino, clave in mapeo_centros.items():
                             if termino in query_lower:
@@ -1297,6 +1316,7 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
 
             st.session_state.main_chat_messages.append({"role": "assistant", "content": respuesta_main})
             st.rerun()
+    
 
 
 
