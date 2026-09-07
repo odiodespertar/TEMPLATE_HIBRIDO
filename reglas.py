@@ -49,7 +49,7 @@ reglas_ruteo = {
         "* 👉 Chalco - Small Van MLP\n"
         "* 👉 Chimas - Car Zona Ext\n"
         "* 👉 Ixtapaluca - Car Zona Ext/Small Van MLP\n"
-        "* 👉 Iztacalco - Car Zona Ext\n"
+        "* 👉 Iztacalco - Car Zona Ext/puede ir Car Newbie 6hrs\n"
         "* 👉 Iztapalapa 2 - Car Newbie 6 hrs/Car Zona Ext\n"
         "* 👉 La Paz - Motos 3h/Small Van MLP/Car Zona Ext\n"
         "* 👉 Pueblos - Car Zona Ext\n"
