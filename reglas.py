@@ -46,7 +46,7 @@ reglas_ruteo = {
     "smx2_precarga": (
         "**Prioridades SMX2 (PRECARGA):**\n\n"
         "* 📌 Orígenes: 02 (corte hasta 16 hrs), 09 (Corte hasta 14 hrs) y 10 (corte hasta 21:00 hrs) + onway\n"
-        "* 👉 Chalco y La Paz - Small Van MLP\n"
+        "* 👉 Chalco - Small Van MLP\n"
         "* 👉 Chimas - Car Zona Ext\n"
         "* 👉 Ixtapaluca - Car Zona Ext/Small Van MLP\n"
         "* 👉 Iztacalco - Car Zona Ext\n"
