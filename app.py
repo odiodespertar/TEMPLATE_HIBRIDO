@@ -1090,6 +1090,14 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                 st.session_state.esperando_subtipo_smx5 = True
                 respuesta_main = "🔍 Detecté **SMX5**. ¿De cuál requieres las prioridades?\n\n1️⃣ **Extendido**\n2️⃣ **Precarga**\n\n*(Elige dando clic en los botones superiores o escribe 1 ó 2)*"
 
+            # C.1) DETECCION ESPECIFICA SMX2
+            elif query_lower == "smx2":
+                if "smx2_precarga" in reglas_ruteo:
+                    respuesta_main = reglas_ruteo["smx2_precarga"]
+                else:
+                    respuesta_main = reglas_ruteo.get("smx2_extendido", "Sin información para SMX2")
+
+            
             # D) BUSCADOR INTELIGENTE LOCAL CON NOTAS DE SUPABASE
             else:
                 partes_respuesta = []
@@ -1233,7 +1241,8 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                 if not coincidencias_faq:
                     mapeo_centros = {
                         "smx9": "smx9_extendido", "sgd2": "sgd2_extendido", "smx4": "smx4_extendido",
-                        "smx2": "smx2_extendido", "smt2": "smt2_extendido", "scp1": "scp1",
+                        "smx2": "smx2_precarga" if "precarga" in query_lower else "smx2_extendido",
+                        "smt2": "smt2_extendido", "scp1": "scp1",
                         "smd1": "smd1", "sch1": "sch1", "sja1": "sja1"
                     }
 
