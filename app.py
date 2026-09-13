@@ -2706,7 +2706,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     margin-right: auto;
 ">
     <div style="font-size: 10px; color: #d0d0d0; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;">
-        📌 RUTEO EN PANTALLA
+        👇 RUTEO EN PANTALLA
     </div>
 
     <!-- Select nativo oculto para mantener compatibilidad con las funciones de tu app -->
