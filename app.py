@@ -2691,7 +2691,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     margin-bottom:10px;
 ">
 
-<!-- 📌 RUTEO EN PANTALLA (DROPDOWN MODERNO CENTRADO) -->
+<!-- 👇 RUTEO EN PANTALLA (DROPDOWN MODERNO CENTRADO) -->
 <div style="
     background-color: #1e2022; 
     padding: 10px 18px; 
