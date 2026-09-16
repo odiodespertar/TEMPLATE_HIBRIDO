@@ -3247,45 +3247,44 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <div id="polys-5" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX2)}</div>
         <!-- 🟢 CALCULADORA COMPACTA PARA EXTENDIDO (TAB 4) -->
         <!-- 🟢 CALCULADORA COMPACTA PARA EXTENDIDO (TAB 4) CON BÚSQUEDA Y AUTO-SELECCIÓN -->
-        <div id="polys-4" class="p-content" style="display:none; max-width: 650px; margin: 0 auto; background: #1e2022; padding: 20px; border-radius: 12px; border: 1.5px solid #34383d; box-shadow: 0 4px 15px rgba(0,0,0,0.4);">
-            <div style="font-size: 15px; font-weight: 800; color: #20B2AA; text-align: center; margin-bottom: 15px; border-bottom: 1px solid #34383d; padding-bottom: 10px;">
+        <!-- 🟢 CALCULADORA ULTRA-COMPACTA PARA EXTENDIDO (TAB 4) CON BUSCADOR INTEGRADO -->
+        <div id="polys-4" class="p-content" style="display:none; max-width: 620px; margin: 0 auto; background: #1e2022; padding: 18px; border-radius: 12px; border: 1.5px solid #34383d; box-shadow: 0 4px 15px rgba(0,0,0,0.4);">
+            <div style="font-size: 14px; font-weight: 800; color: #20B2AA; text-align: center; margin-bottom: 12px; border-bottom: 1px solid #34383d; padding-bottom: 8px; letter-spacing: 0.5px;">
                 ⚡ CALCULADORA RÁPIDA DE EXTENDIDO
             </div>
 
-            <!-- TABLA DE 2 COLUMNAS -->
             <table style="width: 100%; border-collapse: collapse; color: white;">
                 <thead>
-                    <tr style="background: #25282b; height: 32px; font-size: 12px;">
-                        <th style="padding: 6px; border: 1px solid #42474e; width: 40%;">📦 TOTAL PAQUETES</th>
-                        <th style="padding: 6px; border: 1px solid #42474e; width: 60%;">🚛 SELECCIONAR UNIDAD Y SPR MAX</th>
+                    <tr style="background: #25282b; height: 30px; font-size: 12px;">
+                        <th style="padding: 6px; border: 1px solid #42474e; width: 38%;">📦 TOTAL PAQUETES</th>
+                        <th style="padding: 6px; border: 1px solid #42474e; width: 62%;">🚛 UNIDAD & SPR MÁXIMO</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <!-- Columna 1: Entrada de Volumen Editable -->
-                        <td style="padding: 15px; border: 1px solid #42474e; text-align: center; vertical-align: middle; background: #292c30;">
-                            <div style="font-size: 10px; color: #aaa; margin-bottom: 5px;">INGRESA VOLUMEN:</div>
+                        <td style="padding: 12px; border: 1px solid #42474e; text-align: center; vertical-align: middle; background: #292c30;">
+                            <div style="font-size: 10px; color: #aaa; margin-bottom: 4px;">VOLUMEN:</div>
                             <input type="number" id="ext-volumen-in" oninput="calcularExtendidoRapido()" onfocus="this.select()" value="0" placeholder="Ej. 250"
-                                   style="width: 110px; padding: 8px; font-size: 22px; font-weight: bold; text-align: center; border-radius: 6px; border: 1px solid #20B2AA; background: #141414; color: #FFD700; outline: none;" />
+                                   style="width: 100px; padding: 6px; font-size: 22px; font-weight: bold; text-align: center; border-radius: 6px; border: 1px solid #20B2AA; background: #141414; color: #FFD700; outline: none;" />
                         </td>
 
-                        <!-- Columna 2: Búsqueda + Lista Desplegable + SPR Máximo Editable -->
-                        <td style="padding: 15px; border: 1px solid #42474e; background: #292c30; vertical-align: middle;">
-                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <!-- Columna 2: Buscador Integrado + SPR Editable -->
+                        <td style="padding: 12px; border: 1px solid #42474e; background: #292c30; vertical-align: middle;">
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
                                 <div>
-                                    <label style="font-size: 11px; color: #aaa; display: block; margin-bottom: 3px;">🔍 BUSCAR UNIDAD (ej: car, 5h, rental, 120):</label>
-                                    <input type="text" id="ext-filtro-in" oninput="filtrarUnidadesExtendido()" onfocus="this.select()" placeholder="Escribe para filtrar..."
-                                           style="width: 100%; box-sizing: border-box; padding: 6px 10px; font-size: 13px; border-radius: 6px; border: 1px solid #20B2AA; background: #141414; color: #7CFFB2; margin-bottom: 6px; outline: none;" />
-
-                                    <select id="ext-unidad-select" onchange="actualizarSprExtendido(); calcularExtendidoRapido();"
-                                            style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #555; background: #141414; color: white; font-weight: bold; font-size: 14px; cursor: pointer;">
-                                        <option value="">Seleccionar unidad...</option>
-                                    </select>
+                                    <div style="font-size: 10px; color: #aaa; margin-bottom: 4px;">BUSCAR / SELECCIONAR UNIDAD:</div>
+                                    <!-- Buscador y Selector 2-en-1 -->
+                                    <input type="text" id="ext-unidad-input" list="lista-unidades-ext" onchange="seleccionarUnidadBuscador()" oninput="validarAutoAjusteSpr()" onfocus="this.select()" placeholder="Escribe para buscar (ej: car, 120, rental)..."
+                                           style="width: 100%; box-sizing: border-box; padding: 7px 10px; font-size: 13px; font-weight: bold; border-radius: 6px; border: 1px solid #20B2AA; background: #141414; color: #7CFFB2; outline: none;" />
+                                    
+                                    <datalist id="lista-unidades-ext"></datalist>
                                 </div>
-                                <div>
-                                    <label style="font-size: 11px; color: #aaa; display: block; margin-bottom: 3px;">SPR MÁXIMO (EDITABLE):</label>
+
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; background: #1a1c1e; padding: 6px 10px; border-radius: 6px; border: 1px solid #42474e;">
+                                    <span style="font-size: 11px; color: #aaa;">SPR MAX EDITABLE:</span>
                                     <input type="number" id="ext-spr-in" oninput="calcularExtendidoRapido()" onfocus="this.select()" value="0"
-                                           style="width: 100%; box-sizing: border-box; padding: 6px; border-radius: 6px; border: 1px solid #555; background: #141414; color: #20B2AA; font-weight: bold; font-size: 16px; text-align: center;" />
+                                           style="width: 80px; padding: 4px; border-radius: 4px; border: 1px solid #555; background: #141414; color: #20B2AA; font-weight: bold; font-size: 15px; text-align: center; outline: none;" />
                                 </div>
                             </div>
                         </td>
@@ -3293,11 +3292,11 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                 </tbody>
             </table>
 
-            <!-- TARJETA DE RESULTADO DE DIVISIÓN -->
-            <div style="margin-top: 15px; background: #141414; padding: 15px; border-radius: 10px; border: 1px solid #20B2AA; text-align: center;">
-                <span style="font-size: 12px; color: #aaa; display: block; letter-spacing: 1px;">🚚 UNIDADES NECESARIAS:</span>
-                <span id="ext-resultado-unidades" style="font-size: 36px; font-weight: 800; color: #7CFFB2;">0</span>
-                <div id="ext-detalle-formula" style="font-size: 11px; color: #888; margin-top: 4px;">(0 paquetes ÷ 0 SPR)</div>
+            <!-- Resultado del reparto -->
+            <div style="margin-top: 12px; background: #141414; padding: 10px; border-radius: 8px; border: 1px solid #20B2AA; text-align: center;">
+                <span style="font-size: 11px; color: #aaa; display: block; letter-spacing: 0.5px;">🚚 UNIDADES NECESARIAS:</span>
+                <span id="ext-resultado-unidades" style="font-size: 32px; font-weight: 800; color: #7CFFB2;">0</span>
+                <div id="ext-detalle-formula" style="font-size: 11px; color: #888; margin-top: 2px;">(0 paquetes ÷ 0 SPR)</div>
             </div>
         </div>
         <div id="polys-9" class="p-content" style="display:none;">{gen_poligonos(u_C1_VACIA)}</div>
@@ -3615,59 +3614,49 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         "Small Van Newbie": [70, 70]
     }};
 
-    // 🟢 Poblar y/o Filtrar la lista desplegable dinámicamente
-    function poblarSelectExtendido(filtro = "") {{
-        const select = document.getElementById("ext-unidad-select");
-        if (!select) return;
+    // 🟢 Llenar el Datalist para búsqueda nativa integrada
+    function poblarSelectExtendido() {{
+        const dl = document.getElementById("lista-unidades-ext");
+        if (!dl) return;
 
-        let valorPrevio = select.value;
-        select.innerHTML = '<option value="">Seleccionar unidad...</option>';
-
-        let busqueda = filtro.toLowerCase().trim();
+        dl.innerHTML = "";
 
         Object.keys(catalogoUnidadesExtendido).forEach(nombreUnidad => {{
             let sprMax = catalogoUnidadesExtendido[nombreUnidad][1];
-            let textoVisible = `${{nombreUnidad}} (SPR Max: ${{sprMax}})`;
-
-            // Filtra por nombre de unidad O por valor de SPR Máximo
-            if (!busqueda || nombreUnidad.toLowerCase().includes(busqueda) || sprMax.toString().includes(busqueda)) {{
-                let opt = document.createElement("option");
-                opt.value = nombreUnidad;
-                opt.dataset.spr = sprMax;
-                opt.textContent = textoVisible;
-                select.appendChild(opt);
-            }}
+            let opt = document.createElement("option");
+            // El valor sugerido incluye nombre y SPR para facilitar búsqueda por cualquier coincidencia
+            opt.value = `${{nombreUnidad}} — SPR Max: ${{sprMax}}`;
+            dl.appendChild(opt);
         }});
-
-        // Si la unidad anteriormente seleccionada sigue en la lista filtrada, la conserva
-        if (valorPrevio && select.querySelector(`option[value="${{valorPrevio}}"]`)) {{
-            select.value = valorPrevio;
-        }}
     }}
 
-    // 🟢 Función llamada al escribir en el buscador
-    function filtrarUnidadesExtendido() {{
-        const filtro = document.getElementById("ext-filtro-in")?.value || "";
-        poblarSelectExtendido(filtro);
-    }}
-
-    // 🟢 Al seleccionar una unidad, inyecta el SPR Máximo en el input editable y fuerza el cálculo
-    function actualizarSprExtendido() {{
-        const select = document.getElementById("ext-unidad-select");
+    // 🟢 Detectar la selección desde el buscador integrado
+    function seleccionarUnidadBuscador() {{
+        const inputVal = document.getElementById("ext-unidad-input")?.value?.trim() || "";
         const inputSpr = document.getElementById("ext-spr-in");
-        if (!select || !inputSpr) return;
+        if (!inputSpr) return;
 
-        const optSeleccionada = select.options[select.selectedIndex];
-        if (optSeleccionada && optSeleccionada.dataset.spr) {{
-            inputSpr.value = optSeleccionada.dataset.spr;
+        // Extraer el nombre real limpiando la etiqueta del SPR
+        let nombreLimpio = inputVal.split(" — ")[0].trim();
+
+        if (catalogoUnidadesExtendido[nombreLimpio]) {{
+            inputSpr.value = catalogoUnidadesExtendido[nombreLimpio][1];
         }} else {{
-            inputSpr.value = 0;
+            // Búsqueda aproximada por si el usuario escribe directamente sin seleccionar de la lista
+            let clave = Object.keys(catalogoUnidadesExtendido).find(k => k.toLowerCase() === nombreLimpio.toLowerCase());
+            if (clave) {{
+                inputSpr.value = catalogoUnidadesExtendido[clave][1];
+            }}
         }}
 
         calcularExtendidoRapido();
     }}
 
-    // 🟢 División automática
+    function validarAutoAjusteSpr() {{
+        seleccionarUnidadBuscador();
+    }}
+
+    // 🟢 Cálculo matemático directo
     function calcularExtendidoRapido() {{
         const volumen = parseFloat(document.getElementById("ext-volumen-in")?.value) || 0;
         const spr = parseFloat(document.getElementById("ext-spr-in")?.value) || 0;
@@ -3689,6 +3678,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             }}
         }}
     }}
+
 
 
     // ==============================================================================
