@@ -3580,7 +3580,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     }}
 
 
-    // 🟢 CATÁLOGO COMPLETO DE UNIDADES Y SPR MAXIMO
+    // 🟢 CATÁLOGO COMPLETO DE UNIDADES Y SPR MÁXIMO
     const catalogoUnidadesExtendido = {{
         "Car MLP": [110, 120],
         "Small Van MLP": [110, 120],
@@ -3615,21 +3615,40 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         "Small Van Newbie": [70, 70]
     }};
 
-    // 🟢 Poblar la lista desplegable desde el catálogo fijo
-    function poblarSelectExtendido() {{
+    // 🟢 Poblar y/o Filtrar la lista desplegable dinámicamente
+    function poblarSelectExtendido(filtro = "") {{
         const select = document.getElementById("ext-unidad-select");
         if (!select) return;
 
+        let valorPrevio = select.value;
         select.innerHTML = '<option value="">Seleccionar unidad...</option>';
 
+        let busqueda = filtro.toLowerCase().trim();
+
         Object.keys(catalogoUnidadesExtendido).forEach(nombreUnidad => {{
-            let sprMax = catalogoUnidadesExtendido[nombreUnidad][1]; // Toma el valor MÁXIMO
-            let opt = document.createElement("option");
-            opt.value = nombreUnidad;
-            opt.dataset.spr = sprMax;
-            opt.textContent = `${{nombreUnidad}} (SPR Max: ${{sprMax}})`;
-            select.appendChild(opt);
+            let sprMax = catalogoUnidadesExtendido[nombreUnidad][1];
+            let textoVisible = `${{nombreUnidad}} (SPR Max: ${{sprMax}})`;
+
+            // Filtra por nombre de unidad O por valor de SPR Máximo
+            if (!busqueda || nombreUnidad.toLowerCase().includes(busqueda) || sprMax.toString().includes(busqueda)) {{
+                let opt = document.createElement("option");
+                opt.value = nombreUnidad;
+                opt.dataset.spr = sprMax;
+                opt.textContent = textoVisible;
+                select.appendChild(opt);
+            }}
         }});
+
+        // Si la unidad anteriormente seleccionada sigue en la lista filtrada, la conserva
+        if (valorPrevio && select.querySelector(`option[value="${{valorPrevio}}"]`)) {{
+            select.value = valorPrevio;
+        }}
+    }}
+
+    // 🟢 Función llamada al escribir en el buscador
+    function filtrarUnidadesExtendido() {{
+        const filtro = document.getElementById("ext-filtro-in")?.value || "";
+        poblarSelectExtendido(filtro);
     }}
 
     // 🟢 Al seleccionar una unidad, inyecta el SPR Máximo en el input editable y fuerza el cálculo
@@ -3645,7 +3664,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             inputSpr.value = 0;
         }}
 
-        // Dispara el recálculo automático de unidades
         calcularExtendidoRapido();
     }}
 
@@ -3671,7 +3689,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             }}
         }}
     }}
-
 
 
     // ==============================================================================
