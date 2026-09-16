@@ -3246,6 +3246,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <div id="polys-1" class="p-content" style="display:none;">{gen_poligonos(u_PREC)}</div>
         <div id="polys-5" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX2)}</div>
         <!-- 🟢 CALCULADORA COMPACTA PARA EXTENDIDO (TAB 4) -->
+        <!-- 🟢 CALCULADORA COMPACTA PARA EXTENDIDO (TAB 4) CON BÚSQUEDA Y AUTO-SELECCIÓN -->
         <div id="polys-4" class="p-content" style="display:none; max-width: 650px; margin: 0 auto; background: #1e2022; padding: 20px; border-radius: 12px; border: 1.5px solid #34383d; box-shadow: 0 4px 15px rgba(0,0,0,0.4);">
             <div style="font-size: 15px; font-weight: 800; color: #20B2AA; text-align: center; margin-bottom: 15px; border-bottom: 1px solid #34383d; padding-bottom: 10px;">
                 ⚡ CALCULADORA RÁPIDA DE EXTENDIDO
@@ -3264,15 +3265,18 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                         <!-- Columna 1: Entrada de Volumen Editable -->
                         <td style="padding: 15px; border: 1px solid #42474e; text-align: center; vertical-align: middle; background: #292c30;">
                             <div style="font-size: 10px; color: #aaa; margin-bottom: 5px;">INGRESA VOLUMEN:</div>
-                            <input type="number" id="ext-volumen-in" oninput="calcularExtendidoRapido()" value="0" placeholder="Ej. 250"
+                            <input type="number" id="ext-volumen-in" oninput="calcularExtendidoRapido()" onfocus="this.select()" value="0" placeholder="Ej. 250"
                                    style="width: 110px; padding: 8px; font-size: 22px; font-weight: bold; text-align: center; border-radius: 6px; border: 1px solid #20B2AA; background: #141414; color: #FFD700; outline: none;" />
                         </td>
 
-                        <!-- Columna 2: Selección de Unidad + SPR Máximo Editable -->
+                        <!-- Columna 2: Búsqueda + Lista Desplegable + SPR Máximo Editable -->
                         <td style="padding: 15px; border: 1px solid #42474e; background: #292c30; vertical-align: middle;">
                             <div style="display: flex; flex-direction: column; gap: 10px;">
                                 <div>
-                                    <label style="font-size: 11px; color: #aaa; display: block; margin-bottom: 3px;">TIPO DE UNIDAD:</label>
+                                    <label style="font-size: 11px; color: #aaa; display: block; margin-bottom: 3px;">🔍 BUSCAR UNIDAD (ej: car, 5h, rental, 120):</label>
+                                    <input type="text" id="ext-filtro-in" oninput="filtrarUnidadesExtendido()" onfocus="this.select()" placeholder="Escribe para filtrar..."
+                                           style="width: 100%; box-sizing: border-box; padding: 6px 10px; font-size: 13px; border-radius: 6px; border: 1px solid #20B2AA; background: #141414; color: #7CFFB2; margin-bottom: 6px; outline: none;" />
+
                                     <select id="ext-unidad-select" onchange="actualizarSprExtendido(); calcularExtendidoRapido();"
                                             style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #555; background: #141414; color: white; font-weight: bold; font-size: 14px; cursor: pointer;">
                                         <option value="">Seleccionar unidad...</option>
@@ -3280,7 +3284,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                                 </div>
                                 <div>
                                     <label style="font-size: 11px; color: #aaa; display: block; margin-bottom: 3px;">SPR MÁXIMO (EDITABLE):</label>
-                                    <input type="number" id="ext-spr-in" oninput="calcularExtendidoRapido()" value="0"
+                                    <input type="number" id="ext-spr-in" oninput="calcularExtendidoRapido()" onfocus="this.select()" value="0"
                                            style="width: 100%; box-sizing: border-box; padding: 6px; border-radius: 6px; border: 1px solid #555; background: #141414; color: #20B2AA; font-weight: bold; font-size: 16px; text-align: center;" />
                                 </div>
                             </div>
