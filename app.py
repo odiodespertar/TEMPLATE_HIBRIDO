@@ -3224,7 +3224,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 ">
 
     
-         <div style="
+         <div id="titulo-planificacion-poligonos" style="
     background: #25282b !important; 
     background-image: none !important; 
     box-shadow: none !important; 
@@ -3379,16 +3379,23 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
         currentTab = parseInt(valorTab);
 
-        // 3. Ocultar la tabla superior en Extendido (Tab 4) o mostrarla para las demás
+        // 3. Control de visibilidad para SISTÉMICO (ID 4)
+        const tituloPoligonos = document.getElementById('titulo-planificacion-poligonos');
+
         if (currentTab === 4) {{
-            poblarSelectExtendido();
+            // Oculta la tabla superior y el encabezado de polígonos
             const tablaExt = document.getElementById('tab-4');
             if (tablaExt) tablaExt.style.display = 'none';
+            if (tituloPoligonos) tituloPoligonos.style.display = 'none';
+
+            poblarSelectExtendido();
         }} else {{
+            // Muestra la tabla superior activa y restaura el encabezado
             const tablaActiva = document.getElementById('tab-' + valorTab);
             if (tablaActiva) {{
                 tablaActiva.style.display = 'block';
             }}
+            if (tituloPoligonos) tituloPoligonos.style.display = 'block';
         }}
 
         // 4. Mostrar el panel correspondiente
@@ -3401,6 +3408,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             recalc();
         }}
     }}
+    
 
 
     // 🟢 FUNCIÓN LIMPIAR PANTALLA COMPLETA
