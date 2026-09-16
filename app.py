@@ -3363,33 +3363,43 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         }}
     }}
 
+
+
     function cambiarCiclo(valorTab) {{
-    // 1. Ocultar todas las tablas de disponibilidad y dejar visible solo la seleccionada
-    document.querySelectorAll('.t-content').forEach(el => {{
-        el.style.display = 'none';
-    }});
-    const tablaActiva = document.getElementById('tab-' + valorTab);
-    if (tablaActiva) {{
-        tablaActiva.style.display = 'block';
-    }}
+        // 1. Ocultar todas las tablas de disponibilidad superiores
+        document.querySelectorAll('.t-content').forEach(el => {{
+            el.style.display = 'none';
+        }});
 
-    // 2. Ocultar todos los bloques de polígonos y mostrar solo el del ciclo correspondiente
-    document.querySelectorAll('.p-content').forEach(el => {{
-        el.style.display = 'none';
-    }});
-    const polyActivo = document.getElementById('polys-' + valorTab);
-    if (polyActivo) {{
-        polyActivo.style.display = 'block';
-    }}
+        // 2. Ocultar todos los bloques de polígonos
+        document.querySelectorAll('.p-content').forEach(el => {{
+            el.style.display = 'none';
+        }});
 
-    // 3. Actualizar la variable de control global
-    currentTab = parseInt(valorTab);
-    
-    // 4. Recalcular valores de la interfaz
-    if (typeof recalc === 'function') {{
-        recalc();
+        currentTab = parseInt(valorTab);
+
+        // 3. Ocultar la tabla superior en Extendido (Tab 4) o mostrarla para las demás
+        if (currentTab === 4) {{
+            poblarSelectExtendido();
+            const tablaExt = document.getElementById('tab-4');
+            if (tablaExt) tablaExt.style.display = 'none';
+        }} else {{
+            const tablaActiva = document.getElementById('tab-' + valorTab);
+            if (tablaActiva) {{
+                tablaActiva.style.display = 'block';
+            }}
+        }}
+
+        // 4. Mostrar el panel correspondiente
+        const polyActivo = document.getElementById('polys-' + valorTab);
+        if (polyActivo) {{
+            polyActivo.style.display = 'block';
+        }}
+
+        if (typeof recalc === 'function') {{
+            recalc();
+        }}
     }}
-}}
 
 
     // 🟢 FUNCIÓN LIMPIAR PANTALLA COMPLETA
@@ -3564,6 +3574,100 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             alert("❌ Error al procesar la solicitud.");
         }}
     }}
+
+
+    // 🟢 CATÁLOGO COMPLETO DE UNIDADES Y SPR MAXIMO
+    const catalogoUnidadesExtendido = {
+        "Car MLP": [110, 120],
+        "Small Van MLP": [110, 120],
+        "Large Van MLP": [110, 120],
+        "Small Van MLP Newbie": [110, 120],
+        "Large Van MLP Newbie": [110, 120],
+        "Extra large Van MLP": [110, 120],
+        "Small Van MLP XPT": [110, 120],
+        "Small Van MLP foráneo": [110, 120],
+        "Large Van MLP foráneo": [110, 120],
+        "Car MLP foráneo": [110, 120],
+        "Extra large Van MLP H&B": [100, 100],
+        "Rental Car": [120, 150],
+        "Rental Electric Large Van": [120, 150],
+        "Rental Large Van": [120, 150],
+        "Rental Replacement": [120, 150],
+        "Rental Small Van Electrica": [120, 150],
+        "Rental Small Van": [120, 150],
+        "Delivery Cells Car": [1, 1],
+        "Truck 3.5 tons MLP": [1, 1],
+        "Delivery Cell Large Van": [1, 1],
+        "Car 8h": [70, 70],
+        "Car Newbie": [50, 50],
+        "Car Zona Extendida": [60, 60],
+        "Car 3h": [30, 30],
+        "Car 5h": [30, 30],
+        "Moto 3h": [30, 30],
+        "Moto Newbie": [25, 25],
+        "Small Van 11h Ext": [70, 70],
+        "Small Van 9h": [70, 70],
+        "Small Van 9h Ext": [70, 70],
+        "Small Van Newbie": [70, 70]
+    };
+
+    // 🟢 Poblar la lista desplegable desde el catálogo fijo
+    function poblarSelectExtendido() {{
+        const select = document.getElementById("ext-unidad-select");
+        if (!select) return;
+
+        select.innerHTML = '<option value="">Seleccionar unidad...</option>';
+
+        Object.keys(catalogoUnidadesExtendido).forEach(nombreUnidad => {{
+            let sprMax = catalogoUnidadesExtendido[nombreUnidad][1]; // Toma el valor MÁXIMO
+            let opt = document.createElement("option");
+            opt.value = nombreUnidad;
+            opt.dataset.spr = sprMax;
+            opt.textContent = `${{nombreUnidad}} (SPR Max: ${{sprMax}})`;
+            select.appendChild(opt);
+        }});
+    }}
+
+    // 🟢 Al seleccionar una unidad, inyecta el SPR Máximo en el input editable y fuerza el cálculo
+    function actualizarSprExtendido() {{
+        const select = document.getElementById("ext-unidad-select");
+        const inputSpr = document.getElementById("ext-spr-in");
+        if (!select || !inputSpr) return;
+
+        const optSeleccionada = select.options[select.selectedIndex];
+        if (optSeleccionada && optSeleccionada.dataset.spr) {{
+            inputSpr.value = optSeleccionada.dataset.spr;
+        }} else {{
+            inputSpr.value = 0;
+        }}
+
+        // Dispara el recálculo automático de unidades
+        calcularExtendidoRapido();
+    }}
+
+    // 🟢 División automática
+    function calcularExtendidoRapido() {{
+        const volumen = parseFloat(document.getElementById("ext-volumen-in")?.value) || 0;
+        const spr = parseFloat(document.getElementById("ext-spr-in")?.value) || 0;
+        const displayResultado = document.getElementById("ext-resultado-unidades");
+        const displayFormula = document.getElementById("ext-detalle-formula");
+
+        if (!displayResultado) return;
+
+        if (volumen > 0 && spr > 0) {{
+            let unidadesCalculadas = Math.ceil(volumen / spr);
+            displayResultado.innerText = unidadesCalculadas;
+            if (displayFormula) {{
+                displayFormula.innerText = `(${{volumen}} paquetes ÷ ${{spr}} SPR = ${{unidadesCalculadas}} unidades)`;
+            }}
+        }} else {{
+            displayResultado.innerText = "0";
+            if (displayFormula) {{
+                displayFormula.innerText = "(0 paquetes ÷ 0 SPR)";
+            }}
+        }}
+    }}
+
 
 
     // ==============================================================================
