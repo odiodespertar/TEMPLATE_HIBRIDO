@@ -2739,7 +2739,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         transition: all 0.2s ease;
         user-select: none;
     ">
-        <span id="custom-dropdown-selected" style="text-align: center; width: 100%;">🟢 EXTENDIDO</span>
+        <span id="custom-dropdown-selected" style="text-align: center; width: 100%;">🟢 SISTÉMICO</span>
         <span style="font-size: 12px; color: #888; transition: transform 0.2s; position: absolute; right: 16px;" id="dropdown-arrow">▼</span>
     </div>
 
@@ -2764,7 +2764,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <div class="custom-option" onclick="seleccionarOpcionCustom('8', '🔴 C1 SMD1')">🔴 C1 SMD1</div>
         <div class="custom-option" onclick="seleccionarOpcionCustom('1', '🟡 PREC SMX5')">🟡 PREC SMX5</div>
         <div class="custom-option" onclick="seleccionarOpcionCustom('5', '🟡 PREC SMX2')">🟡 PREC SMX2</div>
-        <div class="custom-option" onclick="seleccionarOpcionCustom('4', '🟢 EXTENDIDO')">🟢 EXTENDIDO</div>
+        <div class="custom-option" onclick="seleccionarOpcionCustom('4', '🟢 SISTÉMICO')">🟢 SISTÉMICO</div>
         <div class="custom-option" onclick="seleccionarOpcionCustom('9', '🟣 C1 VACÍA')">🟣 C1 VACÍA</div>
         <div class="custom-option" onclick="seleccionarOpcionCustom('10', '🟡 PREC SMX8')">🟡 PREC SMX8</div>
     </div>
