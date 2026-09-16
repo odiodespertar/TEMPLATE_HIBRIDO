@@ -2717,7 +2717,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <option value="8">🔴 C1 SMD1</option>
         <option value="1">🟡 PREC SMX5</option>
         <option value="5">🟡 PREC SMX2</option>
-        <option value="4" selected>🟢 EXTENDIDO</option>
+        <option value="4" selected>🟢 SISTÉMICO</option>
         <option value="9">🟣 C1 VACÍA</option>
         <option value="10">🟡 PREC SMX8</option>
     </select>
@@ -3245,12 +3245,10 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <div id="polys-8" class="p-content" style="display:none;">{gen_poligonos(u_C1_SMD1)}</div>
         <div id="polys-1" class="p-content" style="display:none;">{gen_poligonos(u_PREC)}</div>
         <div id="polys-5" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX2)}</div>
-        <!-- 🟢 CALCULADORA COMPACTA PARA EXTENDIDO (TAB 4) -->
-        <!-- 🟢 CALCULADORA COMPACTA PARA EXTENDIDO (TAB 4) CON BÚSQUEDA Y AUTO-SELECCIÓN -->
         <!-- 🟢 CALCULADORA ULTRA-COMPACTA PARA EXTENDIDO (TAB 4) CON BUSCADOR INTEGRADO -->
         <div id="polys-4" class="p-content" style="display:none; max-width: 620px; margin: 0 auto; background: #1e2022; padding: 18px; border-radius: 12px; border: 1.5px solid #34383d; box-shadow: 0 4px 15px rgba(0,0,0,0.4);">
             <div style="font-size: 14px; font-weight: 800; color: #20B2AA; text-align: center; margin-bottom: 12px; border-bottom: 1px solid #34383d; padding-bottom: 8px; letter-spacing: 0.5px;">
-                ⚡ CALCULADORA RÁPIDA DE EXTENDIDO
+                ⚡ CALCULADORA RUTEO SISTÉMICO
             </div>
 
             <table style="width: 100%; border-collapse: collapse; color: white;">
