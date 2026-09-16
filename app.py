@@ -3246,43 +3246,44 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <div id="polys-1" class="p-content" style="display:none;">{gen_poligonos(u_PREC)}</div>
         <div id="polys-5" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX2)}</div>
         <!-- 🟢 CALCULADORA ULTRA-COMPACTA PARA EXTENDIDO (TAB 4) CON BUSCADOR INTEGRADO -->
-        <div id="polys-4" class="p-content" style="display:none; max-width: 620px; margin: 0 auto; background: #1e2022; padding: 18px; border-radius: 12px; border: 1.5px solid #34383d; box-shadow: 0 4px 15px rgba(0,0,0,0.4);">
-            <div style="font-size: 14px; font-weight: 800; color: #20B2AA; text-align: center; margin-bottom: 12px; border-bottom: 1px solid #34383d; padding-bottom: 8px; letter-spacing: 0.5px;">
+        <!-- 🟢 CALCULADORA EXPANDIDA Y ULTRA-LEGIBLE PARA RUTEO SISTÉMICO (TAB 4) -->
+        <div id="polys-4" class="p-content" style="display:none; max-width: 780px; margin: 0 auto; background: #1e2022; padding: 25px; border-radius: 14px; border: 2px solid #34383d; box-shadow: 0 6px 20px rgba(0,0,0,0.5);">
+            <div style="font-size: 18px; font-weight: 800; color: #20B2AA; text-align: center; margin-bottom: 18px; border-bottom: 2px solid #34383d; padding-bottom: 10px; letter-spacing: 0.8px;">
                 ⚡ CALCULADORA RUTEO SISTÉMICO
             </div>
 
             <table style="width: 100%; border-collapse: collapse; color: white;">
                 <thead>
-                    <tr style="background: #25282b; height: 30px; font-size: 12px;">
-                        <th style="padding: 6px; border: 1px solid #42474e; width: 38%;">📦 TOTAL PAQUETES</th>
-                        <th style="padding: 6px; border: 1px solid #42474e; width: 62%;">🚛 UNIDAD & SPR MÁXIMO</th>
+                    <tr style="background: #25282b; height: 38px; font-size: 14px;">
+                        <th style="padding: 8px; border: 1px solid #42474e; width: 38%;">📦 TOTAL PAQUETES</th>
+                        <th style="padding: 8px; border: 1px solid #42474e; width: 62%;">🚛 UNIDAD & SPR MÁXIMO</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <!-- Columna 1: Entrada de Volumen Editable -->
-                        <td style="padding: 12px; border: 1px solid #42474e; text-align: center; vertical-align: middle; background: #292c30;">
-                            <div style="font-size: 10px; color: #aaa; margin-bottom: 4px;">VOLUMEN:</div>
+                        <!-- Columna 1: Entrada de Volumen Editable (Aumentado) -->
+                        <td style="padding: 18px; border: 1px solid #42474e; text-align: center; vertical-align: middle; background: #292c30;">
+                            <div style="font-size: 12px; font-weight: bold; color: #bbb; margin-bottom: 6px;">VOLUMEN:</div>
                             <input type="number" id="ext-volumen-in" oninput="calcularExtendidoRapido()" onfocus="this.select()" value="0" placeholder="Ej. 250"
-                                   style="width: 100px; padding: 6px; font-size: 22px; font-weight: bold; text-align: center; border-radius: 6px; border: 1px solid #20B2AA; background: #141414; color: #FFD700; outline: none;" />
+                                   style="width: 140px; padding: 10px; font-size: 28px; font-weight: 800; text-align: center; border-radius: 8px; border: 2px solid #20B2AA; background: #141414; color: #FFD700; outline: none;" />
                         </td>
 
-                        <!-- Columna 2: Buscador Integrado + SPR Editable -->
-                        <td style="padding: 12px; border: 1px solid #42474e; background: #292c30; vertical-align: middle;">
-                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <!-- Columna 2: Buscador e Input de SPR (Aumentado) -->
+                        <td style="padding: 18px; border: 1px solid #42474e; background: #292c30; vertical-align: middle;">
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
                                 <div>
-                                    <div style="font-size: 10px; color: #aaa; margin-bottom: 4px;">BUSCAR / SELECCIONAR UNIDAD:</div>
-                                    <!-- Buscador y Selector 2-en-1 -->
+                                    <div style="font-size: 12px; font-weight: bold; color: #bbb; margin-bottom: 6px;">BUSCAR / SELECCIONAR UNIDAD:</div>
+                                    <!-- Buscador y Selector de mayor tamaño -->
                                     <input type="text" id="ext-unidad-input" list="lista-unidades-ext" onchange="seleccionarUnidadBuscador()" oninput="validarAutoAjusteSpr()" onfocus="this.select()" placeholder="Escribe para buscar (ej: car, 120, rental)..."
-                                           style="width: 100%; box-sizing: border-box; padding: 7px 10px; font-size: 13px; font-weight: bold; border-radius: 6px; border: 1px solid #20B2AA; background: #141414; color: #7CFFB2; outline: none;" />
+                                           style="width: 100%; box-sizing: border-box; padding: 11px 14px; font-size: 16px; font-weight: bold; border-radius: 8px; border: 2px solid #20B2AA; background: #141414; color: #7CFFB2; outline: none;" />
                                     
                                     <datalist id="lista-unidades-ext"></datalist>
                                 </div>
 
-                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; background: #1a1c1e; padding: 6px 10px; border-radius: 6px; border: 1px solid #42474e;">
-                                    <span style="font-size: 11px; color: #aaa;">SPR MAX EDITABLE:</span>
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #1a1c1e; padding: 10px 14px; border-radius: 8px; border: 1px solid #42474e;">
+                                    <span style="font-size: 13px; font-weight: bold; color: #bbb;">SPR MAX EDITABLE:</span>
                                     <input type="number" id="ext-spr-in" oninput="calcularExtendidoRapido()" onfocus="this.select()" value="0"
-                                           style="width: 80px; padding: 4px; border-radius: 4px; border: 1px solid #555; background: #141414; color: #20B2AA; font-weight: bold; font-size: 15px; text-align: center; outline: none;" />
+                                           style="width: 110px; padding: 8px; border-radius: 6px; border: 1.5px solid #555; background: #141414; color: #20B2AA; font-weight: 800; font-size: 20px; text-align: center; outline: none;" />
                                 </div>
                             </div>
                         </td>
@@ -3290,11 +3291,11 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                 </tbody>
             </table>
 
-            <!-- Resultado del reparto -->
-            <div style="margin-top: 12px; background: #141414; padding: 10px; border-radius: 8px; border: 1px solid #20B2AA; text-align: center;">
-                <span style="font-size: 11px; color: #aaa; display: block; letter-spacing: 0.5px;">🚚 UNIDADES NECESARIAS:</span>
-                <span id="ext-resultado-unidades" style="font-size: 32px; font-weight: 800; color: #7CFFB2;">0</span>
-                <div id="ext-detalle-formula" style="font-size: 11px; color: #888; margin-top: 2px;">(0 paquetes ÷ 0 SPR)</div>
+            <!-- Tarjeta de Resultado en Tamaño XL -->
+            <div style="margin-top: 18px; background: #141414; padding: 16px; border-radius: 10px; border: 2px solid #20B2AA; text-align: center;">
+                <span style="font-size: 13px; font-weight: 800; color: #aaa; display: block; letter-spacing: 1px;">🚚 UNIDADES NECESARIAS:</span>
+                <span id="ext-resultado-unidades" style="font-size: 46px; font-weight: 900; color: #7CFFB2; display: inline-block; margin: 4px 0;">0</span>
+                <div id="ext-detalle-formula" style="font-size: 13px; font-weight: bold; color: #888;">(0 paquetes ÷ 0 SPR)</div>
             </div>
         </div>
         <div id="polys-9" class="p-content" style="display:none;">{gen_poligonos(u_C1_VACIA)}</div>
