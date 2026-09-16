@@ -3577,7 +3577,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
 
     // 🟢 CATÁLOGO COMPLETO DE UNIDADES Y SPR MAXIMO
-    const catalogoUnidadesExtendido = {
+    const catalogoUnidadesExtendido = {{
         "Car MLP": [110, 120],
         "Small Van MLP": [110, 120],
         "Large Van MLP": [110, 120],
@@ -3609,7 +3609,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         "Small Van 9h": [70, 70],
         "Small Van 9h Ext": [70, 70],
         "Small Van Newbie": [70, 70]
-    };
+    }};
 
     // 🟢 Poblar la lista desplegable desde el catálogo fijo
     function poblarSelectExtendido() {{
