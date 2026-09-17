@@ -3399,7 +3399,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     }}
 
 
-
     function cambiarCiclo(valorTab) {{
         // 1. Ocultar todas las tablas de disponibilidad superiores
         document.querySelectorAll('.t-content').forEach(el => {{
@@ -3413,16 +3412,17 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
         currentTab = parseInt(valorTab);
 
-        // Captura de elementos a alternar
+        // Captura de elementos a controlar
         const tituloPoligonos = document.getElementById('titulo-planificacion-poligonos');
         const resumenFlota = document.getElementById('resumen-flota-ruteada');
         const botonesSuperiores = document.getElementById('fleet-drag-handle');
         const dosPctTradicional = document.getElementById('dos-pct-global');
         const dosPctSistemico = document.getElementById('calculadoras-dos-pct-sistemico');
+        const calcSistemica = document.getElementById('polys-4');
 
         // 3. Control de Visibilidad para SISTÉMICO (ID 4)
         if (currentTab === 4) {{
-            // Ocultar tabla superior tab-4, título, resumen de flota, botones y 2% tradicional
+            // Ocultar elementos innecesarios
             const tablaExt = document.getElementById('tab-4');
             if (tablaExt) tablaExt.style.display = 'none';
             if (tituloPoligonos) tituloPoligonos.style.display = 'none';
@@ -3430,12 +3430,13 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             if (botonesSuperiores) botonesSuperiores.style.display = 'none';
             if (dosPctTradicional) dosPctTradicional.style.display = 'none';
 
-            // Mostrar recuadros interactivos del 2%
+            // 🟢 MOSTRAR AMBAS CALCULADORAS AL MISMO TIEMPO
             if (dosPctSistemico) dosPctSistemico.style.display = 'flex';
+            if (calcSistemica) calcSistemica.style.display = 'block';
 
             poblarSelectExtendido();
         }} else {{
-            // Mostrar tabla superior activa, resumen, botones y 2% tradicional para los otros ruteos
+            // Restaurar interfaz estándar para los demás ruteos
             const tablaActiva = document.getElementById('tab-' + valorTab);
             if (tablaActiva) tablaActiva.style.display = 'block';
             if (tituloPoligonos) tituloPoligonos.style.display = 'block';
@@ -3445,18 +3446,17 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
             // Ocultar recuadros del 2% sistémico
             if (dosPctSistemico) dosPctSistemico.style.display = 'none';
-        }}
 
-        // 4. Mostrar el panel correspondiente
-        const polyActivo = document.getElementById('polys-' + valorTab);
-        if (polyActivo) {{
-            polyActivo.style.display = 'block';
+            // Mostrar el bloque correspondiente si no es sistémico
+            const polyActivo = document.getElementById('polys-' + valorTab);
+            if (polyActivo) polyActivo.style.display = 'block';
         }}
 
         if (typeof recalc === 'function') {{
             recalc();
         }}
     }}
+    
     
 
 
