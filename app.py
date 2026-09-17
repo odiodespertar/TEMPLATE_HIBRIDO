@@ -2823,6 +2823,60 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             if (arrow) arrow.style.transform = "rotate(0deg)";
         }}
     }});
+
+    function cambiarCiclo(valorTab) {{
+        // 1. Ocultar tablas de disponibilidad superiores
+        document.querySelectorAll('.t-content').forEach(el => {{
+            el.style.display = 'none';
+        }});
+
+        // 2. Ocultar contenedores de polígonos
+        document.querySelectorAll('.p-content').forEach(el => {{
+            el.style.display = 'none';
+        }});
+
+        currentTab = parseInt(valorTab);
+
+        // Elementos a ocultar/mostrar
+        const tituloPoligonos = document.getElementById('titulo-planificacion-poligonos');
+        const resumenFlota = document.getElementById('resumen-flota-ruteada');
+        const barra2Pct = document.getElementById('dos-pct-global');
+        const botonesSuperiores = document.getElementById('fleet-drag-handle');
+
+        // 3. Ocultar controles marcados solo en SISTÉMICO (ID 4)
+        if (currentTab === 4) {{
+            const tablaExt = document.getElementById('tab-4');
+            if (tablaExt) tablaExt.style.display = 'none';
+            if (tituloPoligonos) tituloPoligonos.style.display = 'none';
+            if (resumenFlota) resumenFlota.style.display = 'none';
+            if (barra2Pct) barra2Pct.style.display = 'none';
+            if (botonesSuperiores) botonesSuperiores.style.display = 'none';
+
+            poblarSelectExtendido();
+        }} else {{
+            const tablaActiva = document.getElementById('tab-' + valorTab);
+            if (tablaActiva) tablaActiva.style.display = 'block';
+            if (tituloPoligonos) tituloPoligonos.style.display = 'block';
+            if (resumenFlota) resumenFlota.style.display = 'flex';
+            if (barra2Pct) barra2Pct.style.display = 'block';
+            if (botonesSuperiores) botonesSuperiores.style.display = 'flex';
+        }}
+
+        // 4. Activar el contenedor inferior seleccionado
+        const polyActivo = document.getElementById('polys-' + valorTab);
+        if (polyActivo) {{
+            polyActivo.style.display = 'block';
+        }}
+
+        if (typeof recalc === 'function') {{
+            recalc();
+        }}
+    }}
+
+
+
+
+    
 </script>
 
 <div id="panel-control-unico" style="display: flex; gap: 20px; background: #25282b; padding: 15px; border-radius: 10px; color: white; justify-content: center; align-items: center; margin: 20px 0;">
@@ -3245,7 +3299,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <div id="polys-8" class="p-content" style="display:none;">{gen_poligonos(u_C1_SMD1)}</div>
         <div id="polys-1" class="p-content" style="display:none;">{gen_poligonos(u_PREC)}</div>
         <div id="polys-5" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX2)}</div>
-        <!-- 🟢 CALCULADORA ULTRA-COMPACTA PARA EXTENDIDO (TAB 4) CON BUSCADOR INTEGRADO -->
+
         <!-- 🟢 CALCULADORA EXPANDIDA Y ULTRA-LEGIBLE PARA RUTEO SISTÉMICO (TAB 4) -->
         <div id="polys-4" class="p-content" style="display:none; max-width: 780px; margin: 0 auto; background: #1e2022; padding: 25px; border-radius: 14px; border: 2px solid #34383d; box-shadow: 0 6px 20px rgba(0,0,0,0.5);">
             <div style="font-size: 18px; font-weight: 800; color: #20B2AA; text-align: center; margin-bottom: 18px; border-bottom: 2px solid #34383d; padding-bottom: 10px; letter-spacing: 0.8px;">
@@ -3261,19 +3315,18 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                 </thead>
                 <tbody>
                     <tr>
-                        <!-- Columna 1: Entrada de Volumen Editable (Aumentado) -->
+                        <!-- Columna 1: Entrada de Volumen Editable -->
                         <td style="padding: 18px; border: 1px solid #42474e; text-align: center; vertical-align: middle; background: #292c30;">
                             <div style="font-size: 12px; font-weight: bold; color: #bbb; margin-bottom: 6px;">VOLUMEN:</div>
                             <input type="number" id="ext-volumen-in" oninput="calcularExtendidoRapido()" onfocus="this.select()" value="0" placeholder="Ej. 250"
                                    style="width: 140px; padding: 10px; font-size: 28px; font-weight: 800; text-align: center; border-radius: 8px; border: 2px solid #20B2AA; background: #141414; color: #FFD700; outline: none;" />
                         </td>
 
-                        <!-- Columna 2: Buscador e Input de SPR (Aumentado) -->
+                        <!-- Columna 2: Buscador e Input de SPR -->
                         <td style="padding: 18px; border: 1px solid #42474e; background: #292c30; vertical-align: middle;">
                             <div style="display: flex; flex-direction: column; gap: 12px;">
                                 <div>
                                     <div style="font-size: 12px; font-weight: bold; color: #bbb; margin-bottom: 6px;">BUSCAR / SELECCIONAR UNIDAD:</div>
-                                    <!-- Buscador y Selector de mayor tamaño -->
                                     <input type="text" id="ext-unidad-input" list="lista-unidades-ext" onchange="seleccionarUnidadBuscador()" oninput="validarAutoAjusteSpr()" onfocus="this.select()" placeholder="Escribe para buscar (ej: car, 120, rental)..."
                                            style="width: 100%; box-sizing: border-box; padding: 11px 14px; font-size: 16px; font-weight: bold; border-radius: 8px; border: 2px solid #20B2AA; background: #141414; color: #7CFFB2; outline: none;" />
                                     
@@ -3291,13 +3344,14 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                 </tbody>
             </table>
 
-            <!-- Tarjeta de Resultado en Tamaño XL -->
+            <!-- Tarjeta de Resultado -->
             <div style="margin-top: 18px; background: #141414; padding: 16px; border-radius: 10px; border: 2px solid #20B2AA; text-align: center;">
                 <span style="font-size: 13px; font-weight: 800; color: #aaa; display: block; letter-spacing: 1px;">🚚 UNIDADES NECESARIAS:</span>
                 <span id="ext-resultado-unidades" style="font-size: 46px; font-weight: 900; color: #7CFFB2; display: inline-block; margin: 4px 0;">0</span>
                 <div id="ext-detalle-formula" style="font-size: 13px; font-weight: bold; color: #888;">(0 paquetes ÷ 0 SPR)</div>
             </div>
         </div>
+
         <div id="polys-9" class="p-content" style="display:none;">{gen_poligonos(u_C1_VACIA)}</div>
         <div id="polys-10" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX8)}</div>
 
@@ -3367,60 +3421,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
 
 
-    function cambiarCiclo(valorTab) {{
-        // 1. Ocultar todas las tablas de disponibilidad superiores
-        document.querySelectorAll('.t-content').forEach(el => {{
-            el.style.display = 'none';
-        }});
-
-        // 2. Ocultar todos los bloques de polígonos/paneles
-        document.querySelectorAll('.p-content').forEach(el => {{
-            el.style.display = 'none';
-        }});
-
-        currentTab = parseInt(valorTab);
-
-        // Elementos a ocultar/mostrar dinámicamente según la pestaña activa
-        const tituloPoligonos = document.getElementById('titulo-planificacion-poligonos');
-        const resumenFlota = document.getElementById('resumen-flota-ruteada');
-        const barra2Pct = document.getElementById('dos-pct-global');
-        const botonesSuperiores = document.getElementById('fleet-drag-handle');
-
-        // 3. Ocultar elementos marcados si es SISTÉMICO (ID 4)
-        if (currentTab === 4) {{
-            const tablaExt = document.getElementById('tab-4');
-            if (tablaExt) tablaExt.style.display = 'none';
-            if (tituloPoligonos) tituloPoligonos.style.display = 'none';
-            
-            // Oculta los 3 bloques marcados en amarillo en la imagen
-            if (resumenFlota) resumenFlota.style.display = 'none';
-            if (barra2Pct) barra2Pct.style.display = 'none';
-            if (botonesSuperiores) botonesSuperiores.style.display = 'none';
-
-            poblarSelectExtendido();
-        }} else {{
-            // Restaurar para las demás pestañas de ruteo
-            const tablaActiva = document.getElementById('tab-' + valorTab);
-            if (tablaActiva) tablaActiva.style.display = 'block';
-            if (tituloPoligonos) tituloPoligonos.style.display = 'block';
-            
-            // Muestra de nuevo los bloques en las otras pestañas
-            if (resumenFlota) resumenFlota.style.display = 'flex';
-            if (barra2Pct) barra2Pct.style.display = 'block';
-            if (botonesSuperiores) botonesSuperiores.style.display = 'flex';
-        }}
-
-        // 4. Mostrar el panel inferior de la pestaña seleccionada (polys-4 para Sistémico)
-        const polyActivo = document.getElementById('polys-' + valorTab);
-        if (polyActivo) {{
-            polyActivo.style.display = 'block';
-        }}
-
-        if (typeof recalc === 'function') {{
-            recalc();
-        }}
-    }}
-    
+   
 
 
     // 🟢 FUNCIÓN LIMPIAR PANTALLA COMPLETA
