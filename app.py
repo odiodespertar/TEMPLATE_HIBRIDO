@@ -2800,50 +2800,27 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         arrow.style.transform = visible ? "rotate(0deg)" : "rotate(180deg)";
     }}
 
-    function seleccionarOpcionCustom(valor, texto) {{
-        document.getElementById("custom-dropdown-selected").innerHTML = texto;
-        toggleCustomDropdown();
-        
-        const selNative = document.getElementById("ciclo-selector");
-        if (selNative) {{
-            selNative.value = valor;
-        }}
-
-        if (typeof cambiarCiclo === "function") {{
-            cambiarCiclo(valor);
-        }}
-    }}
-
-    document.addEventListener("click", function(event) {{
-        const dropdown = document.getElementById("custom-dropdown-btn");
-        const menu = document.getElementById("custom-dropdown-menu");
-        if (dropdown && menu && !dropdown.contains(event.target) && !menu.contains(event.target)) {{
-            menu.style.display = "none";
-            const arrow = document.getElementById("dropdown-arrow");
-            if (arrow) arrow.style.transform = "rotate(0deg)";
-        }}
-    }});
-
+    // 🟢 FUNCIÓN DE CAMBIO DE CICLO / PESTAÑA (CORREGIDA Y SIMPLIFICADA)
     function cambiarCiclo(valorTab) {{
-        // 1. Ocultar tablas de disponibilidad superiores
+        // 1. Ocultar todas las tablas superiores (t-content)
         document.querySelectorAll('.t-content').forEach(el => {{
             el.style.display = 'none';
         }});
 
-        // 2. Ocultar contenedores de polígonos
+        // 2. Ocultar todos los contenedores inferiores (p-content)
         document.querySelectorAll('.p-content').forEach(el => {{
             el.style.display = 'none';
         }});
 
         currentTab = parseInt(valorTab);
 
-        // Elementos a ocultar/mostrar
+        // Captura segura de elementos globales de la cabecera
         const tituloPoligonos = document.getElementById('titulo-planificacion-poligonos');
         const resumenFlota = document.getElementById('resumen-flota-ruteada');
         const barra2Pct = document.getElementById('dos-pct-global');
         const botonesSuperiores = document.getElementById('fleet-drag-handle');
 
-        // 3. Ocultar controles marcados solo en SISTÉMICO (ID 4)
+        // 3. Conmutación de elementos de cabecera solo en SISTÉMICO (ID 4)
         if (currentTab === 4) {{
             const tablaExt = document.getElementById('tab-4');
             if (tablaExt) tablaExt.style.display = 'none';
@@ -2854,6 +2831,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
             poblarSelectExtendido();
         }} else {{
+            // Restauración para las demás pestañas
             const tablaActiva = document.getElementById('tab-' + valorTab);
             if (tablaActiva) tablaActiva.style.display = 'block';
             if (tituloPoligonos) tituloPoligonos.style.display = 'block';
@@ -2862,7 +2840,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             if (botonesSuperiores) botonesSuperiores.style.display = 'flex';
         }}
 
-        // 4. Activar el contenedor inferior seleccionado
+        // 4. Encender el panel inferior correspondiente
         const polyActivo = document.getElementById('polys-' + valorTab);
         if (polyActivo) {{
             polyActivo.style.display = 'block';
@@ -2873,6 +2851,18 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         }}
     }}
 
+    // 🟢 SELECCIÓN DESDE EL DROPDOWN PERSONALIZADO
+    function seleccionarOpcionCustom(valor, texto) {{
+        const btnTexto = document.getElementById("custom-dropdown-selected");
+        if (btnTexto) btnTexto.innerHTML = texto;
+        
+        toggleCustomDropdown();
+        
+        const selNative = document.getElementById("ciclo-selector");
+        if (selNative) selNative.value = valor;
+
+        cambiarCiclo(valor);
+    }}
 
 
 
