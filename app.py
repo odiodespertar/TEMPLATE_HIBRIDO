@@ -2870,34 +2870,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         color:#25282b;">
 </div>
 
-<!-- ⚡ CALCULADORAS MINIMALISTAS DE 2% (EXCLUSIVAS DE RUTEO SISTÉMICO) -->
-<div id="calculadoras-dos-pct-sistemico" style="display: none; max-width: 780px; margin: 0 auto 15px auto; gap: 15px;">
-    <!-- Recuadro 1 -->
-    <div style="flex: 1; background: #1e2022; padding: 14px 18px; border-radius: 10px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-        <div>
-            <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px;">2% PERMITIDO - DATO 1</div>
-            <input type="number" id="dos-pct-in-1" oninput="calcularDosPctIndividual(1)" onfocus="this.select()" value="0" placeholder="Ej. 1500"
-                   style="width: 120px; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none; margin-top: 4px;" />
-        </div>
-        <div style="text-align: right;">
-            <span style="font-size: 10px; color: #aaa; display: block; font-weight: bold;">RESULTADO 2%:</span>
-            <span id="dos-pct-res-1" style="font-size: 26px; font-weight: 900; color: #7CFFB2;">0</span>
-        </div>
-    </div>
-
-    <!-- Recuadro 2 -->
-    <div style="flex: 1; background: #1e2022; padding: 14px 18px; border-radius: 10px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-        <div>
-            <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px;">2% PERMITIDO - DATO 2</div>
-            <input type="number" id="dos-pct-in-2" oninput="calcularDosPctIndividual(2)" onfocus="this.select()" value="0" placeholder="Ej. 3000"
-                   style="width: 120px; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none; margin-top: 4px;" />
-        </div>
-        <div style="text-align: right;">
-            <span style="font-size: 10px; color: #aaa; display: block; font-weight: bold;">RESULTADO 2%:</span>
-            <span id="dos-pct-res-2" style="font-size: 26px; font-weight: 900; color: #7CFFB2;">0</span>
-        </div>
-    </div>
-</div>
 
 
 
@@ -3275,7 +3247,36 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <div id="polys-8" class="p-content" style="display:none;">{gen_poligonos(u_C1_SMD1)}</div>
         <div id="polys-1" class="p-content" style="display:none;">{gen_poligonos(u_PREC)}</div>
         <div id="polys-5" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX2)}</div>
-        <!-- 🟢 CALCULADORA ULTRA-COMPACTA PARA EXTENDIDO (TAB 4) CON BUSCADOR INTEGRADO -->
+
+        <!-- ⚡ CALCULADORAS MINIMALISTAS DE 2% (EXCLUSIVAS DE RUTEO SISTÉMICO) -->
+        <div id="calculadoras-dos-pct-sistemico" style="display: none; max-width: 780px; margin: 0 auto 15px auto; gap: 15px;">
+            <!-- Recuadro 1 -->
+            <div style="flex: 1; background: #1e2022; padding: 14px 18px; border-radius: 10px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                <div>
+                    <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px;">2% PERMITIDO - DATO 1</div>
+                    <input type="number" id="dos-pct-in-1" oninput="calcularDosPctIndividual(1)" onfocus="this.select()" value="0" placeholder="Ej. 1500"
+                           style="width: 120px; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none; margin-top: 4px;" />
+                </div>
+                <div style="text-align: right;">
+                    <span style="font-size: 10px; color: #aaa; display: block; font-weight: bold;">RESULTADO 2%:</span>
+                    <span id="dos-pct-res-1" style="font-size: 26px; font-weight: 900; color: #7CFFB2;">0</span>
+                </div>
+            </div>
+
+            <!-- Recuadro 2 -->
+            <div style="flex: 1; background: #1e2022; padding: 14px 18px; border-radius: 10px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                <div>
+                    <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px;">2% PERMITIDO - DATO 2</div>
+                    <input type="number" id="dos-pct-in-2" oninput="calcularDosPctIndividual(2)" onfocus="this.select()" value="0" placeholder="Ej. 3000"
+                           style="width: 120px; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none; margin-top: 4px;" />
+                </div>
+                <div style="text-align: right;">
+                    <span style="font-size: 10px; color: #aaa; display: block; font-weight: bold;">RESULTADO 2%:</span>
+                    <span id="dos-pct-res-2" style="font-size: 26px; font-weight: 900; color: #7CFFB2;">0</span>
+                </div>
+            </div>
+        </div>
+        
         <!-- 🟢 CALCULADORA EXPANDIDA Y ULTRA-LEGIBLE PARA RUTEO SISTÉMICO (TAB 4) -->
         <div id="polys-4" class="p-content" style="display:none; max-width: 780px; margin: 0 auto; background: #1e2022; padding: 25px; border-radius: 14px; border: 2px solid #34383d; box-shadow: 0 6px 20px rgba(0,0,0,0.5);">
             <div style="font-size: 18px; font-weight: 800; color: #20B2AA; text-align: center; margin-bottom: 18px; border-bottom: 2px solid #34383d; padding-bottom: 10px; letter-spacing: 0.8px;">
@@ -3291,19 +3292,18 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                 </thead>
                 <tbody>
                     <tr>
-                        <!-- Columna 1: Entrada de Volumen Editable (Aumentado) -->
+                        <!-- Columna 1: Entrada de Volumen Editable -->
                         <td style="padding: 18px; border: 1px solid #42474e; text-align: center; vertical-align: middle; background: #292c30;">
                             <div style="font-size: 12px; font-weight: bold; color: #bbb; margin-bottom: 6px;">VOLUMEN:</div>
                             <input type="number" id="ext-volumen-in" oninput="calcularExtendidoRapido()" onfocus="this.select()" value="0" placeholder="Ej. 250"
                                    style="width: 140px; padding: 10px; font-size: 28px; font-weight: 800; text-align: center; border-radius: 8px; border: 2px solid #20B2AA; background: #141414; color: #FFD700; outline: none;" />
                         </td>
 
-                        <!-- Columna 2: Buscador e Input de SPR (Aumentado) -->
+                        <!-- Columna 2: Buscador e Input de SPR -->
                         <td style="padding: 18px; border: 1px solid #42474e; background: #292c30; vertical-align: middle;">
                             <div style="display: flex; flex-direction: column; gap: 12px;">
                                 <div>
                                     <div style="font-size: 12px; font-weight: bold; color: #bbb; margin-bottom: 6px;">BUSCAR / SELECCIONAR UNIDAD:</div>
-                                    <!-- Buscador y Selector de mayor tamaño -->
                                     <input type="text" id="ext-unidad-input" list="lista-unidades-ext" onchange="seleccionarUnidadBuscador()" oninput="validarAutoAjusteSpr()" onfocus="this.select()" placeholder="Escribe para buscar (ej: car, 120, rental)..."
                                            style="width: 100%; box-sizing: border-box; padding: 11px 14px; font-size: 16px; font-weight: bold; border-radius: 8px; border: 2px solid #20B2AA; background: #141414; color: #7CFFB2; outline: none;" />
                                     
@@ -3321,7 +3321,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                 </tbody>
             </table>
 
-            <!-- Tarjeta de Resultado en Tamaño XL -->
+            <!-- Tarjeta de Resultado -->
             <div style="margin-top: 18px; background: #141414; padding: 16px; border-radius: 10px; border: 2px solid #20B2AA; text-align: center;">
                 <span style="font-size: 13px; font-weight: 800; color: #aaa; display: block; letter-spacing: 1px;">🚚 UNIDADES NECESARIAS:</span>
                 <span id="ext-resultado-unidades" style="font-size: 46px; font-weight: 900; color: #7CFFB2; display: inline-block; margin: 4px 0;">0</span>
@@ -3398,19 +3398,19 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
 
     function cambiarCiclo(valorTab) {{
-        // 1. Ocultar todas las tablas de disponibilidad superiores
+        // 1. Ocultar tablas de disponibilidad superiores
         document.querySelectorAll('.t-content').forEach(el => {{
             el.style.display = 'none';
         }});
 
-        // 2. Ocultar todos los bloques de polígonos
+        // 2. Ocultar bloques de polígonos
         document.querySelectorAll('.p-content').forEach(el => {{
             el.style.display = 'none';
         }});
 
         currentTab = parseInt(valorTab);
 
-        // Captura de elementos a controlar
+        // Captura de elementos
         const tituloPoligonos = document.getElementById('titulo-planificacion-poligonos');
         const resumenFlota = document.getElementById('resumen-flota-ruteada');
         const botonesSuperiores = document.getElementById('fleet-drag-handle');
@@ -3420,7 +3420,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
         // 3. Control de Visibilidad para SISTÉMICO (ID 4)
         if (currentTab === 4) {{
-            // Ocultar elementos que no corresponden
             const tablaExt = document.getElementById('tab-4');
             if (tablaExt) tablaExt.style.display = 'none';
             if (tituloPoligonos) tituloPoligonos.style.display = 'none';
@@ -3428,13 +3427,12 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             if (botonesSuperiores) botonesSuperiores.style.display = 'none';
             if (dosPctTradicional) dosPctTradicional.style.display = 'none';
 
-            // 🟢 MOSTRAR LAS 2 CAJAS DE 2% Y LA CALCULADORA PRINCIPAL AL MISMO TIEMPO
+            // 🟢 MUESTRA AMBAS EN PANTALLA AL MISMO TIEMPO
             if (dosPctSistemico) dosPctSistemico.style.display = 'flex';
             if (calcSistemica) calcSistemica.style.display = 'block';
 
             poblarSelectExtendido();
         }} else {{
-            // Mostrar interfaz estándar para los demás ruteos
             const tablaActiva = document.getElementById('tab-' + valorTab);
             if (tablaActiva) tablaActiva.style.display = 'block';
             if (tituloPoligonos) tituloPoligonos.style.display = 'block';
@@ -3442,10 +3440,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             if (botonesSuperiores) botonesSuperiores.style.display = 'flex';
             if (dosPctTradicional) dosPctTradicional.style.display = 'block';
 
-            // Ocultar recuadros del 2% sistémico
             if (dosPctSistemico) dosPctSistemico.style.display = 'none';
 
-            // Mostrar el bloque correspondiente si no es sistémico
             const polyActivo = document.getElementById('polys-' + valorTab);
             if (polyActivo) polyActivo.style.display = 'block';
         }}
@@ -3455,8 +3451,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         }}
     }}
 
-
-    // 🟢 Cálculo dinámico del 2% para los recuadros de Sistémico
+    // 🟢 Cálculo dinámico del 2%
     function calcularDosPctIndividual(idIndex) {{
         const inputVal = parseFloat(document.getElementById(`dos-pct-in-${{idIndex}}`)?.value) || 0;
         const resDisplay = document.getElementById(`dos-pct-res-${{idIndex}}`);
@@ -3466,6 +3461,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             resDisplay.innerText = resultado.toLocaleString();
         }}
     }}
+
+
 
 
     // 🟢 FUNCIÓN LIMPIAR PANTALLA COMPLETA
