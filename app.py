@@ -2857,8 +2857,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     </div>
 
 
-
-<!-- 📊 CONTENEDOR 2% TRADICIONAL (SE MUESTRA EN PESTAÑAS REGULARES) -->
 <div id="dos-pct-global"
      style="
         background:#f5f5f5;
@@ -2870,37 +2868,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         font-weight:bold;
         color:#25282b;">
 </div>
-
-<!-- ⚡ CALCULADORAS MINIMALISTAS DE 2% (EXCLUSIVAS DE RUTEO SISTÉMICO) -->
-<div id="calculadoras-dos-pct-sistemico" style="display: none; max-width: 780px; margin: 0 auto 15px auto; gap: 15px;">
-    <!-- Recuadro 1 -->
-    <div style="flex: 1; background: #1e2022; padding: 14px 18px; border-radius: 10px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-        <div>
-            <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px;">2% PERMITIDO - DATO 1</div>
-            <input type="number" id="dos-pct-in-1" oninput="calcularDosPctIndividual(1)" onfocus="this.select()" value="0" placeholder="Ej. 1500"
-                   style="width: 120px; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none; margin-top: 4px;" />
-        </div>
-        <div style="text-align: right;">
-            <span style="font-size: 10px; color: #aaa; display: block; font-weight: bold;">RESULTADO 2%:</span>
-            <span id="dos-pct-res-1" style="font-size: 26px; font-weight: 900; color: #7CFFB2;">0</span>
-        </div>
-    </div>
-
-    <!-- Recuadro 2 -->
-    <div style="flex: 1; background: #1e2022; padding: 14px 18px; border-radius: 10px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-        <div>
-            <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px;">2% PERMITIDO - DATO 2</div>
-            <input type="number" id="dos-pct-in-2" oninput="calcularDosPctIndividual(2)" onfocus="this.select()" value="0" placeholder="Ej. 3000"
-                   style="width: 120px; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none;" />
-        </div>
-        <div style="text-align: right;">
-            <span style="font-size: 10px; color: #aaa; display: block; font-weight: bold;">RESULTADO 2%:</span>
-            <span id="dos-pct-res-2" style="font-size: 26px; font-weight: 900; color: #7CFFB2;">0</span>
-        </div>
-    </div>
-</div>
-
-
 
 
 
@@ -3399,6 +3366,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     }}
 
 
+
     function cambiarCiclo(valorTab) {{
         // 1. Ocultar todas las tablas de disponibilidad superiores
         document.querySelectorAll('.t-content').forEach(el => {{
@@ -3412,51 +3380,35 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
         currentTab = parseInt(valorTab);
 
-        // Captura de elementos a controlar
+        // 3. Control de visibilidad para SISTÉMICO (ID 4)
         const tituloPoligonos = document.getElementById('titulo-planificacion-poligonos');
-        const resumenFlota = document.getElementById('resumen-flota-ruteada');
-        const botonesSuperiores = document.getElementById('fleet-drag-handle');
-        const dosPctTradicional = document.getElementById('dos-pct-global');
-        const dosPctSistemico = document.getElementById('calculadoras-dos-pct-sistemico');
-        const calcSistemica = document.getElementById('polys-4');
 
-        // 3. Control de Visibilidad para SISTÉMICO (ID 4)
         if (currentTab === 4) {{
-            // Ocultar elementos innecesarios
+            // Oculta la tabla superior y el encabezado de polígonos
             const tablaExt = document.getElementById('tab-4');
             if (tablaExt) tablaExt.style.display = 'none';
             if (tituloPoligonos) tituloPoligonos.style.display = 'none';
-            if (resumenFlota) resumenFlota.style.display = 'none';
-            if (botonesSuperiores) botonesSuperiores.style.display = 'none';
-            if (dosPctTradicional) dosPctTradicional.style.display = 'none';
-
-            // 🟢 MOSTRAR AMBAS CALCULADORAS AL MISMO TIEMPO
-            if (dosPctSistemico) dosPctSistemico.style.display = 'flex';
-            if (calcSistemica) calcSistemica.style.display = 'block';
 
             poblarSelectExtendido();
         }} else {{
-            // Restaurar interfaz estándar para los demás ruteos
+            // Muestra la tabla superior activa y restaura el encabezado
             const tablaActiva = document.getElementById('tab-' + valorTab);
-            if (tablaActiva) tablaActiva.style.display = 'block';
+            if (tablaActiva) {{
+                tablaActiva.style.display = 'block';
+            }}
             if (tituloPoligonos) tituloPoligonos.style.display = 'block';
-            if (resumenFlota) resumenFlota.style.display = 'flex';
-            if (botonesSuperiores) botonesSuperiores.style.display = 'flex';
-            if (dosPctTradicional) dosPctTradicional.style.display = 'block';
+        }}
 
-            // Ocultar recuadros del 2% sistémico
-            if (dosPctSistemico) dosPctSistemico.style.display = 'none';
-
-            // Mostrar el bloque correspondiente si no es sistémico
-            const polyActivo = document.getElementById('polys-' + valorTab);
-            if (polyActivo) polyActivo.style.display = 'block';
+        // 4. Mostrar el panel correspondiente
+        const polyActivo = document.getElementById('polys-' + valorTab);
+        if (polyActivo) {{
+            polyActivo.style.display = 'block';
         }}
 
         if (typeof recalc === 'function') {{
             recalc();
         }}
     }}
-    
     
 
 
@@ -3630,18 +3582,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             cerrarModalNotasSVC();
         }} catch (err) {{
             alert("❌ Error al procesar la solicitud.");
-        }}
-    }}
-
-
-    // 🟢 Cálculo dinámico del 2% para los recuadros de Sistémico
-    function calcularDosPctIndividual(idIndex) {{
-        const inputVal = parseFloat(document.getElementById(`dos-pct-in-${{idIndex}}`)?.value) || 0;
-        const resDisplay = document.getElementById(`dos-pct-res-${{idIndex}}`);
-
-        if (resDisplay) {{
-            let resultado = Math.round(inputVal * 0.02);
-            resDisplay.innerText = resultado.toLocaleString();
         }}
     }}
 
