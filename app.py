@@ -3250,7 +3250,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     <!-- 🟢 CONTENEDOR UNIFICADO Y VISIBLE PARA RUTEO SISTÉMICO (TAB 4) -->
     <div id="polys-4" class="p-content" style="display:none;">
         
-        <!-- ⚡ 1. CALCULADORAS MINIMALISTAS DE 2% (ARRIBA) -->
+        <!-- ⚡ 1. CALCULADORAS MINIMALISTAS DE 2% (ARRIBA - VISIBLE CON FLEX) -->
         <div id="calculadoras-dos-pct-sistemico" style="display: flex; max-width: 780px; margin: 0 auto 15px auto; gap: 15px;">
             <!-- Recuadro 1 -->
             <div style="flex: 1; background: #1e2022; padding: 14px 18px; border-radius: 10px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
@@ -3402,12 +3402,12 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
 
     function cambiarCiclo(valorTab) {{
-        // 1. Ocultar tablas de disponibilidad superiores
+        // 1. Ocultar todas las tablas de disponibilidad superiores
         document.querySelectorAll('.t-content').forEach(el => {{
             el.style.display = 'none';
         }});
 
-        // 2. Ocultar todos los paneles inferiores
+        // 2. Ocultar todos los bloques de polígonos/paneles inferiores
         document.querySelectorAll('.p-content').forEach(el => {{
             el.style.display = 'none';
         }});
@@ -3420,8 +3420,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         const botonesSuperiores = document.getElementById('fleet-drag-handle');
         const dosPctTradicional = document.getElementById('dos-pct-global');
 
-        // 3. Control de visibilidad para SISTÉMICO (ID 4)
-        if (currentTab === 4) {{
+        // 3. Control de Visibilidad según la pestaña seleccionada
+        if (currentTab === 4) {{ // SISTÉMICO
             const tablaExt = document.getElementById('tab-4');
             if (tablaExt) tablaExt.style.display = 'none';
             if (tituloPoligonos) tituloPoligonos.style.display = 'none';
@@ -3429,8 +3429,9 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             if (botonesSuperiores) botonesSuperiores.style.display = 'none';
             if (dosPctTradicional) dosPctTradicional.style.display = 'none';
 
+            // Poblar las opciones del autocompletado
             poblarSelectExtendido();
-        }} else {{
+        }} else {{ // RESTO DE RUTEOS (SMX5, SJA1, SMX2, ETC.)
             const tablaActiva = document.getElementById('tab-' + valorTab);
             if (tablaActiva) tablaActiva.style.display = 'block';
             if (tituloPoligonos) tituloPoligonos.style.display = 'block';
@@ -3439,7 +3440,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             if (dosPctTradicional) dosPctTradicional.style.display = 'block';
         }}
 
-        // 4. MUESTRA EL PANEL COMPLETO SISTÉMICO (polys-4 contiene las 2 tarjetas de 2% + la calculadora)
+        // 4. Encender el panel inferior correspondiente
         const polyActivo = document.getElementById('polys-' + valorTab);
         if (polyActivo) {{
             polyActivo.style.display = 'block';
