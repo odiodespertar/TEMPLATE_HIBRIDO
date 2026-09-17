@@ -3247,10 +3247,10 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     <div id="polys-1" class="p-content" style="display:none;">{gen_poligonos(u_PREC)}</div>
     <div id="polys-5" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX2)}</div>
 
-    <!-- 🟢 CONTENEDOR UNIFICADO SISTÉMICO (TAB 4) -->
+    <!-- 🟢 CONTENEDOR UNIFICADO Y VISIBLE PARA RUTEO SISTÉMICO (TAB 4) -->
     <div id="polys-4" class="p-content" style="display:none;">
         
-        <!-- ⚡ CALCULADORAS MINIMALISTAS DE 2% (ARRIBA) -->
+        <!-- ⚡ 1. CALCULADORAS MINIMALISTAS DE 2% (ARRIBA) -->
         <div id="calculadoras-dos-pct-sistemico" style="display: flex; max-width: 780px; margin: 0 auto 15px auto; gap: 15px;">
             <!-- Recuadro 1 -->
             <div style="flex: 1; background: #1e2022; padding: 14px 18px; border-radius: 10px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
@@ -3278,8 +3278,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                 </div>
             </div>
         </div>
-
-        <!-- ⚡ CALCULADORA EXPANDIDA Y ULTRA-LEGIBLE DE RUTEO SISTÉMICO (ABAJO) -->
+        
+        <!-- ⚡ 2. CALCULADORA PRINCIPAL DE RUTEO SISTÉMICO (ABAJO) -->
         <div style="max-width: 780px; margin: 0 auto; background: #1e2022; padding: 25px; border-radius: 14px; border: 2px solid #34383d; box-shadow: 0 6px 20px rgba(0,0,0,0.5);">
             <div style="font-size: 18px; font-weight: 800; color: #20B2AA; text-align: center; margin-bottom: 18px; border-bottom: 2px solid #34383d; padding-bottom: 10px; letter-spacing: 0.8px;">
                 ⚡ CALCULADORA RUTEO SISTÉMICO
@@ -3335,7 +3335,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
     <div id="polys-9" class="p-content" style="display:none;">{gen_poligonos(u_C1_VACIA)}</div>
     <div id="polys-10" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX8)}</div>
-
+    
 
         <div id="excel-polys" style="display:none; margin-top:10px;">
             <div style="background:#25282b; color:white; font-weight:bold; text-align:center; padding:8px; font-size:18px; border:1px solid #0f5b84;">
@@ -3407,7 +3407,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             el.style.display = 'none';
         }});
 
-        // 2. Ocultar bloques de polígonos/paneles inferiores
+        // 2. Ocultar todos los paneles inferiores
         document.querySelectorAll('.p-content').forEach(el => {{
             el.style.display = 'none';
         }});
@@ -3420,8 +3420,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         const botonesSuperiores = document.getElementById('fleet-drag-handle');
         const dosPctTradicional = document.getElementById('dos-pct-global');
 
-        // 3. Control de visibilidad según la pestaña
-        if (currentTab === 4) {{ // SISTÉMICO
+        // 3. Control de visibilidad para SISTÉMICO (ID 4)
+        if (currentTab === 4) {{
             const tablaExt = document.getElementById('tab-4');
             if (tablaExt) tablaExt.style.display = 'none';
             if (tituloPoligonos) tituloPoligonos.style.display = 'none';
@@ -3430,7 +3430,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             if (dosPctTradicional) dosPctTradicional.style.display = 'none';
 
             poblarSelectExtendido();
-        }} else {{ // RESTO DE RUTEOS
+        }} else {{
             const tablaActiva = document.getElementById('tab-' + valorTab);
             if (tablaActiva) tablaActiva.style.display = 'block';
             if (tituloPoligonos) tituloPoligonos.style.display = 'block';
@@ -3439,7 +3439,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             if (dosPctTradicional) dosPctTradicional.style.display = 'block';
         }}
 
-        // 4. Mostrar el panel inferior activo (polys-4 contiene las dos calculadoras juntas)
+        // 4. MUESTRA EL PANEL COMPLETO SISTÉMICO (polys-4 contiene las 2 tarjetas de 2% + la calculadora)
         const polyActivo = document.getElementById('polys-' + valorTab);
         if (polyActivo) {{
             polyActivo.style.display = 'block';
@@ -3449,6 +3449,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             recalc();
         }}
     }}
+
 
     // 🟢 Cálculo dinámico del 2%
     function calcularDosPctIndividual(idIndex) {{
