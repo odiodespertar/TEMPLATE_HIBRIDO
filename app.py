@@ -3373,33 +3373,44 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             el.style.display = 'none';
         }});
 
-        // 2. Ocultar todos los bloques de polígonos
+        // 2. Ocultar todos los bloques de polígonos/paneles
         document.querySelectorAll('.p-content').forEach(el => {{
             el.style.display = 'none';
         }});
 
         currentTab = parseInt(valorTab);
 
-        // 3. Control de visibilidad para SISTÉMICO (ID 4)
+        // Elementos a ocultar/mostrar dinámicamente según la pestaña activa
         const tituloPoligonos = document.getElementById('titulo-planificacion-poligonos');
+        const resumenFlota = document.getElementById('resumen-flota-ruteada');
+        const barra2Pct = document.getElementById('dos-pct-global');
+        const botonesSuperiores = document.getElementById('fleet-drag-handle');
 
+        // 3. Ocultar elementos marcados si es SISTÉMICO (ID 4)
         if (currentTab === 4) {{
-            // Oculta la tabla superior y el encabezado de polígonos
             const tablaExt = document.getElementById('tab-4');
             if (tablaExt) tablaExt.style.display = 'none';
             if (tituloPoligonos) tituloPoligonos.style.display = 'none';
+            
+            // Oculta los 3 bloques marcados en amarillo en la imagen
+            if (resumenFlota) resumenFlota.style.display = 'none';
+            if (barra2Pct) barra2Pct.style.display = 'none';
+            if (botonesSuperiores) botonesSuperiores.style.display = 'none';
 
             poblarSelectExtendido();
         }} else {{
-            // Muestra la tabla superior activa y restaura el encabezado
+            // Restaurar para las demás pestañas de ruteo
             const tablaActiva = document.getElementById('tab-' + valorTab);
-            if (tablaActiva) {{
-                tablaActiva.style.display = 'block';
-            }}
+            if (tablaActiva) tablaActiva.style.display = 'block';
             if (tituloPoligonos) tituloPoligonos.style.display = 'block';
+            
+            // Muestra de nuevo los bloques en las otras pestañas
+            if (resumenFlota) resumenFlota.style.display = 'flex';
+            if (barra2Pct) barra2Pct.style.display = 'block';
+            if (botonesSuperiores) botonesSuperiores.style.display = 'flex';
         }}
 
-        // 4. Mostrar el panel correspondiente
+        // 4. Mostrar el panel inferior de la pestaña seleccionada (polys-4 para Sistémico)
         const polyActivo = document.getElementById('polys-' + valorTab);
         if (polyActivo) {{
             polyActivo.style.display = 'block';
