@@ -4792,7 +4792,7 @@ document.addEventListener('keydown', function(event) {{
 
     // 🟢 Actualizar el atributo data-disp en tiempo real cuando escribas en el campo de Disponibles
     function actualizarDispValor(idx) {{
-        const elDisp = document.getElementById(`sis-disp-${idx}`);
+        const elDisp = document.getElementById(`sis-disp-${{idx}}`);
         const fila = elDisp?.closest('tr');
         if (elDisp && fila) {{
             let val = parseInt(elDisp.innerText) || 0;
