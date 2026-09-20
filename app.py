@@ -4802,7 +4802,7 @@ document.addEventListener('keydown', function(event) {{
 
     // 🟢 Incrementar contador de unidades usadas (+1)
     function sumarUnidadHibrida(idx) {{
-        const elUsadas = document.getElementById(`sis-usadas-${idx}`);
+        const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
         if (elUsadas) {{
             let val = parseInt(elUsadas.innerText) || 0;
             elUsadas.innerText = val + 1;
@@ -4812,9 +4812,9 @@ document.addEventListener('keydown', function(event) {{
 
     // 🟢 Cálculo matemático automático por fila (Volumen ÷ SPR)
     function calcularFilaHibrida(idx) {{
-        const elSpr = parseFloat(document.getElementById(`sis-spr-${idx}`)?.value) || 0;
-        const elVol = parseFloat(document.getElementById(`sis-vol-${idx}`)?.value) || 0;
-        const elRes = document.getElementById(`sis-res-${idx}`);
+        const elSpr = parseFloat(document.getElementById(`sis-spr-${{idx}}`)?.value) || 0;
+        const elVol = parseFloat(document.getElementById(`sis-vol-${{idx}}`)?.value) || 0;
+        const elRes = document.getElementById(`sis-res-${{idx}}`);
 
         if (elRes) {{
             if (elVol > 0 && elSpr > 0) {{
