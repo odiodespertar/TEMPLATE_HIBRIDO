@@ -1701,7 +1701,8 @@ CATALOGO_SISTEMICO = {
     "Small Van 11h Ext": [70, 70],
     "Small Van 9h": [70, 70],
     "Small Van 9h Ext": [70, 70],
-    "Small Van Newbie": [70, 70]
+    "Small Van Newbie": [70, 70],
+    "Media Milla SP": [1, 1]
 }
 
 def gen_rows_hibrido_sistemico():
