@@ -1671,43 +1671,58 @@ def gen_master_rows(data_dict, table_id):
 
 
 
-# --- DICCIONARIO DE UNIDADES Y TURNO PARA SISTÉMICO ---
+# --- CATÁLOGO COMPLETO DE 31 UNIDADES CON SPR [MIN, MAX] ---
 CATALOGO_SISTEMICO = {
-    "Large Van MLP SDD": {"tag": "Fija | 8 hs", "spr": 120, "disp": 25},
-    "Small Van MLP SDD": {"tag": "Fija | 8 hs", "spr": 120, "disp": 13},
-    "Small Van 9h Extra Extendida": {"tag": "Extra | 9 hs", "spr": 70, "disp": 12},
-    "Rental Electric Large Van": {"tag": "Fija | 8 hs", "spr": 150, "disp": 9},
-    "Rental Large Van": {"tag": "Fija | 8 hs", "spr": 120, "disp": 9},
-    "Small Van": {"tag": "Variable | 8 hs", "spr": 70, "disp": 20},
-    "Delivery Cells Truck 3.5 ton": {"tag": "Variable | 6 hs", "spr": 1, "disp": 1},
-    "Extra Large Van MLP H&B": {"tag": "Fija | 8 hs", "spr": 100, "disp": 1},
-    "Large Van": {"tag": "Variable | 8 hs", "spr": 120, "disp": 1},
-    "Car MLP": {"tag": "Variable | 8 hs", "spr": 110, "disp": 15},
-    "Car 8h": {"tag": "Fija | 8 hs", "spr": 70, "disp": 30},
-    "Car Newbie": {"tag": "Fija | 6 hs", "spr": 50, "disp": 10},
-    "Car Zona Extendida": {"tag": "Fija | 8 hs", "spr": 60, "disp": 10},
-    "Moto 3h": {"tag": "Variable | 3 hs", "spr": 30, "disp": 15},
-    "Moto Newbie": {"tag": "Fija | 3 hs", "spr": 25, "disp": 5}
+    "Car MLP": [110, 120],
+    "Small Van MLP": [110, 120],
+    "Large Van MLP": [110, 120],
+    "Small Van MLP Newbie": [110, 120],
+    "Large Van MLP Newbie": [110, 120],
+    "Extra large Van MLP": [110, 120],
+    "Small Van MLP XPT": [110, 120],
+    "Small Van MLP foráneo": [110, 120],
+    "Large Van MLP foráneo": [110, 120],
+    "Car MLP foráneo": [110, 120],
+    "Extra large Van MLP H&B": [100, 100],
+    "Rental Car": [120, 150],
+    "Rental Electric Large Van": [120, 150],
+    "Rental Large Van": [120, 150],
+    "Rental Replacement": [120, 150],
+    "Rental Small Van Electrica": [120, 150],
+    "Rental Small Van": [120, 150],
+    "Delivery Cells Car": [1, 1],
+    "Truck 3.5 tons MLP": [1, 1],
+    "Delivery Cell Large Van": [1, 1],
+    "Car 8h": [70, 70],
+    "Car Newbie": [50, 50],
+    "Car Zona Extendida": [60, 60],
+    "Car 3h": [30, 30],
+    "Car 5h": [30, 30],
+    "Moto 3h": [30, 30],
+    "Moto Newbie": [25, 25],
+    "Small Van 11h Ext": [70, 70],
+    "Small Van 9h": [70, 70],
+    "Small Van 9h Ext": [70, 70],
+    "Small Van Newbie": [70, 70]
 }
 
 def gen_rows_hibrido_sistemico():
     html_rows = ""
-    for idx, (nombre, info) in enumerate(CATALOGO_SISTEMICO.items()):
+    for idx, (nombre, spr) in enumerate(CATALOGO_SISTEMICO.items()):
         html_rows += f'''
-        <tr style="border-bottom: 1px solid #34383d; height: 52px;">
-            <!-- 1. Nombre de la Unidad y Perfil -->
+        <tr class="fila-hibrida-sis" data-disp="0" style="border-bottom: 1px solid #34383d; height: 44px; display: none;">
+            <!-- 1. Nombre de la Unidad (Minimalista sin subtítulo) -->
             <td style="padding: 8px 12px; text-align: left;">
                 <div style="font-weight: 800; font-size: 14px; color: #ffffff;">{nombre}</div>
-                <div style="font-size: 11px; color: #94a3b8; font-weight: 600;">{info["tag"]}</div>
             </td>
 
             <!-- 2. SPR Máximo Editable -->
             <td style="text-align: center; padding: 6px;">
-                <input type="number" id="sis-spr-{idx}" value="{info['spr']}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
+                <input type="number" id="sis-spr-{idx}" value="{spr[1]}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
                        style="width: 65px; text-align: center; padding: 4px; font-weight: 800; border-radius: 6px; border: 1px solid #475569; background: #141414; color: #20B2AA; outline: none;" />
             </td>
 
-            <!-- 3. Unidades Usadas de Disponibles (0 de X) -->
+            <!-- 3. Unidades Usadas vs Disponibles (Inicia en 0) -->
             <td style="text-align: center; padding: 6px;">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
                     <span contenteditable="true" id="sis-usadas-{idx}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
@@ -1718,8 +1733,8 @@ def gen_rows_hibrido_sistemico():
                     
                     <span style="color: #94a3b8; font-size: 13px; font-weight: bold;">de</span>
                     
-                    <span contenteditable="true" id="sis-disp-{idx}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
-                          style="font-weight: 800; font-size: 15px; color: #ffffff; min-width: 24px; text-align: center; background: #141414; border: 1px solid #475569; border-radius: 4px; padding: 2px 4px;">{info['disp']}</span>
+                    <span contenteditable="true" id="sis-disp-{idx}" oninput="actualizarDispValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
+                          style="font-weight: 800; font-size: 15px; color: #ffffff; min-width: 24px; text-align: center; background: #141414; border: 1px solid #475569; border-radius: 4px; padding: 2px 4px;">0</span>
                 </div>
             </td>
 
@@ -4757,17 +4772,60 @@ document.addEventListener('keydown', function(event) {{
 
 
 
+    // 🟢 Filtrado dinámico de filas para ACTIVAS (DISP > 0) y TODAS
     function filterRows(onlyActive) {{
-        // 1. Filtrar las filas de la tabla de disponibilidad de flota (Derecha)
-        const rows = document.querySelectorAll('#body-' + currentTab + ' .master-row');
-        rows.forEach(row => {{
-            const stock = parseInt(row.querySelector('.f-stock').innerText) || 0;
+        // 1. Filtrar filas de la flota tradicional en la tabla derecha
+        const rowsMaster = document.querySelectorAll('#body-' + currentTab + ' .master-row');
+        rowsMaster.forEach(row => {{
+            const stock = parseInt(row.querySelector('.f-stock')?.innerText) || 0;
             row.style.display = (onlyActive && stock === 0) ? 'none' : '';
         }});
-        
-        // La lógica de polígonos fue eliminada para que no interfiera.
+
+        // 2. Filtrar filas de la Tabla Híbrida de Sistémico según el campo DISP
+        const rowsSistemico = document.querySelectorAll('.fila-hibrida-sis');
+        rowsSistemico.forEach(row => {{
+            const dispVal = parseInt(row.getAttribute('data-disp')) || 0;
+            row.style.display = (onlyActive && dispVal === 0) ? 'none' : 'table-row';
+        }});
     }}
 
+
+    // 🟢 Actualizar el atributo data-disp en tiempo real cuando escribas en el campo de Disponibles
+    function actualizarDispValor(idx) {{
+        const elDisp = document.getElementById(`sis-disp-${idx}`);
+        const fila = elDisp?.closest('tr');
+        if (elDisp && fila) {{
+            let val = parseInt(elDisp.innerText) || 0;
+            fila.setAttribute('data-disp', val);
+        }}
+    }}
+
+    // 🟢 Incrementar contador de unidades usadas (+1)
+    function sumarUnidadHibrida(idx) {{
+        const elUsadas = document.getElementById(`sis-usadas-${idx}`);
+        if (elUsadas) {{
+            let val = parseInt(elUsadas.innerText) || 0;
+            elUsadas.innerText = val + 1;
+            calcularFilaHibrida(idx);
+        }}
+    }}
+
+    // 🟢 Cálculo matemático automático por fila (Volumen ÷ SPR)
+    function calcularFilaHibrida(idx) {{
+        const elSpr = parseFloat(document.getElementById(`sis-spr-${idx}`)?.value) || 0;
+        const elVol = parseFloat(document.getElementById(`sis-vol-${idx}`)?.value) || 0;
+        const elRes = document.getElementById(`sis-res-${idx}`);
+
+        if (elRes) {{
+            if (elVol > 0 && elSpr > 0) {{
+                let calc = Math.ceil(elVol / elSpr);
+                elRes.innerText = calc;
+            }} else {{
+                elRes.innerText = "0";
+            }}
+        }}
+    }}
+    
 
 
             
