@@ -1708,49 +1708,47 @@ def gen_rows_hibrido_sistemico():
     html_rows = ""
     for idx, (nombre, spr) in enumerate(CATALOGO_SISTEMICO.items()):
         html_rows += f'''
-        <tr class="fila-hibrida-sis" data-disp="0" style="border-bottom: 1px solid #f2f4f7; height: 58px; transition: background 0.15s ease;">
-            <!-- 1. Nombre de la Unidad (Resalta suave en Semi-Bold, sin verse tosco) -->
+        <tr class="fila-hibrida-sis" data-disp="0" style="border-bottom: 1px solid #f2f4f7; height: 60px; transition: background 0.15s ease;">
+            <!-- 1. Nombre de la Unidad (Semi-Bold de 16px) -->
             <td style="padding: 12px 10px; text-align: left; vertical-align: middle;">
                 <div contenteditable="true" class="edit-name-sis" id="sis-nombre-{idx}" oninput="sincronizarTotalesSistemico()" onfocus="this.select()"
-                     style="font-weight: 600; font-size: 15px; color: #1e293b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; outline: none; border-bottom: 1px dashed transparent; transition: border-color 0.2s;"
+                     style="font-weight: 600; font-size: 16px; color: #1e293b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; outline: none; border-bottom: 1px dashed transparent; transition: border-color 0.2s;"
                      onmouseenter="this.style.borderColor='#0f766e';" onmouseleave="this.style.borderColor='transparent';">
                     {nombre}
                 </div>
             </td>
 
-            <!-- 2. SPR Máximo Editable (Gris sutil y liviano) -->
+            <!-- 2. SPR Máximo Editable (Gris liviano 15px) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <input type="number" id="sis-spr-{idx}" value="{spr[1]}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
-                       style="width: 60px; text-align: center; padding: 4px 2px; font-weight: 400; font-size: 14px; border: none; border-bottom: 1px solid #e2e8f0; background: transparent; color: #94a3b8; outline: none;" />
+                       style="width: 60px; text-align: center; padding: 4px 2px; font-weight: 400; font-size: 15px; border: none; border-bottom: 1px solid #e2e8f0; background: transparent; color: #94a3b8; outline: none;" />
             </td>
 
-            <!-- 3. Usadas de Disponibles (El primer '0' resalta en Semi-Bold, el resto en gris ligero) -->
+            <!-- 3. Usadas de Disponibles (17.5px destacado / 16px) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 5px;">
-                    <!-- Primer 0: Resalta limpio -->
                     <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{idx}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
-                          style="font-weight: 600; font-size: 16px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 22px; text-align: center; outline: none; padding: 2px 3px; border-bottom: 1px solid #cbd5e1;">0</span>
+                          style="font-weight: 600; font-size: 17.5px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 24px; text-align: center; outline: none; padding: 2px 3px; border-bottom: 1px solid #cbd5e1;">0</span>
                     
                     <button onclick="sumarUnidadHibrida({idx})" 
-                            style="cursor: pointer; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; font-weight: 600; border-radius: 50%; width: 22px; height: 22px; line-height: 20px; font-size: 13px; padding: 0; display: inline-flex; align-items: center; justify-content: center; transition: all 0.15s;">+</button>
+                            style="cursor: pointer; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; font-weight: 600; border-radius: 50%; width: 23px; height: 23px; line-height: 21px; font-size: 14px; padding: 0; display: inline-flex; align-items: center; justify-content: center; transition: all 0.15s;">+</button>
                     
-                    <span style="color: #94a3b8; font-size: 13px; font-weight: 400; padding: 0 1px;">de</span>
+                    <span style="color: #94a3b8; font-size: 14px; font-weight: 400; padding: 0 1px;">de</span>
                     
-                    <!-- Segundo 0: Gris secundario suave -->
                     <span contenteditable="true" class="disp-sis" id="sis-disp-{idx}" oninput="actualizarDispValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
-                          style="font-weight: 400; font-size: 15px; color: #64748b; min-width: 22px; text-align: center; outline: none; padding: 2px 3px; border-bottom: 1px solid #e2e8f0;">0</span>
+                          style="font-weight: 400; font-size: 16px; color: #64748b; min-width: 24px; text-align: center; outline: none; padding: 2px 3px; border-bottom: 1px solid #e2e8f0;">0</span>
                 </div>
             </td>
 
-            <!-- 4. Volumen de Paquetes (Línea discreta) -->
+            <!-- 4. Volumen de Paquetes (16px) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <input type="number" id="sis-vol-{idx}" value="0" oninput="calcularFilaHibrida({idx})" onfocus="this.select()" placeholder="0"
-                       style="width: 75px; text-align: center; padding: 4px 2px; font-weight: 600; font-size: 15px; border: none; border-bottom: 1.5px solid #0f766e; background: #f8fafc; color: #0f766e; outline: none; border-radius: 2px;" />
+                       style="width: 78px; text-align: center; padding: 4px 2px; font-weight: 600; font-size: 16px; border: none; border-bottom: 1.5px solid #0f766e; background: #f8fafc; color: #0f766e; outline: none; border-radius: 2px;" />
             </td>
 
-            <!-- 5. Resultado del Cálculo (Verde limpio) -->
+            <!-- 5. Resultado del Cálculo (18px) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
-                <span id="sis-res-{idx}" style="font-weight: 600; font-size: 17px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
+                <span id="sis-res-{idx}" style="font-weight: 600; font-size: 18px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
             </td>
         </tr>
         '''
@@ -3331,44 +3329,46 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <div id="polys-1" class="p-content" style="display:none;">{gen_poligonos(u_PREC)}</div>
         <div id="polys-5" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX2)}</div>
         
-        <!-- 🟢 CONTENEDOR TABLA HÍBRIDA (ESTILO LISTA MINIMALISTA) -->
+        <!-- 🟢 CONTENEDOR TABLA HÍBRIDA CON MINICALCULADORAS 2% EN GRIS OSCURO -->
         <div id="polys-4" class="p-content" style="display:none;">
             
-            <!-- ⚡ DOS CALCULADORAS INDEPENDIENTES DE 2% (ARRIBA) -->
+            <!-- ⚡ DOS CALCULADORAS INDEPENDIENTES DE 2% (RESTAURO DE FONDO GRIS OSCURO) -->
             <div style="display: flex; max-width: 850px; margin: 0 auto 15px auto; gap: 15px;">
-                <div style="flex: 1; background: #ffffff; padding: 14px 18px; border-radius: 12px; border: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <!-- Recuadro 1 -->
+                <div style="flex: 1; background: #1e2022; padding: 14px 18px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
                     <div>
-                        <div style="font-size: 11px; font-weight: 700; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - DATO 1</div>
+                        <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - DATO 1</div>
                         <input type="number" id="dos-pct-in-1" oninput="calcularDosPctIndividual(1)" onfocus="this.select()" value="0" placeholder="Ej. 1500"
-                               style="width: 110px; padding: 4px 6px; font-size: 18px; font-weight: 700; text-align: center; border: none; border-bottom: 1.5px solid #0f766e; background: #fafafa; color: #1e3a8a; outline: none; margin-top: 4px;" />
+                               style="width: 120px; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none; margin-top: 4px;" />
                     </div>
                     <div style="text-align: right;">
-                        <span style="font-size: 10px; color: #888888; display: block; font-weight: 600;">RESULTADO 2%:</span>
-                        <span id="dos-pct-res-1" style="font-size: 24px; font-weight: 800; color: #16a34a;">0</span>
+                        <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold;">RESULTADO 2%:</span>
+                        <span id="dos-pct-res-1" style="font-size: 26px; font-weight: 900; color: #7CFFB2;">0</span>
                     </div>
                 </div>
 
-                <div style="flex: 1; background: #ffffff; padding: 14px 18px; border-radius: 12px; border: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <!-- Recuadro 2 -->
+                <div style="flex: 1; background: #1e2022; padding: 14px 18px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
                     <div>
-                        <div style="font-size: 11px; font-weight: 700; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - DATO 2</div>
+                        <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - DATO 2</div>
                         <input type="number" id="dos-pct-in-2" oninput="calcularDosPctIndividual(2)" onfocus="this.select()" value="0" placeholder="Ej. 3000"
-                               style="width: 110px; padding: 4px 6px; font-size: 18px; font-weight: 700; text-align: center; border: none; border-bottom: 1.5px solid #0f766e; background: #fafafa; color: #1e3a8a; outline: none; margin-top: 4px;" />
+                               style="width: 120px; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none; margin-top: 4px;" />
                     </div>
                     <div style="text-align: right;">
-                        <span style="font-size: 10px; color: #888888; display: block; font-weight: 600;">RESULTADO 2%:</span>
-                        <span id="dos-pct-res-2" style="font-size: 24px; font-weight: 800; color: #16a34a;">0</span>
+                        <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold;">RESULTADO 2%:</span>
+                        <span id="dos-pct-res-2" style="font-size: 26px; font-weight: 900; color: #7CFFB2;">0</span>
                     </div>
                 </div>
             </div>
 
-            <!-- ⚡ TABLA CALCULADORA MINIMALISTA (ESTILO LISTA BLANCA) -->
+            <!-- ⚡ TABLA CALCULADORA MINIMALISTA (BLANCA) -->
             <div style="max-width: 850px; margin: 0 auto; background: #ffffff; padding: 24px 28px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0,0,0,0.04); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
                 <div style="font-size: 17px; font-weight: 700; color: #111111; margin-bottom: 16px; border-bottom: 1px solid #f0f0f0; padding-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
                     <span>Resumen de flota en <strong>Sistémico</strong></span>
                     <span style="font-size: 12px; color: #888888; font-weight: 500;">Calculadora de Operación</span>
                 </div>
 
-                <table style="width: 100%; border-collapse: collapse; color: #222222; font-size: 13px;">
+                <table style="width: 100%; border-collapse: collapse; color: #222222; font-size: 14px;">
                     <thead>
                         <tr style="height: 40px; color: #777777; font-weight: 600; border-bottom: 1.5px solid #e5e7eb; font-size: 14px;">
                             <th style="padding: 8px 12px; text-align: left; width: 38%; font-weight: 600;">Agendados</th>
