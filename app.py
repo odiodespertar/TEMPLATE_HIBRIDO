@@ -1724,24 +1724,26 @@ def gen_rows_hibrido_sistemico():
                        style="width: 60px; text-align: center; padding: 4px 2px; font-weight: 500; font-size: 15px; border: none; border-bottom: 1px solid #cbd5e1; background: transparent; color: #94a3b8; outline: none;" />
             </td>
 
-            <!-- 3. Usadas de Disponibles (Con botón - a la izquierda y + plano a la derecha) -->
+            <!-- 3. Usadas de Disponibles (Área de Clic Optimizada) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-                    <!-- Botón MENOS -->
-                    <button onclick="restarUnidadHibrida({idx})" 
-                            style="cursor: pointer; background: transparent; color: #475569; border: none; font-weight: 700; font-size: 20px; padding: 0 4px; line-height: 1; user-select: none; transition: color 0.15s;"
-                            onmouseenter="this.style.color='#0f766e';" onmouseleave="this.style.color='#475569';">-</button>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+                    <!-- Botón MENOS con Zona Cómoda de Clic -->
+                    <button onclick="restarUnidadHibrida({idx})" class="btn-step-sis" title="Restar 1"
+                            style="cursor: pointer; background: transparent; color: #475569; border: none; font-weight: 700; font-size: 22px; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
+                            onmouseenter="this.style.background='#f1f5f9'; this.style.color='#0f766e';" 
+                            onmouseleave="this.style.background='transparent'; this.style.color='#475569';">-</button>
 
                     <!-- Primer 0: Usadas (21px) -->
                     <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{idx}" oninput="actualizarUsadasValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
                           style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                     
-                    <!-- Botón MÁS (Plano y más grande) -->
-                    <button onclick="sumarUnidadHibrida({idx})" 
-                            style="cursor: pointer; background: transparent; color: #475569; border: none; font-weight: 700; font-size: 20px; padding: 0 4px; line-height: 1; user-select: none; transition: color 0.15s;"
-                            onmouseenter="this.style.color='#0f766e';" onmouseleave="this.style.color='#475569';">+</button>
+                    <!-- Botón MÁS con Zona Cómoda de Clic -->
+                    <button onclick="sumarUnidadHibrida({idx})" class="btn-step-sis" title="Sumar 1"
+                            style="cursor: pointer; background: transparent; color: #475569; border: none; font-weight: 700; font-size: 22px; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
+                            onmouseenter="this.style.background='#f1f5f9'; this.style.color='#0f766e';" 
+                            onmouseleave="this.style.background='transparent'; this.style.color='#475569';">+</button>
                     
-                    <span style="color: #94a3b8; font-size: 14px; font-weight: 400; padding: 0 1px;">de</span>
+                    <span style="color: #94a3b8; font-size: 14px; font-weight: 400; padding: 0 2px;">de</span>
                     
                     <!-- Segundo 0: Disponibles (21px) -->
                     <span contenteditable="true" class="disp-sis" id="sis-disp-{idx}" oninput="actualizarDispValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
@@ -2532,6 +2534,11 @@ html body .meli-table tbody tr:last-child {{
     vertical-align: middle !important;
 }}
 
+
+.btn-step-sis:active {{
+    transform: scale(0.90);
+    background-color: #e2e8f0 !important;
+}}
 
 
 
