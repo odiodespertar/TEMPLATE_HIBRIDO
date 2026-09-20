@@ -3361,7 +3361,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             <!-- ⚡ DOS CALCULADORAS INDEPENDIENTES DE 2% (DATO 1 DINÁMICO EN LISTA) -->
             <div style="display: flex; max-width: 850px; margin: 0 auto 15px auto; gap: 15px; align-items: flex-start;">
                 
-                <!-- RECUADRO 1: LISTA SUMATORIA DINÁMICA DE 2% (MINIMALISTA) -->
+                <!-- RECUADRO 1: LISTA SUMATORIA DINÁMICA DE 2% (CON VERDE MENTA) -->
                 <div style="flex: 1; background: #ffffff; padding: 16px 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
                         <div>
@@ -3370,7 +3370,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                         </div>
                         <div style="text-align: right;">
                             <span style="font-size: 10px; color: #888888; display: block; font-weight: 600;">RESULTADO 2%:</span>
-                            <span id="dos-pct-res-1" style="font-size: 24px; font-weight: 800; color: #16a34a;">0</span>
+                            <!-- Verde menta neón exacto -->
+                            <span id="dos-pct-res-1" style="font-size: 26px; font-weight: 900; color: #6ee7b7;">0</span>
                         </div>
                     </div>
 
