@@ -1671,7 +1671,7 @@ def gen_master_rows(data_dict, table_id):
 
 
 
-# --- CATÁLOGO COMPLETO DE 31 UNIDADES CON SPR [MIN, MAX] ---
+# --- CATÁLOGO COMPLETO DE 31 UNIDADES (INICIA VISIBLE CON DISP = 0) ---
 CATALOGO_SISTEMICO = {
     "Car MLP": [110, 120],
     "Small Van MLP": [110, 120],
@@ -1710,43 +1710,43 @@ def gen_rows_hibrido_sistemico():
     html_rows = ""
     for idx, (nombre, spr) in enumerate(CATALOGO_SISTEMICO.items()):
         html_rows += f'''
-        <tr class="fila-hibrida-sis" data-disp="0" style="border-bottom: 1px solid #34383d; height: 44px; display: none;">
-            <!-- 1. Nombre de la Unidad (Minimalista sin subtítulo) -->
-            <td style="padding: 8px 12px; text-align: left;">
-                <div style="font-weight: 800; font-size: 14px; color: #ffffff;">{nombre}</div>
+        <tr class="fila-hibrida-sis" data-disp="0" style="border-bottom: 1px solid #34383d; height: 50px; display: table-row;">
+            <!-- 1. Nombre de la Unidad (Letra Ampliada) -->
+            <td style="padding: 10px 14px; text-align: left;">
+                <div class="edit-name-sis" style="font-weight: 800; font-size: 16px; color: #ffffff;">{nombre}</div>
             </td>
 
             <!-- 2. SPR Máximo Editable -->
             <td style="text-align: center; padding: 6px;">
                 <input type="number" id="sis-spr-{idx}" value="{spr[1]}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
-                       style="width: 65px; text-align: center; padding: 4px; font-weight: 800; border-radius: 6px; border: 1px solid #475569; background: #141414; color: #20B2AA; outline: none;" />
+                       style="width: 75px; text-align: center; padding: 6px; font-weight: 800; font-size: 16px; border-radius: 6px; border: 1.5px solid #475569; background: #141414; color: #20B2AA; outline: none;" />
             </td>
 
-            <!-- 3. Unidades Usadas vs Disponibles (Inicia en 0) -->
+            <!-- 3. Unidades Usadas vs Disponibles (Mayor Tamaño de Números) -->
             <td style="text-align: center; padding: 6px;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
-                    <span contenteditable="true" id="sis-usadas-{idx}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
-                          style="font-weight: 900; font-size: 16px; color: #FFD700; min-width: 24px; text-align: center; background: #141414; border: 1px solid #475569; border-radius: 4px; padding: 2px 4px;">0</span>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{idx}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
+                          style="font-weight: 900; font-size: 18px; color: #FFD700; min-width: 28px; text-align: center; background: #141414; border: 1.5px solid #475569; border-radius: 6px; padding: 3px 6px;">0</span>
                     
                     <button onclick="sumarUnidadHibrida({idx})" 
-                            style="cursor: pointer; background: #20B2AA; color: #000; border: none; font-weight: 900; border-radius: 4px; width: 22px; height: 22px; line-height: 22px; font-size: 14px; padding: 0;">+</button>
+                            style="cursor: pointer; background: #20B2AA; color: #000; border: none; font-weight: 900; border-radius: 5px; width: 26px; height: 26px; line-height: 26px; font-size: 16px; padding: 0;">+</button>
                     
-                    <span style="color: #94a3b8; font-size: 13px; font-weight: bold;">de</span>
+                    <span style="color: #94a3b8; font-size: 14px; font-weight: bold;">de</span>
                     
-                    <span contenteditable="true" id="sis-disp-{idx}" oninput="actualizarDispValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
-                          style="font-weight: 800; font-size: 15px; color: #ffffff; min-width: 24px; text-align: center; background: #141414; border: 1px solid #475569; border-radius: 4px; padding: 2px 4px;">0</span>
+                    <span contenteditable="true" class="disp-sis" id="sis-disp-{idx}" oninput="actualizarDispValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
+                          style="font-weight: 800; font-size: 17px; color: #ffffff; min-width: 28px; text-align: center; background: #141414; border: 1.5px solid #475569; border-radius: 6px; padding: 3px 6px;">0</span>
                 </div>
             </td>
 
-            <!-- 4. Volumen de Paquetes (Editable) -->
+            <!-- 4. Volumen de Paquetes (Campo XL) -->
             <td style="text-align: center; padding: 6px;">
                 <input type="number" id="sis-vol-{idx}" value="0" oninput="calcularFilaHibrida({idx})" onfocus="this.select()" placeholder="0"
-                       style="width: 85px; text-align: center; padding: 5px; font-weight: 800; font-size: 15px; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none;" />
+                       style="width: 95px; text-align: center; padding: 6px; font-weight: 800; font-size: 17px; border-radius: 6px; border: 2px solid #20B2AA; background: #141414; color: #FFD700; outline: none;" />
             </td>
 
-            <!-- 5. Unidades Calculadas (Resultado Automático) -->
+            <!-- 5. Unidades Calculadas (Resultado XL) -->
             <td style="text-align: center; padding: 6px;">
-                <span id="sis-res-{idx}" style="font-weight: 900; font-size: 20px; color: #7CFFB2;">0</span>
+                <span id="sis-res-{idx}" style="font-weight: 900; font-size: 22px; color: #7CFFB2;">0</span>
             </td>
         </tr>
         '''
@@ -3365,12 +3365,12 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
                 <table style="width: 100%; border-collapse: collapse; color: white;">
                     <thead>
-                        <tr style="background: #25282b; height: 38px; font-size: 12px; color: #20B2AA; border-bottom: 2px solid #34383d;">
-                            <th style="padding: 8px; text-align: left; width: 32%;">UNIDAD Y TURNO</th>
-                            <th style="padding: 8px; text-align: center; width: 14%;">SPR MAX</th>
-                            <th style="padding: 8px; text-align: center; width: 22%;">USADAS / DISP</th>
-                            <th style="padding: 8px; text-align: center; width: 16%;">VOLUMEN</th>
-                            <th style="padding: 8px; text-align: center; width: 16%;">CÁLCULO</th>
+                        <tr style="background: #25282b; height: 42px; font-size: 14px; color: #20B2AA; border-bottom: 2px solid #34383d;">
+                            <th style="padding: 10px; text-align: left; width: 34%;">UNIDAD</th>
+                            <th style="padding: 10px; text-align: center; width: 14%;">SPR MAX</th>
+                            <th style="padding: 10px; text-align: center; width: 22%;">USADAS / DISP</th>
+                            <th style="padding: 10px; text-align: center; width: 15%;">VOLUMEN</th>
+                            <th style="padding: 10px; text-align: center; width: 15%;">CÁLCULO</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -4772,16 +4772,16 @@ document.addEventListener('keydown', function(event) {{
 
 
 
-    // 🟢 Filtrado dinámico de filas para ACTIVAS (DISP > 0) y TODAS
+    // 🟢 FILTRADO DE ACTIVAS (DISP > 0) Y TODAS (INICIA MOSTRANDO TODAS)
     function filterRows(onlyActive) {{
-        // 1. Filtrar filas de la flota tradicional en la tabla derecha
+        // 1. Filtrado para tablas de flota de otros ruteos
         const rowsMaster = document.querySelectorAll('#body-' + currentTab + ' .master-row');
         rowsMaster.forEach(row => {{
             const stock = parseInt(row.querySelector('.f-stock')?.innerText) || 0;
             row.style.display = (onlyActive && stock === 0) ? 'none' : '';
         }});
 
-        // 2. Filtrar filas de la Tabla Híbrida de Sistémico según el campo DISP
+        // 2. Filtrado para la Tabla Híbrida de Sistémico según la columna DISP
         const rowsSistemico = document.querySelectorAll('.fila-hibrida-sis');
         rowsSistemico.forEach(row => {{
             const dispVal = parseInt(row.getAttribute('data-disp')) || 0;
@@ -4789,8 +4789,7 @@ document.addEventListener('keydown', function(event) {{
         }});
     }}
 
-
-    // 🟢 Actualizar el atributo data-disp en tiempo real cuando escribas en el campo de Disponibles
+    // 🟢 ACTUALIZACIÓN DE DISPONIBILIDAD Y VÍNCULO A TOTALES
     function actualizarDispValor(idx) {{
         const elDisp = document.getElementById(`sis-disp-${{idx}}`);
         const fila = elDisp?.closest('tr');
@@ -4800,7 +4799,6 @@ document.addEventListener('keydown', function(event) {{
         }}
     }}
 
-    // 🟢 Incrementar contador de unidades usadas (+1)
     function sumarUnidadHibrida(idx) {{
         const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
         if (elUsadas) {{
@@ -4810,7 +4808,7 @@ document.addEventListener('keydown', function(event) {{
         }}
     }}
 
-    // 🟢 Cálculo matemático automático por fila (Volumen ÷ SPR)
+    // 🟢 CÁLCULO DE FILA Y VÍNCULO A CONTADORES SUPERIORES (MLP, RENTAL, CAR)
     function calcularFilaHibrida(idx) {{
         const elSpr = parseFloat(document.getElementById(`sis-spr-${{idx}}`)?.value) || 0;
         const elVol = parseFloat(document.getElementById(`sis-vol-${{idx}}`)?.value) || 0;
@@ -4824,6 +4822,46 @@ document.addEventListener('keydown', function(event) {{
                 elRes.innerText = "0";
             }}
         }}
+
+        // Si la pestaña activa es Sistémico (4), sincroniza los contadores superiores de MLP, RENTAL y CAR
+        if (currentTab === 4) {{
+            sincronizarTotalesSistemico();
+        }}
+    }}
+
+    // 🟢 RECALCULAR Y ACTUALIZAR LOS CONTADORES SUPERIORES EN TIEMPO REAL
+    function sincronizarTotalesSistemico() {{
+        let totalMlp = 0;
+        let totalRental = 0;
+        let totalCar = 0;
+
+        document.querySelectorAll('.fila-hibrida-sis').forEach(fila => {{
+            const nombreEl = fila.querySelector('.edit-name-sis');
+            const usadasEl = fila.querySelector('.u-manual-sis');
+            if (!nombreEl || !usadasEl) return;
+
+            const nombre = nombreEl.innerText.toLowerCase().trim();
+            const usadas = parseInt(usadasEl.innerText) || 0;
+
+            if (usadas <= 0) return;
+
+            if (nombre.includes("mlp")) {{
+                totalMlp += usadas;
+            }} else if (nombre.includes("rental")) {{
+                totalRental += usadas;
+            }} else if (nombre.includes("car") || nombre.includes("moto") || nombre.includes("small van") || nombre.includes("newbie")) {{
+                totalCar += usadas;
+            }}
+        }});
+
+        // Actualiza los cuadritos superiores visibles en la cabecera
+        const valMlp = document.getElementById("val-mlp-rute-2");
+        const valRental = document.getElementById("val-rental-rute-2");
+        const valCar = document.getElementById("val-car-rute-2");
+
+        if (valMlp) valMlp.innerText = totalMlp;
+        if (valRental) valRental.innerText = totalRental;
+        if (valCar) valCar.innerText = totalCar;
     }}
     
 
