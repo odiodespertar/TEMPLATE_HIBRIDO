@@ -1708,47 +1708,49 @@ def gen_rows_hibrido_sistemico():
     html_rows = ""
     for idx, (nombre, spr) in enumerate(CATALOGO_SISTEMICO.items()):
         html_rows += f'''
-        <tr class="fila-hibrida-sis" data-disp="0" style="border-bottom: 1px solid #f0f0f0; height: 62px; transition: background 0.15s ease;">
-            <!-- 1. Nombre de la Unidad (Aumentado a 16px) -->
+        <tr class="fila-hibrida-sis" data-disp="0" style="border-bottom: 1px solid #f2f4f7; height: 58px; transition: background 0.15s ease;">
+            <!-- 1. Nombre de la Unidad (Resalta suave en Semi-Bold, sin verse tosco) -->
             <td style="padding: 12px 10px; text-align: left; vertical-align: middle;">
                 <div contenteditable="true" class="edit-name-sis" id="sis-nombre-{idx}" oninput="sincronizarTotalesSistemico()" onfocus="this.select()"
-                     style="font-weight: 700; font-size: 16px; color: #111111; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; outline: none; border-bottom: 1px dashed transparent; transition: border-color 0.2s;"
+                     style="font-weight: 600; font-size: 15px; color: #1e293b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; outline: none; border-bottom: 1px dashed transparent; transition: border-color 0.2s;"
                      onmouseenter="this.style.borderColor='#0f766e';" onmouseleave="this.style.borderColor='transparent';">
                     {nombre}
                 </div>
             </td>
 
-            <!-- 2. SPR Máximo Editable (Gris suave atenuado) -->
+            <!-- 2. SPR Máximo Editable (Gris sutil y liviano) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <input type="number" id="sis-spr-{idx}" value="{spr[1]}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
-                       style="width: 65px; text-align: center; padding: 6px 2px; font-weight: 500; font-size: 15px; border: none; border-bottom: 1px solid #e0e0e0; background: transparent; color: #888888; outline: none;" />
+                       style="width: 60px; text-align: center; padding: 4px 2px; font-weight: 400; font-size: 14px; border: none; border-bottom: 1px solid #e2e8f0; background: transparent; color: #94a3b8; outline: none;" />
             </td>
 
-            <!-- 3. Usadas de Disponibles (Aumentado a 18px y 17px) -->
+            <!-- 3. Usadas de Disponibles (El primer '0' resalta en Semi-Bold, el resto en gris ligero) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 5px;">
+                    <!-- Primer 0: Resalta limpio -->
                     <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{idx}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
-                          style="font-weight: 800; font-size: 18px; color: #111111; min-width: 24px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #b0b0b0;">0</span>
+                          style="font-weight: 600; font-size: 16px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 22px; text-align: center; outline: none; padding: 2px 3px; border-bottom: 1px solid #cbd5e1;">0</span>
                     
                     <button onclick="sumarUnidadHibrida({idx})" 
-                            style="cursor: pointer; background: #f0f0f0; color: #222222; border: 1px solid #cccccc; font-weight: 800; border-radius: 50%; width: 24px; height: 24px; line-height: 22px; font-size: 15px; padding: 0; display: inline-flex; align-items: center; justify-content: center; transition: all 0.15s;">+</button>
+                            style="cursor: pointer; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; font-weight: 600; border-radius: 50%; width: 22px; height: 22px; line-height: 20px; font-size: 13px; padding: 0; display: inline-flex; align-items: center; justify-content: center; transition: all 0.15s;">+</button>
                     
-                    <span style="color: #777777; font-size: 14px; font-weight: 500; padding: 0 2px;">de</span>
+                    <span style="color: #94a3b8; font-size: 13px; font-weight: 400; padding: 0 1px;">de</span>
                     
+                    <!-- Segundo 0: Gris secundario suave -->
                     <span contenteditable="true" class="disp-sis" id="sis-disp-{idx}" oninput="actualizarDispValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
-                          style="font-weight: 700; font-size: 17px; color: #555555; min-width: 24px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #b0b0b0;">0</span>
+                          style="font-weight: 400; font-size: 15px; color: #64748b; min-width: 22px; text-align: center; outline: none; padding: 2px 3px; border-bottom: 1px solid #e2e8f0;">0</span>
                 </div>
             </td>
 
-            <!-- 4. Volumen de Paquetes (Aumentado a 16px) -->
+            <!-- 4. Volumen de Paquetes (Línea discreta) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <input type="number" id="sis-vol-{idx}" value="0" oninput="calcularFilaHibrida({idx})" onfocus="this.select()" placeholder="0"
-                       style="width: 80px; text-align: center; padding: 5px 4px; font-weight: 700; font-size: 16px; border: none; border-bottom: 2px solid #0f766e; background: #fbfbfb; color: #0f766e; outline: none; border-radius: 2px;" />
+                       style="width: 75px; text-align: center; padding: 4px 2px; font-weight: 600; font-size: 15px; border: none; border-bottom: 1.5px solid #0f766e; background: #f8fafc; color: #0f766e; outline: none; border-radius: 2px;" />
             </td>
 
-            <!-- 5. Resultado del Cálculo (Aumentado a 19px) -->
+            <!-- 5. Resultado del Cálculo (Verde limpio) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
-                <span id="sis-res-{idx}" style="font-weight: 800; font-size: 19px; color: #16a34a;">0</span>
+                <span id="sis-res-{idx}" style="font-weight: 600; font-size: 17px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
             </td>
         </tr>
         '''
