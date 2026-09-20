@@ -1724,26 +1724,26 @@ def gen_rows_hibrido_sistemico():
                        style="width: 60px; text-align: center; padding: 4px 2px; font-weight: 500; font-size: 15px; border: none; border-bottom: 1px solid #cbd5e1; background: transparent; color: #94a3b8; outline: none;" />
             </td>
 
-            <!-- 3. Usadas de Disponibles (Área de Clic Optimizada) -->
+            <!-- 3. Usadas de Disponibles (Botones con sombreado turquesa intenso e interactivo) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
-                    <!-- Botón MENOS con Zona Cómoda de Clic -->
+                    <!-- Botón MENOS con sombreado Turquesa visible -->
                     <button onclick="restarUnidadHibrida({idx})" class="btn-step-sis" title="Restar 1"
-                            style="cursor: pointer; background: transparent; color: #475569; border: none; font-weight: 700; font-size: 22px; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
-                            onmouseenter="this.style.background='#f1f5f9'; this.style.color='#0f766e';" 
-                            onmouseleave="this.style.background='transparent'; this.style.color='#475569';">-</button>
+                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
+                            onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488'; this.style.boxShadow='0 0 8px rgba(15, 118, 110, 0.4)';" 
+                            onmouseleave="this.style.background='transparent'; this.style.color='#0f766e'; this.style.boxShadow='none';">-</button>
 
                     <!-- Primer 0: Usadas (21px) -->
                     <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{idx}" oninput="actualizarUsadasValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
                           style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                     
-                    <!-- Botón MÁS con Zona Cómoda de Clic -->
+                    <!-- Botón MÁS con sombreado Turquesa visible -->
                     <button onclick="sumarUnidadHibrida({idx})" class="btn-step-sis" title="Sumar 1"
-                            style="cursor: pointer; background: transparent; color: #475569; border: none; font-weight: 700; font-size: 22px; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
-                            onmouseenter="this.style.background='#f1f5f9'; this.style.color='#0f766e';" 
-                            onmouseleave="this.style.background='transparent'; this.style.color='#475569';">+</button>
+                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
+                            onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488'; this.style.boxShadow='0 0 8px rgba(15, 118, 110, 0.4)';" 
+                            onmouseleave="this.style.background='transparent'; this.style.color='#0f766e'; this.style.boxShadow='none';">+</button>
                     
-                    <span style="color: #94a3b8; font-size: 14px; font-weight: 400; padding: 0 2px;">de</span>
+                    <span style="color: #94a3b8; font-size: 14px; font-weight: 400; padding: 0 1px;">de</span>
                     
                     <!-- Segundo 0: Disponibles (21px) -->
                     <span contenteditable="true" class="disp-sis" id="sis-disp-{idx}" oninput="actualizarDispValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
