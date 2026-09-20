@@ -168,6 +168,14 @@ table {
     }
 }
 
+/* Ocultar barra de scroll en el contenedor de celdas */
+#contenedor-celdas-2pct::-webkit-scrollbar {
+    display: none;
+}
+#contenedor-celdas-2pct {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
 
 /* ============================================================
    🤖 ASISTENTE DE RUTEO — VENTANA FLOTANTE
@@ -3375,14 +3383,14 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                         </div>
                     </div>
 
-                    <!-- Celdas de Entrada Minimalistas -->
-                    <div id="contenedor-celdas-2pct" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; padding-right: 2px;">
+                    <!-- Celdas de Entrada (Sin scroll horizontal) -->
+                    <div id="contenedor-celdas-2pct" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-x: hidden; overflow-y: auto; padding-right: 2px;">
                         <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 1"
-                               style="width: 100%; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
+                               style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
                         <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 2"
-                               style="width: 100%; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
+                               style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
                         <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 3"
-                               style="width: 100%; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
+                               style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
                     </div>
 
                     <!-- Botones de Control + y - -->
