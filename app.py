@@ -1669,8 +1669,6 @@ def gen_master_rows(data_dict, table_id):
     return rows
 
 
-
-
 # --- CATÁLOGO COMPLETO DE 31 UNIDADES (INICIA VISIBLE CON DISP = 0) ---
 CATALOGO_SISTEMICO = {
     "Car MLP": [110, 120],
@@ -1751,6 +1749,7 @@ def gen_rows_hibrido_sistemico():
         </tr>
         '''
     return html_rows
+
 
 
 
@@ -4791,7 +4790,7 @@ document.addEventListener('keydown', function(event) {{
 
     // 🟢 ACTUALIZACIÓN DE DISPONIBILIDAD Y VÍNCULO A TOTALES
     function actualizarDispValor(idx) {{
-        const elDisp = document.getElementById(`sis-disp-${{idx}}`);
+        const elDisp = document.getElementById(`sis-disp-${idx}`);
         const fila = elDisp?.closest('tr');
         if (elDisp && fila) {{
             let val = parseInt(elDisp.innerText) || 0;
