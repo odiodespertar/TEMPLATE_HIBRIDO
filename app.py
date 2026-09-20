@@ -3371,7 +3371,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                         <div style="text-align: right;">
                             <span style="font-size: 10px; color: #888888; display: block; font-weight: 600;">RESULTADO 2%:</span>
                             <!-- Verde menta neón exacto -->
-                            <span id="dos-pct-res-1" style="font-size: 26px; font-weight: 900; color: #6ee7b7;">0</span>
+                            <span id="dos-pct-res-1" style="font-size: 26px; font-weight: 900; color: #66CDAA;">0</span>
                         </div>
                     </div>
 
