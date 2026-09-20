@@ -3690,7 +3690,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     
 
 
-    // 🟢 FUNCIÓN LIMPIAR PANTALLA COMPLETA
+    // 🟢 FUNCIÓN LIMPIAR PANTALLA COMPLETA (INCLUYE SISTÉMICO Y 2%)
     function limpiarPantallaCompleta() {{
         if (!confirm("¿Deseas vaciar los valores editados de la pantalla para iniciar un nuevo ruteo?")) return;
 
@@ -3723,11 +3723,72 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         }});
 
         // 3. Reiniciar memoria de filas editadas y recalcular
-        editedRowsPlan.clear();
+        if (typeof editedRowsPlan !== 'undefined' && editedRowsPlan.clear) {{
+            editedRowsPlan.clear();
+        }}
         if (typeof recalc === 'function') recalc();
+
+        // 4. 🟢 LIMPIAR PESTAÑA DE RUTEO SISTÉMICO Y CALCULADORAS DE 2%
+        limpiarSistemico();
         
         // Cierra el menú al terminar
-        toggleMenuLateralVisual();
+        if (typeof toggleMenuLateralVisual === 'function') {{
+            toggleMenuLateralVisual();
+        }}
+    }}
+
+    // 🟢 SUB-FUNCIÓN AUXILIAR DE LIMPIEZA DE SISTÉMICO
+    function limpiarSistemico() {{
+        // A. REINICIAR CALCULADORA 2% DATO 1 (SUMATORIA DINÁMICA)
+        const contenedor = document.getElementById('contenedor-celdas-2pct');
+        if (contenedor) {{
+            contenedor.innerHTML = `
+                <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 1"
+                       style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
+                <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 2"
+                       style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
+                <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 3"
+                       style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
+            `;
+        }}
+        
+        const elSuma1 = document.getElementById('dos-pct-suma-total-1');
+        const elRes1 = document.getElementById('dos-pct-res-1');
+        if (elSuma1) elSuma1.innerText = '0';
+        if (elRes1) elRes1.innerText = '0';
+
+        // B. REINICIAR CALCULADORA 2% DATO 2 (ESTÁTICO)
+        const inDato2 = document.getElementById('dos-pct-in-2');
+        const elRes2 = document.getElementById('dos-pct-res-2');
+        if (inDato2) inDato2.value = '0';
+        if (elRes2) elRes2.innerText = '0';
+
+        // C. REINICIAR TODAS LAS FILAS DE LA TABLA HÍBRIDA DE SISTÉMICO
+        const filasSistemico = document.querySelectorAll('.fila-hibrida-sis');
+        filasSistemico.forEach((fila, idx) => {{
+            fila.setAttribute('data-disp', '0');
+            fila.setAttribute('data-usadas', '0');
+
+            const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
+            if (elUsadas) elUsadas.innerText = '0';
+
+            const elDisp = document.getElementById(`sis-disp-${{idx}}`);
+            if (elDisp) elDisp.innerText = '0';
+
+            const elVol = document.getElementById(`sis-vol-${{idx}}`);
+            if (elVol) elVol.value = '0';
+
+            const elRes = document.getElementById(`sis-res-${{idx}}`);
+            if (elRes) elRes.innerText = '0';
+        }});
+
+        // D. SINCRONIZAR CONTADORES Y RESTABLECER VISTA
+        if (typeof sincronizarTotalesSistemico === 'function') {{
+            sincronizarTotalesSistemico();
+        }}
+        if (typeof filterRows === 'function') {{
+            filterRows(false);
+        }}
     }}
 
 
