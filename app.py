@@ -3559,7 +3559,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         
         nuevaInput.type = 'number';
         nuevaInput.className = 'in-2pct-lista';
-        nuevaInput.placeholder = `Dato ${numCeldas}`;
+        nuevaInput.placeholder = `Dato ${{numCeldas}}`;
         nuevaInput.onkeydown = function(e) {{ navegarConFlechas2Pct(e, this); }};
         nuevaInput.oninput = calcularDosPctDato1Dinámico;
         nuevaInput.onfocus = function() {{ this.select(); }};
