@@ -3347,22 +3347,40 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <!-- 🟢 CONTENEDOR TABLA HÍBRIDA CON MINICALCULADORAS 2% EN GRIS OSCURO -->
         <div id="polys-4" class="p-content" style="display:none;">
             
-            <!-- ⚡ DOS CALCULADORAS INDEPENDIENTES DE 2% (RESTAURO DE FONDO GRIS OSCURO) -->
-            <div style="display: flex; max-width: 850px; margin: 0 auto 15px auto; gap: 15px;">
-                <!-- Recuadro 1 -->
-                <div style="flex: 1; background: #1e2022; padding: 14px 18px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-                    <div>
-                        <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - DATO 1</div>
-                        <input type="number" id="dos-pct-in-1" oninput="calcularDosPctIndividual(1)" onfocus="this.select()" value="0" placeholder="Ej. 1500"
-                               style="width: 120px; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none; margin-top: 4px;" />
+            <!-- ⚡ DOS CALCULADORAS INDEPENDIENTES DE 2% (DATO 1 DINÁMICO EN LISTA) -->
+            <div style="display: flex; max-width: 850px; margin: 0 auto 15px auto; gap: 15px; align-items: flex-start;">
+                
+                <!-- RECUADRO 1: LISTA SUMATORIA DINÁMICA DE 2% -->
+                <div style="flex: 1; background: #1e2022; padding: 14px 18px; border-radius: 12px; border: 1.5px solid #34383d; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                        <div>
+                            <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - DATO 1 (SUMATORIA)</div>
+                            <span style="font-size: 10px; color: #aaaaaa; font-weight: 600;">Suma total: <strong id="dos-pct-suma-total-1" style="color: #FFD700;">0</strong></span>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold;">RESULTADO 2%:</span>
+                            <span id="dos-pct-res-1" style="font-size: 26px; font-weight: 900; color: #7CFFB2;">0</span>
+                        </div>
                     </div>
-                    <div style="text-align: right;">
-                        <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold;">RESULTADO 2%:</span>
-                        <span id="dos-pct-res-1" style="font-size: 26px; font-weight: 900; color: #7CFFB2;">0</span>
+
+                    <!-- Celdas de Entrada en Lista -->
+                    <div id="contenedor-celdas-2pct" style="display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto; padding-right: 4px;">
+                        <input type="number" class="in-2pct-lista" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 1"
+                               style="width: 100%; padding: 5px; font-size: 16px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none;" />
+                        <input type="number" class="in-2pct-lista" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 2"
+                               style="width: 100%; padding: 5px; font-size: 16px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none;" />
+                        <input type="number" class="in-2pct-lista" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 3"
+                               style="width: 100%; padding: 5px; font-size: 16px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none;" />
                     </div>
+
+                    <!-- Botón + para agregar más celdas -->
+                    <button onclick="agregarCelda2Pct()" title="Agregar otro valor"
+                            style="margin-top: 8px; width: 100%; cursor: pointer; background: transparent; color: #20B2AA; border: 1px dashed #20B2AA; font-weight: 800; border-radius: 6px; padding: 3px 0; font-size: 16px; transition: all 0.15s ease;"
+                            onmouseenter="this.style.background='#20B2AA'; this.style.color='#000';" 
+                            onmouseleave="this.style.background='transparent'; this.style.color='#20B2AA';">+</button>
                 </div>
 
-                <!-- Recuadro 2 -->
+                <!-- RECUADRO 2: DATO DEDICADO INDIVIDUAL (SE QUEDA IGUAL) -->
                 <div style="flex: 1; background: #1e2022; padding: 14px 18px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
                     <div>
                         <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - DATO 2</div>
@@ -3477,7 +3495,55 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             resDisplay.innerText = resultado.toLocaleString();
         }}
     }}
-    
+
+
+    // 🟢 CÁLCULO SUMATORIA Y 2% EN TIEMPO REAL (DATO 1)
+    function calcularDosPctDato1Dinámico() {{
+        const celdas = document.querySelectorAll('.in-2pct-lista');
+        let sumaTotal = 0;
+
+        celdas.forEach(input => {{
+            let val = parseFloat(input.value) || 0;
+            sumaTotal += val;
+        }});
+
+        // Actualiza el texto de suma acumulada y el resultado del 2%
+        const elSuma = document.getElementById('dos-pct-suma-total-1');
+        const elRes = document.getElementById('dos-pct-res-1');
+
+        if (elSuma) elSuma.innerText = sumaTotal.toLocaleString();
+        if (elRes) elRes.innerText = Math.ceil(sumaTotal * 0.02).toLocaleString();
+    }}
+
+    // 🟢 AÑADIR NAVEGACIÓN Y CELDAS DINÁMICAS AL PRESIONAR EL BOTÓN +
+    function agregarCelda2Pct() {{
+        const contenedor = document.getElementById('contenedor-celdas-2pct');
+        if (!contenedor) return;
+
+        const numCeldas = contenedor.querySelectorAll('.in-2pct-lista').length + 1;
+        const nuevaInput = document.createElement('input');
+        
+        nuevaInput.type = 'number';
+        nuevaInput.className = 'in-2pct-lista';
+        nuevaInput.placeholder = `Dato ${{numCeldas}}`;
+        nuevaInput.oninput = calcularDosPctDato1Dinámico;
+        nuevaInput.onfocus = function() {{ this.select(); }};
+        nuevaInput.style.cssText = "width: 100%; padding: 5px; font-size: 16px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none;";
+
+        contenedor.appendChild(nuevaInput);
+        nuevaInput.focus();
+    }}
+
+    // 🟢 CÁLCULO DEL DATO 2 INDIVIDUAL (CONSERVA SU LÓGICA)
+    function calcularDosPctIndividual(num) {{
+        if (num === 2) {{
+            const input2 = parseFloat(document.getElementById('dos-pct-in-2')?.value) || 0;
+            const res2 = document.getElementById('dos-pct-res-2');
+            if (res2) res2.innerText = Math.ceil(input2 * 0.02).toLocaleString();
+        }}
+    }}
+
+
 
     // 🟢 Incrementar contador de unidades usadas (+1)
     function sumarUnidadHibrida(idx) {{
