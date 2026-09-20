@@ -1708,47 +1708,47 @@ def gen_rows_hibrido_sistemico():
     html_rows = ""
     for idx, (nombre, spr) in enumerate(CATALOGO_SISTEMICO.items()):
         html_rows += f'''
-        <tr class="fila-hibrida-sis" data-disp="0" style="border-bottom: 1px solid #f0f0f0; height: 56px; transition: background 0.15s ease;">
-            <!-- 1. Nombre de la Unidad (EDITABLE DIRECTAMENTE AL HACER CLIC) -->
-            <td style="padding: 12px 8px; text-align: left; vertical-align: middle;">
+        <tr class="fila-hibrida-sis" data-disp="0" style="border-bottom: 1px solid #f0f0f0; height: 62px; transition: background 0.15s ease;">
+            <!-- 1. Nombre de la Unidad (Aumentado a 16px) -->
+            <td style="padding: 12px 10px; text-align: left; vertical-align: middle;">
                 <div contenteditable="true" class="edit-name-sis" id="sis-nombre-{idx}" oninput="sincronizarTotalesSistemico()" onfocus="this.select()"
-                     style="font-weight: 600; font-size: 14px; color: #222222; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; outline: none; border-bottom: 1px dashed transparent; transition: border-color 0.2s;"
+                     style="font-weight: 700; font-size: 16px; color: #111111; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; outline: none; border-bottom: 1px dashed transparent; transition: border-color 0.2s;"
                      onmouseenter="this.style.borderColor='#0f766e';" onmouseleave="this.style.borderColor='transparent';">
                     {nombre}
                 </div>
             </td>
 
-            <!-- 2. SPR Máximo Editable -->
+            <!-- 2. SPR Máximo Editable (Gris suave atenuado) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <input type="number" id="sis-spr-{idx}" value="{spr[1]}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
-                       style="width: 55px; text-align: center; padding: 4px 2px; font-weight: 600; font-size: 14px; border: none; border-bottom: 1px solid #e0e0e0; background: transparent; color: #555555; outline: none;" />
+                       style="width: 65px; text-align: center; padding: 6px 2px; font-weight: 500; font-size: 15px; border: none; border-bottom: 1px solid #e0e0e0; background: transparent; color: #888888; outline: none;" />
             </td>
 
-            <!-- 3. Usadas de Disponibles (Estilo "0 de 0" Minimalista) -->
+            <!-- 3. Usadas de Disponibles (Aumentado a 18px y 17px) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
                     <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{idx}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
-                          style="font-weight: 700; font-size: 15px; color: #111111; min-width: 20px; text-align: center; outline: none; padding: 1px 3px; border-bottom: 1px solid #cccccc;">0</span>
+                          style="font-weight: 800; font-size: 18px; color: #111111; min-width: 24px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #b0b0b0;">0</span>
                     
                     <button onclick="sumarUnidadHibrida({idx})" 
-                            style="cursor: pointer; background: #f0f0f0; color: #333333; border: 1px solid #dddddd; font-weight: 700; border-radius: 50%; width: 20px; height: 20px; line-height: 18px; font-size: 13px; padding: 0; display: inline-flex; align-items: center; justify-content: center; transition: all 0.15s;">+</button>
+                            style="cursor: pointer; background: #f0f0f0; color: #222222; border: 1px solid #cccccc; font-weight: 800; border-radius: 50%; width: 24px; height: 24px; line-height: 22px; font-size: 15px; padding: 0; display: inline-flex; align-items: center; justify-content: center; transition: all 0.15s;">+</button>
                     
-                    <span style="color: #888888; font-size: 13px; font-weight: 400; padding: 0 2px;">de</span>
+                    <span style="color: #777777; font-size: 14px; font-weight: 500; padding: 0 2px;">de</span>
                     
                     <span contenteditable="true" class="disp-sis" id="sis-disp-{idx}" oninput="actualizarDispValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
-                          style="font-weight: 600; font-size: 14px; color: #666666; min-width: 20px; text-align: center; outline: none; padding: 1px 3px; border-bottom: 1px solid #cccccc;">0</span>
+                          style="font-weight: 700; font-size: 17px; color: #555555; min-width: 24px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #b0b0b0;">0</span>
                 </div>
             </td>
 
-            <!-- 4. Volumen de Paquetes (Entrada Discreta) -->
+            <!-- 4. Volumen de Paquetes (Aumentado a 16px) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <input type="number" id="sis-vol-{idx}" value="0" oninput="calcularFilaHibrida({idx})" onfocus="this.select()" placeholder="0"
-                       style="width: 70px; text-align: center; padding: 4px 2px; font-weight: 600; font-size: 14px; border: none; border-bottom: 1.5px solid #0f766e; background: #fafafa; color: #0f766e; outline: none; border-radius: 2px;" />
+                       style="width: 80px; text-align: center; padding: 5px 4px; font-weight: 700; font-size: 16px; border: none; border-bottom: 2px solid #0f766e; background: #fbfbfb; color: #0f766e; outline: none; border-radius: 2px;" />
             </td>
 
-            <!-- 5. Resultado del Cálculo (Limpio y Elegante) -->
+            <!-- 5. Resultado del Cálculo (Aumentado a 19px) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
-                <span id="sis-res-{idx}" style="font-weight: 700; font-size: 16px; color: #16a34a;">0</span>
+                <span id="sis-res-{idx}" style="font-weight: 800; font-size: 19px; color: #16a34a;">0</span>
             </td>
         </tr>
         '''
@@ -3368,12 +3368,12 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
                 <table style="width: 100%; border-collapse: collapse; color: #222222; font-size: 13px;">
                     <thead>
-                        <tr style="height: 36px; color: #888888; font-weight: 500; border-bottom: 1px solid #e5e7eb; font-size: 12px;">
-                            <th style="padding: 8px 12px; text-align: left; width: 38%; font-weight: 500;">Agendados</th>
-                            <th style="padding: 8px; text-align: center; width: 13%; font-weight: 500;">SPR MAX</th>
-                            <th style="padding: 8px; text-align: center; width: 23%; font-weight: 500;">Utilizados</th>
-                            <th style="padding: 8px; text-align: center; width: 13%; font-weight: 500;">Volumen</th>
-                            <th style="padding: 8px; text-align: center; width: 13%; font-weight: 500;">Cálculo</th>
+                        <tr style="height: 40px; color: #777777; font-weight: 600; border-bottom: 1.5px solid #e5e7eb; font-size: 14px;">
+                            <th style="padding: 8px 12px; text-align: left; width: 38%; font-weight: 600;">Agendados</th>
+                            <th style="padding: 8px; text-align: center; width: 13%; font-weight: 600;">SPR MAX</th>
+                            <th style="padding: 8px; text-align: center; width: 23%; font-weight: 600;">Utilizados</th>
+                            <th style="padding: 8px; text-align: center; width: 13%; font-weight: 600;">Volumen</th>
+                            <th style="padding: 8px; text-align: center; width: 13%; font-weight: 600;">Cálculo</th>
                         </tr>
                     </thead>
                     <tbody>
