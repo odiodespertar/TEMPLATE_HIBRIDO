@@ -1708,8 +1708,8 @@ def gen_rows_hibrido_sistemico():
     html_rows = ""
     for idx, (nombre, spr) in enumerate(CATALOGO_SISTEMICO.items()):
         html_rows += f'''
-        <tr class="fila-hibrida-sis" data-disp="0" style="border-bottom: 1px solid #e2e8f0; height: 62px; transition: background 0.15s ease;">
-            <!-- 1. Nombre de la Unidad (16px Semi-Bold) -->
+        <tr class="fila-hibrida-sis" data-disp="0" data-usadas="0" style="border-bottom: 1px solid #e2e8f0; height: 62px; transition: background 0.15s ease;">
+            <!-- 1. Nombre de la Unidad (Editable) -->
             <td style="padding: 12px 10px; text-align: left; vertical-align: middle;">
                 <div contenteditable="true" class="edit-name-sis" id="sis-nombre-{idx}" oninput="sincronizarTotalesSistemico()" onfocus="this.select()"
                      style="font-weight: 600; font-size: 16px; color: #1e293b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; outline: none; border-bottom: 1px dashed transparent; transition: border-color 0.2s;"
@@ -1718,17 +1718,17 @@ def gen_rows_hibrido_sistemico():
                 </div>
             </td>
 
-            <!-- 2. SPR Máximo Editable (15px en gris sutil) -->
+            <!-- 2. SPR Máximo Editable -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <input type="number" id="sis-spr-{idx}" value="{spr[1]}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
                        style="width: 60px; text-align: center; padding: 4px 2px; font-weight: 500; font-size: 15px; border: none; border-bottom: 1px solid #cbd5e1; background: transparent; color: #94a3b8; outline: none;" />
             </td>
 
-            <!-- 3. Usadas de Disponibles (Ambos ceros en 21px) -->
+            <!-- 3. Usadas de Disponibles -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-                    <!-- Primer 0: Destacado 21px -->
-                    <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{idx}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
+                    <!-- Primer 0: Usadas -->
+                    <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{idx}" oninput="actualizarUsadasValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
                           style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                     
                     <button onclick="sumarUnidadHibrida({idx})" 
@@ -1736,19 +1736,19 @@ def gen_rows_hibrido_sistemico():
                     
                     <span style="color: #94a3b8; font-size: 14px; font-weight: 400; padding: 0 1px;">de</span>
                     
-                    <!-- Segundo 0: 21px en tono gris secundario -->
+                    <!-- Segundo 0: Disponibles -->
                     <span contenteditable="true" class="disp-sis" id="sis-disp-{idx}" oninput="actualizarDispValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
                           style="font-weight: 500; font-size: 21px; color: #64748b; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                 </div>
             </td>
 
-            <!-- 4. Volumen de Paquetes (16px) -->
+            <!-- 4. Volumen de Paquetes -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <input type="number" id="sis-vol-{idx}" value="0" oninput="calcularFilaHibrida({idx})" onfocus="this.select()" placeholder="0"
                        style="width: 78px; text-align: center; padding: 4px 2px; font-weight: 600; font-size: 16px; border: none; border-bottom: 1.5px solid #0f766e; background: #f8fafc; color: #0f766e; outline: none; border-radius: 2px;" />
             </td>
 
-            <!-- 5. Resultado del Cálculo (22px en verde) -->
+            <!-- 5. Resultado del Cálculo -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <span id="sis-res-{idx}" style="font-weight: 600; font-size: 22px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
             </td>
@@ -4794,13 +4794,25 @@ document.addEventListener('keydown', function(event) {{
         }});
     }}
 
+
+
     // 🟢 ACTUALIZACIÓN DE DISPONIBILIDAD Y VÍNCULO A TOTALES
     function actualizarDispValor(idx) {{
-        const elDisp = document.getElementById(`sis-disp-${{idx}}`);
+        const elDisp = document.getElementById(`sis-disp-${idx}`);
         const fila = elDisp?.closest('tr');
         if (elDisp && fila) {{
             let val = parseInt(elDisp.innerText) || 0;
             fila.setAttribute('data-disp', val);
+        }}
+    }}
+
+    // 🟢 NUEVO: Guarda en la fila el valor de las unidades USADAS (primer 0)
+    function actualizarUsadasValor(idx) {{
+        const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
+        const fila = elUsadas?.closest('tr');
+        if (elUsadas && fila) {{
+            let val = parseInt(elUsadas.innerText) || 0;
+            fila.setAttribute('data-usadas', val);
         }}
     }}
 
@@ -4809,6 +4821,7 @@ document.addEventListener('keydown', function(event) {{
         if (elUsadas) {{
             let val = parseInt(elUsadas.innerText) || 0;
             elUsadas.innerText = val + 1;
+            actualizarUsadasValor(idx); // 👈 AQUÍ SE AGREGA ESTA LÍNEA
             calcularFilaHibrida(idx);
         }}
     }}
@@ -4867,6 +4880,30 @@ document.addEventListener('keydown', function(event) {{
         if (valMlp) valMlp.innerText = totalMlp;
         if (valRental) valRental.innerText = totalRental;
         if (valCar) valCar.innerText = totalCar;
+    }}
+
+    // 🟢 Y EN TU FUNCIÓN DE FILTRAR (BUSCA DÓNDE TIENES 'filterRows'), REEMPLÁZALA POR ESTA:
+    function filterRows(onlyActive) {{
+        // 1. Filtrado para las tablas estándar
+        const rowsMaster = document.querySelectorAll('#body-' + currentTab + ' .master-row');
+        rowsMaster.forEach(row => {{
+            const stock = parseInt(row.querySelector('.f-stock')?.innerText) || 0;
+            const ruteadas = parseInt(row.querySelector('.f-ruteadas')?.innerText) || 0;
+            row.style.display = (onlyActive && stock === 0 && ruteadas === 0) ? 'none' : '';
+        }});
+
+        // 2. Filtrado para la Tabla Híbrida de Sistémico (Acepta DISP > 0 O USADAS > 0)
+        const rowsSistemico = document.querySelectorAll('.fila-hibrida-sis');
+        rowsSistemico.forEach(row => {{
+            const dispVal = parseInt(row.getAttribute('data-disp')) || 0;
+            const usadasVal = parseInt(row.getAttribute('data-usadas')) || 0;
+
+            if (onlyActive) {{
+                row.style.display = (dispVal > 0 || usadasVal > 0) ? 'table-row' : 'none';
+            }} else {{
+                row.style.display = 'table-row';
+            }}
+        }});
     }}
     
 
