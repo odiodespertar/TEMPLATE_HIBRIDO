@@ -1708,43 +1708,43 @@ def gen_rows_hibrido_sistemico():
     html_rows = ""
     for idx, (nombre, spr) in enumerate(CATALOGO_SISTEMICO.items()):
         html_rows += f'''
-        <tr class="fila-hibrida-sis" data-disp="0" style="border-bottom: 1px solid #34383d; height: 50px; display: table-row;">
-            <!-- 1. Nombre de la Unidad (Letra Ampliada) -->
+        <tr class="fila-hibrida-sis" data-disp="0" style="border-bottom: 1px solid #e2e8f0; height: 50px; display: table-row;">
+            <!-- 1. Nombre de la Unidad (Texto Oscuro sobre Blanco) -->
             <td style="padding: 10px 14px; text-align: left;">
-                <div class="edit-name-sis" style="font-weight: 800; font-size: 16px; color: #ffffff;">{nombre}</div>
+                <div class="edit-name-sis" style="font-weight: 800; font-size: 15px; color: #0f172a;">{nombre}</div>
             </td>
 
             <!-- 2. SPR Máximo Editable -->
             <td style="text-align: center; padding: 6px;">
                 <input type="number" id="sis-spr-{idx}" value="{spr[1]}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
-                       style="width: 75px; text-align: center; padding: 6px; font-weight: 800; font-size: 16px; border-radius: 6px; border: 1.5px solid #475569; background: #141414; color: #20B2AA; outline: none;" />
+                       style="width: 75px; text-align: center; padding: 6px; font-weight: 800; font-size: 16px; border-radius: 6px; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f766e; outline: none;" />
             </td>
 
-            <!-- 3. Unidades Usadas vs Disponibles (Mayor Tamaño de Números) -->
+            <!-- 3. Unidades Usadas vs Disponibles (Reemplazado el amarillo por Azul Marino Intenso) -->
             <td style="text-align: center; padding: 6px;">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
                     <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{idx}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
-                          style="font-weight: 900; font-size: 18px; color: #FFD700; min-width: 28px; text-align: center; background: #141414; border: 1.5px solid #475569; border-radius: 6px; padding: 3px 6px;">0</span>
+                          style="font-weight: 900; font-size: 18px; color: #1e3a8a; min-width: 28px; text-align: center; background: #ffffff; border: 1.5px solid #94a3b8; border-radius: 6px; padding: 3px 6px;">0</span>
                     
                     <button onclick="sumarUnidadHibrida({idx})" 
-                            style="cursor: pointer; background: #20B2AA; color: #000; border: none; font-weight: 900; border-radius: 5px; width: 26px; height: 26px; line-height: 26px; font-size: 16px; padding: 0;">+</button>
+                            style="cursor: pointer; background: #0f766e; color: #ffffff; border: none; font-weight: 900; border-radius: 5px; width: 26px; height: 26px; line-height: 26px; font-size: 16px; padding: 0;">+</button>
                     
-                    <span style="color: #94a3b8; font-size: 14px; font-weight: bold;">de</span>
+                    <span style="color: #64748b; font-size: 14px; font-weight: bold;">de</span>
                     
                     <span contenteditable="true" class="disp-sis" id="sis-disp-{idx}" oninput="actualizarDispValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
-                          style="font-weight: 800; font-size: 17px; color: #ffffff; min-width: 28px; text-align: center; background: #141414; border: 1.5px solid #475569; border-radius: 6px; padding: 3px 6px;">0</span>
+                          style="font-weight: 800; font-size: 17px; color: #0f172a; min-width: 28px; text-align: center; background: #ffffff; border: 1.5px solid #94a3b8; border-radius: 6px; padding: 3px 6px;">0</span>
                 </div>
             </td>
 
-            <!-- 4. Volumen de Paquetes (Campo XL) -->
+            <!-- 4. Volumen de Paquetes (Input con borde Turquesa) -->
             <td style="text-align: center; padding: 6px;">
                 <input type="number" id="sis-vol-{idx}" value="0" oninput="calcularFilaHibrida({idx})" onfocus="this.select()" placeholder="0"
-                       style="width: 95px; text-align: center; padding: 6px; font-weight: 800; font-size: 17px; border-radius: 6px; border: 2px solid #20B2AA; background: #141414; color: #FFD700; outline: none;" />
+                       style="width: 95px; text-align: center; padding: 6px; font-weight: 800; font-size: 17px; border-radius: 6px; border: 2px solid #0f766e; background: #ffffff; color: #1e3a8a; outline: none;" />
             </td>
 
-            <!-- 5. Unidades Calculadas (Resultado XL) -->
+            <!-- 5. Unidades Calculadas (Verde Bosque/Esmeralda) -->
             <td style="text-align: center; padding: 6px;">
-                <span id="sis-res-{idx}" style="font-weight: 900; font-size: 22px; color: #7CFFB2;">0</span>
+                <span id="sis-res-{idx}" style="font-weight: 900; font-size: 22px; color: #16a3a4;">0</span>
             </td>
         </tr>
         '''
@@ -3326,45 +3326,45 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <div id="polys-1" class="p-content" style="display:none;">{gen_poligonos(u_PREC)}</div>
         <div id="polys-5" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX2)}</div>
         
-        <!-- 🟢 CONTENEDOR TABLA HÍBRIDA DE SISTÉMICO (TAB 4) CON 2% ARRIBA -->
+        <!-- 🟢 CONTENEDOR TABLA HÍBRIDA DE SISTÉMICO (TEMA CLARO MINIMALISTA) -->
         <div id="polys-4" class="p-content" style="display:none;">
             
             <!-- ⚡ DOS CALCULADORAS INDEPENDIENTES DE 2% (ARRIBA) -->
             <div style="display: flex; max-width: 900px; margin: 0 auto 15px auto; gap: 15px;">
-                <div style="flex: 1; background: #1e2022; padding: 14px 18px; border-radius: 10px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                <div style="flex: 1; background: #ffffff; padding: 14px 18px; border-radius: 12px; border: 1.5px solid #cbd5e1; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
                     <div>
-                        <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px;">2% PERMITIDO - DATO 1</div>
+                        <div style="font-size: 11px; font-weight: 800; color: #0f766e; letter-spacing: 0.5px;">2% PERMITIDO - DATO 1</div>
                         <input type="number" id="dos-pct-in-1" oninput="calcularDosPctIndividual(1)" onfocus="this.select()" value="0" placeholder="Ej. 1500"
-                               style="width: 120px; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none; margin-top: 4px;" />
+                               style="width: 120px; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #0f766e; background: #f8fafc; color: #1e3a8a; outline: none; margin-top: 4px;" />
                     </div>
                     <div style="text-align: right;">
-                        <span style="font-size: 10px; color: #aaa; display: block; font-weight: bold;">RESULTADO 2%:</span>
-                        <span id="dos-pct-res-1" style="font-size: 26px; font-weight: 900; color: #7CFFB2;">0</span>
+                        <span style="font-size: 10px; color: #64748b; display: block; font-weight: bold;">RESULTADO 2%:</span>
+                        <span id="dos-pct-res-1" style="font-size: 26px; font-weight: 900; color: #16a3a4;">0</span>
                     </div>
                 </div>
 
-                <div style="flex: 1; background: #1e2022; padding: 14px 18px; border-radius: 10px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                <div style="flex: 1; background: #ffffff; padding: 14px 18px; border-radius: 12px; border: 1.5px solid #cbd5e1; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
                     <div>
-                        <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px;">2% PERMITIDO - DATO 2</div>
+                        <div style="font-size: 11px; font-weight: 800; color: #0f766e; letter-spacing: 0.5px;">2% PERMITIDO - DATO 2</div>
                         <input type="number" id="dos-pct-in-2" oninput="calcularDosPctIndividual(2)" onfocus="this.select()" value="0" placeholder="Ej. 3000"
-                               style="width: 120px; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none; margin-top: 4px;" />
+                               style="width: 120px; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #0f766e; background: #f8fafc; color: #1e3a8a; outline: none; margin-top: 4px;" />
                     </div>
                     <div style="text-align: right;">
-                        <span style="font-size: 10px; color: #aaa; display: block; font-weight: bold;">RESULTADO 2%:</span>
-                        <span id="dos-pct-res-2" style="font-size: 26px; font-weight: 900; color: #7CFFB2;">0</span>
+                        <span style="font-size: 10px; color: #64748b; display: block; font-weight: bold;">RESULTADO 2%:</span>
+                        <span id="dos-pct-res-2" style="font-size: 26px; font-weight: 900; color: #16a3a4;">0</span>
                     </div>
                 </div>
             </div>
 
             <!-- ⚡ TABLA CALCULADORA HÍBRIDA DE FLOTA Y VOLUMEN SISTÉMICO -->
-            <div style="max-width: 900px; margin: 0 auto; background: #1e2022; padding: 20px; border-radius: 14px; border: 2px solid #34383d; box-shadow: 0 6px 20px rgba(0,0,0,0.5);">
-                <div style="font-size: 18px; font-weight: 800; color: #20B2AA; text-align: center; margin-bottom: 15px; border-bottom: 2px solid #34383d; padding-bottom: 8px;">
+            <div style="max-width: 900px; margin: 0 auto; background: #ffffff; padding: 20px; border-radius: 14px; border: 1.5px solid #cbd5e1; box-shadow: 0 8px 24px rgba(0,0,0,0.08);">
+                <div style="font-size: 18px; font-weight: 800; color: #0f766e; text-align: center; margin-bottom: 15px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px;">
                     ⚡ TABLA CALCULADORA HÍBRIDA SISTÉMICA
                 </div>
 
-                <table style="width: 100%; border-collapse: collapse; color: white;">
+                <table style="width: 100%; border-collapse: collapse; color: #0f172a;">
                     <thead>
-                        <tr style="background: #25282b; height: 42px; font-size: 14px; color: #20B2AA; border-bottom: 2px solid #34383d;">
+                        <tr style="background: #f8fafc; height: 42px; font-size: 13px; color: #0f766e; border-bottom: 2px solid #e2e8f0;">
                             <th style="padding: 10px; text-align: left; width: 34%;">UNIDAD</th>
                             <th style="padding: 10px; text-align: center; width: 14%;">SPR MAX</th>
                             <th style="padding: 10px; text-align: center; width: 22%;">USADAS / DISP</th>
