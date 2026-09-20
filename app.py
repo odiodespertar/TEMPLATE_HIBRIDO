@@ -2509,6 +2509,17 @@ html body .meli-table tbody tr:last-child {{
 }}
 
 
+/* Ocultar flechas por defecto en inputs numéricos de la lista */
+.in-2pct-lista::-webkit-outer-spin-button,
+.in-2pct-lista::-webkit-inner-spin-button {{
+    -webkit-appearance: none;
+    margin: 0;
+}}
+.in-2pct-lista {{
+    -moz-appearance: textfield;
+}}
+
+
 /* Colores y sombras (la sombra da el efecto de grosor) */
 .btn-start {{ background: #28a745; color: white; box-shadow: 0 5px 0 #1e7e34; }}
 .btn-stop  {{ background: #ffc107; color: #333;  box-shadow: 0 5px 0 #d39e00; }}
@@ -3350,34 +3361,41 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             <!-- ⚡ DOS CALCULADORAS INDEPENDIENTES DE 2% (DATO 1 DINÁMICO EN LISTA) -->
             <div style="display: flex; max-width: 850px; margin: 0 auto 15px auto; gap: 15px; align-items: flex-start;">
                 
-                <!-- RECUADRO 1: LISTA SUMATORIA DINÁMICA DE 2% -->
-                <div style="flex: 1; background: #1e2022; padding: 14px 18px; border-radius: 12px; border: 1.5px solid #34383d; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                <!-- RECUADRO 1: LISTA SUMATORIA DINÁMICA DE 2% (MINIMALISTA) -->
+                <div style="flex: 1; background: #ffffff; padding: 16px 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
                         <div>
-                            <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - DATO 1 (SUMATORIA)</div>
-                            <span style="font-size: 10px; color: #aaaaaa; font-weight: 600;">Suma total: <strong id="dos-pct-suma-total-1" style="color: #FFD700;">0</strong></span>
+                            <div style="font-size: 11px; font-weight: 700; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - DATO 1</div>
+                            <span style="font-size: 11px; color: #64748b; font-weight: 600;">Suma total: <strong id="dos-pct-suma-total-1" style="color: #0f172a;">0</strong></span>
                         </div>
                         <div style="text-align: right;">
-                            <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold;">RESULTADO 2%:</span>
-                            <span id="dos-pct-res-1" style="font-size: 26px; font-weight: 900; color: #7CFFB2;">0</span>
+                            <span style="font-size: 10px; color: #888888; display: block; font-weight: 600;">RESULTADO 2%:</span>
+                            <span id="dos-pct-res-1" style="font-size: 24px; font-weight: 800; color: #16a34a;">0</span>
                         </div>
                     </div>
 
-                    <!-- Celdas de Entrada en Lista -->
-                    <div id="contenedor-celdas-2pct" style="display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto; padding-right: 4px;">
-                        <input type="number" class="in-2pct-lista" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 1"
-                               style="width: 100%; padding: 5px; font-size: 16px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none;" />
-                        <input type="number" class="in-2pct-lista" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 2"
-                               style="width: 100%; padding: 5px; font-size: 16px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none;" />
-                        <input type="number" class="in-2pct-lista" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 3"
-                               style="width: 100%; padding: 5px; font-size: 16px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none;" />
+                    <!-- Celdas de Entrada Minimalistas -->
+                    <div id="contenedor-celdas-2pct" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; padding-right: 2px;">
+                        <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 1"
+                               style="width: 100%; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
+                        <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 2"
+                               style="width: 100%; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
+                        <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 3"
+                               style="width: 100%; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
                     </div>
 
-                    <!-- Botón + para agregar más celdas -->
-                    <button onclick="agregarCelda2Pct()" title="Agregar otro valor"
-                            style="margin-top: 8px; width: 100%; cursor: pointer; background: transparent; color: #20B2AA; border: 1px dashed #20B2AA; font-weight: 800; border-radius: 6px; padding: 3px 0; font-size: 16px; transition: all 0.15s ease;"
-                            onmouseenter="this.style.background='#20B2AA'; this.style.color='#000';" 
-                            onmouseleave="this.style.background='transparent'; this.style.color='#20B2AA';">+</button>
+                    <!-- Botones de Control + y - -->
+                    <div style="display: flex; gap: 8px; margin-top: 10px;">
+                        <button onclick="removerCelda2Pct()" title="Eliminar última celda"
+                                style="flex: 1; cursor: pointer; background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; font-weight: 700; border-radius: 6px; padding: 4px 0; font-size: 16px; transition: all 0.15s ease;"
+                                onmouseenter="this.style.background='#fee2e2'; this.style.color='#dc2626'; this.style.borderColor='#fca5a5';" 
+                                onmouseleave="this.style.background='#f1f5f9'; this.style.color='#64748b'; this.style.borderColor='#cbd5e1';">-</button>
+
+                        <button onclick="agregarCelda2Pct()" title="Agregar celda"
+                                style="flex: 1; cursor: pointer; background: #f1f5f9; color: #0f766e; border: 1px solid #cbd5e1; font-weight: 700; border-radius: 6px; padding: 4px 0; font-size: 16px; transition: all 0.15s ease;"
+                                onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488'; this.style.borderColor='#99f6e4';" 
+                                onmouseleave="this.style.background='#f1f5f9'; this.style.color='#0f766e'; this.style.borderColor='#cbd5e1';">+</button>
+                    </div>
                 </div>
 
                 <!-- RECUADRO 2: DATO DEDICADO INDIVIDUAL (SE QUEDA IGUAL) -->
@@ -3507,12 +3525,28 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             sumaTotal += val;
         }});
 
-        // Actualiza el texto de suma acumulada y el resultado del 2%
         const elSuma = document.getElementById('dos-pct-suma-total-1');
         const elRes = document.getElementById('dos-pct-res-1');
 
         if (elSuma) elSuma.innerText = sumaTotal.toLocaleString();
         if (elRes) elRes.innerText = Math.ceil(sumaTotal * 0.02).toLocaleString();
+    }}
+
+    // 🟢 NAVEGACIÓN CON FLECHAS (ARRIBA Y ABAJO SIN AUMENTAR NÚMEROS)
+    function navegarConFlechas2Pct(event, currentInput) {{
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {{
+            event.preventDefault(); // Evita que la flecha modifique el número
+            const celdas = Array.from(document.querySelectorAll('.in-2pct-lista'));
+            const index = celdas.indexOf(currentInput);
+
+            if (event.key === 'ArrowDown' && index < celdas.length - 1) {{
+                celdas[index + 1].focus();
+                celdas[index + 1].select();
+            }} else if (event.key === 'ArrowUp' && index > 0) {{
+                celdas[index - 1].focus();
+                celdas[index - 1].select();
+            }}
+        }}
     }}
 
     // 🟢 AÑADIR NAVEGACIÓN Y CELDAS DINÁMICAS AL PRESIONAR EL BOTÓN +
@@ -3525,16 +3559,29 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         
         nuevaInput.type = 'number';
         nuevaInput.className = 'in-2pct-lista';
-        nuevaInput.placeholder = `Dato ${{numCeldas}}`;
+        nuevaInput.placeholder = `Dato ${numCeldas}`;
+        nuevaInput.onkeydown = function(e) {{ navegarConFlechas2Pct(e, this); }};
         nuevaInput.oninput = calcularDosPctDato1Dinámico;
         nuevaInput.onfocus = function() {{ this.select(); }};
-        nuevaInput.style.cssText = "width: 100%; padding: 5px; font-size: 16px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #FFD700; outline: none;";
+        nuevaInput.style.cssText = "width: 100%; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;";
 
         contenedor.appendChild(nuevaInput);
         nuevaInput.focus();
     }}
 
-    // 🟢 CÁLCULO DEL DATO 2 INDIVIDUAL (CONSERVA SU LÓGICA)
+    // 🟢 ELIMINAR ÚLTIMA CELDA DINÁMICA AL PRESIONAR EL BOTÓN -
+    function removerCelda2Pct() {{
+        const contenedor = document.getElementById('contenedor-celdas-2pct');
+        if (!contenedor) return;
+
+        const celdas = contenedor.querySelectorAll('.in-2pct-lista');
+        if (celdas.length > 1) {{
+            contenedor.removeChild(celdas[celdas.length - 1]);
+            calcularDosPctDato1Dinámico();
+        }}
+    }}
+
+    // 🟢 CÁLCULO DEL DATO 2 INDIVIDUAL (DATO ESTÁTICO)
     function calcularDosPctIndividual(num) {{
         if (num === 2) {{
             const input2 = parseFloat(document.getElementById('dos-pct-in-2')?.value) || 0;
