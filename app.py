@@ -1709,7 +1709,7 @@ def gen_rows_hibrido_sistemico():
     for idx, (nombre, spr) in enumerate(CATALOGO_SISTEMICO.items()):
         html_rows += f'''
         <tr class="fila-hibrida-sis" data-disp="0" data-usadas="0" style="border-bottom: 1px solid #e2e8f0; height: 62px; transition: background 0.15s ease;">
-            <!-- 1. Nombre de la Unidad (Editable) -->
+            <!-- 1. Nombre de la Unidad (16px Semi-Bold Editable) -->
             <td style="padding: 12px 10px; text-align: left; vertical-align: middle;">
                 <div contenteditable="true" class="edit-name-sis" id="sis-nombre-{idx}" oninput="sincronizarTotalesSistemico()" onfocus="this.select()"
                      style="font-weight: 600; font-size: 16px; color: #1e293b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; outline: none; border-bottom: 1px dashed transparent; transition: border-color 0.2s;"
@@ -1718,43 +1718,51 @@ def gen_rows_hibrido_sistemico():
                 </div>
             </td>
 
-            <!-- 2. SPR Máximo Editable -->
+            <!-- 2. SPR Máximo Editable (15px) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <input type="number" id="sis-spr-{idx}" value="{spr[1]}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
                        style="width: 60px; text-align: center; padding: 4px 2px; font-weight: 500; font-size: 15px; border: none; border-bottom: 1px solid #cbd5e1; background: transparent; color: #94a3b8; outline: none;" />
             </td>
 
-            <!-- 3. Usadas de Disponibles -->
+            <!-- 3. Usadas de Disponibles (Con botón - a la izquierda y + plano a la derecha) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-                    <!-- Primer 0: Usadas -->
+                    <!-- Botón MENOS -->
+                    <button onclick="restarUnidadHibrida({idx})" 
+                            style="cursor: pointer; background: transparent; color: #475569; border: none; font-weight: 700; font-size: 20px; padding: 0 4px; line-height: 1; user-select: none; transition: color 0.15s;"
+                            onmouseenter="this.style.color='#0f766e';" onmouseleave="this.style.color='#475569';">-</button>
+
+                    <!-- Primer 0: Usadas (21px) -->
                     <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{idx}" oninput="actualizarUsadasValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
                           style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                     
+                    <!-- Botón MÁS (Plano y más grande) -->
                     <button onclick="sumarUnidadHibrida({idx})" 
-                            style="cursor: pointer; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; font-weight: 600; border-radius: 50%; width: 24px; height: 24px; line-height: 22px; font-size: 15px; padding: 0; display: inline-flex; align-items: center; justify-content: center; transition: all 0.15s;">+</button>
+                            style="cursor: pointer; background: transparent; color: #475569; border: none; font-weight: 700; font-size: 20px; padding: 0 4px; line-height: 1; user-select: none; transition: color 0.15s;"
+                            onmouseenter="this.style.color='#0f766e';" onmouseleave="this.style.color='#475569';">+</button>
                     
                     <span style="color: #94a3b8; font-size: 14px; font-weight: 400; padding: 0 1px;">de</span>
                     
-                    <!-- Segundo 0: Disponibles -->
+                    <!-- Segundo 0: Disponibles (21px) -->
                     <span contenteditable="true" class="disp-sis" id="sis-disp-{idx}" oninput="actualizarDispValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
                           style="font-weight: 500; font-size: 21px; color: #64748b; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                 </div>
             </td>
 
-            <!-- 4. Volumen de Paquetes -->
+            <!-- 4. Volumen de Paquetes (16px) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <input type="number" id="sis-vol-{idx}" value="0" oninput="calcularFilaHibrida({idx})" onfocus="this.select()" placeholder="0"
                        style="width: 78px; text-align: center; padding: 4px 2px; font-weight: 600; font-size: 16px; border: none; border-bottom: 1.5px solid #0f766e; background: #f8fafc; color: #0f766e; outline: none; border-radius: 2px;" />
             </td>
 
-            <!-- 5. Resultado del Cálculo -->
+            <!-- 5. Resultado del Cálculo (22px) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <span id="sis-res-{idx}" style="font-weight: 600; font-size: 22px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
             </td>
         </tr>
         '''
     return html_rows
+    
 
 
 def export_c1_csv():
@@ -3464,7 +3472,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     }}
     
 
-
     // 🟢 Incrementar contador de unidades usadas (+1)
     function sumarUnidadHibrida(idx) {{
         const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
@@ -3491,6 +3498,21 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         }}
     }}
     
+
+
+    
+    // 🟢 Restar contador de unidades usadas (-1, mínimo 0)
+    function restarUnidadHibrida(idx) {{
+        const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
+        if (elUsadas) {{
+            let val = parseInt(elUsadas.innerText) || 0;
+            if (val > 0) {{
+                elUsadas.innerText = val - 1;
+                actualizarUsadasValor(idx);
+                calcularFilaHibrida(idx);
+            }}
+        }}
+    }}
 
 
 
