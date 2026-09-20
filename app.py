@@ -4790,7 +4790,7 @@ document.addEventListener('keydown', function(event) {{
 
     // 🟢 ACTUALIZACIÓN DE DISPONIBILIDAD Y VÍNCULO A TOTALES
     function actualizarDispValor(idx) {{
-        const elDisp = document.getElementById(`sis-disp-${idx}`);
+        const elDisp = document.getElementById(`sis-disp-${{idx}}`);
         const fila = elDisp?.closest('tr');
         if (elDisp && fila) {{
             let val = parseInt(elDisp.innerText) || 0;
