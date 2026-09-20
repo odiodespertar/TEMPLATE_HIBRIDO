@@ -1708,7 +1708,7 @@ def gen_rows_hibrido_sistemico():
     html_rows = ""
     for idx, (nombre, spr) in enumerate(CATALOGO_SISTEMICO.items()):
         html_rows += f'''
-        <tr class="fila-hibrida-sis" data-disp="0" style="border-bottom: 1px solid #f2f4f7; height: 62px; transition: background 0.15s ease;">
+        <tr class="fila-hibrida-sis" data-disp="0" style="border-bottom: 1px solid #e2e8f0; height: 62px; transition: background 0.15s ease;">
             <!-- 1. Nombre de la Unidad (16px Semi-Bold) -->
             <td style="padding: 12px 10px; text-align: left; vertical-align: middle;">
                 <div contenteditable="true" class="edit-name-sis" id="sis-nombre-{idx}" oninput="sincronizarTotalesSistemico()" onfocus="this.select()"
@@ -1718,16 +1718,16 @@ def gen_rows_hibrido_sistemico():
                 </div>
             </td>
 
-            <!-- 2. SPR Máximo Editable (Regresa al tamaño de antes: 15px en gris sutil) -->
+            <!-- 2. SPR Máximo Editable (15px en gris sutil) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <input type="number" id="sis-spr-{idx}" value="{spr[1]}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
-                       style="width: 60px; text-align: center; padding: 4px 2px; font-weight: 500; font-size: 15px; border: none; border-bottom: 1px solid #e2e8f0; background: transparent; color: #94a3b8; outline: none;" />
+                       style="width: 60px; text-align: center; padding: 4px 2px; font-weight: 500; font-size: 15px; border: none; border-bottom: 1px solid #cbd5e1; background: transparent; color: #94a3b8; outline: none;" />
             </td>
 
-            <!-- 3. Usadas de Disponibles (Primer '0' AUMENTADO a 21px, segundo '0' a 18px) -->
+            <!-- 3. Usadas de Disponibles (Ambos ceros en 21px) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-                    <!-- Primer 0: Aumentado a 21px -->
+                    <!-- Primer 0: Destacado 21px -->
                     <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{idx}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
                           style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                     
@@ -1736,9 +1736,9 @@ def gen_rows_hibrido_sistemico():
                     
                     <span style="color: #94a3b8; font-size: 14px; font-weight: 400; padding: 0 1px;">de</span>
                     
-                    <!-- Segundo 0: Aumentado a 18px en gris secundario -->
+                    <!-- Segundo 0: 21px en tono gris secundario -->
                     <span contenteditable="true" class="disp-sis" id="sis-disp-{idx}" oninput="actualizarDispValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
-                          style="font-weight: 400; font-size: 18px; color: #64748b; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1px solid #e2e8f0;">0</span>
+                          style="font-weight: 500; font-size: 21px; color: #64748b; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                 </div>
             </td>
 
@@ -1748,15 +1748,13 @@ def gen_rows_hibrido_sistemico():
                        style="width: 78px; text-align: center; padding: 4px 2px; font-weight: 600; font-size: 16px; border: none; border-bottom: 1.5px solid #0f766e; background: #f8fafc; color: #0f766e; outline: none; border-radius: 2px;" />
             </td>
 
-            <!-- 5. Resultado del Cálculo (AUMENTADO a 22px en verde) -->
+            <!-- 5. Resultado del Cálculo (22px en verde) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <span id="sis-res-{idx}" style="font-weight: 600; font-size: 22px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
             </td>
         </tr>
         '''
     return html_rows
-
-
 
 
 def export_c1_csv():
