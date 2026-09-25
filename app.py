@@ -3607,9 +3607,9 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
 
     // 🟢 LÓGICA DE BÚSQUEDA Y SUGERENCIAS DESPLEGABLES CON TECLADO
-    function buscarCoincidenciasUnidad(input, idx) {
+    function buscarCoincidenciasUnidad(input, idx) {{
         const query = input.value.toLowerCase().trim();
-        const boxSug = document.getElementById(`sis-sug-${idx}`);
+        const boxSug = document.getElementById(`sis-sug-${{idx}}`);
         if (!boxSug) return;
 
         boxSug.innerHTML = "";
@@ -3619,81 +3619,81 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             query === "" || nombre.toLowerCase().includes(query)
         );
 
-        if (coincidencias.length === 0) {
+        if (coincidencias.length === 0) {{
             boxSug.style.display = "none";
             return;
-        }
+        }}
 
-        coincidencias.forEach((nombre, itemIndex) => {
+        coincidencias.forEach((nombre, itemIndex) => {{
             const spr = catalogoUnidadesExtendido[nombre][1];
             const item = document.createElement("div");
-            item.className = `sug-item-${idx}`;
+            item.className = `sug-item-${{idx}}`;
             item.style.cssText = "padding: 8px 12px; font-size: 14px; font-weight: 600; color: #1e293b; cursor: pointer; transition: background 0.1s ease; border-bottom: 1px solid #f1f5f9;";
-            item.innerHTML = `<span style="color:#0f172a;">${nombre}</span> <span style="font-size:12px; color:#94a3b8; float:right;">SPR: ${spr}</span>`;
+            item.innerHTML = `<span style="color:#0f172a;">${{nombre}}</span> <span style="font-size:12px; color:#94a3b8; float:right;">SPR: ${{spr}}</span>`;
             
-            item.onmouseenter = function() {
+            item.onmouseenter = function() {{
                 resaltarSugerenciaItem(idx, itemIndex);
-            };
+            }};
 
-            item.onclick = function() {
+            item.onclick = function() {{
                 seleccionarUnidadSugerida(idx, nombre, spr);
-            };
+            }};
 
             boxSug.appendChild(item);
-        });
+        }});
 
         boxSug.style.display = "block";
-    }
+    }}
 
     let indiceSugerenciaSeleccionada = {};
 
-    function resaltarSugerenciaItem(idx, itemIndex) {
-        const items = document.querySelectorAll(`.sug-item-${idx}`);
-        items.forEach((it, i) => {
-            if (i === itemIndex) {
+    function resaltarSugerenciaItem(idx, itemIndex) {{
+        const items = document.querySelectorAll(`.sug-item-${{idx}}`);
+        items.forEach((it, i) => {{
+            if (i === itemIndex) {{
                 it.style.background = "#ccfbf1";
                 it.style.color = "#0f766e";
-            } else {
+            }} else {{
                 it.style.background = "transparent";
                 it.style.color = "#1e293b";
-            }
-        });
+            }}
+        }});
         indiceSugerenciaSeleccionada[idx] = itemIndex;
-    }
+    }}
 
-    function navegarSugerenciasUnidad(event, idx) {
-        const boxSug = document.getElementById(`sis-sug-${idx}`);
+    function navegarSugerenciasUnidad(event, idx) {{
+        const boxSug = document.getElementById(`sis-sug-${{idx}}`);
         if (!boxSug || boxSug.style.display === "none") return;
 
-        const items = document.querySelectorAll(`.sug-item-${idx}`);
+        const items = document.querySelectorAll(`.sug-item-${{idx}}`);
         if (items.length === 0) return;
 
         let currentIndex = indiceSugerenciaSeleccionada[idx] ?? -1;
 
-        if (event.key === "ArrowDown") {
+        if (event.key === "ArrowDown") {{
             event.preventDefault();
             currentIndex = (currentIndex + 1) % items.length;
             resaltarSugerenciaItem(idx, currentIndex);
             items[currentIndex].scrollIntoView({ block: "nearest" });
-        } else if (event.key === "ArrowUp") {
+        }} else if (event.key === "ArrowUp") {{
             event.preventDefault();
             currentIndex = (currentIndex - 1 + items.length) % items.length;
             resaltarSugerenciaItem(idx, currentIndex);
-            items[currentIndex].scrollIntoView({ block: "nearest" });
-        } else if (event.key === "Enter") {
+            items[currentIndex].scrollIntoView({{ block: "nearest" }});
+        }} else if (event.key === "Enter") {{
             event.preventDefault();
-            if (currentIndex >= 0 && items[currentIndex]) {
+            if (currentIndex >= 0 && items[currentIndex]) {{
                 items[currentIndex].click();
-            }
-        } else if (event.key === "Escape") {
+            }}
+        }} else if (event.key === "Escape") {{
             boxSug.style.display = "none";
-        }
-    }
+        }}
+    }}
 
-    function seleccionarUnidadSugerida(idx, nombre, spr) {
-        const inputNombre = document.getElementById(`sis-nombre-${idx}`);
-        const inputSpr = document.getElementById(`sis-spr-${idx}`);
-        const boxSug = document.getElementById(`sis-sug-${idx}`);
+    function seleccionarUnidadSugerida(idx, nombre, spr) {{
+        const inputNombre = document.getElementById(`sis-nombre-${{idx}}`);
+        const inputSpr = document.getElementById(`sis-spr-${{idx}}`);
+        const boxSug = document.getElementById(`sis-sug-${{idx}}`);
 
         if (inputNombre) inputNombre.value = nombre;
         if (inputSpr) inputSpr.value = spr;
@@ -3701,16 +3701,16 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
         sincronizarTotalesSistemico();
         calcularFilaHibrida(idx);
-    }
+    }}
 
     // Ocultar sugerencias al hacer clic fuera
-    document.addEventListener("click", function(e) {
-        document.querySelectorAll(".sugerencias-sis-box").forEach(box => {
-            if (!box.contains(e.target) && !e.target.classList.contains("edit-name-sis")) {
+    document.addEventListener("click", function(e) {{
+        document.querySelectorAll(".sugerencias-sis-box").forEach(box => {{
+            if (!box.contains(e.target) && !e.target.classList.contains("edit-name-sis")) {{
                 box.style.display = "none";
-            }
-        });
-    });
+            }}
+        }});
+    }});
 
     // 🟢 AGREGAR FILA EN BLANCO
     function agregarFilaSistemico() {{
