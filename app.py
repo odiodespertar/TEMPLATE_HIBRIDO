@@ -3674,7 +3674,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             event.preventDefault();
             currentIndex = (currentIndex + 1) % items.length;
             resaltarSugerenciaItem(idx, currentIndex);
-            items[currentIndex].scrollIntoView({ block: "nearest" });
+            items[currentIndex].scrollIntoView({{ block: "nearest" }});
         }} else if (event.key === "ArrowUp") {{
             event.preventDefault();
             currentIndex = (currentIndex - 1 + items.length) % items.length;
