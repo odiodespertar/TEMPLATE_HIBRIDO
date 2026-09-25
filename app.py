@@ -3430,7 +3430,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                             <th style="padding: 8px; text-align: center; width: 13%; font-weight: 600;">SPR MAX</th>
                             <th style="padding: 8px; text-align: center; width: 23%; font-weight: 600;">Utilizados</th>
                             <th style="padding: 8px; text-align: center; width: 13%; font-weight: 600;">Volumen</th>
-                            <th style="padding: 8px; text-align: center; width: 13%; font-weight: 600;">Cálculo</th>
+                            <th style="padding: 8px; text-align: center; width: 13%; font-weight: 600;">Requeridas</th>
                         </tr>
                     </thead>
                     <tbody id="tbody-hibrido-sistemico">
