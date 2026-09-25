@@ -3645,7 +3645,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         boxSug.style.display = "block";
     }}
 
-    let indiceSugerenciaSeleccionada = {};
+    let indiceSugerenciaSeleccionada = {{}};
 
     function resaltarSugerenciaItem(idx, itemIndex) {{
         const items = document.querySelectorAll(`.sug-item-${{idx}}`);
