@@ -1714,38 +1714,34 @@ CATALOGO_SISTEMICO = {
 
 def gen_rows_hibrido_sistemico():
     html_rows = ""
-    for idx, (nombre, spr) in enumerate(CATALOGO_SISTEMICO.items()):
+    # Renderiza 5 filas vacías por defecto
+    for idx in range(5):
         html_rows += f'''
         <tr class="fila-hibrida-sis" data-disp="0" data-usadas="0" style="border-bottom: 1px solid #e2e8f0; height: 62px; transition: background 0.15s ease;">
-            <!-- 1. Nombre de la Unidad (16px Semi-Bold Editable) -->
-            <td style="padding: 12px 10px; text-align: left; vertical-align: middle;">
-                <div contenteditable="true" class="edit-name-sis" id="sis-nombre-{idx}" oninput="sincronizarTotalesSistemico()" onfocus="this.select()"
-                     style="font-weight: 600; font-size: 16px; color: #1e293b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; outline: none; border-bottom: 1px dashed transparent; transition: border-color 0.2s;"
-                     onmouseenter="this.style.borderColor='#0f766e';" onmouseleave="this.style.borderColor='transparent';">
-                    {nombre}
-                </div>
+            <!-- 1. Buscador de Unidad con Sugerencias -->
+            <td style="padding: 12px 10px; text-align: left; vertical-align: middle; position: relative;">
+                <input type="text" class="edit-name-sis" id="sis-nombre-{idx}" oninput="buscarCoincidenciasUnidad(this, {idx})" onkeydown="navegarSugerenciasUnidad(event, {idx})" onfocus="buscarCoincidenciasUnidad(this, {idx})" placeholder="Buscar unidad (ej. car, mlp)..." autocomplete="off"
+                       style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 16px; color: #1e293b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 4px 6px; border-radius: 4px;" />
+                <div id="sis-sug-{idx}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 80%; left: 10px; right: 10px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 160px; overflow-y: auto;"></div>
             </td>
 
             <!-- 2. SPR Máximo Editable (15px) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
-                <input type="number" id="sis-spr-{idx}" value="{spr[1]}" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
+                <input type="number" id="sis-spr-{idx}" value="0" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
                        style="width: 60px; text-align: center; padding: 4px 2px; font-weight: 500; font-size: 15px; border: none; border-bottom: 1px solid #cbd5e1; background: transparent; color: #94a3b8; outline: none;" />
             </td>
 
-            <!-- 3. Usadas de Disponibles (Botones con sombreado turquesa intenso e interactivo) -->
+            <!-- 3. Usadas de Disponibles (Con botones + / -) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
-                    <!-- Botón MENOS con sombreado Turquesa visible -->
                     <button onclick="restarUnidadHibrida({idx})" class="btn-step-sis" title="Restar 1"
                             style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
                             onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488'; this.style.boxShadow='0 0 8px rgba(15, 118, 110, 0.4)';" 
                             onmouseleave="this.style.background='transparent'; this.style.color='#0f766e'; this.style.boxShadow='none';">-</button>
 
-                    <!-- Primer 0: Usadas (21px) -->
                     <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{idx}" oninput="actualizarUsadasValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
                           style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                     
-                    <!-- Botón MÁS con sombreado Turquesa visible -->
                     <button onclick="sumarUnidadHibrida({idx})" class="btn-step-sis" title="Sumar 1"
                             style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
                             onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488'; this.style.boxShadow='0 0 8px rgba(15, 118, 110, 0.4)';" 
@@ -1753,19 +1749,18 @@ def gen_rows_hibrido_sistemico():
                     
                     <span style="color: #94a3b8; font-size: 14px; font-weight: 400; padding: 0 1px;">de</span>
                     
-                    <!-- Segundo 0: Disponibles (21px) -->
                     <span contenteditable="true" class="disp-sis" id="sis-disp-{idx}" oninput="actualizarDispValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
                           style="font-weight: 500; font-size: 21px; color: #64748b; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                 </div>
             </td>
 
-            <!-- 4. Volumen de Paquetes (16px) -->
+            <!-- 4. Volumen de Paquetes -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <input type="number" id="sis-vol-{idx}" value="0" oninput="calcularFilaHibrida({idx})" onfocus="this.select()" placeholder="0"
                        style="width: 78px; text-align: center; padding: 4px 2px; font-weight: 600; font-size: 16px; border: none; border-bottom: 1.5px solid #0f766e; background: #f8fafc; color: #0f766e; outline: none; border-radius: 2px;" />
             </td>
 
-            <!-- 5. Resultado del Cálculo (22px) -->
+            <!-- 5. Resultado del Cálculo -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <span id="sis-res-{idx}" style="font-weight: 600; font-size: 22px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
             </td>
@@ -3421,7 +3416,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                 </div>
             </div>
 
-            <!-- ⚡ TABLA CALCULADORA MINIMALISTA (BLANCA) -->
+            <!-- ⚡ TABLA CALCULADORA MINIMALISTA CON BUSCADOR DE UNIDADES -->
             <div style="max-width: 850px; margin: 0 auto; background: #ffffff; padding: 24px 28px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0,0,0,0.04); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
                 <div style="font-size: 17px; font-weight: 700; color: #111111; margin-bottom: 16px; border-bottom: 1px solid #f0f0f0; padding-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
                     <span>Resumen de flota en <strong>Sistémico</strong></span>
@@ -3438,13 +3433,24 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                             <th style="padding: 8px; text-align: center; width: 13%; font-weight: 600;">Cálculo</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tbody-hibrido-sistemico">
                         {gen_rows_hibrido_sistemico()}
                     </tbody>
                 </table>
-            </div>
 
-        </div>
+                <!-- Botones para agregar o quitar filas vacías -->
+                <div style="display: flex; gap: 8px; margin-top: 14px;">
+                    <button onclick="removerFilaSistemico()" title="Eliminar última fila"
+                            style="flex: 1; cursor: pointer; background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; font-weight: 700; border-radius: 6px; padding: 6px 0; font-size: 16px; transition: all 0.15s ease;"
+                            onmouseenter="this.style.background='#fee2e2'; this.style.color='#dc2626'; this.style.borderColor='#fca5a5';" 
+                            onmouseleave="this.style.background='#f1f5f9'; this.style.color='#64748b'; this.style.borderColor='#cbd5e1';">- Quitar Espacio</button>
+
+                    <button onclick="agregarFilaSistemico()" title="Agregar nuevo espacio"
+                            style="flex: 1; cursor: pointer; background: #f1f5f9; color: #0f766e; border: 1px solid #cbd5e1; font-weight: 700; border-radius: 6px; padding: 6px 0; font-size: 16px; transition: all 0.15s ease;"
+                            onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488'; this.style.borderColor='#99f6e4';" 
+                            onmouseleave="this.style.background='#f1f5f9'; this.style.color='#0f766e'; this.style.borderColor='#cbd5e1';">+ Agregar Espacio de Unidad</button>
+                </div>
+            </div>
         
         <div id="polys-9" class="p-content" style="display:none;">{gen_poligonos(u_C1_VACIA)}</div>
         <div id="polys-10" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX8)}</div>
@@ -3596,6 +3602,179 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             const input2 = parseFloat(document.getElementById('dos-pct-in-2')?.value) || 0;
             const res2 = document.getElementById('dos-pct-res-2');
             if (res2) res2.innerText = Math.ceil(input2 * 0.02).toLocaleString();
+        }}
+    }}
+
+
+    // 🟢 LÓGICA DE BÚSQUEDA Y SUGERENCIAS DESPLEGABLES CON TECLADO
+    function buscarCoincidenciasUnidad(input, idx) {
+        const query = input.value.toLowerCase().trim();
+        const boxSug = document.getElementById(`sis-sug-${idx}`);
+        if (!boxSug) return;
+
+        boxSug.innerHTML = "";
+        
+        // Muestra sugerencias coincidentes o catálogo completo si hace focus sin escribir
+        const coincidencias = Object.keys(catalogoUnidadesExtendido).filter(nombre => 
+            query === "" || nombre.toLowerCase().includes(query)
+        );
+
+        if (coincidencias.length === 0) {
+            boxSug.style.display = "none";
+            return;
+        }
+
+        coincidencias.forEach((nombre, itemIndex) => {
+            const spr = catalogoUnidadesExtendido[nombre][1];
+            const item = document.createElement("div");
+            item.className = `sug-item-${idx}`;
+            item.style.cssText = "padding: 8px 12px; font-size: 14px; font-weight: 600; color: #1e293b; cursor: pointer; transition: background 0.1s ease; border-bottom: 1px solid #f1f5f9;";
+            item.innerHTML = `<span style="color:#0f172a;">${nombre}</span> <span style="font-size:12px; color:#94a3b8; float:right;">SPR: ${spr}</span>`;
+            
+            item.onmouseenter = function() {
+                resaltarSugerenciaItem(idx, itemIndex);
+            };
+
+            item.onclick = function() {
+                seleccionarUnidadSugerida(idx, nombre, spr);
+            };
+
+            boxSug.appendChild(item);
+        });
+
+        boxSug.style.display = "block";
+    }
+
+    let indiceSugerenciaSeleccionada = {};
+
+    function resaltarSugerenciaItem(idx, itemIndex) {
+        const items = document.querySelectorAll(`.sug-item-${idx}`);
+        items.forEach((it, i) => {
+            if (i === itemIndex) {
+                it.style.background = "#ccfbf1";
+                it.style.color = "#0f766e";
+            } else {
+                it.style.background = "transparent";
+                it.style.color = "#1e293b";
+            }
+        });
+        indiceSugerenciaSeleccionada[idx] = itemIndex;
+    }
+
+    function navegarSugerenciasUnidad(event, idx) {
+        const boxSug = document.getElementById(`sis-sug-${idx}`);
+        if (!boxSug || boxSug.style.display === "none") return;
+
+        const items = document.querySelectorAll(`.sug-item-${idx}`);
+        if (items.length === 0) return;
+
+        let currentIndex = indiceSugerenciaSeleccionada[idx] ?? -1;
+
+        if (event.key === "ArrowDown") {
+            event.preventDefault();
+            currentIndex = (currentIndex + 1) % items.length;
+            resaltarSugerenciaItem(idx, currentIndex);
+            items[currentIndex].scrollIntoView({ block: "nearest" });
+        } else if (event.key === "ArrowUp") {
+            event.preventDefault();
+            currentIndex = (currentIndex - 1 + items.length) % items.length;
+            resaltarSugerenciaItem(idx, currentIndex);
+            items[currentIndex].scrollIntoView({ block: "nearest" });
+        } else if (event.key === "Enter") {
+            event.preventDefault();
+            if (currentIndex >= 0 && items[currentIndex]) {
+                items[currentIndex].click();
+            }
+        } else if (event.key === "Escape") {
+            boxSug.style.display = "none";
+        }
+    }
+
+    function seleccionarUnidadSugerida(idx, nombre, spr) {
+        const inputNombre = document.getElementById(`sis-nombre-${idx}`);
+        const inputSpr = document.getElementById(`sis-spr-${idx}`);
+        const boxSug = document.getElementById(`sis-sug-${idx}`);
+
+        if (inputNombre) inputNombre.value = nombre;
+        if (inputSpr) inputSpr.value = spr;
+        if (boxSug) boxSug.style.display = "none";
+
+        sincronizarTotalesSistemico();
+        calcularFilaHibrida(idx);
+    }
+
+    // Ocultar sugerencias al hacer clic fuera
+    document.addEventListener("click", function(e) {
+        document.querySelectorAll(".sugerencias-sis-box").forEach(box => {
+            if (!box.contains(e.target) && !e.target.classList.contains("edit-name-sis")) {
+                box.style.display = "none";
+            }
+        });
+    });
+
+    // 🟢 AGREGAR FILA EN BLANCO
+    function agregarFilaSistemico() {{
+        const tbody = document.getElementById("tbody-hibrido-sistemico");
+        if (!tbody) return;
+
+        const numFilas = tbody.querySelectorAll("tr.fila-hibrida-sis").length;
+        const nuevaTr = document.createElement("tr");
+
+        nuevaTr.className = "fila-hibrida-sis";
+        nuevaTr.setAttribute("data-disp", "0");
+        nuevaTr.setAttribute("data-usadas", "0");
+        nuevaTr.style.cssText = "border-bottom: 1px solid #e2e8f0; height: 62px; transition: background 0.15s ease;";
+
+        nuevaTr.innerHTML = `
+            <td style="padding: 12px 10px; text-align: left; vertical-align: middle; position: relative;">
+                <input type="text" class="edit-name-sis" id="sis-nombre-${{numFilas}}" oninput="buscarCoincidenciasUnidad(this, ${{numFilas}})" onkeydown="navegarSugerenciasUnidad(event, ${{numFilas}})" onfocus="buscarCoincidenciasUnidad(this, ${{numFilas}})" placeholder="Buscar unidad (ej. car, mlp)..." autocomplete="off"
+                       style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 16px; color: #1e293b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 4px 6px; border-radius: 4px;" />
+                <div id="sis-sug-${{numFilas}}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 80%; left: 10px; right: 10px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 160px; overflow-y: auto;"></div>
+            </td>
+            <td style="text-align: center; padding: 6px; vertical-align: middle;">
+                <input type="number" id="sis-spr-${{numFilas}}" value="0" oninput="calcularFilaHibrida(${{numFilas}})" onfocus="this.select()"
+                       style="width: 60px; text-align: center; padding: 4px 2px; font-weight: 500; font-size: 15px; border: none; border-bottom: 1px solid #cbd5e1; background: transparent; color: #94a3b8; outline: none;" />
+            </td>
+            <td style="text-align: center; padding: 6px; vertical-align: middle;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+                    <button onclick="restarUnidadHibrida(${{numFilas}})" class="btn-step-sis" title="Restar 1"
+                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
+                            onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488'; this.style.boxShadow='0 0 8px rgba(15, 118, 110, 0.4)';" 
+                            onmouseleave="this.style.background='transparent'; this.style.color='#0f766e'; this.style.boxShadow='none';">-</button>
+                    <span contenteditable="true" class="u-manual-sis" id="sis-usadas-${{numFilas}}" oninput="actualizarUsadasValor(${{numFilas}}); calcularFilaHibrida(${{numFilas}});" onfocus="this.select()"
+                          style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
+                    <button onclick="sumarUnidadHibrida(${{numFilas}})" class="btn-step-sis" title="Sumar 1"
+                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
+                            onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488'; this.style.boxShadow='0 0 8px rgba(15, 118, 110, 0.4)';" 
+                            onmouseleave="this.style.background='transparent'; this.style.color='#0f766e'; this.style.boxShadow='none';">+</button>
+                    <span style="color: #94a3b8; font-size: 14px; font-weight: 400; padding: 0 1px;">de</span>
+                    <span contenteditable="true" class="disp-sis" id="sis-disp-${{numFilas}}" oninput="actualizarDispValor(${{numFilas}}); calcularFilaHibrida(${{numFilas}});" onfocus="this.select()"
+                          style="font-weight: 500; font-size: 21px; color: #64748b; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
+                </div>
+            </td>
+            <td style="text-align: center; padding: 6px; vertical-align: middle;">
+                <input type="number" id="sis-vol-${{numFilas}}" value="0" oninput="calcularFilaHibrida(${{numFilas}})" onfocus="this.select()" placeholder="0"
+                       style="width: 78px; text-align: center; padding: 4px 2px; font-weight: 600; font-size: 16px; border: none; border-bottom: 1.5px solid #0f766e; background: #f8fafc; color: #0f766e; outline: none; border-radius: 2px;" />
+            </td>
+            <td style="text-align: center; padding: 6px; vertical-align: middle;">
+                <span id="sis-res-${{numFilas}}" style="font-weight: 600; font-size: 22px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
+            </td>
+        `;
+
+        tbody.appendChild(nuevaTr);
+        const nuevoInput = document.getElementById(`sis-nombre-${{numFilas}}`);
+        if (nuevoInput) nuevoInput.focus();
+    }}
+
+    // 🟢 REMOVER ÚLTIMA FILA
+    function removerFilaSistemico() {{
+        const tbody = document.getElementById("tbody-hibrido-sistemico");
+        if (!tbody) return;
+
+        const filas = tbody.querySelectorAll("tr.fila-hibrida-sis");
+        if (filas.length > 1) {{
+            tbody.removeChild(filas[filas.length - 1]);
+            sincronizarTotalesSistemico();
         }}
     }}
 
