@@ -3769,7 +3769,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                 <div style="display: flex; align-items: center; justify-content: center; gap: 3px;">
                     <!-- Botón Restar en JS con dobles llaves -->
                     <button onclick="restarUnidadHibrida(${{numFilas}})" class="btn-step-sis" title="Restar 1"
-                            style="cursor: pointer; background: transparent; color: #dc2626; border: none; font-weight: 800; font-size: 22px; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
+                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
                             onmouseenter="this.style.background='#fee2e2'; this.style.color='#b91c1c'; this.style.boxShadow='0 0 8px rgba(220, 38, 38, 0.4)';" 
                             onmouseleave="this.style.background='transparent'; this.style.color='#dc2626'; this.style.boxShadow='none';">-</button>
                     
