@@ -3974,7 +3974,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         }}
     }}
 
-    // 🟢 SUB-FUNCIÓN AUXILIAR DE LIMPIEZA DE SISTÉMICO
+
+    // 🟢 SUB-FUNCIÓN AUXILIAR DE LIMPIEZA DE SISTÉMICO (INCLUYE OCULTAR BADGES DE EXCESO)
     function limpiarSistemico() {{
         // A. REINICIAR CALCULADORA 2% DATO 1 (SUMATORIA DINÁMICA)
         const contenedor = document.getElementById('contenedor-celdas-2pct');
@@ -4006,6 +4007,12 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             fila.setAttribute('data-disp', '0');
             fila.setAttribute('data-usadas', '0');
 
+            const elNombre = document.getElementById(`sis-nombre-${{idx}}`);
+            if (elNombre) elNombre.value = '';
+
+            const elSpr = document.getElementById(`sis-spr-${{idx}}`);
+            if (elSpr) elSpr.value = '0';
+
             const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
             if (elUsadas) elUsadas.innerText = '0';
 
@@ -4017,6 +4024,13 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
             const elRes = document.getElementById(`sis-res-${{idx}}`);
             if (elRes) elRes.innerText = '0';
+
+            // 🔴 OCULTAR Y LIMPIAR EL BADGE DE EXCESO ROJO
+            const badgeExceso = document.getElementById(`sis-badge-exceso-${{idx}}`);
+            if (badgeExceso) {{
+                badgeExceso.innerText = '';
+                badgeExceso.style.display = 'none';
+            }}
         }});
 
         // D. SINCRONIZAR CONTADORES Y RESTABLECER VISTA
@@ -4027,6 +4041,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             filterRows(false);
         }}
     }}
+    
 
 
     // 🟢 FUNCIÓN OCULTAR / MOSTRAR PLANES EXTRA (GENÉRICOS)
