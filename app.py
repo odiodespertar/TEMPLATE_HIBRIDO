@@ -1704,7 +1704,7 @@ CATALOGO_SISTEMICO = {
     "Car 3h": [30, 30],
     "Car 5h": [30, 30],
     "Car Zona Extendida": [60, 60],
-    "Car Extra 8h": [70, 70],
+    "Car 8h": [70, 70],
     "Small Van 11h Ext": [70, 70],
     "Small Van 9h": [70, 70],
     "Small Van 9h Ext Extendida": [70, 70],
@@ -1731,17 +1731,23 @@ def gen_rows_hibrido_sistemico():
                        style="width: 60px; text-align: center; padding: 4px 2px; font-weight: 500; font-size: 15px; border: none; border-bottom: 1px solid #cbd5e1; background: transparent; color: #94a3b8; outline: none;" />
             </td>
 
-            <!-- 3. Usadas de Disponibles (Con botones + / -) -->
+            <!-- 3. Usadas de Disponibles (Con Badge +X de exceso al lado) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 4px; position: relative;">
+                    <!-- Botón Restar -->
                     <button onclick="restarUnidadHibrida({idx})" class="btn-step-sis" title="Restar 1"
                             style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
                             onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488'; this.style.boxShadow='0 0 8px rgba(15, 118, 110, 0.4)';" 
                             onmouseleave="this.style.background='transparent'; this.style.color='#0f766e'; this.style.boxShadow='none';">-</button>
 
+                    <!-- Primer 0: Usadas/Utilizados -->
                     <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{idx}" oninput="actualizarUsadasValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
                           style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                     
+                    <!-- 🟢 Badge de Exceso (+X) discreto -->
+                    <span id="sis-badge-exceso-{idx}" style="display: none; font-size: 10px; background: #d32f2f; color: #ffffff; padding: 1px 4px; border-radius: 4px; font-weight: 800; line-height: 1; vertical-align: middle; margin-left: -2px; margin-right: 2px;"></span>
+
+                    <!-- Botón Sumar -->
                     <button onclick="sumarUnidadHibrida({idx})" class="btn-step-sis" title="Sumar 1"
                             style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
                             onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488'; this.style.boxShadow='0 0 8px rgba(15, 118, 110, 0.4)';" 
@@ -1749,6 +1755,7 @@ def gen_rows_hibrido_sistemico():
                     
                     <span style="color: #94a3b8; font-size: 14px; font-weight: 400; padding: 0 1px;">de</span>
                     
+                    <!-- Segundo 0: Disponibles -->
                     <span contenteditable="true" class="disp-sis" id="sis-disp-{idx}" oninput="actualizarDispValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
                           style="font-weight: 500; font-size: 21px; color: #64748b; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                 </div>
@@ -3790,12 +3797,18 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         }}
     }}
 
-    // 🟢 Cálculo automático por fila (Volumen ÷ SPR)
+    // 🟢 CÁLCULO DE FILA, EXCESO Y VÍNCULO A CONTADORES
     function calcularFilaHibrida(idx) {{
+        const inputNombre = document.getElementById(`sis-nombre-${{idx}}`);
+        const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
+        const elDisp = document.getElementById(`sis-disp-${{idx}}`);
+        const badgeExceso = document.getElementById(`sis-badge-exceso-${{idx}}`);
+        
         const elSpr = parseFloat(document.getElementById(`sis-spr-${{idx}}`)?.value) || 0;
         const elVol = parseFloat(document.getElementById(`sis-vol-${{idx}}`)?.value) || 0;
         const elRes = document.getElementById(`sis-res-${{idx}}`);
 
+        // 1. Cálculo de resultado de paquetes ÷ SPR
         if (elRes) {{
             if (elVol > 0 && elSpr > 0) {{
                 let calc = Math.ceil(elVol / elSpr);
@@ -3803,6 +3816,32 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             }} else {{
                 elRes.innerText = "0";
             }}
+        }}
+
+        // 2. Lógica del Badge de Exceso exclusivo para Cars (Car 3h, Car 5h, Car 8h)
+        if (inputNombre && elUsadas && elDisp && badgeExceso) {{
+            const nombre = (inputNombre.value || inputNombre.innerText || "").toLowerCase().trim();
+            const usadas = parseInt(elUsadas.innerText) || 0;
+            const disp = parseInt(elDisp.innerText) || 0;
+
+            // Unidades permitidas para mostrar exceso
+            const esCarPermitido = nombre.includes("car 3h") || nombre.includes("car - 3h") ||
+                                   nombre.includes("car 5h") || nombre.includes("car - 5h") ||
+                                   nombre.includes("car 8h") || nombre.includes("car - 8h");
+
+            if (esCarPermitido && usadas > disp) {{
+                const exceso = usadas - disp;
+                badgeExceso.innerText = `+${{exceso}}`;
+                badgeExceso.style.display = "inline-block";
+                badgeExceso.title = `Exceso de ${{exceso}} unidad(es) sobre la disponibilidad`;
+            }} else {{
+                badgeExceso.style.display = "none";
+            }}
+        }}
+
+        // 3. Sincronización global si la pestaña activa es Sistémico (4)
+        if (currentTab === 4) {{
+            sincronizarTotalesSistemico();
         }}
     }}
     
