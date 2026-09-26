@@ -1731,7 +1731,7 @@ def gen_rows_hibrido_sistemico():
                        style="width: 60px; text-align: center; padding: 4px 2px; font-weight: 500; font-size: 15px; border: none; border-bottom: 1px solid #cbd5e1; background: transparent; color: #94a3b8; outline: none;" />
             </td>
 
-            <!-- 3. Usadas de Disponibles (Con Badge +X de exceso al lado) -->
+            <!-- 3. Usadas de Disponibles (Con Badge +X de exceso generado dinámicamente) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 4px; position: relative;">
                     <!-- Botón Restar -->
@@ -1743,9 +1743,6 @@ def gen_rows_hibrido_sistemico():
                     <!-- Primer 0: Usadas/Utilizados -->
                     <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{idx}" oninput="actualizarUsadasValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
                           style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
-                    
-                    <!-- 🟢 BADGE ROJO DE EXCESO (+X) -->
-                    <span id="sis-badge-exceso-{idx}" style="display: none; font-size: 10px; background: #d32f2f; color: #ffffff; padding: 1px 4px; border-radius: 4px; font-weight: 800; line-height: 1; vertical-align: middle; margin-left: -2px; margin-right: 2px;"></span>
 
                     <!-- Botón Sumar -->
                     <button onclick="sumarUnidadHibrida({idx})" class="btn-step-sis" title="Sumar 1"
@@ -3805,12 +3802,11 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
 
 
-    // 🟢 CÁLCULO DE FILA Y BADGE ROJO DE EXCESO (+X)
+    // 🟢 CÁLCULO DE FILA Y BADGE ROJO DE EXCESO (+X) (MISMOS PARÁMETROS QUE OTROS RUTEOS)
     function calcularFilaHibrida(idx) {{
         const inputNombre = document.getElementById(`sis-nombre-${{idx}}`);
         const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
         const elDisp = document.getElementById(`sis-disp-${{idx}}`);
-        const badgeExceso = document.getElementById(`sis-badge-exceso-${{idx}}`);
         
         const elSpr = parseFloat(document.getElementById(`sis-spr-${{idx}}`)?.value) || 0;
         const elVol = parseFloat(document.getElementById(`sis-vol-${{idx}}`)?.value) || 0;
@@ -3826,12 +3822,22 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             }}
         }}
 
-        // 2. Lógica del Badge de Exceso exclusivo para Cars (Car 3h, Car 5h, Car 8h)
-        if (inputNombre && elUsadas && elDisp && badgeExceso) {{
-            // Extraer valor de forma segura si es INPUT o DIV
+        // 2. Lógica exacta del Badge de Exceso exclusivo para Cars (Car 3h, Car 5h, Car 8h)
+        if (inputNombre && elUsadas && elDisp) {{
             const nombre = (inputNombre.value !== undefined ? inputNombre.value : inputNombre.innerText || "").toLowerCase().trim();
             const usadas = parseInt(elUsadas.innerText) || 0;
             const disp = parseInt(elDisp.innerText) || 0;
+
+            // Buscar si ya existe el badge o crearlo dentro del contenedor de la celda
+            let badge = document.getElementById(`sis-badge-exceso-${{idx}}`);
+            if (!badge) {{
+                badge = document.createElement('span');
+                badge.id = `sis-badge-exceso-${{idx}}`;
+                badge.style.cssText = 'font-size: 11px; background: #d32f2f; color: white; padding: 1px 4px; border-radius: 3px; font-weight: bold; margin-left: 2px; margin-right: 2px; display: inline-block; vertical-align: middle;';
+                
+                // Inyectar el badge justo después del primer número de unidades usadas
+                elUsadas.after(badge);
+            }}
 
             // Validación flexible para detectar variantes de Car 3h, Car 5h, Car 8h
             const esCarPermitido = nombre.includes("car 3h") || nombre.includes("car - 3h") ||
@@ -3840,11 +3846,11 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
             if (esCarPermitido && usadas > disp) {{
                 const exceso = usadas - disp;
-                badgeExceso.innerText = `+${{exceso}}`;
-                badgeExceso.style.display = "inline-block";
-                badgeExceso.title = `Exceso de ${{exceso}} unidad(es) sobre la disponibilidad`;
+                badge.innerText = `+${{exceso}}`;
+                badge.style.display = "inline-block";
+                badge.title = `Exceso de ${{exceso}} unidad(es) sobre la disponibilidad`;
             }} else {{
-                badgeExceso.style.display = "none";
+                badge.style.display = "none";
             }}
         }}
 
