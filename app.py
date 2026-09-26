@@ -2992,7 +2992,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 </div>
 
 
-
 <!-- 1. BOTONES SUPERIORES (SE QUEDAN SIEMPRE FIJOS ATRÁS) -->
 <div id="fleet-drag-handle" style="display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap; padding: 4px 0; margin-bottom: 8px;">
     
@@ -3895,6 +3894,24 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     }}
     
 
+    // 🟢 CONVERTIDOR RÁPIDO DE ORH (MINUTOS A HORAS)
+    function convertirOrhRapido() {{
+        const inputMin = parseFloat(document.getElementById('orh-minutos-in')?.value) || 0;
+        const resDisplay = document.getElementById('orh-horas-res');
+
+        if (resDisplay) {{
+            if (inputMin > 0) {{
+                let horas = Math.floor(inputMin / 60);
+                let mins = Math.round(inputMin % 60);
+                let hStr = String(horas).padStart(2, '0');
+                let mStr = String(mins).padStart(2, '0');
+                resDisplay.innerText = `${{hStr}}:${{mStr}}`;
+            }} else {{
+                resDisplay.innerText = '00:00';
+            }}
+        }}
+    }}
+
 
 
     function cambiarCiclo(valorTab) {{
@@ -4016,6 +4033,12 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         if (inDato2) inDato2.value = '0';
         if (elRes2) elRes2.innerText = '0';
 
+        // 🟢 B.2 REINICIAR CONVERTIDOR ORH (AGREGADO AQUÍ)
+        const inOrhMin = document.getElementById('orh-minutos-in');
+        const elResOrh = document.getElementById('orh-horas-res');
+        if (inOrhMin) inOrhMin.value = '';
+        if (elResOrh) elResOrh.innerText = '00:00';
+
         // C. REINICIAR TODAS LAS FILAS DE LA TABLA HÍBRIDA DE SISTÉMICO
         const filasSistemico = document.querySelectorAll('.fila-hibrida-sis');
         filasSistemico.forEach((fila, idx) => {{
@@ -4056,6 +4079,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             filterRows(false);
         }}
     }}
+    
     
 
 
