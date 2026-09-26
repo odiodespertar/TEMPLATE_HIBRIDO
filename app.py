@@ -1746,7 +1746,7 @@ def gen_rows_hibrido_sistemico():
                               style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 26px; text-align: center; outline: none; padding: 2px 2px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                         
                         <!-- 🟢 BADGE ROJO DE EXCESO NATIVO (+X) -->
-                        <span id="sis-badge-exceso-{idx}" style="display: none; position: absolute; top: -10px; right: -14px; font-size: 11px; background: #dc2626; color: #ffffff; padding: 2px 5px; border-radius: 4px; font-weight: 800; line-height: 1; z-index: 10; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; letter-spacing: -0.2px;"></span>
+                        <span id="sis-badge-exceso-{idx}" style="display: none; position: absolute; top: -10px; right: -14px; font-size: 11px; background: #6495ED; color: #ffffff; padding: 2px 5px; border-radius: 4px; font-weight: 800; line-height: 1; z-index: 10; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; letter-spacing: -0.2px;"></span>
                     </div>
 
                     <!-- Botón Sumar -->
