@@ -3366,34 +3366,35 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <div id="polys-1" class="p-content" style="display:none;">{gen_poligonos(u_PREC)}</div>
         <div id="polys-5" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX2)}</div>
         
-        <!-- 🟢 CONTENEDOR TABLA HÍBRIDA CON MINICALCULADORAS 2% EN GRIS OSCURO -->
+        <!-- 🟢 CONTENEDOR TABLA HÍBRIDA CON MINICALCULADORAS 2% Y CONVERTIDOR ORH -->
         <div id="polys-4" class="p-content" style="display:none;">
             
-            <!-- ⚡ DOS CALCULADORAS INDEPENDIENTES DE 2% (DATO 1 DINÁMICO EN LISTA) -->
-            <div style="display: flex; max-width: 850px; margin: 0 auto 15px auto; gap: 15px; align-items: flex-start;">
+            <!-- ⚡ BLOQUE SUPERIOR: DOS CALCULADORAS INDEPENDIENTES DE 2% + CONVERTIDOR DE ORH (DE LADO A LADO) -->
+            <div style="display: flex; max-width: 850px; margin: 0 auto 20px auto; gap: 15px; align-items: stretch;">
                 
-                <!-- RECUADRO 1: LISTA SUMATORIA DINÁMICA DE 2% (CON VERDE MENTA) -->
-                <div style="flex: 1; background: #ffffff; padding: 16px 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
-                        <div>
-                            <div style="font-size: 11px; font-weight: 700; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - SIN NODOS</div>
-                            <span style="font-size: 11px; color: #64748b; font-weight: 600;">Suma total: <strong id="dos-pct-suma-total-1" style="color: #0f172a;">0</strong></span>
+                <!-- RECUADRO 1: LISTA SUMATORIA DINÁMICA DE 2% -->
+                <div style="flex: 1; background: #ffffff; padding: 16px 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
+                            <div>
+                                <div style="font-size: 11px; font-weight: 700; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - SIN NODOS</div>
+                                <span style="font-size: 11px; color: #64748b; font-weight: 600;">Suma total: <strong id="dos-pct-suma-total-1" style="color: #0f172a;">0</strong></span>
+                            </div>
+                            <div style="text-align: right;">
+                                <span style="font-size: 10px; color: #888888; display: block; font-weight: 600;">RESULTADO 2%:</span>
+                                <span id="dos-pct-res-1" style="font-size: 26px; font-weight: 900; color: #66CDAA;">0</span>
+                            </div>
                         </div>
-                        <div style="text-align: right;">
-                            <span style="font-size: 10px; color: #888888; display: block; font-weight: 600;">RESULTADO 2%:</span>
-                            <!-- Verde menta neón exacto -->
-                            <span id="dos-pct-res-1" style="font-size: 26px; font-weight: 900; color: #66CDAA;">0</span>
-                        </div>
-                    </div>
 
-                    <!-- Celdas de Entrada (Sin scroll horizontal) -->
-                    <div id="contenedor-celdas-2pct" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-x: hidden; overflow-y: auto; padding-right: 2px;">
-                        <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 1"
-                               style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
-                        <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 2"
-                               style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
-                        <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 3"
-                               style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
+                        <!-- Celdas de Entrada (Sin scroll horizontal) -->
+                        <div id="contenedor-celdas-2pct" style="display: flex; flex-direction: column; gap: 8px; max-height: 160px; overflow-x: hidden; overflow-y: auto; padding-right: 2px;">
+                            <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 1"
+                                   style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
+                            <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 2"
+                                   style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
+                            <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 3"
+                                   style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
+                        </div>
                     </div>
 
                     <!-- Botones de Control + y - -->
@@ -3410,8 +3411,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                     </div>
                 </div>
 
-                <!-- RECUADRO 2: DATO DEDICADO INDIVIDUAL + CONVERTIDOR ORH -->
-                <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
+                <!-- RECUADRO 2: DATO DEDICADO INDIVIDUAL + CONVERTIDOR DE ORH -->
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 12px; justify-content: space-between;">
                     <!-- Recuadro Dato 2 -->
                     <div style="background: #1e2022; padding: 14px 18px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
                         <div>
@@ -3425,8 +3426,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                         </div>
                     </div>
 
-                    <!-- ⏱️ NUEVO MINIPANEL CONVERTIDOR DE ORH A HORAS -->
-                    <div style="background: #1e2022; padding: 12px 18px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                    <!-- ⏱️ MINIPANEL CONVERTIDOR DE ORH A HORAS -->
+                    <div style="background: #1e2022; padding: 14px 18px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
                         <div>
                             <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">CONVERTIDOR ORH</div>
                             <input type="number" id="orh-minutos-in" oninput="convertirOrhRapido()" onfocus="this.select()" placeholder="Minutos"
@@ -3438,8 +3439,9 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                         </div>
                     </div>
                 </div>
+            </div>
 
-            <!-- ⚡ TABLA CALCULADORA MINIMALISTA CON BUSCADOR DE UNIDADES -->
+            <!-- ⚡ BLOQUE INFERIOR SEPARADO: TABLA CALCULADORA DE SISTÉMICO -->
             <div style="max-width: 850px; margin: 0 auto; background: #ffffff; padding: 24px 28px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0,0,0,0.04); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
                 <div style="font-size: 17px; font-weight: 700; color: #111111; margin-bottom: 16px; border-bottom: 1px solid #f0f0f0; padding-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
                     <span>Resumen de flota en <strong>Sistémico</strong></span>
@@ -3474,6 +3476,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                             onmouseleave="this.style.background='#f1f5f9'; this.style.color='#0f766e'; this.style.borderColor='#cbd5e1';">+ Agregar Espacio de Unidad</button>
                 </div>
             </div>
+        </div>
         
         <div id="polys-9" class="p-content" style="display:none;">{gen_poligonos(u_C1_VACIA)}</div>
         <div id="polys-10" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX8)}</div>
