@@ -1746,7 +1746,7 @@ def gen_rows_hibrido_sistemico():
                               style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 26px; text-align: center; outline: none; padding: 2px 2px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                         
                         <!-- 🟢 BADGE ROJO DE EXCESO NATIVO (+X) -->
-                        <span id="sis-badge-exceso-{idx}" style="display: none; position: absolute; top: -8px; right: -12px; font-size: 10px; background: #dc2626; color: #ffffff; padding: 1px 4px; border-radius: 4px; font-weight: 800; line-height: 1; z-index: 10; box-shadow: 0 1px 3px rgba(0,0,0,0.2);"></span>
+                        <span id="sis-badge-exceso-{idx}" style="display: none; position: absolute; top: -10px; right: -14px; font-size: 11px; background: #dc2626; color: #ffffff; padding: 2px 5px; border-radius: 4px; font-weight: 800; line-height: 1; z-index: 10; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; letter-spacing: -0.2px;"></span>
                     </div>
 
                     <!-- Botón Sumar -->
@@ -3762,7 +3762,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                               style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 26px; text-align: center; outline: none; padding: 2px 2px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                         
                         <!-- 🟢 BADGE ROJO DE EXCESO (+X) -->
-                        <span id="sis-badge-exceso-${{numFilas}}" style="display: none; position: absolute; top: -8px; right: -12px; font-size: 10px; background: #dc2626; color: #ffffff; padding: 1px 4px; border-radius: 4px; font-weight: 800; line-height: 1; z-index: 10; box-shadow: 0 1px 3px rgba(0,0,0,0.2);"></span>
+                        <span id="sis-badge-exceso-${{numFilas}}" style="display: none; position: absolute; top: -10px; right: -14px; font-size: 11px; background: #dc2626; color: #ffffff; padding: 2px 5px; border-radius: 4px; font-weight: 800; line-height: 1; z-index: 10; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; letter-spacing: -0.2px;"></span>
                     </div>
 
                     <!-- Botón Sumar -->
