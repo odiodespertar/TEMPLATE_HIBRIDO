@@ -1736,7 +1736,7 @@ def gen_rows_hibrido_sistemico():
                 <div style="display: flex; align-items: center; justify-content: center; gap: 3px;">
                     <!-- Botón Restar con Hover Rojo -->
                     <button onclick="restarUnidadHibrida({idx})" class="btn-step-sis" title="Restar 1"
-                            style="cursor: pointer; background: transparent; color: #dc2626; border: none; font-weight: 800; font-size: 22px; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
+                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
                             onmouseenter="this.style.background='#fee2e2'; this.style.color='#b91c1c'; this.style.boxShadow='0 0 8px rgba(220, 38, 38, 0.4)';" 
                             onmouseleave="this.style.background='transparent'; this.style.color='#dc2626'; this.style.boxShadow='none';">-</button>
 
@@ -1746,7 +1746,7 @@ def gen_rows_hibrido_sistemico():
                               style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 26px; text-align: center; outline: none; padding: 2px 2px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                         
                         <!-- 🟢 BADGE ROJO DE EXCESO NATIVO (+X) -->
-                        <span id="sis-badge-exceso-{idx}" style="display: none; position: absolute; top: -10px; right: -14px; font-size: 11px; background: #FFD700; color: #ffffff; padding: 2px 5px; border-radius: 4px; font-weight: 800; line-height: 1; z-index: 10; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; letter-spacing: -0.2px;"></span>
+                        <span id="sis-badge-exceso-{idx}" style="display: none; position: absolute; top: -10px; right: -14px; font-size: 11px; background: #FFD700; color: #808080; padding: 2px 5px; border-radius: 4px; font-weight: 800; line-height: 1; z-index: 10; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; letter-spacing: -0.2px;"></span>
                     </div>
 
                     <!-- Botón Sumar -->
