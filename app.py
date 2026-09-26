@@ -1731,30 +1731,35 @@ def gen_rows_hibrido_sistemico():
                        style="width: 60px; text-align: center; padding: 4px 2px; font-weight: 500; font-size: 15px; border: none; border-bottom: 1px solid #cbd5e1; background: transparent; color: #94a3b8; outline: none;" />
             </td>
 
-            <!-- 3. Usadas de Disponibles (Con Badge +X de exceso generado dinámicamente) -->
+            <!-- 3. Usadas de Disponibles (Con Badge +X integrado) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 4px; position: relative;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 3px;">
                     <!-- Botón Restar -->
                     <button onclick="restarUnidadHibrida({idx})" class="btn-step-sis" title="Restar 1"
-                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
+                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
                             onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488'; this.style.boxShadow='0 0 8px rgba(15, 118, 110, 0.4)';" 
                             onmouseleave="this.style.background='transparent'; this.style.color='#0f766e'; this.style.boxShadow='none';">-</button>
 
-                    <!-- Primer 0: Usadas/Utilizados -->
-                    <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{idx}" oninput="actualizarUsadasValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
-                          style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
+                    <!-- Primer 0: Utilizados con Badge integrado en contenedor rel -->
+                    <div style="position: relative; display: inline-flex; align-items: center;">
+                        <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{idx}" oninput="actualizarUsadasValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
+                              style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 26px; text-align: center; outline: none; padding: 2px 2px; border-bottom: 1.5px solid #cbd5e1;">0</span>
+                        
+                        <!-- 🟢 BADGE ROJO DE EXCESO NATIVO (+X) -->
+                        <span id="sis-badge-exceso-{idx}" style="display: none; position: absolute; top: -8px; right: -12px; font-size: 10px; background: #dc2626; color: #ffffff; padding: 1px 4px; border-radius: 4px; font-weight: 800; line-height: 1; z-index: 10; box-shadow: 0 1px 3px rgba(0,0,0,0.2);"></span>
+                    </div>
 
                     <!-- Botón Sumar -->
                     <button onclick="sumarUnidadHibrida({idx})" class="btn-step-sis" title="Sumar 1"
-                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
+                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
                             onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488'; this.style.boxShadow='0 0 8px rgba(15, 118, 110, 0.4)';" 
                             onmouseleave="this.style.background='transparent'; this.style.color='#0f766e'; this.style.boxShadow='none';">+</button>
                     
-                    <span style="color: #94a3b8; font-size: 14px; font-weight: 400; padding: 0 1px;">de</span>
+                    <span style="color: #94a3b8; font-size: 13px; font-weight: 400; padding: 0 1px;">de</span>
                     
                     <!-- Segundo 0: Disponibles -->
                     <span contenteditable="true" class="disp-sis" id="sis-disp-{idx}" oninput="actualizarDispValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
-                          style="font-weight: 500; font-size: 21px; color: #64748b; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
+                          style="font-weight: 500; font-size: 21px; color: #64748b; -webkit-font-smoothing: antialiased; min-width: 26px; text-align: center; outline: none; padding: 2px 2px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                 </div>
             </td>
 
@@ -3721,8 +3726,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
 
 
-
-    // 🟢 AGREGAR FILA EN BLANCO
     function agregarFilaSistemico() {{
         const tbody = document.getElementById("tbody-hibrido-sistemico");
         if (!tbody) return;
@@ -3737,7 +3740,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
         nuevaTr.innerHTML = `
             <td style="padding: 12px 10px; text-align: left; vertical-align: middle; position: relative;">
-                <input type="text" class="edit-name-sis" id="sis-nombre-${{numFilas}}" oninput="buscarCoincidenciasUnidad(this, ${{numFilas}})" onkeydown="navegarSugerenciasUnidad(event, ${{numFilas}})" onfocus="buscarCoincidenciasUnidad(this, ${{numFilas}})" placeholder="Buscar unidad (ej. car, mlp)..." autocomplete="off"
+                <input type="text" class="edit-name-sis" id="sis-nombre-${{numFilas}}" oninput="buscarCoincidenciasUnidad(this, ${{numFilas}}); calcularFilaHibrida(${{numFilas}});" onkeydown="navegarSugerenciasUnidad(event, ${{numFilas}})" onfocus="buscarCoincidenciasUnidad(this, ${{numFilas}})" placeholder="Buscar unidad (ej. car, mlp)..." autocomplete="off"
                        style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 16px; color: #1e293b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 4px 6px; border-radius: 4px;" />
                 <div id="sis-sug-${{numFilas}}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 80%; left: 10px; right: 10px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 160px; overflow-y: auto;"></div>
             </td>
@@ -3746,20 +3749,33 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                        style="width: 60px; text-align: center; padding: 4px 2px; font-weight: 500; font-size: 15px; border: none; border-bottom: 1px solid #cbd5e1; background: transparent; color: #94a3b8; outline: none;" />
             </td>
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 3px;">
+                    <!-- Botón Restar -->
                     <button onclick="restarUnidadHibrida(${{numFilas}})" class="btn-step-sis" title="Restar 1"
-                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
+                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
                             onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488'; this.style.boxShadow='0 0 8px rgba(15, 118, 110, 0.4)';" 
                             onmouseleave="this.style.background='transparent'; this.style.color='#0f766e'; this.style.boxShadow='none';">-</button>
-                    <span contenteditable="true" class="u-manual-sis" id="sis-usadas-${{numFilas}}" oninput="actualizarUsadasValor(${{numFilas}}); calcularFilaHibrida(${{numFilas}});" onfocus="this.select()"
-                          style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
+                    
+                    <!-- Contenedor del número de Utilizados + Badge Rojo Flotante -->
+                    <div style="position: relative; display: inline-flex; align-items: center;">
+                        <span contenteditable="true" class="u-manual-sis" id="sis-usadas-${{numFilas}}" oninput="actualizarUsadasValor(${{numFilas}}); calcularFilaHibrida(${{numFilas}});" onfocus="this.select()"
+                              style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 26px; text-align: center; outline: none; padding: 2px 2px; border-bottom: 1.5px solid #cbd5e1;">0</span>
+                        
+                        <!-- 🟢 BADGE ROJO DE EXCESO (+X) -->
+                        <span id="sis-badge-exceso-${{numFilas}}" style="display: none; position: absolute; top: -8px; right: -12px; font-size: 10px; background: #dc2626; color: #ffffff; padding: 1px 4px; border-radius: 4px; font-weight: 800; line-height: 1; z-index: 10; box-shadow: 0 1px 3px rgba(0,0,0,0.2);"></span>
+                    </div>
+
+                    <!-- Botón Sumar -->
                     <button onclick="sumarUnidadHibrida(${{numFilas}})" class="btn-step-sis" title="Sumar 1"
-                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
+                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
                             onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488'; this.style.boxShadow='0 0 8px rgba(15, 118, 110, 0.4)';" 
                             onmouseleave="this.style.background='transparent'; this.style.color='#0f766e'; this.style.boxShadow='none';">+</button>
-                    <span style="color: #94a3b8; font-size: 14px; font-weight: 400; padding: 0 1px;">de</span>
+                    
+                    <span style="color: #94a3b8; font-size: 13px; font-weight: 400; padding: 0 1px;">de</span>
+                    
+                    <!-- Disponibles -->
                     <span contenteditable="true" class="disp-sis" id="sis-disp-${{numFilas}}" oninput="actualizarDispValor(${{numFilas}}); calcularFilaHibrida(${{numFilas}});" onfocus="this.select()"
-                          style="font-weight: 500; font-size: 21px; color: #64748b; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
+                          style="font-weight: 500; font-size: 21px; color: #64748b; -webkit-font-smoothing: antialiased; min-width: 26px; text-align: center; outline: none; padding: 2px 2px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                 </div>
             </td>
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
@@ -3775,6 +3791,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         const nuevoInput = document.getElementById(`sis-nombre-${{numFilas}}`);
         if (nuevoInput) nuevoInput.focus();
     }}
+    
+
 
     // 🟢 REMOVER ÚLTIMA FILA
     function removerFilaSistemico() {{
@@ -3861,21 +3879,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         }}
     }}
     
-
-
-    
-    // 🟢 RESTAR UNIDAD (-1) Y REEVALUAR BADGE ROJO
-    function restarUnidadHibrida(idx) {{
-        const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
-        if (elUsadas) {{
-            let val = parseInt(elUsadas.innerText) || 0;
-            if (val > 0) {{
-                elUsadas.innerText = val - 1;
-                actualizarUsadasValor(idx);
-                calcularFilaHibrida(idx);
-            }}
-        }}
-    }}
 
 
 
@@ -5244,7 +5247,7 @@ document.addEventListener('keydown', function(event) {{
 
 
 
-    // 🟢 ACTUALIZACIÓN DE DISPONIBILIDAD Y VÍNCULO A TOTALES
+    // 🟢 MANTENER ATRIBUTOS DATA Y LECTURA EN TIEMPO REAL
     function actualizarDispValor(idx) {{
         const elDisp = document.getElementById(`sis-disp-${{idx}}`);
         const fila = elDisp?.closest('tr');
@@ -5254,7 +5257,6 @@ document.addEventListener('keydown', function(event) {{
         }}
     }}
 
-    // 🟢 NUEVO: Guarda en la fila el valor de las unidades USADAS (primer 0)
     function actualizarUsadasValor(idx) {{
         const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
         const fila = elUsadas?.closest('tr');
@@ -5269,17 +5271,80 @@ document.addEventListener('keydown', function(event) {{
         if (elUsadas) {{
             let val = parseInt(elUsadas.innerText) || 0;
             elUsadas.innerText = val + 1;
-            actualizarUsadasValor(idx); // 👈 AQUÍ SE AGREGA ESTA LÍNEA
+            actualizarUsadasValor(idx);
             calcularFilaHibrida(idx);
         }}
     }}
 
-    // 🟢 CÁLCULO DE FILA Y VÍNCULO A CONTADORES SUPERIORES (MLP, RENTAL, CAR)
+
+
+    function restarUnidadHibrida(idx) {
+        const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
+        if (elUsadas) {{
+            let val = parseInt(elUsadas.innerText) || 0;
+            if (val > 0) {{
+                elUsadas.innerText = val - 1;
+                actualizarUsadasValor(idx);
+                calcularFilaHibrida(idx);
+            }}
+        }}
+    }}
+    
+
+    // 🟢 MANTENER ATRIBUTOS DATA Y LECTURA EN TIEMPO REAL
+    function actualizarDispValor(idx) {{
+        const elDisp = document.getElementById(`sis-disp-${{idx}}`);
+        const fila = elDisp?.closest('tr');
+        if (elDisp && fila) {{
+            let val = parseInt(elDisp.innerText) || 0;
+            fila.setAttribute('data-disp', val);
+        }}
+    }}
+
+    function actualizarUsadasValor(idx) {{
+        const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
+        const fila = elUsadas?.closest('tr');
+        if (elUsadas && fila) {{
+            let val = parseInt(elUsadas.innerText) || 0;
+            fila.setAttribute('data-usadas', val);
+        }}
+    }}
+
+    function sumarUnidadHibrida(idx) {{
+        const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
+        if (elUsadas) {{
+            let val = parseInt(elUsadas.innerText) || 0;
+            elUsadas.innerText = val + 1;
+            actualizarUsadasValor(idx);
+            calcularFilaHibrida(idx);
+        }}
+    }}
+
+    function restarUnidadHibrida(idx) {{
+        const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
+        if (elUsadas) {{
+            let val = parseInt(elUsadas.innerText) || 0;
+            if (val > 0) {{
+                elUsadas.innerText = val - 1;
+                actualizarUsadasValor(idx);
+                calcularFilaHibrida(idx);
+            }}
+        }}
+    }}
+    
+
+    // 🟢 CÁLCULO DE FILA Y BADGE ROJO DE EXCESO (+X) CORREGIDO
     function calcularFilaHibrida(idx) {{
+        const inputNombre = document.getElementById(`sis-nombre-${{idx}}`);
+        const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
+        const elDisp = document.getElementById(`sis-disp-${{idx}}`);
+        const badgeExceso = document.getElementById(`sis-badge-exceso-${{idx}}`);
+        
         const elSpr = parseFloat(document.getElementById(`sis-spr-${{idx}}`)?.value) || 0;
         const elVol = parseFloat(document.getElementById(`sis-vol-${{idx}}`)?.value) || 0;
         const elRes = document.getElementById(`sis-res-${{idx}}`);
 
+        // 1. Cálculo de resultado de paquetes ÷ SPR
         if (elRes) {{
             if (elVol > 0 && elSpr > 0) {{
                 let calc = Math.ceil(elVol / elSpr);
@@ -5289,11 +5354,33 @@ document.addEventListener('keydown', function(event) {{
             }}
         }}
 
-        // Si la pestaña activa es Sistémico (4), sincroniza los contadores superiores de MLP, RENTAL y CAR
+        // 2. Evaluador del Badge de Exceso exclusivo para Car 3h, Car 5h, Car 8h
+        if (inputNombre && elUsadas && elDisp && badgeExceso) {{
+            const nombre = (inputNombre.value || inputNombre.innerText || "").toLowerCase().trim();
+            const usadas = parseInt(elUsadas.innerText) || 0;
+            const disp = parseInt(elDisp.innerText) || 0;
+
+            // Detección de variantes de Car 3h, Car 5h, Car 8h
+            const esCarPermitido = nombre.includes("car 3h") || nombre.includes("car - 3h") ||
+                                   nombre.includes("car 5h") || nombre.includes("car - 5h") ||
+                                   nombre.includes("car 8h") || nombre.includes("car - 8h");
+
+            if (esCarPermitido && usadas > disp) {{
+                const exceso = usadas - disp;
+                badgeExceso.innerText = `+${{exceso}}`;
+                badgeExceso.style.display = "inline-block";
+            }} else {{
+                badgeExceso.style.display = "none";
+            }}
+        }}
+
+        // 3. Sincroniza totales superiores en Sistémico
         if (currentTab === 4) {{
             sincronizarTotalesSistemico();
         }}
     }}
+
+
 
     // 🟢 RECALCULAR Y ACTUALIZAR LOS CONTADORES SUPERIORES EN TIEMPO REAL (CON EXCLUSIONES)
     function sincronizarTotalesSistemico() {{
