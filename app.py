@@ -1720,12 +1720,12 @@ def gen_rows_hibrido_sistemico():
         <tr class="fila-hibrida-sis" data-disp="0" data-usadas="0" style="border-bottom: 1px solid #e2e8f0; height: 62px; transition: background 0.15s ease;">
             <!-- 1. Buscador de Unidad con Sugerencias -->
             <td style="padding: 12px 10px; text-align: left; vertical-align: middle; position: relative;">
-                <input type="text" class="edit-name-sis" id="sis-nombre-{idx}" oninput="buscarCoincidenciasUnidad(this, {idx})" onkeydown="navegarSugerenciasUnidad(event, {idx})" onfocus="buscarCoincidenciasUnidad(this, {idx})" placeholder="Buscar unidad (ej. car, mlp)..." autocomplete="off"
+                <input type="text" class="edit-name-sis" id="sis-nombre-{idx}" oninput="buscarCoincidenciasUnidad(this, {idx}); calcularFilaHibrida({idx});" onkeydown="navegarSugerenciasUnidad(event, {idx})" onfocus="buscarCoincidenciasUnidad(this, {idx})" placeholder="Buscar unidad (ej. car, mlp)..." autocomplete="off"
                        style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 16px; color: #1e293b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 4px 6px; border-radius: 4px;" />
                 <div id="sis-sug-{idx}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 80%; left: 10px; right: 10px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 160px; overflow-y: auto;"></div>
             </td>
 
-            <!-- 2. SPR Máximo Editable (15px) -->
+            <!-- 2. SPR Máximo Editable -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <input type="number" id="sis-spr-{idx}" value="0" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
                        style="width: 60px; text-align: center; padding: 4px 2px; font-weight: 500; font-size: 15px; border: none; border-bottom: 1px solid #cbd5e1; background: transparent; color: #94a3b8; outline: none;" />
@@ -1744,7 +1744,7 @@ def gen_rows_hibrido_sistemico():
                     <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{idx}" oninput="actualizarUsadasValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
                           style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 28px; text-align: center; outline: none; padding: 2px 4px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                     
-                    <!-- 🟢 Badge de Exceso (+X) discreto -->
+                    <!-- 🟢 BADGE ROJO DE EXCESO (+X) -->
                     <span id="sis-badge-exceso-{idx}" style="display: none; font-size: 10px; background: #d32f2f; color: #ffffff; padding: 1px 4px; border-radius: 4px; font-weight: 800; line-height: 1; vertical-align: middle; margin-left: -2px; margin-right: 2px;"></span>
 
                     <!-- Botón Sumar -->
@@ -3697,6 +3697,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         }}
     }}
 
+
+
     function seleccionarUnidadSugerida(idx, nombre, spr) {{
         const inputNombre = document.getElementById(`sis-nombre-${{idx}}`);
         const inputSpr = document.getElementById(`sis-spr-${{idx}}`);
@@ -3706,8 +3708,9 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         if (inputSpr) inputSpr.value = spr;
         if (boxSug) boxSug.style.display = "none";
 
-        sincronizarTotalesSistemico();
+        // Dispara la verificación del badge rojo y actualización de totales
         calcularFilaHibrida(idx);
+        sincronizarTotalesSistemico();
     }}
 
     // Ocultar sugerencias al hacer clic fuera
@@ -3718,6 +3721,9 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             }}
         }});
     }});
+
+
+
 
     // 🟢 AGREGAR FILA EN BLANCO
     function agregarFilaSistemico() {{
@@ -3797,7 +3803,9 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         }}
     }}
 
-    // 🟢 CÁLCULO DE FILA, EXCESO Y VÍNCULO A CONTADORES
+
+
+    // 🟢 CÁLCULO DE FILA Y BADGE ROJO DE EXCESO (+X)
     function calcularFilaHibrida(idx) {{
         const inputNombre = document.getElementById(`sis-nombre-${{idx}}`);
         const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
@@ -3820,11 +3828,12 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
         // 2. Lógica del Badge de Exceso exclusivo para Cars (Car 3h, Car 5h, Car 8h)
         if (inputNombre && elUsadas && elDisp && badgeExceso) {{
-            const nombre = (inputNombre.value || inputNombre.innerText || "").toLowerCase().trim();
+            // Extraer valor de forma segura si es INPUT o DIV
+            const nombre = (inputNombre.value !== undefined ? inputNombre.value : inputNombre.innerText || "").toLowerCase().trim();
             const usadas = parseInt(elUsadas.innerText) || 0;
             const disp = parseInt(elDisp.innerText) || 0;
 
-            // Unidades permitidas para mostrar exceso
+            // Validación flexible para detectar variantes de Car 3h, Car 5h, Car 8h
             const esCarPermitido = nombre.includes("car 3h") || nombre.includes("car - 3h") ||
                                    nombre.includes("car 5h") || nombre.includes("car - 5h") ||
                                    nombre.includes("car 8h") || nombre.includes("car - 8h");
@@ -4193,6 +4202,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             dl.appendChild(opt);
         }});
     }}
+
+
 
     // 🟢 Detectar la selección desde el buscador integrado
     function seleccionarUnidadBuscador() {{
