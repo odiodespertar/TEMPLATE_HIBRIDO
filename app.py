@@ -1728,29 +1728,29 @@ def gen_rows_hibrido_sistemico():
             <!-- 2. SPR Máximo Editable -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <input type="number" id="sis-spr-{idx}" value="0" oninput="calcularFilaHibrida({idx})" onfocus="this.select()"
-                       style="width: 60px; text-align: center; padding: 4px 2px; font-weight: 500; font-size: 15px; border: none; border-bottom: 1px solid #cbd5e1; background: transparent; color: #94a3b8; outline: none;" />
+                       style="width: 60px; text-align: center; padding: 4px 2px; font-weight: 500; font-size: 15px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #94a3b8; outline: none;" />
             </td>
 
             <!-- 3. Usadas de Disponibles (Con Badge +X integrado) -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 3px;">
-                    <!-- Botón Restar con Hover Rojo y evento onclick correcto -->
-                    <button onclick="restarUnidadHibrida({{idx}})" class="btn-step-sis" title="Restar 1"
+                    <!-- Botón Restar con Hover Rojo -->
+                    <button onclick="restarUnidadHibrida({idx})" class="btn-step-sis" title="Restar 1"
                             style="cursor: pointer; background: transparent; color: #dc2626; border: none; font-weight: 800; font-size: 22px; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
                             onmouseenter="this.style.background='#fee2e2'; this.style.color='#b91c1c'; this.style.boxShadow='0 0 8px rgba(220, 38, 38, 0.4)';" 
                             onmouseleave="this.style.background='transparent'; this.style.color='#dc2626'; this.style.boxShadow='none';">-</button>
 
                     <!-- Primer 0: Utilizados con Badge integrado en contenedor rel -->
                     <div style="position: relative; display: inline-flex; align-items: center;">
-                        <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{{idx}}" oninput="actualizarUsadasValor({{idx}}); calcularFilaHibrida({{idx}});" onfocus="this.select()"
+                        <span contenteditable="true" class="u-manual-sis" id="sis-usadas-{idx}" oninput="actualizarUsadasValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
                               style="font-weight: 600; font-size: 21px; color: #0f172a; -webkit-font-smoothing: antialiased; min-width: 26px; text-align: center; outline: none; padding: 2px 2px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                         
                         <!-- 🟢 BADGE ROJO DE EXCESO NATIVO (+X) -->
-                        <span id="sis-badge-exceso-{{idx}}" style="display: none; position: absolute; top: -8px; right: -12px; font-size: 10px; background: #dc2626; color: #ffffff; padding: 1px 4px; border-radius: 4px; font-weight: 800; line-height: 1; z-index: 10; box-shadow: 0 1px 3px rgba(0,0,0,0.2);"></span>
+                        <span id="sis-badge-exceso-{idx}" style="display: none; position: absolute; top: -8px; right: -12px; font-size: 10px; background: #dc2626; color: #ffffff; padding: 1px 4px; border-radius: 4px; font-weight: 800; line-height: 1; z-index: 10; box-shadow: 0 1px 3px rgba(0,0,0,0.2);"></span>
                     </div>
 
                     <!-- Botón Sumar -->
-                    <button onclick="sumarUnidadHibrida({{idx}})" class="btn-step-sis" title="Sumar 1"
+                    <button onclick="sumarUnidadHibrida({idx})" class="btn-step-sis" title="Sumar 1"
                             style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 800; font-size: 22px; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; user-select: none; transition: all 0.15s ease;"
                             onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488'; this.style.boxShadow='0 0 8px rgba(15, 118, 110, 0.4)';" 
                             onmouseleave="this.style.background='transparent'; this.style.color='#0f766e'; this.style.boxShadow='none';">+</button>
@@ -1758,20 +1758,20 @@ def gen_rows_hibrido_sistemico():
                     <span style="color: #94a3b8; font-size: 13px; font-weight: 400; padding: 0 1px;">de</span>
                     
                     <!-- Segundo 0: Disponibles -->
-                    <span contenteditable="true" class="disp-sis" id="sis-disp-{{idx}}" oninput="actualizarDispValor({{idx}}); calcularFilaHibrida({{idx}});" onfocus="this.select()"
+                    <span contenteditable="true" class="disp-sis" id="sis-disp-{idx}" oninput="actualizarDispValor({idx}); calcularFilaHibrida({idx});" onfocus="this.select()"
                           style="font-weight: 500; font-size: 21px; color: #64748b; -webkit-font-smoothing: antialiased; min-width: 26px; text-align: center; outline: none; padding: 2px 2px; border-bottom: 1.5px solid #cbd5e1;">0</span>
                 </div>
             </td>
 
             <!-- 4. Volumen de Paquetes -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
-                <input type="number" id="sis-vol-{{idx}}" value="0" oninput="calcularFilaHibrida({{idx}})" onfocus="this.select()" placeholder="0"
+                <input type="number" id="sis-vol-{idx}" value="0" oninput="calcularFilaHibrida({idx})" onfocus="this.select()" placeholder="0"
                        style="width: 78px; text-align: center; padding: 4px 2px; font-weight: 600; font-size: 16px; border: none; border-bottom: 1.5px solid #0f766e; background: #f8fafc; color: #0f766e; outline: none; border-radius: 2px;" />
             </td>
 
             <!-- 5. Resultado del Cálculo -->
             <td style="text-align: center; padding: 6px; vertical-align: middle;">
-                <span id="sis-res-{{idx}}" style="font-weight: 600; font-size: 22px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
+                <span id="sis-res-{idx}" style="font-weight: 600; font-size: 22px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
             </td>
         </tr>
         '''
@@ -5266,6 +5266,7 @@ document.addEventListener('keydown', function(event) {{
         }}
     }}
 
+    // 🟢 SUMAR UNIDAD (+1)
     function sumarUnidadHibrida(idx) {{
         const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
         if (elUsadas) {{
@@ -5276,9 +5277,7 @@ document.addEventListener('keydown', function(event) {{
         }}
     }}
 
-
-
-    // 🟢 RESTAR UNIDAD (-1) Y REEVALUAR EN TIEMPO REAL
+    // 🟢 RESTAR UNIDAD (-1, MÍNIMO 0)
     function restarUnidadHibrida(idx) {{
         const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
         if (elUsadas) {{
@@ -5290,51 +5289,8 @@ document.addEventListener('keydown', function(event) {{
             }}
         }}
     }}
-    
 
-    // 🟢 MANTENER ATRIBUTOS DATA Y LECTURA EN TIEMPO REAL
-    function actualizarDispValor(idx) {{
-        const elDisp = document.getElementById(`sis-disp-${{idx}}`);
-        const fila = elDisp?.closest('tr');
-        if (elDisp && fila) {{
-            let val = parseInt(elDisp.innerText) || 0;
-            fila.setAttribute('data-disp', val);
-        }}
-    }}
-
-    function actualizarUsadasValor(idx) {{
-        const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
-        const fila = elUsadas?.closest('tr');
-        if (elUsadas && fila) {{
-            let val = parseInt(elUsadas.innerText) || 0;
-            fila.setAttribute('data-usadas', val);
-        }}
-    }}
-
-    function sumarUnidadHibrida(idx) {{
-        const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
-        if (elUsadas) {{
-            let val = parseInt(elUsadas.innerText) || 0;
-            elUsadas.innerText = val + 1;
-            actualizarUsadasValor(idx);
-            calcularFilaHibrida(idx);
-        }}
-    }}
-
-    function restarUnidadHibrida(idx) {{
-        const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
-        if (elUsadas) {{
-            let val = parseInt(elUsadas.innerText) || 0;
-            if (val > 0) {{
-                elUsadas.innerText = val - 1;
-                actualizarUsadasValor(idx);
-                calcularFilaHibrida(idx);
-            }}
-        }}
-    }}
-    
-
-    // 🟢 CÁLCULO DE FILA Y BADGE ROJO DE EXCESO (+X) CORREGIDO
+    // 🟢 CÁLCULO DE FILA Y EVALUADOR DE BADGE ROJO DE EXCESO (+X)
     function calcularFilaHibrida(idx) {{
         const inputNombre = document.getElementById(`sis-nombre-${{idx}}`);
         const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
