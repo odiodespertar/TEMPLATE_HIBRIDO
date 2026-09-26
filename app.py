@@ -3790,19 +3790,20 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
 
 
-    // 🟢 Incrementar contador de unidades usadas (+1)
+    // 🟢 SUMAR UNIDAD (+1) Y REEVALUAR BADGE ROJO
     function sumarUnidadHibrida(idx) {{
         const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
         if (elUsadas) {{
             let val = parseInt(elUsadas.innerText) || 0;
             elUsadas.innerText = val + 1;
+            actualizarUsadasValor(idx);
             calcularFilaHibrida(idx);
         }}
     }}
 
 
 
-    // 🟢 CÁLCULO DE FILA Y BADGE ROJO DE EXCESO (+X) (MISMOS PARÁMETROS QUE OTROS RUTEOS)
+    // 🟢 CÁLCULO DE FILA Y FORZADO DE BADGE ROJO DE EXCESO (+X)
     function calcularFilaHibrida(idx) {{
         const inputNombre = document.getElementById(`sis-nombre-${{idx}}`);
         const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
@@ -3812,7 +3813,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         const elVol = parseFloat(document.getElementById(`sis-vol-${{idx}}`)?.value) || 0;
         const elRes = document.getElementById(`sis-res-${{idx}}`);
 
-        // 1. Cálculo de resultado de paquetes ÷ SPR
+        // 1. Cálculo de Paquetes ÷ SPR
         if (elRes) {{
             if (elVol > 0 && elSpr > 0) {{
                 let calc = Math.ceil(elVol / elSpr);
@@ -3822,29 +3823,29 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             }}
         }}
 
-        // 2. Lógica exacta del Badge de Exceso exclusivo para Cars (Car 3h, Car 5h, Car 8h)
+        // 2. Lógica del Badge Rojo de Exceso para Car 3h, Car 5h y Car 8h
         if (inputNombre && elUsadas && elDisp) {{
-            const nombre = (inputNombre.value !== undefined ? inputNombre.value : inputNombre.innerText || "").toLowerCase().trim();
+            const nombre = (inputNombre.value || inputNombre.innerText || "").toLowerCase().trim();
             const usadas = parseInt(elUsadas.innerText) || 0;
             const disp = parseInt(elDisp.innerText) || 0;
 
-            // Buscar si ya existe el badge o crearlo dentro del contenedor de la celda
+            // Busca el badge o lo crea directamente si no existe en el DOM
             let badge = document.getElementById(`sis-badge-exceso-${{idx}}`);
             if (!badge) {{
                 badge = document.createElement('span');
                 badge.id = `sis-badge-exceso-${{idx}}`;
-                badge.style.cssText = 'font-size: 11px; background: #d32f2f; color: white; padding: 1px 4px; border-radius: 3px; font-weight: bold; margin-left: 2px; margin-right: 2px; display: inline-block; vertical-align: middle;';
+                badge.style.cssText = 'font-size: 11px; background: #d32f2f; color: #ffffff; padding: 1px 5px; border-radius: 4px; font-weight: 800; margin-left: 2px; margin-right: 2px; display: inline-block; vertical-align: middle; line-height: 1.2;';
                 
-                // Inyectar el badge justo después del primer número de unidades usadas
+                // Lo inyecta inmediatamente al lado derecho del primer número (Utilizados)
                 elUsadas.after(badge);
             }}
 
-            // Validación flexible para detectar variantes de Car 3h, Car 5h, Car 8h
-            const esCarPermitido = nombre.includes("car 3h") || nombre.includes("car - 3h") ||
-                                   nombre.includes("car 5h") || nombre.includes("car - 5h") ||
-                                   nombre.includes("car 8h") || nombre.includes("car - 8h");
+            // Comprueba si la unidad es exclusivamente Car 3h, Car 5h o Car 8h
+            const esCarValido = nombre.includes("car 3h") || nombre.includes("car - 3h") ||
+                                nombre.includes("car 5h") || nombre.includes("car - 5h") ||
+                                nombre.includes("car 8h") || nombre.includes("car - 8h");
 
-            if (esCarPermitido && usadas > disp) {{
+            if (esCarValido && usadas > disp) {{
                 const exceso = usadas - disp;
                 badge.innerText = `+${{exceso}}`;
                 badge.style.display = "inline-block";
@@ -3854,7 +3855,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             }}
         }}
 
-        // 3. Sincronización global si la pestaña activa es Sistémico (4)
+        // 3. Sincroniza totales superiores si la pestaña activa es Sistémico
         if (currentTab === 4) {{
             sincronizarTotalesSistemico();
         }}
@@ -3863,7 +3864,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
 
     
-    // 🟢 Restar contador de unidades usadas (-1, mínimo 0)
+    // 🟢 RESTAR UNIDAD (-1) Y REEVALUAR BADGE ROJO
     function restarUnidadHibrida(idx) {{
         const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
         if (elUsadas) {{
