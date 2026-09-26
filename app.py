@@ -5278,7 +5278,7 @@ document.addEventListener('keydown', function(event) {{
 
 
 
-    function restarUnidadHibrida(idx) {
+    function restarUnidadHibrida(idx) {{
         const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
         if (elUsadas) {{
             let val = parseInt(elUsadas.innerText) || 0;
