@@ -5238,22 +5238,34 @@ document.addEventListener('keydown', function(event) {{
         }}
     }}
 
-    // 🟢 RECALCULAR Y ACTUALIZAR LOS CONTADORES SUPERIORES EN TIEMPO REAL
+    // 🟢 RECALCULAR Y ACTUALIZAR LOS CONTADORES SUPERIORES EN TIEMPO REAL (CON EXCLUSIONES)
     function sincronizarTotalesSistemico() {{
         let totalMlp = 0;
         let totalRental = 0;
         let totalCar = 0;
 
         document.querySelectorAll('.fila-hibrida-sis').forEach(fila => {{
-            const nombreEl = fila.querySelector('.edit-name-sis');
+            const inputNombre = fila.querySelector('.edit-name-sis');
             const usadasEl = fila.querySelector('.u-manual-sis');
-            if (!nombreEl || !usadasEl) return;
+            if (!inputNombre || !usadasEl) return;
 
-            const nombre = nombreEl.innerText.toLowerCase().trim();
+            // Lee la propiedad .value del input editable
+            const nombre = (inputNombre.value || inputNombre.innerText || "").toLowerCase().trim();
             const usadas = parseInt(usadasEl.innerText) || 0;
 
-            if (usadas <= 0) return;
+            if (usadas <= 0 || !nombre) return;
 
+            // 🚫 FILTRO DE EXCLUSIÓN: Ignorar unidades especiales
+            const esExtraLargeHB = nombre.includes("extra large van mlp h&b") || nombre.includes("extra large van mlp h & b");
+            const esTruck35 = nombre.includes("truck 3.5 tons mlp") || nombre.includes("truck 3.5 ton mlp") || nombre.includes("truck 3.5");
+            const esDeliveryCell = nombre.includes("delivery cell");
+
+            // Si es alguna de las 3 unidades excluidas, no entra a ningún contador
+            if (esExtraLargeHB || esTruck35 || esDeliveryCell) {{
+                return;
+            }}
+
+            // 🟢 SUMATORIA DE CATEGORÍAS VÁLIDAS
             if (nombre.includes("mlp")) {{
                 totalMlp += usadas;
             }} else if (nombre.includes("rental")) {{
@@ -5272,6 +5284,8 @@ document.addEventListener('keydown', function(event) {{
         if (valRental) valRental.innerText = totalRental;
         if (valCar) valCar.innerText = totalCar;
     }}
+
+
 
     // 🟢 Y EN TU FUNCIÓN DE FILTRAR (BUSCA DÓNDE TIENES 'filterRows'), REEMPLÁZALA POR ESTA:
     function filterRows(onlyActive) {{
