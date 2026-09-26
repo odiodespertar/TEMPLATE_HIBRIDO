@@ -3411,19 +3411,34 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                     </div>
                 </div>
 
-                <!-- RECUADRO 2: DATO DEDICADO INDIVIDUAL (SE QUEDA IGUAL) -->
-                <div style="flex: 1; background: #1e2022; padding: 14px 18px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-                    <div>
-                        <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - TOTAL(+NODOS)</div>
-                        <input type="number" id="dos-pct-in-2" oninput="calcularDosPctIndividual(2)" onfocus="this.select()" value="0" placeholder="Ej. 3000"
-                               style="width: 120px; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #DCDCDC; outline: none; margin-top: 4px;" />
+                <!-- RECUADRO 2: DATO DEDICADO INDIVIDUAL + CONVERTIDOR ORH -->
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
+                    <!-- Recuadro Dato 2 -->
+                    <div style="background: #1e2022; padding: 14px 18px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                        <div>
+                            <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - TOTAL(+NODOS)</div>
+                            <input type="number" id="dos-pct-in-2" oninput="calcularDosPctIndividual(2)" onfocus="this.select()" value="0" placeholder="Ej. 3000"
+                                   style="width: 120px; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #DCDCDC; outline: none; margin-top: 4px;" />
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold;">RESULTADO 2%:</span>
+                            <span id="dos-pct-res-2" style="font-size: 26px; font-weight: 900; color: #7CFFB2;">0</span>
+                        </div>
                     </div>
-                    <div style="text-align: right;">
-                        <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold;">RESULTADO 2%:</span>
-                        <span id="dos-pct-res-2" style="font-size: 26px; font-weight: 900; color: #7CFFB2;">0</span>
+
+                    <!-- ⏱️ NUEVO MINIPANEL CONVERTIDOR DE ORH A HORAS -->
+                    <div style="background: #1e2022; padding: 12px 18px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                        <div>
+                            <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">CONVERTIDOR ORH</div>
+                            <input type="number" id="orh-minutos-in" oninput="convertirOrhRapido()" onfocus="this.select()" placeholder="Minutos"
+                                   style="width: 120px; padding: 6px; font-size: 18px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #cbd5e1; background: #ffffff; color: #0f172a; outline: none; margin-top: 4px;" />
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold;">HORAS REALES:</span>
+                            <span id="orh-horas-res" style="font-size: 24px; font-weight: 900; color: #20B2AA; font-family: monospace;">00:00</span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
             <!-- ⚡ TABLA CALCULADORA MINIMALISTA CON BUSCADOR DE UNIDADES -->
             <div style="max-width: 850px; margin: 0 auto; background: #ffffff; padding: 24px 28px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0,0,0,0.04); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
