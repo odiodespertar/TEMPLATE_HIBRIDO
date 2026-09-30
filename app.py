@@ -1782,7 +1782,7 @@ def gen_tabla_sistemico_planes():
 
                 <td style="text-align: center; padding: 4px; vertical-align: middle; border-right: 1px solid #25282b;">
                     <input type="number" id="sis-spr-{idx}" value="0" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()"
-                           style="width: 65px; text-align: center; padding: 4px; font-weight: 700; font-size: 15px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #475569; outline: none;" />
+                           style="width: 65px; text-align: center; padding: 4px; font-weight: 700; font-size: 18px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #475569; outline: none;" />
                 </td>
 
                 <td style="text-align: center; padding: 4px; vertical-align: middle; background: #ffffff;">
