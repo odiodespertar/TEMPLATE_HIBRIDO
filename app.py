@@ -1723,10 +1723,8 @@ PLANES_SISTEMICO = [
 ]
 
 def gen_tabla_sistemico_planes():
-    # 🟢 SOLO TABLA UNIFICADA DE PLANES (La flota de patio vive fija arriba en #polys-4)
     html = '''
     <div style="max-width: 980px; margin: 0 auto; background: #ffffff; padding: 0; border: 1.5px solid #25282b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-        
         <div style="background: #25282b; color: #20B2AA; font-weight: 800; font-size: 17px; text-align: center; padding: 12px; border-bottom: 1.5px solid #25282b; letter-spacing: 0.5px;">
             📋 PLANIFICACIÓN POR POLÍGONOS (SISTÉMICO)
         </div>
@@ -6556,38 +6554,44 @@ function obtenerCarFlexible() {{
         const filasExistentes = document.querySelectorAll(`.fila-plan-sistemico[data-plan-idx="${{planIdx}}"]`);
         const nuevaNumFilas = filasExistentes.length + 1;
 
+        // 🟢 1. Actualizar el rowspan de las celdas PLAN e IDS DROPEADOS
         const tdPlan = document.getElementById(`td-plan-nom-${{planIdx}}`);
         const tdDrop = document.getElementById(`td-plan-drop-${{planIdx}}`);
         if (tdPlan) tdPlan.rowSpan = nuevaNumFilas;
         if (tdDrop) tdDrop.rowSpan = nuevaNumFilas;
 
+        // 🟢 2. Quitar el borde inferior grueso a la fila que antes era la última del plan
+        const ultimaFilaAnterior = filasExistentes[filasExistentes.length - 1];
+        if (ultimaFilaAnterior) {{
+            ultimaFilaAnterior.style.borderBottom = "1px solid #cbd5e1";
+        }}
+
+        // 🟢 3. Crear la nueva fila con el borde marco de cierre (2px solid #25282b)
         const totalFilasGlobal = tbody.querySelectorAll('.fila-plan-sistemico').length;
         const nuevaTr = document.createElement("tr");
         nuevaTr.className = "fila-plan-sistemico";
         nuevaTr.setAttribute("data-plan", planNom);
         nuevaTr.setAttribute("data-plan-idx", planIdx);
         nuevaTr.id = `sis-tr-${{totalFilasGlobal}}`;
-        nuevaTr.style.cssText = "border-bottom: 1px solid #f1f5f9; height: 48px;";
+        nuevaTr.style.cssText = "border-bottom: 2px solid #25282b; height: 48px; background: #ffffff;";
 
         nuevaTr.innerHTML = `
-            <td style="padding: 4px 8px; text-align: left; vertical-align: middle; position: relative; border-right: 1px solid #f1f5f9;">
+            <td style="padding: 4px 8px; text-align: left; vertical-align: middle; position: relative; border-right: 1px solid #25282b;">
                 <input type="text" class="edit-name-sis" id="sis-nombre-${{totalFilasGlobal}}" oninput="buscarCoincidenciasUnidad(this, ${{totalFilasGlobal}}); calcularPlanSistemico(${{planIdx}});" onkeydown="navegarSugerenciasUnidad(event, ${{totalFilasGlobal}})" onfocus="buscarCoincidenciasUnidad(this, ${{totalFilasGlobal}})" placeholder="Buscar unidad..." autocomplete="off"
                        style="width: 100%; box-sizing: border-box; font-weight: 700; font-size: 15px; color: #1e293b; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 4px 6px; border-radius: 4px;" />
-                <div id="sis-sug-${{totalFilasGlobal}}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 90%; left: 6px; right: 6px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 160px; overflow-y: auto;"></div>
+                <div id="sis-sug-${{totalFilasGlobal}}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 90%; left: 6px; right: 6px; background: #ffffff; border: 1px solid #25282b; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 160px; overflow-y: auto;"></div>
             </td>
-            <td style="text-align: center; padding: 4px; vertical-align: middle; border-right: 1px solid #f1f5f9;">
+            <td style="text-align: center; padding: 4px; vertical-align: middle; border-right: 1px solid #25282b;">
                 <input type="number" id="sis-spr-${{totalFilasGlobal}}" value="0" oninput="calcularPlanSistemico(${{planIdx}})" onfocus="this.select()"
                        style="width: 65px; text-align: center; padding: 4px; font-weight: 700; font-size: 15px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #475569; outline: none;" />
             </td>
-            <td style="text-align: center; padding: 4px; vertical-align: middle;">
-                <span id="sis-res-${{totalFilasGlobal}}" class="res-adic-sis" style="font-weight: 800; font-size: 22px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
+            <td style="text-align: center; padding: 4px; vertical-align: middle; background: #d3f0e5;">
+                <span id="sis-res-${{totalFilasGlobal}}" class="res-adic-sis" style="font-weight: 800; font-size: 22px; color: #008B8B; -webkit-font-smoothing: antialiased;">0</span>
             </td>
         `;
 
-        const ultimaFila = filasExistentes[filasExistentes.length - 1];
-        ultimaFila.after(nuevaTr);
+        ultimaFilaAnterior.after(nuevaTr);
     }}
-    
 
     function quitarFilaPlanSis(planNom, planIdx) {{
         const filasExistentes = document.querySelectorAll(`.fila-plan-sistemico[data-plan-idx="${{planIdx}}"]`);
@@ -6600,6 +6604,12 @@ function obtenerCarFlexible() {{
             const tdDrop = document.getElementById(`td-plan-drop-${{planIdx}}`);
             if (tdPlan) tdPlan.rowSpan = nuevaNumFilas;
             if (tdDrop) tdDrop.rowSpan = nuevaNumFilas;
+
+            // Restablecer el borde de cierre en la nueva última fila del plan
+            const nuevaUltimaFila = filasExistentes[filasExistentes.length - 2];
+            if (nuevaUltimaFila) {{
+                nuevaUltimaFila.style.borderBottom = "2px solid #25282b";
+            }}
 
             calcularPlanSistemico(planIdx);
         }}
