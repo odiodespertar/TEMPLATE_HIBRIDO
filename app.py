@@ -6606,7 +6606,7 @@ function obtenerCarFlexible() {{
             </td>
             <!-- 🟢 FONDO BLANCO RESTAURADO EN UNIDADES ADICIONALES -->
             <td style="text-align: center; padding: 4px; vertical-align: middle; background: #ffffff;">
-                <span id="sis-res-${{totalFilasGlobal}}" class="res-adic-sis" style="font-weight: 800; font-size: 22px; color: #008B8B; -webkit-font-smoothing: antialiased;">0</span>
+                <span id="sis-res-${{totalFilasGlobal}}" class="res-adic-sis" style="font-weight: 600; font-size: 22px; color: #008B8B; -webkit-font-smoothing: antialiased;">0</span>
             </td>
         `;
 
