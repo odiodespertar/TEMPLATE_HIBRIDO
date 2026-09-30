@@ -6203,9 +6203,9 @@ function obtenerCarFlexible() {{
     }}
     
 
-    // 🧠 2. AUTO-CALCULAR VINCULADO STRICTAMENTE A DISPONIBILIDAD DE PATIO
+    // 🧠 MOTOR AUTO-CALCULAR BASADO ESTRICTAMENTE EN STOCK REAL DE PATIO
     function distribuirAutomaticoSistemico() {{
-        // A. Leer disponibilidad de patio de la minitabla flotante
+        // 1. Leer disponibilidad actual en patio
         let flotaDisponibilidad = {{}};
         document.querySelectorAll('.row-flota-sis').forEach((row, idx) => {{
             let nameCell = row.querySelector('.sis-unit-name');
@@ -6214,7 +6214,7 @@ function obtenerCarFlexible() {{
             let nombre = nameCell?.innerText?.trim() || "";
             let dispVal = parseInt(inputDisp?.value) || 0;
 
-            if (nombre && dispVal > 0) {{
+            if (nombre) {{
                 flotaDisponibilidad[nombre.toLowerCase()] = {{
                     nombreReal: nombre,
                     disponible: dispVal,
@@ -6223,7 +6223,7 @@ function obtenerCarFlexible() {{
             }}
         }});
 
-        // B. Agrupar planes e IDs dropeados (Prioridad: mayor a menor IDs)
+        // 2. Agrupar planes e IDs dropeados
         let planesData = [];
         const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
 
@@ -6254,46 +6254,51 @@ function obtenerCarFlexible() {{
             }});
         }});
 
-        // Ordenar planes por mayor cantidad de IDs
+        // Ordenar planes por mayor volumen de IDs dropeados
         planesData.sort((a, b) => b.dropTotal - a.dropTotal);
 
-        // C. Reparto en cascada respetando disponibilidad real en patio
+        // 3. Asignación en cascada respetando LÍMITES FÍSICOS de patio
         planesData.forEach(pData => {{
             let dropRestante = pData.dropTotal;
+
+            // Reiniciar displays
+            pData.unidadesDelPlan.forEach(u => {{
+                if (u.elRes) u.elRes.innerText = "0";
+            }});
+
             if (dropRestante <= 0 || pData.unidadesDelPlan.length === 0) return;
 
+            // Asignar fila por fila en el orden configurado en el plan
             pData.unidadesDelPlan.forEach(uInfo => {{
-                if (dropRestante <= 0) {{
-                    if (uInfo.elRes) uInfo.elRes.innerText = "0";
-                    return;
-                }}
+                if (dropRestante <= 0) return;
 
-                let necesarias = Math.ceil(dropRestante / uInfo.spr);
                 let claveUnidad = uInfo.nombre.toLowerCase();
                 let esExcepcionInfinita = claveUnidad.includes("car 8h") || claveUnidad.includes("car - 8h") || claveUnidad.includes("small van 9h ext");
 
+                let dispInfo = flotaDisponibilidad[claveUnidad];
+                let disponiblesPatio = dispInfo ? (dispInfo.disponible - dispInfo.usadas) : 0;
+
+                // 🔴 CANDADO CLAVE: Si no hay disponibles en patio y no es infinita, SE SALTA ESTA UNIDAD
+                if (disponiblesPatio <= 0 && !esExcepcionInfinita) {{
+                    if (uInfo.elRes) uInfo.elRes.innerText = "0";
+                    return; // Pasa a la siguiente unidad del plan que sí tenga disponibles
+                }}
+
+                // Calcular cuántas unidades se necesitan para los IDs restantes
+                let necesarias = Math.ceil(dropRestante / uInfo.spr);
                 let asignadas = 0;
 
-                if (flotaDisponibilidad[claveUnidad]) {{
-                    let dispInfo = flotaDisponibilidad[claveUnidad];
-                    let disponiblesPatio = dispInfo.disponible - dispInfo.usadas;
-
-                    if (disponiblesPatio >= necesarias) {{
-                        asignadas = necesarias;
-                        dispInfo.usadas += necesarias;
-                    }} else if (disponiblesPatio > 0) {{
-                        asignadas = disponiblesPatio;
-                        dispInfo.usadas += disponiblesPatio;
-                    }} else if (esExcepcionInfinita) {{
-                        asignadas = necesarias;
-                    }}
-                }} else if (esExcepcionInfinita) {{
+                if (esExcepcionInfinita) {{
                     asignadas = necesarias;
+                }} else {{
+                    // Asigna como máximo las que realmente quedan en patio
+                    asignadas = Math.min(necesarias, disponiblesPatio);
+                    dispInfo.usadas += asignadas;
                 }}
 
                 if (uInfo.elRes) uInfo.elRes.innerText = asignadas;
 
-                // Descuenta la capacidad cubierta
+                // Resta de los IDs la capacidad que esta unidad logró cubrir
                 let capacidadCubierta = asignadas * uInfo.spr;
                 dropRestante -= capacidadCubierta;
                 if (dropRestante < 0) dropRestante = 0;
