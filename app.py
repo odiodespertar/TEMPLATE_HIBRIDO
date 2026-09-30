@@ -5522,7 +5522,125 @@ document.addEventListener('keydown', function(event) {{
 
 
 
-    // 🟢 4. SINCRONIZADOR RESTANTE DE PATIO EN LA MINITABLA
+    // 🟢 1. LECTURA GLOBAL DE DISPONIBILIDAD EN PATIO
+    function obtenerInventarioPatio() {{
+        let flota = {{}};
+        document.querySelectorAll('.row-flota-sis').forEach((row, idx) => {{
+            let nameCell = row.querySelector('.sis-unit-name');
+            let inputDisp = document.getElementById(`sis-disp-flota-${{idx}}`);
+            
+            let nombre = nameCell?.innerText?.trim() || "";
+            let dispVal = parseInt(inputDisp?.value) || 0;
+
+            if (nombre) {{
+                flota[nombre.toLowerCase()] = {{
+                    nombreReal: nombre,
+                    disponible: dispVal,
+                    usadas: 0
+                }};
+            }}
+        }});
+        return flota;
+    }}
+
+    // 🟢 2. CÁLCULO INDIVIDUAL DE PLANES RESPETANDO PATIO
+    function calcularPlanSistemico(planIdx) {{
+        // Si no se llama desde Auto-Calcular, recalculamos todo el mapa para mantener coherencia
+        distribuirAutomaticoSistemico();
+    }}
+
+    // 🧠 3. MOTOR AUTO-CALCULAR CON CANDADO INVIOLABLE
+    function distribuirAutomaticoSistemico() {{
+        let flotaDisponibilidad = obtenerInventarioPatio();
+
+        // Limpiar todas las asignaciones adicionales antes de calcular
+        document.querySelectorAll('.res-adic-sis').forEach(el => el.innerText = "0");
+
+        // Agrupar planes e IDs dropeados
+        let planesData = [];
+        const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
+
+        planesUnicos.forEach(planIdx => {{
+            let dropIn = document.getElementById(`sis-drop-plan-${{planIdx}}`);
+            let dropTotal = parseFloat(dropIn?.value) || 0;
+            let filasPlan = document.querySelectorAll(`.fila-plan-sistemico[data-plan-idx="${{planIdx}}"]`);
+
+            let unidadesDelPlan = [];
+            filasPlan.forEach(fila => {{
+                let idx = fila.id.replace("sis-tr-", "");
+                let inputNombre = document.getElementById(`sis-nombre-${{idx}}`);
+                let inputSpr = document.getElementById(`sis-spr-${{idx}}`);
+                let elRes = document.getElementById(`sis-res-${{idx}}`);
+
+                let nombre = inputNombre?.value?.trim() || "";
+                let spr = parseFloat(inputSpr?.value) || 0;
+
+                if (nombre && spr > 0) {{
+                    unidadesDelPlan.push({{ idx, nombre, spr, elRes }});
+                }}
+            }});
+
+            if (dropTotal > 0 && unidadesDelPlan.length > 0) {{
+                planesData.push({{
+                    planIdx,
+                    dropTotal,
+                    unidadesDelPlan
+                }});
+            }}
+        }});
+
+        // ORDENAR PLANES: Damos prioridad estricta a los planes con MAYOR número de IDs dropeados
+        planesData.sort((a, b) => b.dropTotal - a.dropTotal);
+
+        // REPARTO CON CANDADO STRICTO
+        planesData.forEach(pData => {{
+            let dropRestantePlan = pData.dropTotal;
+
+            pData.unidadesDelPlan.forEach(uInfo => {{
+                if (dropRestantePlan <= 0) return;
+
+                let claveUnidad = uInfo.nombre.toLowerCase();
+
+                // CANDADO: Lista de unidades que SÍ pueden sobrepasar stock
+                let esExcepcionInfinita = 
+                    claveUnidad.includes("car 8h") || claveUnidad.includes("car - 8h") ||
+                    claveUnidad.includes("car 5h") || claveUnidad.includes("car - 5h") ||
+                    claveUnidad.includes("car 3h") || claveUnidad.includes("car - 3h") ||
+                    claveUnidad.includes("small van 9h ext");
+
+                let dispInfo = flotaDisponibilidad[claveUnidad];
+                let disponiblesEnPatio = dispInfo ? (dispInfo.disponible - dispInfo.usadas) : 0;
+
+                // 🚫 SI TIENE 0 O ESTÁ AGOTADA Y NO ES EXCEPCIÓN -> SE QUEDA EN 0 OBLIGATORIAMENTE
+                if (disponiblesEnPatio <= 0 && !esExcepcionInfinita) {{
+                    if (uInfo.elRes) uInfo.elRes.innerText = "0";
+                    return;
+                }}
+
+                let necesarias = Math.ceil(dropRestantePlan / uInfo.spr);
+                let asignadas = 0;
+
+                if (esExcepcionInfinita) {{
+                    asignadas = necesarias;
+                }} else {{
+                    // Asigna ÚNICAMENTE las que realmente quedan en patio
+                    asignadas = Math.min(necesarias, disponiblesEnPatio);
+                    dispInfo.usadas += asignadas;
+                }}
+
+                if (uInfo.elRes) uInfo.elRes.innerText = asignadas;
+
+                // Descuenta de los IDs del plan
+                let capacidadCubierta = asignadas * uInfo.spr;
+                dropRestantePlan -= capacidadCubierta;
+                if (dropRestantePlan < 0) dropRestantePlan = 0;
+            }});
+        }});
+
+        sincronizarTotalesSistemico();
+    }}
+
+    // 🟢 4. REFRESCA EL RESTANTE EN PATIO (SIN NÚMEROS ROJOS NEGATIVOS)
     function sincronizarTotalesSistemico() {{
         let conteoUnidades = {{}};
 
@@ -5551,11 +5669,11 @@ document.addEventListener('keydown', function(event) {{
             if (restCell) {{
                 let restante = disponible - ocupadas;
                 restCell.innerText = restante;
+                // Color rojo solo si es negativo (que para unidades normales ya no ocurrirá)
                 restCell.style.color = restante < 0 ? "#ef4444" : "#2dd4bf";
             }}
         }});
     }}
-
 
 
     // 🟢 Y EN TU FUNCIÓN DE FILTRAR (BUSCA DÓNDE TIENES 'filterRows'), REEMPLÁZALA POR ESTA:
@@ -6103,40 +6221,7 @@ function obtenerCarFlexible() {{
 }}
 
 
-    // 🟢 1. CÁLCULO EN CASCADA MATEMÁTICAMENTE EXACTO POR PLAN
-    function calcularPlanSistemico(planIdx) {{
-        const dropIn = document.getElementById(`sis-drop-plan-${{planIdx}}`);
-        let dropRestante = parseFloat(dropIn?.value) || 0;
-
-        const filasPlan = document.querySelectorAll(`.fila-plan-sistemico[data-plan-idx="${{planIdx}}"]`);
-
-        filasPlan.forEach(fila => {{
-            let idx = fila.id.replace("sis-tr-", "");
-            let inputNombre = document.getElementById(`sis-nombre-${{idx}}`);
-            let inputSpr = document.getElementById(`sis-spr-${{idx}}`);
-            let resDisplay = document.getElementById(`sis-res-${{idx}}`);
-
-            let nombre = inputNombre?.value?.trim() || "";
-            let spr = parseFloat(inputSpr?.value) || 0;
-
-            if (nombre && spr > 0 && dropRestante > 0) {{
-                // Cuántas de esta unidad especifica se necesitan para cubrir lo que queda de IDs
-                let unidadesNecesarias = Math.ceil(dropRestante / spr);
-                let capacidadCubierta = unidadesNecesarias * spr;
-
-                if (resDisplay) resDisplay.innerText = unidadesNecesarias;
-
-                // Descuenta la capacidad real del acumulador
-                dropRestante -= capacidadCubierta;
-                if (dropRestante < 0) dropRestante = 0;
-            }} else {{
-                if (resDisplay) resDisplay.innerText = "0";
-            }}
-        }});
-
-        sincronizarTotalesSistemico();
-    }}
-
+    
 
     function calcularTodosLosPlanesSistemico() {{
         const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
@@ -6203,114 +6288,7 @@ function obtenerCarFlexible() {{
     }}
     
 
-    // 🧠 MOTOR AUTO-CALCULAR CON CANDADO ESTRICTO Y PRIORIDAD DE IDS DROPEADOS
-    function distribuirAutomaticoSistemico() {{
-        // 1. Leer disponibilidad real de patio desde la minitabla flotante
-        let flotaDisponibilidad = {{}};
-        document.querySelectorAll('.row-flota-sis').forEach((row, idx) => {{
-            let nameCell = row.querySelector('.sis-unit-name');
-            let inputDisp = document.getElementById(`sis-disp-flota-${{idx}}`);
-            
-            let nombre = nameCell?.innerText?.trim() || "";
-            let dispVal = parseInt(inputDisp?.value) || 0;
-
-            if (nombre) {{
-                flotaDisponibilidad[nombre.toLowerCase()] = {{
-                    nombreReal: nombre,
-                    disponible: dispVal,
-                    usadas: 0
-                }};
-            }}
-        }});
-
-        // 2. Limpiar todos los displays de resultados en la tabla de planes
-        document.querySelectorAll('.res-adic-sis').forEach(el => el.innerText = "0");
-
-        // 3. Capturar todos los planes y agrupar sus unidades asignadas
-        let planesData = [];
-        const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
-
-        planesUnicos.forEach(planIdx => {{
-            let dropIn = document.getElementById(`sis-drop-plan-${{planIdx}}`);
-            let dropTotal = parseFloat(dropIn?.value) || 0;
-            let filasPlan = document.querySelectorAll(`.fila-plan-sistemico[data-plan-idx="${{planIdx}}"]`);
-
-            let unidadesDelPlan = [];
-            filasPlan.forEach(fila => {{
-                let idx = fila.id.replace("sis-tr-", "");
-                let inputNombre = document.getElementById(`sis-nombre-${{idx}}`);
-                let inputSpr = document.getElementById(`sis-spr-${{idx}}`);
-                let elRes = document.getElementById(`sis-res-${{idx}}`);
-
-                let nombre = inputNombre?.value?.trim() || "";
-                let spr = parseFloat(inputSpr?.value) || 0;
-
-                if (nombre && spr > 0) {{
-                    unidadesDelPlan.push({{ idx, nombre, spr, elRes }});
-                }}
-            }});
-
-            if (dropTotal > 0 && unidadesDelPlan.length > 0) {{
-                planesData.push({{
-                    planIdx,
-                    dropTotal,
-                    unidadesDelPlan
-                }});
-            }}
-        }});
-
-        // 🟢 ORDENAR PLANES DE MAYOR A MENOR SEGÚN SUS IDS DROPEADOS
-        planesData.sort((a, b) => b.dropTotal - a.dropTotal);
-
-        // 4. Asignar disponibilidad dando prioridad a los planes con más IDs
-        planesData.forEach(pData => {{
-            let dropRestantePlan = pData.dropTotal;
-
-            pData.unidadesDelPlan.forEach(uInfo => {{
-                if (dropRestantePlan <= 0) return;
-
-                let claveUnidad = uInfo.nombre.toLowerCase();
-
-                // 🟢 LISTA DE EXCEPCIONES PERMITIDAS PARA EXCEDER DISPONIBILIDAD (+X)
-                let esExcepcionInfinita = 
-                    claveUnidad.includes("car 8h") || claveUnidad.includes("car - 8h") ||
-                    claveUnidad.includes("car 5h") || claveUnidad.includes("car - 5h") ||
-                    claveUnidad.includes("car 3h") || claveUnidad.includes("car - 3h") ||
-                    claveUnidad.includes("small van 9h ext");
-
-                let dispInfo = flotaDisponibilidad[claveUnidad];
-                let disponiblesPatio = dispInfo ? (dispInfo.disponible - dispInfo.usadas) : 0;
-
-                // Si no hay stock disponible y la unidad NO es de las excepciones, la deja en 0 y salta
-                if (disponiblesPatio <= 0 && !esExcepcionInfinita) {{
-                    if (uInfo.elRes) uInfo.elRes.innerText = "0";
-                    return;
-                }}
-
-                // Cálculo de unidades requeridas para el remanente de IDs del plan
-                let necesarias = Math.ceil(dropRestantePlan / uInfo.spr);
-                let asignadas = 0;
-
-                if (esExcepcionInfinita) {{
-                    asignadas = necesarias;
-                }} else {{
-                    // CANDADO ESTRICTO: Solo toma las disponibles reales en patio
-                    asignadas = Math.min(necesarias, disponiblesPatio);
-                    dispInfo.usadas += asignadas;
-                }}
-
-                if (uInfo.elRes) uInfo.elRes.innerText = asignadas;
-
-                // Descuenta la capacidad cubierta de los IDs del plan
-                let capacidadCubierta = asignadas * uInfo.spr;
-                dropRestantePlan -= capacidadCubierta;
-                if (dropRestantePlan < 0) dropRestantePlan = 0;
-            }});
-        }});
-
-        // 5. Refrescar contadores y cantidades restantes en patio
-        sincronizarTotalesSistemico();
-    }}
+    
     
 
     // 🟢 4. FILTRAR PLANES OCULTANDO LOS QUE NO TIENEN UNIDADES NI IDs (AL PULSAR "ACTIVAS")
