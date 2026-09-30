@@ -1717,7 +1717,7 @@ CATALOGO_SISTEMICO = {
 
 
 PLANES_SISTEMICO = [
-   "ACTOPAN", "⚠ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
+   "ACTOPAN", "⚠️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
    "TEZUITLAN", "TLALTETELA", "TRAPICHE", "TUZAMAPA", "XICO", "CONTINGENCIA CENTRO NODO", 
    "CONTINGENCIA TUZAMAPA", "CONTINGENCIA XICO"
 ]
@@ -1770,11 +1770,11 @@ def gen_tabla_sistemico_planes():
 
         <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: flex-end;">
             <button onclick="quitarFilaFlotaSis()" title="Quitar última fila" style="cursor: pointer; background: #262626; color: #f87171; border: 1px solid #7f1d1d; font-weight: 800; border-radius: 5px; padding: 4px 10px; font-size: 12px;">- fila unidad</button>
-            <button onclick="agregarFilaFlotaSis()" title="Agregar nueva fila" style="cursor: pointer; background: #262626; color: #2dd4bf; border: 1px solid #115e59; font-weight: 800; border-radius: 5px; padding: 4px 10px; font-size: 12px;">+ fila unidad</button>
+            <button onclick="agregarFilaFlotaSis()" title="Agregar nueva fila" style="cursor: pointer; background: #262626; color: #2dd4bf; border: 1px solid #115e59; font-weight: 800; border-radius: 4px; padding: 4px 10px; font-size: 12px;">+ fila unidad</button>
         </div>
     </div>
 
-    <!-- 🟢 2. TABLA UNIFICADA DE PLANES (BOTONES ARRIBA DEL NOMBRE DEL PLAN) -->
+    <!-- 🟢 2. TABLA UNIFICADA DE PLANES (CONTENEDOR FLEXBOX ESTRUCTURADO) -->
     <div style="max-width: 980px; margin: 0 auto; background: #ffffff; padding: 20px 24px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0,0,0,0.04); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
         <div style="font-size: 17px; font-weight: 800; color: #0f172a; margin-bottom: 16px; border-bottom: 2px solid #0f766e; padding-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
             <span>📋 Planificación de Ruteo Sistémico por Plan</span>
@@ -1808,13 +1808,15 @@ def gen_tabla_sistemico_planes():
 
             if r_idx == 0:
                 html += f'''
-                <td rowspan="{num_filas}" class="td-plan-name" id="td-plan-nom-{p_idx}" style="background: #f8fafc; font-weight: 800; font-size: 15px; color: #0f172a; text-align: center; vertical-align: middle; border-right: 1.5px solid #cbd5e1; border-bottom: 2px solid #cbd5e1; padding: 6px;">
-                    <!-- ⬆️ BOTONES UBICADOS ARRIBA PARA EVITAR DESPLAZAMIENTO -->
-                    <div style="margin-bottom: 6px; display: flex; gap: 4px; justify-content: center;">
-                        <button onclick="agregarFilaPlanSis('{plan_nom}', {p_idx})" title="Agregar fila" style="cursor: pointer; background: #ccfbf1; color: #0d9488; border: 1px solid #99f6e4; font-weight: 800; border-radius: 4px; padding: 2px 6px; font-size: 11px;">+ fila</button>
-                        <button onclick="quitarFilaPlanSis('{plan_nom}', {p_idx})" title="Quitar fila" style="cursor: pointer; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; font-weight: 800; border-radius: 4px; padding: 2px 6px; font-size: 11px;">- fila</button>
+                <td rowspan="{num_filas}" class="td-plan-name" id="td-plan-nom-{p_idx}" style="background: #f8fafc; border-right: 1.5px solid #cbd5e1; border-bottom: 2px solid #cbd5e1; padding: 8px; vertical-align: middle;">
+                    <!-- 🔒 ESTRUCTURA FLEXBOX: Mantiene el texto y botones estables sin saltos -->
+                    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100%; gap: 8px;">
+                        <div style="font-weight: 800; font-size: 15px; color: #0f172a; text-align: center;">{plan_nom}</div>
+                        <div style="display: flex; gap: 4px; justify-content: center;">
+                            <button onclick="agregarFilaPlanSis('{plan_nom}', {p_idx})" title="Agregar fila" style="cursor: pointer; background: #ccfbf1; color: #0d9488; border: 1px solid #99f6e4; font-weight: 800; border-radius: 4px; padding: 3px 7px; font-size: 11px;">+ fila</button>
+                            <button onclick="quitarFilaPlanSis('{plan_nom}', {p_idx})" title="Quitar fila" style="cursor: pointer; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; font-weight: 800; border-radius: 4px; padding: 3px 7px; font-size: 11px;">- fila</button>
+                        </div>
                     </div>
-                    <div>{plan_nom}</div>
                 </td>
                 <td rowspan="{num_filas}" class="td-plan-drop" id="td-plan-drop-{p_idx}" style="background: #f0fdfa; text-align: center; vertical-align: middle; border-right: 1.5px solid #cbd5e1; border-bottom: 2px solid #cbd5e1; padding: 6px;">
                     <input type="number" class="sis-plan-drop-in" id="sis-drop-plan-{p_idx}" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()" value="0" placeholder="0"
