@@ -1717,13 +1717,13 @@ CATALOGO_SISTEMICO = {
 
 
 PLANES_SISTEMICO = [
-   "ACTOPAN", "⚠️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
+   "ACTOPAN", "⚠️ CENTRO 1", "⚠️️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
    "TEZUITLAN", "TLALTETELA", "TRAPICHE", "TUZAMAPA", "XICO", "CONTINGENCIA CENTRO NODO", 
    "CONTINGENCIA TUZAMAPA", "CONTINGENCIA XICO"
 ]
 
 def gen_tabla_sistemico_planes():
-    # 🟢 1. TARJETA FLOTANTE MINIMALISTA DE PATIO
+    # 🟢 1. TARJETA FLOTANTE MINIMALISTA PARA FLOTA DISPONIBLE
     html = '''
     <div id="sis-flota-flotante" style="max-width: 980px; margin: 0 auto 18px auto; background: #17191b; padding: 14px 20px; border-radius: 12px; border: 1.5px solid #2dd4bf; box-shadow: 0 6px 20px rgba(0,0,0,0.35); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #262626; padding-bottom: 8px;">
@@ -1774,21 +1774,20 @@ def gen_tabla_sistemico_planes():
         </div>
     </div>
 
-    <!-- 🟢 2. TABLA UNIFICADA DE PLANES (COLORES TIPO POLÍGONO CON TAMAÑOS GRANDES RESTAURADOS) -->
-    <div style="max-width: 980px; margin: 0 auto; background: #ffffff; padding: 0; border: 1.5px solid #25282b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-        
-        <!-- ENCABEZADO TIPO POLÍGONO -->
-        <div style="background: #25282b; color: #20B2AA; font-weight: 800; font-size: 17px; text-align: center; padding: 12px; border-bottom: 1.5px solid #25282b; letter-spacing: 0.5px;">
-            📋 PLANIFICACIÓN POR POLÍGONOS (SISTÉMICO)
+    <!-- 🟢 2. TABLA UNIFICADA DE PLANES (BORDES DIVISORES REFORZADOS) -->
+    <div style="max-width: 980px; margin: 0 auto; background: #ffffff; padding: 20px 24px; border-radius: 12px; border: 1px solid #cbd5e1; box-shadow: 0 4px 16px rgba(0,0,0,0.04); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        <div style="font-size: 17px; font-weight: 800; color: #0f172a; margin-bottom: 16px; border-bottom: 2.5px solid #0f766e; padding-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+            <span>📋 Planificación de Ruteo Sistémico por Plan</span>
+            <span style="font-size: 12px; color: #0f766e; font-weight: 700;">Consumo en Cascada ÷ SPR Logis</span>
         </div>
 
         <table style="width: 100%; border-collapse: collapse; color: #222222; font-size: 14px; table-layout: fixed;">
             <thead>
-                <tr style="height: 38px; background: #25282b; color: #ffffff; font-weight: 800; font-size: 13px; text-transform: uppercase;">
-                    <th style="padding: 8px; text-align: center; width: 18%; border-right: 1px solid #ffffff;">PLAN</th>
-                    <th style="padding: 8px; text-align: center; width: 16%; border-right: 1px solid #ffffff;">IDS DROPEADOS</th>
-                    <th style="padding: 8px; text-align: center; width: 34%; border-right: 1px solid #ffffff;">UNIDAD</th>
-                    <th style="padding: 8px; text-align: center; width: 14%; border-right: 1px solid #ffffff;">SPR LOGIS</th>
+                <tr style="height: 40px; background: #f1f5f9; color: #334155; font-weight: 800; border-bottom: 3px solid #0f766e; font-size: 13px; text-transform: uppercase;">
+                    <th style="padding: 8px; text-align: center; width: 18%; border-right: 1.5px solid #94a3b8;">PLAN</th>
+                    <th style="padding: 8px; text-align: center; width: 16%; border-right: 1.5px solid #94a3b8;">IDS DROPEADOS</th>
+                    <th style="padding: 8px; text-align: left; width: 34%; border-right: 1px solid #cbd5e1;">UNIDAD</th>
+                    <th style="padding: 8px; text-align: center; width: 14%; border-right: 1px solid #cbd5e1;">SPR LOGIS</th>
                     <th style="padding: 8px; text-align: center; width: 18%;">UNIDADES ADICIONALES</th>
                 </tr>
             </thead>
@@ -1801,45 +1800,45 @@ def gen_tabla_sistemico_planes():
 
         for r_idx in range(num_filas):
             idx = fila_global_idx
-            
+            # 🔴 LÍNEA DIVISORA GRUESA Y OSCURA AL TERMINAR CADA PLAN
             es_ultima_fila_plan = (r_idx == num_filas - 1)
-            border_bottom = "2px solid #25282b" if es_ultima_fila_plan else "1px solid #cbd5e1"
+            border_bottom = "3px solid #0f766e" if es_ultima_fila_plan else "1px solid #e2e8f0"
             
             html += f'''
-            <tr class="fila-plan-sistemico" data-plan="{plan_nom}" data-plan-idx="{p_idx}" id="sis-tr-{idx}" style="border-bottom: {border_bottom}; height: 48px; background: #ffffff;">
+            <tr class="fila-plan-sistemico" data-plan="{plan_nom}" data-plan-idx="{p_idx}" id="sis-tr-{idx}" style="border-bottom: {border_bottom}; height: 48px;">
             '''
 
             if r_idx == 0:
                 html += f'''
-                <td rowspan="{num_filas}" class="td-plan-name" id="td-plan-nom-{p_idx}" style="background: #dcdcdc; border-right: 1.5px solid #25282b; border-bottom: 2px solid #25282b; padding: 8px; vertical-align: middle;">
+                <td rowspan="{num_filas}" class="td-plan-name" id="td-plan-nom-{p_idx}" style="background: #f8fafc; border-right: 2px solid #94a3b8; border-bottom: 3px solid #0f766e; padding: 8px; vertical-align: middle;">
                     <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100%; gap: 8px;">
                         <div style="font-weight: 800; font-size: 15px; color: #0f172a; text-align: center;">{plan_nom}</div>
                         <div style="display: flex; gap: 4px; justify-content: center;">
-                            <button onclick="agregarFilaPlanSis('{plan_nom}', {p_idx})" title="Agregar fila" style="cursor: pointer; background: #d3f0e5; color: #0f766e; border: 1px solid #25282b; font-weight: 800; border-radius: 4px; padding: 3px 7px; font-size: 11px;">+ fila</button>
-                            <button onclick="quitarFilaPlanSis('{plan_nom}', {p_idx})" title="Quitar fila" style="cursor: pointer; background: #fee2e2; color: #dc2626; border: 1px solid #25282b; font-weight: 800; border-radius: 4px; padding: 3px 7px; font-size: 11px;">- fila</button>
+                            <button onclick="agregarFilaPlanSis('{plan_nom}', {p_idx})" title="Agregar fila" style="cursor: pointer; background: #ccfbf1; color: #0d9488; border: 1px solid #99f6e4; font-weight: 800; border-radius: 4px; padding: 3px 7px; font-size: 11px;">+ fila</button>
+                            <button onclick="quitarFilaPlanSis('{plan_nom}', {p_idx})" title="Quitar fila" style="cursor: pointer; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; font-weight: 800; border-radius: 4px; padding: 3px 7px; font-size: 11px;">- fila</button>
                         </div>
                     </div>
                 </td>
-                <td rowspan="{num_filas}" class="td-plan-drop" id="td-plan-drop-{p_idx}" style="background: #f0fdfa; text-align: center; vertical-align: middle; border-right: 1.5px solid #25282b; border-bottom: 2px solid #25282b; padding: 6px;">
+                <td rowspan="{num_filas}" class="td-plan-drop" id="td-plan-drop-{p_idx}" style="background: #f0fdfa; text-align: center; vertical-align: middle; border-right: 2px solid #94a3b8; border-bottom: 3px solid #0f766e; padding: 6px;">
                     <input type="number" class="sis-plan-drop-in" id="sis-drop-plan-{p_idx}" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()" value="0" placeholder="0"
                            style="width: 80px; text-align: center; padding: 6px; font-weight: 800; font-size: 18px; border: 1.5px solid #0f766e; background: #ffffff; color: #0f766e; outline: none; border-radius: 6px;" />
                 </td>
                 '''
 
             html += f'''
-                <td style="padding: 4px 8px; text-align: left; vertical-align: middle; position: relative; border-right: 1px solid #25282b;">
+                <td style="padding: 4px 8px; text-align: left; vertical-align: middle; position: relative; border-right: 1px solid #e2e8f0;">
                     <input type="text" class="edit-name-sis" id="sis-nombre-{idx}" oninput="buscarCoincidenciasUnidad(this, {idx}); calcularPlanSistemico({p_idx});" onkeydown="navegarSugerenciasUnidad(event, {idx})" onfocus="buscarCoincidenciasUnidad(this, {idx})" placeholder="Buscar unidad..." autocomplete="off"
                            style="width: 100%; box-sizing: border-box; font-weight: 700; font-size: 15px; color: #1e293b; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 4px 6px; border-radius: 4px;" />
-                    <div id="sis-sug-{idx}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 90%; left: 6px; right: 6px; background: #ffffff; border: 1px solid #25282b; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 160px; overflow-y: auto;"></div>
+                    <div id="sis-sug-{idx}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 90%; left: 6px; right: 6px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 160px; overflow-y: auto;"></div>
                 </td>
 
-                <td style="text-align: center; padding: 4px; vertical-align: middle; border-right: 1px solid #25282b;">
+                <td style="text-align: center; padding: 4px; vertical-align: middle; border-right: 1px solid #e2e8f0;">
                     <input type="number" id="sis-spr-{idx}" value="0" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()"
                            style="width: 65px; text-align: center; padding: 4px; font-weight: 700; font-size: 15px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #475569; outline: none;" />
                 </td>
 
-                <td style="text-align: center; padding: 4px; vertical-align: middle; background: #d3f0e5;">
-                    <span id="sis-res-{idx}" class="res-adic-sis" style="font-weight: 800; font-size: 22px; color: #008B8B; -webkit-font-smoothing: antialiased;">0</span>
+                <td style="text-align: center; padding: 4px; vertical-align: middle;">
+                    <span id="sis-res-{idx}" class="res-adic-sis" style="font-weight: 800; font-size: 22px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
                 </td>
             </tr>
             '''
