@@ -1684,6 +1684,8 @@ CATALOGO_SISTEMICO = {
     "Car MLP": [110, 120],
     "Small Van MLP": [110, 120],
     "Large Van MLP": [110, 120],
+    "Small Van": [110, 120],
+    "Large Van": [110, 120],
     "Extra large Van MLP": [110, 120],
     "Small Van MLP XPT": [110, 120],
     "Small Van MLP SDD": [110, 120],
