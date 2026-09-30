@@ -1757,7 +1757,7 @@ def gen_tabla_sistemico_planes():
 
             if r_idx == 0:
                 html += f'''
-                <td rowspan="{num_filas}" class="td-plan-name" id="td-plan-nom-{p_idx}" style="background: #dcdcdc; border-right: 1.5px solid #25282b; border-bottom: 2px solid #25282b; padding: 8px; vertical-align: middle;">
+                <td rowspan="{num_filas}" class="td-plan-name" id="td-plan-nom-{p_idx}" style="background: #e3e3e3; border-right: 1.5px solid #25282b; border-bottom: 2px solid #25282b; padding: 8px; vertical-align: middle;">
                     <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100%; gap: 8px;">
                         <div style="font-weight: 800; font-size: 15px; color: #0f172a; text-align: center;">{plan_nom}</div>
                         <div style="display: flex; gap: 4px; justify-content: center;">
