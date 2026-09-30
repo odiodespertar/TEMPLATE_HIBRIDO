@@ -3503,9 +3503,11 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                         </tbody>
                     </table>
 
-                    <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: flex-end;">
-                        <button onclick="quitarFilaFlotaSis()" title="Quitar última fila" style="cursor: pointer; background: #262626; color: #f87171; border: 1px solid #7f1d1d; font-weight: 800; border-radius: 5px; padding: 4px 10px; font-size: 12px;">-</button>
-                        <button onclick="agregarFilaFlotaSis()" title="Agregar nueva fila" style="cursor: pointer; background: #262626; color: #2dd4bf; border: 1px solid #115e59; font-weight: 800; border-radius: 5px; padding: 4px 10px; font-size: 12px;">+</button>
+                    <div style="display: flex; gap: 6px; margin-top: 10px; justify-content: flex-end;">
+                        <button onclick="quitarFilaFlotaSis()" title="Quitar última fila" 
+                                style="cursor: pointer; background: #262626; color: #d4d4d4; border: 1px solid #404040; font-weight: 700; border-radius: 4px; width: 24px; height: 22px; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; padding: 0; outline: none;">-</button>
+                        <button onclick="agregarFilaFlotaSis()" title="Agregar nueva fila" 
+                                style="cursor: pointer; background: #262626; color: #d4d4d4; border: 1px solid #404040; font-weight: 700; border-radius: 4px; width: 24px; height: 22px; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; padding: 0; outline: none;">+</button>
                     </div>
                 </div>
             </div>
