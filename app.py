@@ -1784,7 +1784,7 @@ def gen_tabla_sistemico_planes():
                            style="width: 65px; text-align: center; padding: 4px; font-weight: 700; font-size: 15px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #475569; outline: none;" />
                 </td>
 
-                <td style="text-align: center; padding: 4px; vertical-align: middle; background: #d3f0e5;">
+                <td style="text-align: center; padding: 4px; vertical-align: middle; background: #ffffff;">
                     <span id="sis-res-{idx}" class="res-adic-sis" style="font-weight: 800; font-size: 22px; color: #008B8B; -webkit-font-smoothing: antialiased;">0</span>
                 </td>
             </tr>
