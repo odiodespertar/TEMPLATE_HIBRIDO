@@ -1767,9 +1767,9 @@ def gen_tabla_sistemico_planes():
                                     style="cursor: pointer; background: rgba(0,0,0,0.06); color: #333333; border: 1px solid #a3a3a3; font-weight: 700; border-radius: 4px; width: 22px; height: 20px; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; padding: 0; outline: none;">-</button>
                         </div>
                 </td>
-                <td rowspan="{num_filas}" class="td-plan-drop" id="td-plan-drop-{p_idx}" style="background: #fffff; text-align: center; vertical-align: middle; border-right: 1.5px solid #25282b; border-bottom: 2px solid #25282b; padding: 6px;">
+                <td rowspan="{num_filas}" class="td-plan-drop" id="td-plan-drop-{p_idx}" style="background: #ffffff; text-align: center; vertical-align: middle; border-right: 1.5px solid #25282b; border-bottom: 2px solid #25282b; padding: 6px;">
                     <input type="number" class="sis-plan-drop-in" id="sis-drop-plan-{p_idx}" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()" value="0" placeholder="0"
-                           style="width: 80px; text-align: center; padding: 6px; font-weight: 800; font-size: 18px; border: 1.5px solid #fffff; background: #ffffff; color: #FF4500; outline: none; border-radius: 6px;" />
+                           style="width: 80px; text-align: center; padding: 6px; font-weight: 800; font-size: 18px; border: 1.5px solid transparent; background: transparent; color: #FF4500; outline: none; border-radius: 6px; transition: all 0.15s ease;" />
                 </td>
                 '''
 
@@ -2380,6 +2380,13 @@ body {{ font-family: sans-serif; background: #ffffff; padding: 14px; }}
     color: #25282b;
 }}
 
+
+/* 🟢 Recuadro negro redondeado solo al seleccionar la casilla */
+.sis-plan-drop-in:focus {{
+    background: #ffffff !important;
+    border: 2px solid #000000 !important;
+    box-shadow: 0 0 0 1px #000000 !important;
+}}
 
 
 /* ===== MODO FLOTANTE PERFECTAMENTE CENTRADO ===== */
