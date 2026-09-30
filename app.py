@@ -1819,7 +1819,7 @@ def gen_tabla_sistemico_planes():
                         </div>
                     </div>
                 </td>
-                <td rowspan="{num_filas}" class="td-plan-drop" id="td-plan-drop-{p_idx}" style="background: #f0fdfa; text-align: center; vertical-align: middle; border-right: 2px solid #94a3b8; border-bottom: 3px solid #0f766e; padding: 6px;">
+                <td rowspan="{num_filas}" class="td-plan-drop" id="td-plan-drop-{p_idx}" style="background: #bdf0e6; text-align: center; vertical-align: middle; border-right: 2px solid #94a3b8; border-bottom: 3px solid #0f766e; padding: 6px;">
                     <input type="number" class="sis-plan-drop-in" id="sis-drop-plan-{p_idx}" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()" value="0" placeholder="0"
                            style="width: 80px; text-align: center; padding: 6px; font-weight: 800; font-size: 18px; border: 1.5px solid #0f766e; background: #ffffff; color: #0f766e; outline: none; border-radius: 6px;" />
                 </td>
