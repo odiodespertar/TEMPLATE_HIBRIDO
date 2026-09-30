@@ -2478,6 +2478,34 @@ body {{ font-family: sans-serif; background: #ffffff; padding: 14px; }}
 }}
 
 
+/* ============================================================
+   🚛 MODO FLOTANTE EXCLUSIVO PARA TARJETA NEGRA DE SISTÉMICO
+   ============================================================ */
+#sis-flota-contenedor.sis-floating {{
+  position: fixed !important;
+  top: 170px;
+  left: 50% !important;
+  transform: translateX(-50%);
+  width: min(980px, 92vw) !important;
+  max-height: 380px !important;
+  overflow: hidden !important;
+  z-index: 999999 !important;
+  background: #17191b !important;
+  border: 3px solid #2dd4bf !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.60) !important;
+  padding: 8px !important;
+  margin: 0 !important;
+}}
+
+#sis-flota-contenedor.sis-normal {{
+  position: static !important;
+  transform: none !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}}
 
 
 
