@@ -4215,6 +4215,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         "Car MLP": [110, 120],
         "Small Van MLP": [110, 120],
         "Large Van MLP": [110, 120],
+        "Small Van": [110, 120],
+        "Large Van": [110, 120],
         "Small Van MLP Newbie": [110, 120],
         "Large Van MLP Newbie": [110, 120],
         "Extra large Van MLP": [110, 120],
