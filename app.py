@@ -1757,15 +1757,19 @@ def gen_tabla_sistemico_planes():
 
             if r_idx == 0:
                 html += f'''
-                <td rowspan="{num_filas}" class="td-plan-name" id="td-plan-nom-{p_idx}" style="background: #e3e3e3; border-right: 1.5px solid #25282b; border-bottom: 2px solid #25282b; padding: 8px; vertical-align: middle;">
+                <td rowspan="{num_filas}" class="td-plan-name" id="td-plan-nom-{p_idx}" style="background: #dcdcdc; border-right: 1.5px solid #25282b; border-bottom: 2px solid #25282b; padding: 8px; vertical-align: middle;">
                     <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100%; gap: 8px;">
-                        <div style="font-weight: 800; font-size: 15px; color: #0f172a; text-align: center;">{plan_nom}</div>
+                        <!-- 🟢 NOMBRE DEL PLAN EDITABLE -->
+                        <div contenteditable="true" style="font-weight: 800; font-size: 15px; color: #0f172a; text-align: center; outline: none; padding: 2px 4px; border-radius: 4px;" title="Haz clic para editar el nombre del plan">
+                            {plan_nom}
+                        </div>
                         <div style="display: flex; gap: 4px; justify-content: center;">
                             <button onclick="agregarFilaPlanSis('{plan_nom}', {p_idx})" title="Agregar fila"
                                     style="cursor: pointer; background: rgba(0,0,0,0.06); color: #333333; border: 1px solid #a3a3a3; font-weight: 700; border-radius: 4px; width: 22px; height: 20px; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; padding: 0; outline: none;">+</button>
                             <button onclick="quitarFilaPlanSis('{plan_nom}', {p_idx})" title="Quitar fila"
                                     style="cursor: pointer; background: rgba(0,0,0,0.06); color: #333333; border: 1px solid #a3a3a3; font-weight: 700; border-radius: 4px; width: 22px; height: 20px; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; padding: 0; outline: none;">-</button>
                         </div>
+                    </div>
                 </td>
                 <td rowspan="{num_filas}" class="td-plan-drop" id="td-plan-drop-{p_idx}" style="background: #ffffff; text-align: center; vertical-align: middle; border-right: 1.5px solid #25282b; border-bottom: 2px solid #25282b; padding: 6px;">
                     <input type="number" class="sis-plan-drop-in" id="sis-drop-plan-{p_idx}" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()" value="0" placeholder="0"
@@ -2378,6 +2382,14 @@ body {{ font-family: sans-serif; background: #ffffff; padding: 14px; }}
     height: 24px;
     background: white;
     color: #25282b;
+}}
+
+
+/* 🟢 Resaltado cuando seleccionas o editas el nombre del plan en Sistémico */
+.td-plan-name div[contenteditable="true"]:focus {{
+    background: #ffffff !important;
+    border: 1.5px solid #25282b !important;
+    box-shadow: 0 0 4px rgba(0,0,0,0.15) !important;
 }}
 
 
