@@ -3868,6 +3868,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             // Comprueba si la unidad es exclusivamente Car 3h, Car 5h o Car 8h
             const esCarValido = nombre.includes("car 3h") || nombre.includes("car - 3h") ||
                                 nombre.includes("car 5h") || nombre.includes("car - 5h") ||
+                                nombre.includes("car 5h") || nombre.includes("small van - 9h") ||
                                 nombre.includes("car 8h") || nombre.includes("car - 8h");
 
             if (esCarValido && usadas > disp) {{
