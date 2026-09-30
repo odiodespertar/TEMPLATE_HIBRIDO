@@ -6586,7 +6586,7 @@ function obtenerCarFlexible() {{
             ultimaFilaAnterior.style.borderBottom = "1px solid #cbd5e1";
         }}
 
-        const totalFilasGlobal = tbody.querySelectorAll('.fila-plan-sistemico').length;
+        const totalFilasGlobal = tbody.querySelectorAll('.fila-plan-sistemico').length; 
         const nuevaTr = document.createElement("tr");
         nuevaTr.className = "fila-plan-sistemico";
         nuevaTr.setAttribute("data-plan", planNom);
