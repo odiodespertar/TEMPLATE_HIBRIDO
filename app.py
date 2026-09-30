@@ -1722,18 +1722,18 @@ PLANES_SISTEMICO = [
 ]
 
 def gen_tabla_sistemico_planes():
-    # 🟢 1. MINITABLA FLOTANTE MINIMALISTA CON BUSCADOR Y FILAS DINÁMICAS
+    # 🟢 1. TARJETA FLOTANTE MINIMALISTA PARA FLOTA DISPONIBLE (LETRAS Y NÚMEROS MÁS GRANDES)
     html = '''
-    <div id="sis-flota-flotante" style="max-width: 950px; margin: 0 auto 16px auto; background: #17191b; padding: 12px 18px; border-radius: 12px; border: 1.5px solid #2dd4bf; box-shadow: 0 6px 20px rgba(0,0,0,0.35); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #262626; padding-bottom: 6px;">
-            <span style="font-size: 11px; font-weight: 800; color: #2dd4bf; letter-spacing: 0.8px; text-transform: uppercase;">🚛 FLOTA DISPONIBLE EN PATIO (SISTÉMICO)</span>
-            <span style="font-size: 10px; color: #a3a3a3;">Ingresa disponibilidad real para Auto-Calcular</span>
+    <div id="sis-flota-flotante" style="max-width: 980px; margin: 0 auto 18px auto; background: #17191b; padding: 14px 20px; border-radius: 12px; border: 1.5px solid #2dd4bf; box-shadow: 0 6px 20px rgba(0,0,0,0.35); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #262626; padding-bottom: 8px;">
+            <span style="font-size: 13px; font-weight: 800; color: #2dd4bf; letter-spacing: 0.8px; text-transform: uppercase;">🚛 FLOTA DISPONIBLE EN PATIO (SISTÉMICO)</span>
+            <span style="font-size: 11px; color: #a3a3a3; font-weight: 500;">Ingresa disponibilidad real para Auto-Calcular</span>
         </div>
 
-        <table style="width: 100%; border-collapse: collapse; color: #f5f5f5; font-size: 12px; table-layout: fixed;">
+        <table style="width: 100%; border-collapse: collapse; color: #f5f5f5; font-size: 14px; table-layout: fixed;">
             <thead>
-                <tr style="color: #67e8f9; font-size: 10px; text-transform: uppercase; border-bottom: 1px solid #333333; height: 26px;">
-                    <th style="text-align: left; width: 45%; padding-left: 4px;">UNIDAD</th>
+                <tr style="color: #67e8f9; font-size: 12px; font-weight: 800; text-transform: uppercase; border-bottom: 1.5px solid #333333; height: 30px;">
+                    <th style="text-align: left; width: 45%; padding-left: 6px;">UNIDAD</th>
                     <th style="text-align: center; width: 18%;">SPR MAX</th>
                     <th style="text-align: center; width: 18%; color: #facc15;">DISPONIBLE</th>
                     <th style="text-align: center; width: 19%;">RESTANTE</th>
@@ -1742,23 +1742,23 @@ def gen_tabla_sistemico_planes():
             <tbody id="tbody-flota-flotante-sis">
     '''
 
-    # Genera 4 filas iniciales dinámicas
+    # Genera 4 filas iniciales dinámicas con letra más grande
     for idx in range(4):
         html += f'''
-        <tr class="row-flota-sis" id="sis-flota-tr-{idx}" style="border-bottom: 1px solid #262626; height: 38px;">
-            <td style="padding: 4px; text-align: left; vertical-align: middle; position: relative;">
+        <tr class="row-flota-sis" id="sis-flota-tr-{idx}" style="border-bottom: 1px solid #262626; height: 42px;">
+            <td style="padding: 6px; text-align: left; vertical-align: middle; position: relative;">
                 <input type="text" class="edit-name-flota-sis" id="sis-flota-nombre-{idx}" oninput="buscarCoincidenciasFlotaSis(this, {idx});" onkeydown="navegarSugerenciasFlotaSis(event, {idx})" onfocus="buscarCoincidenciasFlotaSis(this, {idx})" placeholder="Buscar unidad..." autocomplete="off"
-                       style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 13px; color: #f5f5f5; outline: none; border: none; border-bottom: 1px solid #525252; background: transparent; padding: 3px 4px;" />
-                <div id="sis-flota-sug-{idx}" class="sugerencias-flota-box" style="display: none; position: absolute; top: 90%; left: 4px; right: 4px; background: #262626; border: 1px solid #525252; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 999; max-height: 140px; overflow-y: auto;"></div>
+                       style="width: 100%; box-sizing: border-box; font-weight: 700; font-size: 15px; color: #ffffff; outline: none; border: none; border-bottom: 1.5px solid #525252; background: transparent; padding: 4px 6px;" />
+                <div id="sis-flota-sug-{idx}" class="sugerencias-flota-box" style="display: none; position: absolute; top: 90%; left: 6px; right: 6px; background: #262626; border: 1px solid #525252; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 999; max-height: 160px; overflow-y: auto;"></div>
             </td>
-            <td style="text-align: center; color: #a3a3a3; font-weight: 600; font-size: 12px;">
+            <td style="text-align: center; color: #d4d4d4; font-weight: 700; font-size: 15px;">
                 <span id="sis-flota-spr-{idx}">0</span>
             </td>
-            <td style="text-align: center; padding: 2px;">
+            <td style="text-align: center; padding: 3px;">
                 <input type="number" class="sis-disp-flota-in" id="sis-disp-flota-{idx}" oninput="sincronizarTotalesSistemico();" onfocus="this.select()" value="0" placeholder="0"
-                       style="width: 55px; text-align: center; padding: 3px; font-weight: 800; font-size: 13px; border: 1px solid #facc15; background: #0a0a0a; color: #facc15; outline: none; border-radius: 4px;" />
+                       style="width: 65px; text-align: center; padding: 4px; font-weight: 800; font-size: 16px; border: 1.5px solid #facc15; background: #0a0a0a; color: #facc15; outline: none; border-radius: 5px;" />
             </td>
-            <td style="text-align: center; font-weight: 800; font-size: 13px; color: #2dd4bf;" id="sis-rest-flota-{idx}">
+            <td style="text-align: center; font-weight: 800; font-size: 16px; color: #2dd4bf;" id="sis-rest-flota-{idx}">
                 0
             </td>
         </tr>
@@ -1769,27 +1769,27 @@ def gen_tabla_sistemico_planes():
         </table>
 
         <!-- Botones + y - para agregar o quitar filas -->
-        <div style="display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end;">
-            <button onclick="quitarFilaFlotaSis()" title="Quitar última fila" style="cursor: pointer; background: #262626; color: #f87171; border: 1px solid #7f1d1d; font-weight: 700; border-radius: 4px; padding: 2px 8px; font-size: 11px;">- fila unidad</button>
-            <button onclick="agregarFilaFlotaSis()" title="Agregar nueva fila" style="cursor: pointer; background: #262626; color: #2dd4bf; border: 1px solid #115e59; font-weight: 700; border-radius: 4px; padding: 2px 8px; font-size: 11px;">+ fila unidad</button>
+        <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: flex-end;">
+            <button onclick="quitarFilaFlotaSis()" title="Quitar última fila" style="cursor: pointer; background: #262626; color: #f87171; border: 1px solid #7f1d1d; font-weight: 800; border-radius: 5px; padding: 4px 10px; font-size: 12px;">- fila unidad</button>
+            <button onclick="agregarFilaFlotaSis()" title="Agregar nueva fila" style="cursor: pointer; background: #262626; color: #2dd4bf; border: 1px solid #115e59; font-weight: 800; border-radius: 5px; padding: 4px 10px; font-size: 12px;">+ fila unidad</button>
         </div>
     </div>
 
-    <!-- 🟢 2. TABLA UNIFICADA DE PLANES (SIN CAMBIOS) -->
-    <div style="max-width: 950px; margin: 0 auto; background: #ffffff; padding: 18px 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0,0,0,0.04); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-        <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 14px; border-bottom: 2px solid #0f766e; padding-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+    <!-- 🟢 2. TABLA UNIFICADA DE PLANES (NÚMEROS Y LETRAS AMPLIADOS) -->
+    <div style="max-width: 980px; margin: 0 auto; background: #ffffff; padding: 20px 24px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0,0,0,0.04); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        <div style="font-size: 17px; font-weight: 800; color: #0f172a; margin-bottom: 16px; border-bottom: 2px solid #0f766e; padding-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
             <span>📋 Planificación de Ruteo Sistémico por Plan</span>
-            <span style="font-size: 11px; color: #0f766e; font-weight: 700;">Consumo en Cascada ÷ SPR Logis</span>
+            <span style="font-size: 12px; color: #0f766e; font-weight: 700;">Consumo en Cascada ÷ SPR Logis</span>
         </div>
 
-        <table style="width: 100%; border-collapse: collapse; color: #222222; font-size: 13px; table-layout: fixed;">
+        <table style="width: 100%; border-collapse: collapse; color: #222222; font-size: 14px; table-layout: fixed;">
             <thead>
-                <tr style="height: 36px; background: #f8fafc; color: #475569; font-weight: 700; border-bottom: 2px solid #cbd5e1; font-size: 12px; text-transform: uppercase;">
-                    <th style="padding: 6px; text-align: center; width: 18%; border-right: 1px solid #e2e8f0;">PLAN</th>
-                    <th style="padding: 6px; text-align: center; width: 16%; border-right: 1px solid #e2e8f0;">IDS DROPEADOS</th>
-                    <th style="padding: 6px; text-align: left; width: 34%; border-right: 1px solid #e2e8f0;">UNIDAD</th>
-                    <th style="padding: 6px; text-align: center; width: 14%; border-right: 1px solid #e2e8f0;">SPR LOGIS</th>
-                    <th style="padding: 6px; text-align: center; width: 18%;">UNIDADES ADICIONALES</th>
+                <tr style="height: 38px; background: #f8fafc; color: #475569; font-weight: 800; border-bottom: 2px solid #cbd5e1; font-size: 13px; text-transform: uppercase;">
+                    <th style="padding: 8px; text-align: center; width: 18%; border-right: 1px solid #e2e8f0;">PLAN</th>
+                    <th style="padding: 8px; text-align: center; width: 16%; border-right: 1px solid #e2e8f0;">IDS DROPEADOS</th>
+                    <th style="padding: 8px; text-align: left; width: 34%; border-right: 1px solid #e2e8f0;">UNIDAD</th>
+                    <th style="padding: 8px; text-align: center; width: 14%; border-right: 1px solid #e2e8f0;">SPR LOGIS</th>
+                    <th style="padding: 8px; text-align: center; width: 18%;">UNIDADES ADICIONALES</th>
                 </tr>
             </thead>
             <tbody id="tbody-sistemico-planes">
@@ -1804,38 +1804,38 @@ def gen_tabla_sistemico_planes():
             border_bottom = "2px solid #cbd5e1" if r_idx == num_filas - 1 else "1px solid #f1f5f9"
             
             html += f'''
-            <tr class="fila-plan-sistemico" data-plan="{plan_nom}" data-plan-idx="{p_idx}" id="sis-tr-{idx}" style="border-bottom: {border_bottom}; height: 44px;">
+            <tr class="fila-plan-sistemico" data-plan="{plan_nom}" data-plan-idx="{p_idx}" id="sis-tr-{idx}" style="border-bottom: {border_bottom}; height: 48px;">
             '''
 
             if r_idx == 0:
                 html += f'''
-                <td rowspan="{num_filas}" class="td-plan-name" id="td-plan-nom-{p_idx}" style="background: #f8fafc; font-weight: 800; font-size: 13px; color: #0f172a; text-align: center; vertical-align: middle; border-right: 1.5px solid #cbd5e1; border-bottom: 2px solid #cbd5e1; padding: 4px;">
+                <td rowspan="{num_filas}" class="td-plan-name" id="td-plan-nom-{p_idx}" style="background: #f8fafc; font-weight: 800; font-size: 15px; color: #0f172a; text-align: center; vertical-align: middle; border-right: 1.5px solid #cbd5e1; border-bottom: 2px solid #cbd5e1; padding: 6px;">
                     <div>{plan_nom}</div>
-                    <div style="margin-top: 5px; display: flex; gap: 3px; justify-content: center;">
-                        <button onclick="agregarFilaPlanSis('{plan_nom}', {p_idx})" title="Agregar fila" style="cursor: pointer; background: #ccfbf1; color: #0d9488; border: 1px solid #99f6e4; font-weight: 800; border-radius: 4px; padding: 2px 5px; font-size: 10px;">+ fila</button>
-                        <button onclick="quitarFilaPlanSis('{plan_nom}', {p_idx})" title="Quitar fila" style="cursor: pointer; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; font-weight: 800; border-radius: 4px; padding: 2px 5px; font-size: 10px;">- fila</button>
+                    <div style="margin-top: 6px; display: flex; gap: 4px; justify-content: center;">
+                        <button onclick="agregarFilaPlanSis('{plan_nom}', {p_idx})" title="Agregar fila" style="cursor: pointer; background: #ccfbf1; color: #0d9488; border: 1px solid #99f6e4; font-weight: 800; border-radius: 4px; padding: 2px 6px; font-size: 11px;">+ fila</button>
+                        <button onclick="quitarFilaPlanSis('{plan_nom}', {p_idx})" title="Quitar fila" style="cursor: pointer; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; font-weight: 800; border-radius: 4px; padding: 2px 6px; font-size: 11px;">- fila</button>
                     </div>
                 </td>
-                <td rowspan="{num_filas}" class="td-plan-drop" id="td-plan-drop-{p_idx}" style="background: #f0fdfa; text-align: center; vertical-align: middle; border-right: 1.5px solid #cbd5e1; border-bottom: 2px solid #cbd5e1; padding: 4px;">
+                <td rowspan="{num_filas}" class="td-plan-drop" id="td-plan-drop-{p_idx}" style="background: #f0fdfa; text-align: center; vertical-align: middle; border-right: 1.5px solid #cbd5e1; border-bottom: 2px solid #cbd5e1; padding: 6px;">
                     <input type="number" class="sis-plan-drop-in" id="sis-drop-plan-{p_idx}" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()" value="0" placeholder="0"
-                           style="width: 70px; text-align: center; padding: 4px; font-weight: 800; font-size: 15px; border: 1.5px solid #0f766e; background: #ffffff; color: #0f766e; outline: none; border-radius: 5px;" />
+                           style="width: 80px; text-align: center; padding: 6px; font-weight: 800; font-size: 18px; border: 1.5px solid #0f766e; background: #ffffff; color: #0f766e; outline: none; border-radius: 6px;" />
                 </td>
                 '''
 
             html += f'''
-                <td style="padding: 3px 6px; text-align: left; vertical-align: middle; position: relative; border-right: 1px solid #f1f5f9;">
+                <td style="padding: 4px 8px; text-align: left; vertical-align: middle; position: relative; border-right: 1px solid #f1f5f9;">
                     <input type="text" class="edit-name-sis" id="sis-nombre-{idx}" oninput="buscarCoincidenciasUnidad(this, {idx}); calcularPlanSistemico({p_idx});" onkeydown="navegarSugerenciasUnidad(event, {idx})" onfocus="buscarCoincidenciasUnidad(this, {idx})" placeholder="Buscar unidad..." autocomplete="off"
-                           style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 13px; color: #1e293b; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 3px 5px; border-radius: 4px;" />
-                    <div id="sis-sug-{idx}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 90%; left: 6px; right: 6px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 140px; overflow-y: auto;"></div>
+                           style="width: 100%; box-sizing: border-box; font-weight: 700; font-size: 15px; color: #1e293b; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 4px 6px; border-radius: 4px;" />
+                    <div id="sis-sug-{idx}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 90%; left: 6px; right: 6px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 160px; overflow-y: auto;"></div>
                 </td>
 
-                <td style="text-align: center; padding: 3px; vertical-align: middle; border-right: 1px solid #f1f5f9;">
+                <td style="text-align: center; padding: 4px; vertical-align: middle; border-right: 1px solid #f1f5f9;">
                     <input type="number" id="sis-spr-{idx}" value="0" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()"
-                           style="width: 60px; text-align: center; padding: 2px; font-weight: 600; font-size: 13px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #64748b; outline: none;" />
+                           style="width: 65px; text-align: center; padding: 4px; font-weight: 700; font-size: 15px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #475569; outline: none;" />
                 </td>
 
-                <td style="text-align: center; padding: 3px; vertical-align: middle;">
-                    <span id="sis-res-{idx}" class="res-adic-sis" style="font-weight: 800; font-size: 18px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
+                <td style="text-align: center; padding: 4px; vertical-align: middle;">
+                    <span id="sis-res-{idx}" class="res-adic-sis" style="font-weight: 800; font-size: 22px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
                 </td>
             </tr>
             '''
@@ -1847,7 +1847,6 @@ def gen_tabla_sistemico_planes():
     </div>
     '''
     return html
-
     
 
 
@@ -5745,7 +5744,8 @@ document.addEventListener('keydown', function(event) {{
         }});
     }});
 
-    // 🟢 AGREGAR Y QUITAR FILAS DINÁMICAS EN LA MINITABLA FLOTANTE
+
+    
     function agregarFilaFlotaSis() {{
         const tbody = document.getElementById("tbody-flota-flotante-sis");
         if (!tbody) return;
@@ -5755,22 +5755,22 @@ document.addEventListener('keydown', function(event) {{
 
         nuevaTr.className = "row-flota-sis";
         nuevaTr.id = `sis-flota-tr-${{numFilas}}`;
-        nuevaTr.style.cssText = "border-bottom: 1px solid #262626; height: 38px;";
+        nuevaTr.style.cssText = "border-bottom: 1px solid #262626; height: 42px;";
 
         nuevaTr.innerHTML = `
-            <td style="padding: 4px; text-align: left; vertical-align: middle; position: relative;">
+            <td style="padding: 6px; text-align: left; vertical-align: middle; position: relative;">
                 <input type="text" class="edit-name-flota-sis" id="sis-flota-nombre-${{numFilas}}" oninput="buscarCoincidenciasFlotaSis(this, ${{numFilas}});" onkeydown="navegarSugerenciasFlotaSis(event, ${{numFilas}})" onfocus="buscarCoincidenciasFlotaSis(this, ${{numFilas}})" placeholder="Buscar unidad..." autocomplete="off"
-                       style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 13px; color: #f5f5f5; outline: none; border: none; border-bottom: 1px solid #525252; background: transparent; padding: 3px 4px;" />
-                <div id="sis-flota-sug-${{numFilas}}" class="sugerencias-flota-box" style="display: none; position: absolute; top: 90%; left: 4px; right: 4px; background: #262626; border: 1px solid #525252; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 999; max-height: 140px; overflow-y: auto;"></div>
+                       style="width: 100%; box-sizing: border-box; font-weight: 700; font-size: 15px; color: #ffffff; outline: none; border: none; border-bottom: 1.5px solid #525252; background: transparent; padding: 4px 6px;" />
+                <div id="sis-flota-sug-${{numFilas}}" class="sugerencias-flota-box" style="display: none; position: absolute; top: 90%; left: 6px; right: 6px; background: #262626; border: 1px solid #525252; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 999; max-height: 160px; overflow-y: auto;"></div>
             </td>
-            <td style="text-align: center; color: #a3a3a3; font-weight: 600; font-size: 12px;">
+            <td style="text-align: center; color: #d4d4d4; font-weight: 700; font-size: 15px;">
                 <span id="sis-flota-spr-${{numFilas}}">0</span>
             </td>
-            <td style="text-align: center; padding: 2px;">
+            <td style="text-align: center; padding: 3px;">
                 <input type="number" class="sis-disp-flota-in" id="sis-disp-flota-${{numFilas}}" oninput="sincronizarTotalesSistemico();" onfocus="this.select()" value="0" placeholder="0"
-                       style="width: 55px; text-align: center; padding: 3px; font-weight: 800; font-size: 13px; border: 1px solid #facc15; background: #0a0a0a; color: #facc15; outline: none; border-radius: 4px;" />
+                       style="width: 65px; text-align: center; padding: 4px; font-weight: 800; font-size: 16px; border: 1.5px solid #facc15; background: #0a0a0a; color: #facc15; outline: none; border-radius: 5px;" />
             </td>
-            <td style="text-align: center; font-weight: 800; font-size: 13px; color: #2dd4bf;" id="sis-rest-flota-${{numFilas}}">
+            <td style="text-align: center; font-weight: 800; font-size: 16px; color: #2dd4bf;" id="sis-rest-flota-${{numFilas}}">
                 0
             </td>
         `;
@@ -5779,6 +5779,8 @@ document.addEventListener('keydown', function(event) {{
         const nuevoInput = document.getElementById(`sis-flota-nombre-${{numFilas}}`);
         if (nuevoInput) nuevoInput.focus();
     }}
+
+
 
     function quitarFilaFlotaSis() {{
         const tbody = document.getElementById("tbody-flota-flotante-sis");
