@@ -1716,60 +1716,43 @@ CATALOGO_SISTEMICO = {
 
 
 
+
+# --- TABLA DE FLOTA DISPONIBLE EN RUTEO SISTÉMICO (INTEGRADA A TAB-4) ---
+def gen_master_rows_sistemico():
+    rows = ""
+    for idx, (nombre, spr) in enumerate(CATALOGO_SISTEMICO.items()):
+        rows += f'''
+        <tr class="master-row-sis" style="height: 28px;">
+            <td class="edit-name sis-unit-name" style="font-weight: bold; text-align: left; padding-left: 8px; color: #25282b;">
+                {nombre}
+            </td>
+            <td class="edit-spr-max" style="text-align: center; color: #64748b; font-weight: 600;">
+                {spr[1]}
+            </td>
+            <td style="text-align: center; padding: 2px;">
+                <input type="number" class="sis-disp-flota-in f-stock" id="sis-disp-flota-{idx}" data-unit="{nombre.lower()}" oninput="sincronizarTotalesSistemico(); calcularTodosLosPlanesSistemico();" onfocus="this.select()" value="0" placeholder="0"
+                       style="width: 60px; text-align: center; padding: 2px; font-weight: 800; font-size: 14px; border: 1px solid #25282b; background: #fef08a; color: #0f172a; outline: none; border-radius: 4px;" />
+            </td>
+            <td class="f-ruteadas" style="text-align: center; font-weight: bold; color: #0f766e;" id="sis-usadas-flota-{idx}">
+                0
+            </td>
+            <td class="f-left" style="text-align: center; font-weight: bold; color: #25282b;" id="sis-rest-flota-{idx}">
+                0
+            </td>
+        </tr>
+        '''
+    return rows
+
+
 PLANES_SISTEMICO = [
-   "ACTOPAN", "⚠️️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
+   "ACTOPAN", "⚠️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
    "TEZUITLAN", "TLALTETELA", "TRAPICHE", "TUZAMAPA", "XICO", "CONTINGENCIA CENTRO NODO", 
    "CONTINGENCIA TUZAMAPA", "CONTINGENCIA XICO"
 ]
 
 def gen_tabla_sistemico_planes():
-    # 🟢 1. TARJETA FLOTANTE MINIMALISTA Y COMPACTA (DISPONIBILIDAD)
     html = '''
-    <div id="sis-flota-flotante" style="position: sticky; top: 10px; z-index: 99; max-width: 950px; margin: 0 auto 16px auto; background: #17191b; padding: 10px 16px; border-radius: 10px; border: 1px solid #2dd4bf; box-shadow: 0 6px 20px rgba(0,0,0,0.4);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid #262626; padding-bottom: 6px;">
-            <span style="font-size: 11px; font-weight: 800; color: #2dd4bf; letter-spacing: 0.8px; text-transform: uppercase;">🚛 FLOTA DISPONIBLE EN PATIO (SISTÉMICO)</span>
-            <span style="font-size: 10px; color: #a3a3a3;">Ingresa disponibilidad real para Auto-Calcular</span>
-        </div>
-
-        <div style="max-height: 130px; overflow-y: auto; overflow-x: hidden;">
-            <table style="width: 100%; border-collapse: collapse; color: #f5f5f5; font-size: 12px; table-layout: fixed;">
-                <thead>
-                    <tr style="color: #67e8f9; font-size: 10px; text-transform: uppercase; border-bottom: 1px solid #262626; height: 22px;">
-                        <th style="text-align: left; width: 45%; padding-left: 4px;">UNIDAD</th>
-                        <th style="text-align: center; width: 20%;">SPR MAX</th>
-                        <th style="text-align: center; width: 18%; color: #facc15;">DISPONIBLE</th>
-                        <th style="text-align: center; width: 17%;">RESTANTE</th>
-                    </tr>
-                </thead>
-                <tbody>
-    '''
-
-    for idx, (nombre, spr) in enumerate(CATALOGO_SISTEMICO.items()):
-        html += f'''
-        <tr class="row-flota-sis" style="border-bottom: 1px solid #262626; height: 28px;">
-            <td class="sis-unit-name" style="padding-left: 4px; font-weight: 600; color: #e5e5e5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                {nombre}
-            </td>
-            <td style="text-align: center; color: #737373; font-size: 11px;">
-                {spr[1]}
-            </td>
-            <td style="text-align: center;">
-                <input type="number" class="sis-disp-flota-in" id="sis-disp-flota-{idx}" data-unit="{nombre.lower()}" oninput="sincronizarTotalesSistemico(); calcularTodosLosPlanesSistemico();" onfocus="this.select()" value="0" placeholder="0"
-                       style="width: 55px; text-align: center; padding: 2px; font-weight: 800; font-size: 13px; border: 1px solid #facc15; background: #0a0a0a; color: #facc15; outline: none; border-radius: 4px;" />
-            </td>
-            <td style="text-align: center; font-weight: 800; font-size: 13px; color: #2dd4bf;" id="sis-rest-flota-{idx}">
-                0
-            </td>
-        </tr>
-        '''
-
-    html += '''
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- 🟢 2. TABLA UNIFICADA DE PLANES -->
+    <!-- 🟢 TABLA UNIFICADA DE PLANES EN RUTEO SISTÉMICO -->
     <div style="max-width: 950px; margin: 0 auto; background: #ffffff; padding: 18px 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0,0,0,0.04); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
         <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 14px; border-bottom: 2px solid #0f766e; padding-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
             <span>📋 Planificación de Ruteo Sistémico por Plan</span>
@@ -1840,8 +1823,7 @@ def gen_tabla_sistemico_planes():
         </table>
     </div>
     '''
-    return html
-    
+    return html   
 
 
 def export_c1_csv():
@@ -3278,26 +3260,20 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
       </table>
   </div>
 
+
+  <!-- TABLA FLOTA DISPONIBLE SISTÉMICO (ID 4) CON DISEÑO ESTÁNDAR -->
   <div id="tab-4" class="t-content">
       <table class="meli-table" style="width: 100%; table-layout: fixed; border-collapse: collapse;">
           <thead>
               <tr style="background: linear-gradient(180deg, #0a2e42 0%, #25282b 100%); color: white;">
                   <th style="border-right: 0.5px solid #25282b; padding: 4px 8px; font-size: 14px; color: #25282b !important;">UNIDAD</th>
-                  <th style="border-right: 0.5px solid #25282b; padding: 2px; font-size: 11px; color: #25282b !important; width: 45px;">SPR<br>MIN</th>
-                  <th style="border-right: 0.5px solid #25282b; padding: 2px; font-size: 11px; color: #25282b !important; width: 45px;">SPR<br>MAX</th>
-                  <th style="border-right:0.5px solid #25282b; padding:4px 8px; font-size:11px; color: #25282b !important; width:60px;">SCHEDULE</th>
-                  <th style="border-right:0.7px solid #25282b; padding:4px 9px; font-size:11px; color:#25282b !important; width:57px; text-align:center; display:table-cell; vertical-align:middle;">USADAS</th>
-                  <th style="border-right:0.5px solid #25282b; padding:4px 8px; font-size:11px; color: #25282b !important; width:50px;">DELTA</th>
+                  <th style="border-right: 0.5px solid #25282b; padding: 2px; font-size: 11px; color: #25282b !important; width: 60px;">SPR MAX</th>
+                  <th style="border-right: 0.5px solid #25282b; padding: 4px 8px; font-size: 11px; color: #25282b !important; width: 75px;">DISPONIBLE</th>
+                  <th style="border-right: 0.7px solid #25282b; padding: 4px 8px; font-size: 11px; color: #25282b !important; width: 60px;">USADAS</th>
+                  <th style="border-right: 0.5px solid #25282b; padding: 4px 8px; font-size: 11px; color: #25282b !important; width: 60px;">RESTANTE</th>
               </tr>
           </thead>
-          <tbody id="body-4">{gen_master_rows(u_SDE, 4)}</tbody>
-          <tfoot class="fila-total">
-              <tr class="fila-total">
-                  <td style="border:none;"></td>
-                  <td colspan="3" style="padding:6px; text-align:right;">🚛 TOTAL RUTEADAS</td>
-                  <td id="total-car-real-4" style="text-align:center; color:#3CB371; font-size:16px; font-weight:bold;">0</td>
-              </tr>
-          </tfoot>
+          <tbody id="body-4">{gen_master_rows_sistemico()}</tbody>
       </table>
   </div>
 
@@ -5640,7 +5616,7 @@ document.addEventListener('keydown', function(event) {{
         sincronizarTotalesSistemico();
     }}
 
-    // 🟢 4. REFRESCA EL RESTANTE EN PATIO (SIN NÚMEROS ROJOS NEGATIVOS)
+    // 🟢 REFRESCA EL RESTANTE Y CONTEO EN LA TABLA FLOTANTE STANDAR
     function sincronizarTotalesSistemico() {{
         let conteoUnidades = {{}};
 
@@ -5657,48 +5633,80 @@ document.addEventListener('keydown', function(event) {{
             }}
         }});
 
-        document.querySelectorAll('.row-flota-sis').forEach((row, idx) => {{
+        document.querySelectorAll('.master-row-sis').forEach((row, idx) => {{
             let nameCell = row.querySelector('.sis-unit-name');
             let inputDisp = document.getElementById(`sis-disp-flota-${{idx}}`);
             let restCell = document.getElementById(`sis-rest-flota-${{idx}}`);
+            let usadasCell = document.getElementById(`sis-usadas-flota-${{idx}}`);
 
             let nombre = nameCell?.innerText?.trim()?.toLowerCase() || "";
             let disponible = parseInt(inputDisp?.value) || 0;
             let ocupadas = conteoUnidades[nombre] || 0;
 
+            if (usadasCell) usadasCell.innerText = ocupadas;
+
             if (restCell) {{
                 let restante = disponible - ocupadas;
                 restCell.innerText = restante;
-                // Color rojo solo si es negativo (que para unidades normales ya no ocurrirá)
-                restCell.style.color = restante < 0 ? "#ef4444" : "#2dd4bf";
+                restCell.style.color = restante < 0 ? "#dc2626" : "#25282b";
             }}
         }});
     }}
 
 
-    // 🟢 Y EN TU FUNCIÓN DE FILTRAR (BUSCA DÓNDE TIENES 'filterRows'), REEMPLÁZALA POR ESTA:
-    function filterRows(onlyActive) {{
-        // 1. Filtrado para las tablas estándar
-        const rowsMaster = document.querySelectorAll('#body-' + currentTab + ' .master-row');
-        rowsMaster.forEach(row => {{
-            const stock = parseInt(row.querySelector('.f-stock')?.innerText) || 0;
-            const ruteadas = parseInt(row.querySelector('.f-ruteadas')?.innerText) || 0;
-            row.style.display = (onlyActive && stock === 0 && ruteadas === 0) ? 'none' : '';
-        }});
+    // 🟢 FILTRADO DINÁMICO AL PRESIONAR BOTONES "ACTIVAS" O "TODAS"
+    function filterRowsSistemico(onlyActive) {{
+        // 1. Filtrar Tabla Flotante de Flota
+        document.querySelectorAll('.master-row-sis').forEach((row, idx) => {{
+            let inputDisp = document.getElementById(`sis-disp-flota-${{idx}}`);
+            let restCell = document.getElementById(`sis-rest-flota-${{idx}}`);
+            let usadasCell = document.getElementById(`sis-usadas-flota-${{idx}}`);
 
-        // 2. Filtrado para la Tabla Híbrida de Sistémico (Acepta DISP > 0 O USADAS > 0)
-        const rowsSistemico = document.querySelectorAll('.fila-hibrida-sis');
-        rowsSistemico.forEach(row => {{
-            const dispVal = parseInt(row.getAttribute('data-disp')) || 0;
-            const usadasVal = parseInt(row.getAttribute('data-usadas')) || 0;
+            let disp = parseInt(inputDisp?.value) || 0;
+            let usadas = parseInt(usadasCell?.innerText) || 0;
 
             if (onlyActive) {{
-                row.style.display = (dispVal > 0 || usadasVal > 0) ? 'table-row' : 'none';
+                row.style.display = (disp > 0 || usadas > 0) ? "table-row" : "none";
             }} else {{
-                row.style.display = 'table-row';
+                row.style.display = "table-row";
             }}
         }});
+
+        // 2. Filtrar Tabla de Planes
+        const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
+
+        planesUnicos.forEach(planIdx => {{
+            let dropIn = document.getElementById(`sis-drop-plan-${{planIdx}}`);
+            let dropTotal = parseFloat(dropIn?.value) || 0;
+            let filasPlan = document.querySelectorAll(`.fila-plan-sistemico[data-plan-idx="${{planIdx}}"]`);
+
+            filasPlan.forEach(fila => {{
+                let idx = fila.id.replace("sis-tr-", "");
+                let inputNombre = document.getElementById(`sis-nombre-${{idx}}`);
+                let resDisplay = document.getElementById(`sis-res-${{idx}}`);
+
+                let tieneNombre = inputNombre && inputNombre.value.trim() !== "";
+                let tieneAdicionales = resDisplay && parseInt(resDisplay.innerText) > 0;
+
+                if (onlyActive) {{
+                    // Muestra la fila individual si tiene unidad o resultado asignado
+                    fila.style.display = (dropTotal > 0 && (tieneNombre || tieneAdicionales)) ? "table-row" : "none";
+                }} else {{
+                    fila.style.display = "table-row";
+                }}
+            }});
+        }});
     }}
+
+    // Redireccionar botón global de filtro
+    const fnFilterRowsOriginal = window.filterRows;
+    window.filterRows = function(onlyActive) {{
+        if (currentTab === 4) {{
+            filterRowsSistemico(onlyActive);
+        }} else if (typeof fnFilterRowsOriginal === 'function') {{
+            fnFilterRowsOriginal(onlyActive);
+        }}
+    }};
     
 
 
