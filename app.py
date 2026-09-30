@@ -5537,14 +5537,16 @@ document.addEventListener('keydown', function(event) {{
         distribuirAutomaticoSistemico();
     }}
 
-    // 🧠 3. MOTOR AUTO-CALCULAR CON CANDADO INVIOLABLE
+
+    // 🧠 MOTOR AUTO-CALCULAR CON RESPETO ESTRICTO DE UNIDADES PRE-ASIGNADAS Y PATIO
     function distribuirAutomaticoSistemico() {{
+        // 1. Leer disponibilidad real de patio desde la minitabla flotante
         let flotaDisponibilidad = obtenerInventarioPatio();
 
-        // Limpiar todas las asignaciones adicionales antes de calcular
+        // Reiniciar todos los contadores de resultados a 0
         document.querySelectorAll('.res-adic-sis').forEach(el => el.innerText = "0");
 
-        // Agrupar planes e IDs dropeados
+        // 2. Agrupar planes y sus filas de unidades pre-configuradas
         let planesData = [];
         const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
 
@@ -5563,8 +5565,9 @@ document.addEventListener('keydown', function(event) {{
                 let nombre = inputNombre?.value?.trim() || "";
                 let spr = parseFloat(inputSpr?.value) || 0;
 
+                // Solo tomamos en cuenta unidades con nombre e introducidas en este plan
                 if (nombre && spr > 0) {{
-                    unidadesDelPlan.push({{ idx, nombre, spr, elRes }});
+                    unidadesDelPlan.push({{ idx, nombre, spr, elRes, asignadas: 0 }});
                 }}
             }});
 
@@ -5577,57 +5580,66 @@ document.addEventListener('keydown', function(event) {{
             }}
         }});
 
-        // ORDENAR PLANES: Damos prioridad estricta a los planes con MAYOR número de IDs dropeados
+        // 🟢 PASO A: ORDENAR PLANES DE MAYOR A MENOR IDs DROPEADOS
         planesData.sort((a, b) => b.dropTotal - a.dropTotal);
 
-        // REPARTO CON CANDADO STRICTO
+        // 3. Procesar asignaciones respetando prioridades de plan e inventario
         planesData.forEach(pData => {{
             let dropRestantePlan = pData.dropTotal;
 
+            // 🟢 FASE 1: Consumir stock físico DISPONIBLE de patio de las unidades elegidas en este plan
             pData.unidadesDelPlan.forEach(uInfo => {{
                 if (dropRestantePlan <= 0) return;
 
                 let claveUnidad = uInfo.nombre.toLowerCase();
-
-                // CANDADO: Lista de unidades que SÍ pueden sobrepasar stock
-                let esExcepcionInfinita = 
-                    claveUnidad.includes("car 8h") || claveUnidad.includes("car - 8h") ||
-                    claveUnidad.includes("car 5h") || claveUnidad.includes("car - 5h") ||
-                    claveUnidad.includes("car 3h") || claveUnidad.includes("car - 3h") ||
-                    claveUnidad.includes("small van 9h ext");
-
                 let dispInfo = flotaDisponibilidad[claveUnidad];
-                let disponiblesEnPatio = dispInfo ? (dispInfo.disponible - dispInfo.usadas) : 0;
+                let disponiblesPatio = dispInfo ? (dispInfo.disponible - dispInfo.usadas) : 0;
 
-                // 🚫 SI TIENE 0 O ESTÁ AGOTADA Y NO ES EXCEPCIÓN -> SE QUEDA EN 0 OBLIGATORIAMENTE
-                if (disponiblesEnPatio <= 0 && !esExcepcionInfinita) {{
-                    if (uInfo.elRes) uInfo.elRes.innerText = "0";
-                    return;
+                if (disponiblesPatio > 0) {{
+                    let necesarias = Math.ceil(dropRestantePlan / uInfo.spr);
+                    let tomar = Math.min(necesarias, disponiblesPatio);
+
+                    uInfo.asignadas += tomar;
+                    dispInfo.usadas += tomar;
+
+                    let capacidadCubierta = tomar * uInfo.spr;
+                    dropRestantePlan -= capacidadCubierta;
+                    if (dropRestantePlan < 0) dropRestantePlan = 0;
                 }}
+            }});
 
-                let necesarias = Math.ceil(dropRestantePlan / uInfo.spr);
-                let asignadas = 0;
+            // 🟢 FASE 2: Si aún faltan IDs por cubrir, utilizar ÚNICAMENTE las Excepciones que YA ESTÁN PUESTAS en este plan
+            if (dropRestantePlan > 0) {{
+                pData.unidadesDelPlan.forEach(uInfo => {{
+                    if (dropRestantePlan <= 0) return;
 
-                if (esExcepcionInfinita) {{
-                    asignadas = necesarias;
-                }} else {{
-                    // Asigna ÚNICAMENTE las que realmente quedan en patio
-                    asignadas = Math.min(necesarias, disponiblesEnPatio);
-                    dispInfo.usadas += asignadas;
-                }}
+                    let claveUnidad = uInfo.nombre.toLowerCase();
+                    let esExcepcionInfinita = 
+                        claveUnidad.includes("car 8h") || claveUnidad.includes("car - 8h") ||
+                        claveUnidad.includes("car 5h") || claveUnidad.includes("car - 5h") ||
+                        claveUnidad.includes("car 3h") || claveUnidad.includes("car - 3h") ||
+                        claveUnidad.includes("small van 9h ext");
 
-                if (uInfo.elRes) uInfo.elRes.innerText = asignadas;
+                    if (esExcepcionInfinita) {{
+                        let necesariasExceso = Math.ceil(dropRestantePlan / uInfo.spr);
+                        uInfo.asignadas += necesariasExceso;
 
-                // Descuenta de los IDs del plan
-                let capacidadCubierta = asignadas * uInfo.spr;
-                dropRestantePlan -= capacidadCubierta;
-                if (dropRestantePlan < 0) dropRestantePlan = 0;
+                        let capacidadCubierta = necesariasExceso * uInfo.spr;
+                        dropRestantePlan -= capacidadCubierta;
+                        if (dropRestantePlan < 0) dropRestantePlan = 0;
+                    }}
+                }});
+            }}
+
+            // Escribir en pantalla las unidades finales asignadas a este plan
+            pData.unidadesDelPlan.forEach(uInfo => {{
+                if (uInfo.elRes) uInfo.elRes.innerText = uInfo.asignadas;
             }});
         }});
 
         sincronizarTotalesSistemico();
     }}
-
+    
 
     // 🟢 BÚSQUEDA Y SUGERENCIAS EN LA MINITABLA FLOTANTE DE PATIO
     function buscarCoincidenciasFlotaSis(input, idx) {{
