@@ -6403,7 +6403,6 @@ function obtenerCarFlexible() {{
 
     
 
-    // 🟢 3. REAGRUSTAR ROWSPAN PERFECTO AL AGREGAR O QUITAR FILAS
     function agregarFilaPlanSis(planNom, planIdx) {{
         const tbody = document.getElementById("tbody-sistemico-planes");
         if (!tbody) return;
@@ -6422,20 +6421,20 @@ function obtenerCarFlexible() {{
         nuevaTr.setAttribute("data-plan", planNom);
         nuevaTr.setAttribute("data-plan-idx", planIdx);
         nuevaTr.id = `sis-tr-${{totalFilasGlobal}}`;
-        nuevaTr.style.cssText = "border-bottom: 1px solid #f1f5f9; height: 44px;";
+        nuevaTr.style.cssText = "border-bottom: 1px solid #f1f5f9; height: 48px;";
 
         nuevaTr.innerHTML = `
-            <td style="padding: 3px 6px; text-align: left; vertical-align: middle; position: relative; border-right: 1px solid #f1f5f9;">
+            <td style="padding: 4px 8px; text-align: left; vertical-align: middle; position: relative; border-right: 1px solid #f1f5f9;">
                 <input type="text" class="edit-name-sis" id="sis-nombre-${{totalFilasGlobal}}" oninput="buscarCoincidenciasUnidad(this, ${{totalFilasGlobal}}); calcularPlanSistemico(${{planIdx}});" onkeydown="navegarSugerenciasUnidad(event, ${{totalFilasGlobal}})" onfocus="buscarCoincidenciasUnidad(this, ${{totalFilasGlobal}})" placeholder="Buscar unidad..." autocomplete="off"
-                       style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 13px; color: #1e293b; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 3px 5px; border-radius: 4px;" />
-                <div id="sis-sug-${{totalFilasGlobal}}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 90%; left: 6px; right: 6px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 140px; overflow-y: auto;"></div>
+                       style="width: 100%; box-sizing: border-box; font-weight: 700; font-size: 15px; color: #1e293b; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 4px 6px; border-radius: 4px;" />
+                <div id="sis-sug-${{totalFilasGlobal}}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 90%; left: 6px; right: 6px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 160px; overflow-y: auto;"></div>
             </td>
-            <td style="text-align: center; padding: 3px; vertical-align: middle; border-right: 1px solid #f1f5f9;">
+            <td style="text-align: center; padding: 4px; vertical-align: middle; border-right: 1px solid #f1f5f9;">
                 <input type="number" id="sis-spr-${{totalFilasGlobal}}" value="0" oninput="calcularPlanSistemico(${{planIdx}})" onfocus="this.select()"
-                       style="width: 60px; text-align: center; padding: 2px; font-weight: 600; font-size: 13px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #64748b; outline: none;" />
+                       style="width: 65px; text-align: center; padding: 4px; font-weight: 700; font-size: 15px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #475569; outline: none;" />
             </td>
-            <td style="text-align: center; padding: 3px; vertical-align: middle;">
-                <span id="sis-res-${{totalFilasGlobal}}" class="res-adic-sis" style="font-weight: 800; font-size: 18px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
+            <td style="text-align: center; padding: 4px; vertical-align: middle;">
+                <span id="sis-res-${{totalFilasGlobal}}" class="res-adic-sis" style="font-weight: 800; font-size: 22px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
             </td>
         `;
 
