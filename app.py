@@ -1709,7 +1709,7 @@ CATALOGO_SISTEMICO = {
     "Car 8h": [70, 70],
     "Small Van 11h Ext": [70, 70],
     "Small Van 9h": [70, 70],
-    "Small Van 9h Ext Extendida": [70, 70],
+    "Small Van 9h Ext": [70, 70],
     "Small Van Newbie": [70, 70],
     "Media Milla SP": [1, 1]
 }
