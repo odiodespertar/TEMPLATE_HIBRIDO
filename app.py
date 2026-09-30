@@ -1769,8 +1769,8 @@ def gen_tabla_sistemico_planes():
         </table>
 
         <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: flex-end;">
-            <button onclick="quitarFilaFlotaSis()" title="Quitar última fila" style="cursor: pointer; background: #262626; color: #f87171; border: 1px solid #7f1d1d; font-weight: 800; border-radius: 5px; padding: 4px 10px; font-size: 12px;">- fila unidad</button>
-            <button onclick="agregarFilaFlotaSis()" title="Agregar nueva fila" style="cursor: pointer; background: #262626; color: #2dd4bf; border: 1px solid #115e59; font-weight: 800; border-radius: 5px; padding: 4px 10px; font-size: 12px;">+ fila unidad</button>
+            <button onclick="quitarFilaFlotaSis()" title="Quitar última fila" style="cursor: pointer; background: #262626; color: #f87171; border: 1px solid #7f1d1d; font-weight: 800; border-radius: 5px; padding: 4px 10px; font-size: 12px;">- fila</button>
+            <button onclick="agregarFilaFlotaSis()" title="Agregar nueva fila" style="cursor: pointer; background: #262626; color: #2dd4bf; border: 1px solid #115e59; font-weight: 800; border-radius: 5px; padding: 4px 10px; font-size: 12px;">+ fila</button>
         </div>
     </div>
 
