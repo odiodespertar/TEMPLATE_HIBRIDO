@@ -1771,7 +1771,7 @@ def gen_tabla_sistemico_planes():
                 <td rowspan="{num_filas}" class="td-plan-drop" id="td-plan-drop-{p_idx}" style="background: #ffffff; text-align: center; vertical-align: middle; border-right: 1.5px solid #25282b; border-bottom: 2px solid #25282b; padding: 6px;">
                     <!-- 🟢 IDS DROPEADOS: Grande pero estilizado (font-weight: 600, font-size: 20px) -->
                     <input type="number" class="sis-plan-drop-in" id="sis-drop-plan-{p_idx}" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()" value="0" placeholder="0"
-                           style="width: 80px; text-align: center; padding: 6px; font-weight: 600; font-size: 20px; border: 1.5px solid transparent; background: transparent; color: #FF4500; outline: none; border-radius: 6px; transition: all 0.15s ease;" />
+                           style="width: 80px; text-align: center; padding: 6px; font-weight: 600; font-size: 24px; border: 1.5px solid transparent; background: transparent; color: #FF4500; outline: none; border-radius: 6px; transition: all 0.15s ease;" />
                 </td>
                 '''
 
@@ -2392,11 +2392,12 @@ body {{ font-family: sans-serif; background: #ffffff; padding: 14px; }}
 }}
 
 
-/* 🟢 Recuadro negro redondeado solo al seleccionar la casilla */
 .sis-plan-drop-in:focus {{
     background: #ffffff !important;
     border: 2px solid #000000 !important;
     box-shadow: 0 0 0 1px #000000 !important;
+    font-size: 20px !important;
+    font-weight: 600 !important;
 }}
 
 
