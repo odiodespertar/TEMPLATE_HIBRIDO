@@ -1769,8 +1769,8 @@ def gen_tabla_sistemico_planes():
         </table>
 
         <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: flex-end;">
-            <button onclick="quitarFilaFlotaSis()" title="Quitar última fila" style="cursor: pointer; background: #262626; color: #f87171; border: 1px solid #7f1d1d; font-weight: 800; border-radius: 5px; padding: 4px 10px; font-size: 12px;">- fila unidad</button>
-            <button onclick="agregarFilaFlotaSis()" title="Agregar nueva fila" style="cursor: pointer; background: #262626; color: #2dd4bf; border: 1px solid #115e59; font-weight: 800; border-radius: 5px; padding: 4px 10px; font-size: 12px;">+ fila unidad</button>
+            <button onclick="quitarFilaFlotaSis()" title="Quitar última fila" style="cursor: pointer; background: #262626; color: #f87171; border: 1px solid #7f1d1d; font-weight: 800; border-radius: 5px; padding: 4px 10px; font-size: 12px;">-</button>
+            <button onclick="agregarFilaFlotaSis()" title="Agregar nueva fila" style="cursor: pointer; background: #262626; color: #2dd4bf; border: 1px solid #115e59; font-weight: 800; border-radius: 5px; padding: 4px 10px; font-size: 12px;">+</button>
         </div>
     </div>
 
@@ -1814,8 +1814,8 @@ def gen_tabla_sistemico_planes():
                     <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100%; gap: 8px;">
                         <div style="font-weight: 800; font-size: 15px; color: #0f172a; text-align: center;">{plan_nom}</div>
                         <div style="display: flex; gap: 4px; justify-content: center;">
-                            <button onclick="agregarFilaPlanSis('{plan_nom}', {p_idx})" title="Agregar fila" style="cursor: pointer; background: #ccfbf1; color: #0d9488; border: 1px solid #99f6e4; font-weight: 800; border-radius: 4px; padding: 3px 7px; font-size: 11px;">+ fila</button>
-                            <button onclick="quitarFilaPlanSis('{plan_nom}', {p_idx})" title="Quitar fila" style="cursor: pointer; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; font-weight: 800; border-radius: 4px; padding: 3px 7px; font-size: 11px;">- fila</button>
+                            <button onclick="agregarFilaPlanSis('{plan_nom}', {p_idx})" title="Agregar fila" style="cursor: pointer; background: #ccfbf1; color: #0d9488; border: 1px solid #99f6e4; font-weight: 800; border-radius: 4px; padding: 3px 7px; font-size: 11px;">+</button>
+                            <button onclick="quitarFilaPlanSis('{plan_nom}', {p_idx})" title="Quitar fila" style="cursor: pointer; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; font-weight: 800; border-radius: 4px; padding: 3px 7px; font-size: 11px;">-</button>
                         </div>
                     </div>
                 </td>
