@@ -1715,47 +1715,48 @@ CATALOGO_SISTEMICO = {
 }
 
 
-
 PLANES_SISTEMICO = [
-   "ACTOPAN", "⚠️️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
+   "ACTOPAN", "⚠ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
    "TEZUITLAN", "TLALTETELA", "TRAPICHE", "TUZAMAPA", "XICO", "CONTINGENCIA CENTRO NODO", 
    "CONTINGENCIA TUZAMAPA", "CONTINGENCIA XICO"
 ]
 
 def gen_tabla_sistemico_planes():
-    # 🟢 1. TARJETA FLOTANTE MINIMALISTA Y COMPACTA (DISPONIBILIDAD)
+    # 🟢 1. MINITABLA FLOTANTE MINIMALISTA CON BUSCADOR Y FILAS DINÁMICAS
     html = '''
-    <div id="sis-flota-flotante" style="position: sticky; top: 10px; z-index: 99; max-width: 950px; margin: 0 auto 16px auto; background: #17191b; padding: 10px 16px; border-radius: 10px; border: 1px solid #2dd4bf; box-shadow: 0 6px 20px rgba(0,0,0,0.4);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid #262626; padding-bottom: 6px;">
+    <div id="sis-flota-flotante" style="max-width: 950px; margin: 0 auto 16px auto; background: #17191b; padding: 12px 18px; border-radius: 12px; border: 1.5px solid #2dd4bf; box-shadow: 0 6px 20px rgba(0,0,0,0.35); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #262626; padding-bottom: 6px;">
             <span style="font-size: 11px; font-weight: 800; color: #2dd4bf; letter-spacing: 0.8px; text-transform: uppercase;">🚛 FLOTA DISPONIBLE EN PATIO (SISTÉMICO)</span>
             <span style="font-size: 10px; color: #a3a3a3;">Ingresa disponibilidad real para Auto-Calcular</span>
         </div>
 
-        <div style="max-height: 130px; overflow-y: auto; overflow-x: hidden;">
-            <table style="width: 100%; border-collapse: collapse; color: #f5f5f5; font-size: 12px; table-layout: fixed;">
-                <thead>
-                    <tr style="color: #67e8f9; font-size: 10px; text-transform: uppercase; border-bottom: 1px solid #262626; height: 22px;">
-                        <th style="text-align: left; width: 45%; padding-left: 4px;">UNIDAD</th>
-                        <th style="text-align: center; width: 20%;">SPR MAX</th>
-                        <th style="text-align: center; width: 18%; color: #facc15;">DISPONIBLE</th>
-                        <th style="text-align: center; width: 17%;">RESTANTE</th>
-                    </tr>
-                </thead>
-                <tbody>
+        <table style="width: 100%; border-collapse: collapse; color: #f5f5f5; font-size: 12px; table-layout: fixed;">
+            <thead>
+                <tr style="color: #67e8f9; font-size: 10px; text-transform: uppercase; border-bottom: 1px solid #333333; height: 26px;">
+                    <th style="text-align: left; width: 45%; padding-left: 4px;">UNIDAD</th>
+                    <th style="text-align: center; width: 18%;">SPR MAX</th>
+                    <th style="text-align: center; width: 18%; color: #facc15;">DISPONIBLE</th>
+                    <th style="text-align: center; width: 19%;">RESTANTE</th>
+                </tr>
+            </thead>
+            <tbody id="tbody-flota-flotante-sis">
     '''
 
-    for idx, (nombre, spr) in enumerate(CATALOGO_SISTEMICO.items()):
+    # Genera 4 filas iniciales dinámicas
+    for idx in range(4):
         html += f'''
-        <tr class="row-flota-sis" style="border-bottom: 1px solid #262626; height: 28px;">
-            <td class="sis-unit-name" style="padding-left: 4px; font-weight: 600; color: #e5e5e5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                {nombre}
+        <tr class="row-flota-sis" id="sis-flota-tr-{idx}" style="border-bottom: 1px solid #262626; height: 38px;">
+            <td style="padding: 4px; text-align: left; vertical-align: middle; position: relative;">
+                <input type="text" class="edit-name-flota-sis" id="sis-flota-nombre-{idx}" oninput="buscarCoincidenciasFlotaSis(this, {idx});" onkeydown="navegarSugerenciasFlotaSis(event, {idx})" onfocus="buscarCoincidenciasFlotaSis(this, {idx})" placeholder="Buscar unidad..." autocomplete="off"
+                       style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 13px; color: #f5f5f5; outline: none; border: none; border-bottom: 1px solid #525252; background: transparent; padding: 3px 4px;" />
+                <div id="sis-flota-sug-{idx}" class="sugerencias-flota-box" style="display: none; position: absolute; top: 90%; left: 4px; right: 4px; background: #262626; border: 1px solid #525252; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 999; max-height: 140px; overflow-y: auto;"></div>
             </td>
-            <td style="text-align: center; color: #737373; font-size: 11px;">
-                {spr[1]}
+            <td style="text-align: center; color: #a3a3a3; font-weight: 600; font-size: 12px;">
+                <span id="sis-flota-spr-{idx}">0</span>
             </td>
-            <td style="text-align: center;">
-                <input type="number" class="sis-disp-flota-in" id="sis-disp-flota-{idx}" data-unit="{nombre.lower()}" oninput="sincronizarTotalesSistemico(); calcularTodosLosPlanesSistemico();" onfocus="this.select()" value="0" placeholder="0"
-                       style="width: 55px; text-align: center; padding: 2px; font-weight: 800; font-size: 13px; border: 1px solid #facc15; background: #0a0a0a; color: #facc15; outline: none; border-radius: 4px;" />
+            <td style="text-align: center; padding: 2px;">
+                <input type="number" class="sis-disp-flota-in" id="sis-disp-flota-{idx}" oninput="sincronizarTotalesSistemico();" onfocus="this.select()" value="0" placeholder="0"
+                       style="width: 55px; text-align: center; padding: 3px; font-weight: 800; font-size: 13px; border: 1px solid #facc15; background: #0a0a0a; color: #facc15; outline: none; border-radius: 4px;" />
             </td>
             <td style="text-align: center; font-weight: 800; font-size: 13px; color: #2dd4bf;" id="sis-rest-flota-{idx}">
                 0
@@ -1764,12 +1765,17 @@ def gen_tabla_sistemico_planes():
         '''
 
     html += '''
-                </tbody>
-            </table>
+            </tbody>
+        </table>
+
+        <!-- Botones + y - para agregar o quitar filas -->
+        <div style="display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end;">
+            <button onclick="quitarFilaFlotaSis()" title="Quitar última fila" style="cursor: pointer; background: #262626; color: #f87171; border: 1px solid #7f1d1d; font-weight: 700; border-radius: 4px; padding: 2px 8px; font-size: 11px;">- fila unidad</button>
+            <button onclick="agregarFilaFlotaSis()" title="Agregar nueva fila" style="cursor: pointer; background: #262626; color: #2dd4bf; border: 1px solid #115e59; font-weight: 700; border-radius: 4px; padding: 2px 8px; font-size: 11px;">+ fila unidad</button>
         </div>
     </div>
 
-    <!-- 🟢 2. TABLA UNIFICADA DE PLANES -->
+    <!-- 🟢 2. TABLA UNIFICADA DE PLANES (SIN CAMBIOS) -->
     <div style="max-width: 950px; margin: 0 auto; background: #ffffff; padding: 18px 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0,0,0,0.04); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
         <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 14px; border-bottom: 2px solid #0f766e; padding-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
             <span>📋 Planificación de Ruteo Sistémico por Plan</span>
@@ -1841,6 +1847,7 @@ def gen_tabla_sistemico_planes():
     </div>
     '''
     return html
+
     
 
 
@@ -5522,26 +5529,7 @@ document.addEventListener('keydown', function(event) {{
 
 
 
-    // 🟢 1. LECTURA GLOBAL DE DISPONIBILIDAD EN PATIO
-    function obtenerInventarioPatio() {{
-        let flota = {{}};
-        document.querySelectorAll('.row-flota-sis').forEach((row, idx) => {{
-            let nameCell = row.querySelector('.sis-unit-name');
-            let inputDisp = document.getElementById(`sis-disp-flota-${{idx}}`);
-            
-            let nombre = nameCell?.innerText?.trim() || "";
-            let dispVal = parseInt(inputDisp?.value) || 0;
-
-            if (nombre) {{
-                flota[nombre.toLowerCase()] = {{
-                    nombreReal: nombre,
-                    disponible: dispVal,
-                    usadas: 0
-                }};
-            }}
-        }});
-        return flota;
-    }}
+    
 
     // 🟢 2. CÁLCULO INDIVIDUAL DE PLANES RESPETANDO PATIO
     function calcularPlanSistemico(planIdx) {{
@@ -5640,7 +5628,179 @@ document.addEventListener('keydown', function(event) {{
         sincronizarTotalesSistemico();
     }}
 
-    // 🟢 4. REFRESCA EL RESTANTE EN PATIO (SIN NÚMEROS ROJOS NEGATIVOS)
+
+    // 🟢 BÚSQUEDA Y SUGERENCIAS EN LA MINITABLA FLOTANTE DE PATIO
+    function buscarCoincidenciasFlotaSis(input, idx) {{
+        const query = input.value.toLowerCase().trim();
+        const boxSug = document.getElementById(`sis-flota-sug-${{idx}}`);
+        if (!boxSug) return;
+
+        boxSug.innerHTML = "";
+        
+        const coincidencias = Object.keys(catalogoUnidadesExtendido).filter(nombre => 
+            query === "" || nombre.toLowerCase().includes(query)
+        );
+
+        if (coincidencias.length === 0) {{
+            boxSug.style.display = "none";
+            return;
+        }}
+
+        coincidencias.forEach((nombre, itemIndex) => {{
+            const spr = catalogoUnidadesExtendido[nombre][1];
+            const item = document.createElement("div");
+            item.className = `sug-flota-item-${{idx}}`;
+            item.style.cssText = "padding: 6px 10px; font-size: 12px; font-weight: 600; color: #f5f5f5; cursor: pointer; transition: background 0.1s ease; border-bottom: 1px solid #333333;";
+            item.innerHTML = `<span style="color:#2dd4bf;">${{nombre}}</span> <span style="font-size:11px; color:#a3a3a3; float:right;">SPR: ${{spr}}</span>`;
+            
+            item.onmouseenter = function() {{
+                resaltarSugerenciaFlotaItem(idx, itemIndex);
+            }};
+
+            item.onclick = function() {{
+                seleccionarUnidadFlotaSugerida(idx, nombre, spr);
+            }};
+
+            boxSug.appendChild(item);
+        }});
+
+        boxSug.style.display = "block";
+    }}
+
+    let indiceFlotaSugerenciaSeleccionada = {{}};
+
+    function resaltarSugerenciaFlotaItem(idx, itemIndex) {{
+        const items = document.querySelectorAll(`.sug-flota-item-${{idx}}`);
+        items.forEach((it, i) => {{
+            if (i === itemIndex) {{
+                it.style.background = "#0f766e";
+                it.style.color = "#ffffff";
+            }} else {{
+                it.style.background = "transparent";
+                it.style.color = "#f5f5f5";
+            }}
+        }});
+        indiceFlotaSugerenciaSeleccionada[idx] = itemIndex;
+    }}
+
+    function navegarSugerenciasFlotaSis(event, idx) {{
+        const boxSug = document.getElementById(`sis-flota-sug-${{idx}}`);
+        if (!boxSug || boxSug.style.display === "none") return;
+
+        const items = document.querySelectorAll(`.sug-flota-item-${{idx}}`);
+        if (items.length === 0) return;
+
+        let currentIndex = indiceFlotaSugerenciaSeleccionada[idx] ?? -1;
+
+        if (event.key === "ArrowDown") {{
+            event.preventDefault();
+            currentIndex = (currentIndex + 1) % items.length;
+            resaltarSugerenciaFlotaItem(idx, currentIndex);
+            items[currentIndex].scrollIntoView({{ block: "nearest" }});
+        }} else if (event.key === "ArrowUp") {{
+            event.preventDefault();
+            currentIndex = (currentIndex - 1 + items.length) % items.length;
+            resaltarSugerenciaFlotaItem(idx, currentIndex);
+            items[currentIndex].scrollIntoView({{ block: "nearest" }});
+        }} else if (event.key === "Enter") {{
+            event.preventDefault();
+            if (currentIndex >= 0 && items[currentIndex]) {{
+                items[currentIndex].click();
+            }}
+        }} else if (event.key === "Escape") {{
+            boxSug.style.display = "none";
+        }}
+    }}
+
+    function seleccionarUnidadFlotaSugerida(idx, nombre, spr) {{
+        const inputNombre = document.getElementById(`sis-flota-nombre-${{idx}}`);
+        const spanSpr = document.getElementById(`sis-flota-spr-${{idx}}`);
+        const boxSug = document.getElementById(`sis-flota-sug-${{idx}}`);
+
+        if (inputNombre) inputNombre.value = nombre;
+        if (spanSpr) spanSpr.innerText = spr;
+        if (boxSug) boxSug.style.display = "none";
+
+        sincronizarTotalesSistemico();
+    }}
+
+    // Ocultar sugerencias de flota al hacer clic fuera
+    document.addEventListener("click", function(e) {{
+        document.querySelectorAll(".sugerencias-flota-box").forEach(box => {{
+            if (!box.contains(e.target) && !e.target.classList.contains("edit-name-flota-sis")) {{
+                box.style.display = "none";
+            }}
+        }});
+    }});
+
+    // 🟢 AGREGAR Y QUITAR FILAS DINÁMICAS EN LA MINITABLA FLOTANTE
+    function agregarFilaFlotaSis() {{
+        const tbody = document.getElementById("tbody-flota-flotante-sis");
+        if (!tbody) return;
+
+        const numFilas = tbody.querySelectorAll(".row-flota-sis").length;
+        const nuevaTr = document.createElement("tr");
+
+        nuevaTr.className = "row-flota-sis";
+        nuevaTr.id = `sis-flota-tr-${{numFilas}}`;
+        nuevaTr.style.cssText = "border-bottom: 1px solid #262626; height: 38px;";
+
+        nuevaTr.innerHTML = `
+            <td style="padding: 4px; text-align: left; vertical-align: middle; position: relative;">
+                <input type="text" class="edit-name-flota-sis" id="sis-flota-nombre-${{numFilas}}" oninput="buscarCoincidenciasFlotaSis(this, ${{numFilas}});" onkeydown="navegarSugerenciasFlotaSis(event, ${{numFilas}})" onfocus="buscarCoincidenciasFlotaSis(this, ${{numFilas}})" placeholder="Buscar unidad..." autocomplete="off"
+                       style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 13px; color: #f5f5f5; outline: none; border: none; border-bottom: 1px solid #525252; background: transparent; padding: 3px 4px;" />
+                <div id="sis-flota-sug-${{numFilas}}" class="sugerencias-flota-box" style="display: none; position: absolute; top: 90%; left: 4px; right: 4px; background: #262626; border: 1px solid #525252; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 999; max-height: 140px; overflow-y: auto;"></div>
+            </td>
+            <td style="text-align: center; color: #a3a3a3; font-weight: 600; font-size: 12px;">
+                <span id="sis-flota-spr-${{numFilas}}">0</span>
+            </td>
+            <td style="text-align: center; padding: 2px;">
+                <input type="number" class="sis-disp-flota-in" id="sis-disp-flota-${{numFilas}}" oninput="sincronizarTotalesSistemico();" onfocus="this.select()" value="0" placeholder="0"
+                       style="width: 55px; text-align: center; padding: 3px; font-weight: 800; font-size: 13px; border: 1px solid #facc15; background: #0a0a0a; color: #facc15; outline: none; border-radius: 4px;" />
+            </td>
+            <td style="text-align: center; font-weight: 800; font-size: 13px; color: #2dd4bf;" id="sis-rest-flota-${{numFilas}}">
+                0
+            </td>
+        `;
+
+        tbody.appendChild(nuevaTr);
+        const nuevoInput = document.getElementById(`sis-flota-nombre-${{numFilas}}`);
+        if (nuevoInput) nuevoInput.focus();
+    }}
+
+    function quitarFilaFlotaSis() {{
+        const tbody = document.getElementById("tbody-flota-flotante-sis");
+        if (!tbody) return;
+
+        const filas = tbody.querySelectorAll(".row-flota-sis");
+        if (filas.length > 1) {{
+            tbody.removeChild(filas[filas.length - 1]);
+            sincronizarTotalesSistemico();
+        }}
+    }}
+
+    // 🟢 LECTURA DE DISPONIBILIDAD EN PATIO DESDE LOS BUSCADORES DE LA MINITABLA
+    function obtenerInventarioPatio() {{
+        let flota = {{}};
+        document.querySelectorAll('.row-flota-sis').forEach((row) => {{
+            let inputNombre = row.querySelector('.edit-name-flota-sis');
+            let inputDisp = row.querySelector('.sis-disp-flota-in');
+            
+            let nombre = inputNombre?.value?.trim() || "";
+            let dispVal = parseInt(inputDisp?.value) || 0;
+
+            if (nombre) {{
+                flota[nombre.toLowerCase()] = {{
+                    nombreReal: nombre,
+                    disponible: dispVal,
+                    usadas: 0
+                }};
+            }}
+        }});
+        return flota;
+    }}
+
+    // 🟢 RECALCULADOR DEL RESTANTE EN PATIO EN TIEMPO REAL
     function sincronizarTotalesSistemico() {{
         let conteoUnidades = {{}};
 
@@ -5657,24 +5817,23 @@ document.addEventListener('keydown', function(event) {{
             }}
         }});
 
-        document.querySelectorAll('.row-flota-sis').forEach((row, idx) => {{
-            let nameCell = row.querySelector('.sis-unit-name');
-            let inputDisp = document.getElementById(`sis-disp-flota-${{idx}}`);
-            let restCell = document.getElementById(`sis-rest-flota-${{idx}}`);
+        document.querySelectorAll('.row-flota-sis').forEach((row) => {{
+            let inputNombre = row.querySelector('.edit-name-flota-sis');
+            let inputDisp = row.querySelector('.sis-disp-flota-in');
+            let restCell = row.querySelector('td[id^="sis-rest-flota-"]');
 
-            let nombre = nameCell?.innerText?.trim()?.toLowerCase() || "";
+            let nombre = inputNombre?.value?.trim()?.toLowerCase() || "";
             let disponible = parseInt(inputDisp?.value) || 0;
             let ocupadas = conteoUnidades[nombre] || 0;
 
             if (restCell) {{
                 let restante = disponible - ocupadas;
                 restCell.innerText = restante;
-                // Color rojo solo si es negativo (que para unidades normales ya no ocurrirá)
                 restCell.style.color = restante < 0 ? "#ef4444" : "#2dd4bf";
             }}
         }});
     }}
-
+    
 
     // 🟢 Y EN TU FUNCIÓN DE FILTRAR (BUSCA DÓNDE TIENES 'filterRows'), REEMPLÁZALA POR ESTA:
     function filterRows(onlyActive) {{
