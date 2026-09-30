@@ -1715,28 +1715,30 @@ CATALOGO_SISTEMICO = {
 }
 
 
+
 PLANES_SISTEMICO = [
-   "ACTOPAN", "⚠️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
+   "ACTOPAN", "⚠️️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
    "TEZUITLAN", "TLALTETELA", "TRAPICHE", "TUZAMAPA", "XICO", "CONTINGENCIA CENTRO NODO", 
    "CONTINGENCIA TUZAMAPA", "CONTINGENCIA XICO"
 ]
 
 def gen_tabla_sistemico_planes():
-    # 🟢 1. MINITABLA DE DISPONIBILIDAD DE FLOTA (SOLO SISTÉMICO)
+    # 🟢 1. TARJETA FLOTANTE MINIMALISTA Y COMPACTA (DISPONIBILIDAD)
     html = '''
-    <div style="max-width: 950px; margin: 0 auto 20px auto; background: #1e2022; padding: 14px 18px; border-radius: 12px; border: 1.5px solid #34383d; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-        <div style="font-size: 13px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-            <span>🚛 FLOTA DISPONIBLE EN SISTÉMICO</span>
-            <span style="font-size: 10px; color: #aaaaaa; font-weight: normal;">Ingresa disponibilidad para Auto-Calcular</span>
+    <div id="sis-flota-flotante" style="position: sticky; top: 10px; z-index: 99; max-width: 950px; margin: 0 auto 16px auto; background: #17191b; padding: 10px 16px; border-radius: 10px; border: 1px solid #2dd4bf; box-shadow: 0 6px 20px rgba(0,0,0,0.4);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid #262626; padding-bottom: 6px;">
+            <span style="font-size: 11px; font-weight: 800; color: #2dd4bf; letter-spacing: 0.8px; text-transform: uppercase;">🚛 FLOTA DISPONIBLE EN PATIO (SISTÉMICO)</span>
+            <span style="font-size: 10px; color: #a3a3a3;">Ingresa disponibilidad real para Auto-Calcular</span>
         </div>
 
-        <div style="max-height: 180px; overflow-y: auto; overflow-x: hidden; padding-right: 4px;">
-            <table style="width: 100%; border-collapse: collapse; color: #ffffff; font-size: 13px;">
+        <div style="max-height: 130px; overflow-y: auto; overflow-x: hidden;">
+            <table style="width: 100%; border-collapse: collapse; color: #f5f5f5; font-size: 12px; table-layout: fixed;">
                 <thead>
-                    <tr style="background: #141414; color: #66CDAA; font-size: 11px; text-transform: uppercase; position: sticky; top: 0; z-index: 10;">
-                        <th style="padding: 6px; text-align: left; width: 45%;">UNIDAD</th>
-                        <th style="padding: 6px; text-align: center; width: 25%;">SPR LOGIS</th>
-                        <th style="padding: 6px; text-align: center; width: 30%; color: #FFD700;">DISPONIBLE</th>
+                    <tr style="color: #67e8f9; font-size: 10px; text-transform: uppercase; border-bottom: 1px solid #262626; height: 22px;">
+                        <th style="text-align: left; width: 45%; padding-left: 4px;">UNIDAD</th>
+                        <th style="text-align: center; width: 20%;">SPR MAX</th>
+                        <th style="text-align: center; width: 18%; color: #facc15;">DISPONIBLE</th>
+                        <th style="text-align: center; width: 17%;">RESTANTE</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1744,16 +1746,19 @@ def gen_tabla_sistemico_planes():
 
     for idx, (nombre, spr) in enumerate(CATALOGO_SISTEMICO.items()):
         html += f'''
-        <tr class="row-flota-sis" style="border-bottom: 1px solid #2e3237; height: 32px;">
-            <td class="sis-unit-name" style="padding-left: 8px; font-weight: 700; color: #e2e8f0;">
+        <tr class="row-flota-sis" style="border-bottom: 1px solid #262626; height: 28px;">
+            <td class="sis-unit-name" style="padding-left: 4px; font-weight: 600; color: #e5e5e5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                 {nombre}
             </td>
-            <td style="text-align: center; color: #94a3b8; font-weight: 600;">
+            <td style="text-align: center; color: #737373; font-size: 11px;">
                 {spr[1]}
             </td>
-            <td style="text-align: center; padding: 2px;">
-                <input type="number" class="sis-disp-flota-in" id="sis-disp-flota-{idx}" data-unit="{nombre.lower()}" onfocus="this.select()" value="0" placeholder="0"
-                       style="width: 70px; text-align: center; padding: 3px; font-weight: 800; font-size: 14px; border: 1.5px solid #FFD700; background: #141414; color: #FFD700; outline: none; border-radius: 4px;" />
+            <td style="text-align: center;">
+                <input type="number" class="sis-disp-flota-in" id="sis-disp-flota-{idx}" data-unit="{nombre.lower()}" oninput="sincronizarTotalesSistemico(); calcularTodosLosPlanesSistemico();" onfocus="this.select()" value="0" placeholder="0"
+                       style="width: 55px; text-align: center; padding: 2px; font-weight: 800; font-size: 13px; border: 1px solid #facc15; background: #0a0a0a; color: #facc15; outline: none; border-radius: 4px;" />
+            </td>
+            <td style="text-align: center; font-weight: 800; font-size: 13px; color: #2dd4bf;" id="sis-rest-flota-{idx}">
+                0
             </td>
         </tr>
         '''
@@ -1764,21 +1769,21 @@ def gen_tabla_sistemico_planes():
         </div>
     </div>
 
-    <!-- 🟢 2. TABLA UNIFICADA DE RUTEO SISTÉMICO POR PLAN -->
-    <div style="max-width: 950px; margin: 0 auto; background: #ffffff; padding: 20px 24px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0,0,0,0.04); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-        <div style="font-size: 17px; font-weight: 700; color: #111111; margin-bottom: 16px; border-bottom: 1.5px solid #0f766e; padding-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+    <!-- 🟢 2. TABLA UNIFICADA DE PLANES -->
+    <div style="max-width: 950px; margin: 0 auto; background: #ffffff; padding: 18px 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0,0,0,0.04); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 14px; border-bottom: 2px solid #0f766e; padding-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
             <span>📋 Planificación de Ruteo Sistémico por Plan</span>
-            <span style="font-size: 12px; color: #0f766e; font-weight: 600;">IDs Dropeados ÷ SPR Logis</span>
+            <span style="font-size: 11px; color: #0f766e; font-weight: 700;">Consumo en Cascada ÷ SPR Logis</span>
         </div>
 
-        <table style="width: 100%; border-collapse: collapse; color: #222222; font-size: 14px; table-layout: fixed;">
+        <table style="width: 100%; border-collapse: collapse; color: #222222; font-size: 13px; table-layout: fixed;">
             <thead>
-                <tr style="height: 38px; background: #f8fafc; color: #475569; font-weight: 700; border-bottom: 2px solid #cbd5e1; font-size: 13px; text-transform: uppercase;">
-                    <th style="padding: 8px; text-align: center; width: 18%; border-right: 1px solid #e2e8f0;">PLAN</th>
-                    <th style="padding: 8px; text-align: center; width: 16%; border-right: 1px solid #e2e8f0;">IDS DROPEADOS</th>
-                    <th style="padding: 8px; text-align: left; width: 34%; border-right: 1px solid #e2e8f0;">UNIDAD</th>
-                    <th style="padding: 8px; text-align: center; width: 14%; border-right: 1px solid #e2e8f0;">SPR LOGIS</th>
-                    <th style="padding: 8px; text-align: center; width: 18%;">UNIDADES ADICIONALES</th>
+                <tr style="height: 36px; background: #f8fafc; color: #475569; font-weight: 700; border-bottom: 2px solid #cbd5e1; font-size: 12px; text-transform: uppercase;">
+                    <th style="padding: 6px; text-align: center; width: 18%; border-right: 1px solid #e2e8f0;">PLAN</th>
+                    <th style="padding: 6px; text-align: center; width: 16%; border-right: 1px solid #e2e8f0;">IDS DROPEADOS</th>
+                    <th style="padding: 6px; text-align: left; width: 34%; border-right: 1px solid #e2e8f0;">UNIDAD</th>
+                    <th style="padding: 6px; text-align: center; width: 14%; border-right: 1px solid #e2e8f0;">SPR LOGIS</th>
+                    <th style="padding: 6px; text-align: center; width: 18%;">UNIDADES ADICIONALES</th>
                 </tr>
             </thead>
             <tbody id="tbody-sistemico-planes">
@@ -1786,45 +1791,45 @@ def gen_tabla_sistemico_planes():
 
     fila_global_idx = 0
     for p_idx, plan_nom in enumerate(PLANES_SISTEMICO):
-        num_filas = 6 if plan_nom == "⚠️ CENTRO 1" else 4
+        num_filas = 4 if plan_nom == "⚠️ CENTRO 1" else 2
 
         for r_idx in range(num_filas):
             idx = fila_global_idx
             border_bottom = "2px solid #cbd5e1" if r_idx == num_filas - 1 else "1px solid #f1f5f9"
             
             html += f'''
-            <tr class="fila-plan-sistemico" data-plan="{plan_nom}" data-plan-idx="{p_idx}" id="sis-tr-{idx}" style="border-bottom: {border_bottom}; height: 48px;">
+            <tr class="fila-plan-sistemico" data-plan="{plan_nom}" data-plan-idx="{p_idx}" id="sis-tr-{idx}" style="border-bottom: {border_bottom}; height: 44px;">
             '''
 
             if r_idx == 0:
                 html += f'''
-                <td rowspan="{num_filas}" class="td-plan-name" id="td-plan-nom-{p_idx}" style="background: #f8fafc; font-weight: 800; font-size: 14px; color: #0f172a; text-align: center; vertical-align: middle; border-right: 1.5px solid #cbd5e1; border-bottom: 2px solid #cbd5e1; padding: 6px;">
+                <td rowspan="{num_filas}" class="td-plan-name" id="td-plan-nom-{p_idx}" style="background: #f8fafc; font-weight: 800; font-size: 13px; color: #0f172a; text-align: center; vertical-align: middle; border-right: 1.5px solid #cbd5e1; border-bottom: 2px solid #cbd5e1; padding: 4px;">
                     <div>{plan_nom}</div>
-                    <div style="margin-top: 6px; display: flex; gap: 4px; justify-content: center;">
-                        <button onclick="agregarFilaPlanSis('{plan_nom}', {p_idx})" title="Agregar fila" style="cursor: pointer; background: #ccfbf1; color: #0d9488; border: 1px solid #99f6e4; font-weight: 800; border-radius: 4px; padding: 2px 5px; font-size: 11px;">+ fila</button>
-                        <button onclick="quitarFilaPlanSis('{plan_nom}', {p_idx})" title="Quitar fila" style="cursor: pointer; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; font-weight: 800; border-radius: 4px; padding: 2px 5px; font-size: 11px;">- fila</button>
+                    <div style="margin-top: 5px; display: flex; gap: 3px; justify-content: center;">
+                        <button onclick="agregarFilaPlanSis('{plan_nom}', {p_idx})" title="Agregar fila" style="cursor: pointer; background: #ccfbf1; color: #0d9488; border: 1px solid #99f6e4; font-weight: 800; border-radius: 4px; padding: 2px 5px; font-size: 10px;">+ fila</button>
+                        <button onclick="quitarFilaPlanSis('{plan_nom}', {p_idx})" title="Quitar fila" style="cursor: pointer; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; font-weight: 800; border-radius: 4px; padding: 2px 5px; font-size: 10px;">- fila</button>
                     </div>
                 </td>
-                <td rowspan="{num_filas}" class="td-plan-drop" id="td-plan-drop-{p_idx}" style="background: #f0fdfa; text-align: center; vertical-align: middle; border-right: 1.5px solid #cbd5e1; border-bottom: 2px solid #cbd5e1; padding: 6px;">
+                <td rowspan="{num_filas}" class="td-plan-drop" id="td-plan-drop-{p_idx}" style="background: #f0fdfa; text-align: center; vertical-align: middle; border-right: 1.5px solid #cbd5e1; border-bottom: 2px solid #cbd5e1; padding: 4px;">
                     <input type="number" class="sis-plan-drop-in" id="sis-drop-plan-{p_idx}" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()" value="0" placeholder="0"
-                           style="width: 75px; text-align: center; padding: 5px; font-weight: 800; font-size: 16px; border: 1.5px solid #0f766e; background: #ffffff; color: #0f766e; outline: none; border-radius: 6px;" />
+                           style="width: 70px; text-align: center; padding: 4px; font-weight: 800; font-size: 15px; border: 1.5px solid #0f766e; background: #ffffff; color: #0f766e; outline: none; border-radius: 5px;" />
                 </td>
                 '''
 
             html += f'''
-                <td style="padding: 4px 8px; text-align: left; vertical-align: middle; position: relative; border-right: 1px solid #f1f5f9;">
+                <td style="padding: 3px 6px; text-align: left; vertical-align: middle; position: relative; border-right: 1px solid #f1f5f9;">
                     <input type="text" class="edit-name-sis" id="sis-nombre-{idx}" oninput="buscarCoincidenciasUnidad(this, {idx}); calcularPlanSistemico({p_idx});" onkeydown="navegarSugerenciasUnidad(event, {idx})" onfocus="buscarCoincidenciasUnidad(this, {idx})" placeholder="Buscar unidad..." autocomplete="off"
-                           style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 14px; color: #1e293b; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 3px 6px; border-radius: 4px;" />
-                    <div id="sis-sug-{idx}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 90%; left: 8px; right: 8px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 150px; overflow-y: auto;"></div>
+                           style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 13px; color: #1e293b; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 3px 5px; border-radius: 4px;" />
+                    <div id="sis-sug-{idx}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 90%; left: 6px; right: 6px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 140px; overflow-y: auto;"></div>
                 </td>
 
-                <td style="text-align: center; padding: 4px; vertical-align: middle; border-right: 1px solid #f1f5f9;">
+                <td style="text-align: center; padding: 3px; vertical-align: middle; border-right: 1px solid #f1f5f9;">
                     <input type="number" id="sis-spr-{idx}" value="0" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()"
-                           style="width: 65px; text-align: center; padding: 3px; font-weight: 600; font-size: 14px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #64748b; outline: none;" />
+                           style="width: 60px; text-align: center; padding: 2px; font-weight: 600; font-size: 13px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #64748b; outline: none;" />
                 </td>
 
-                <td style="text-align: center; padding: 4px; vertical-align: middle;">
-                    <span id="sis-res-{idx}" class="res-adic-sis" style="font-weight: 800; font-size: 19px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
+                <td style="text-align: center; padding: 3px; vertical-align: middle;">
+                    <span id="sis-res-{idx}" class="res-adic-sis" style="font-weight: 800; font-size: 18px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
                 </td>
             </tr>
             '''
@@ -5517,51 +5522,38 @@ document.addEventListener('keydown', function(event) {{
 
 
 
-    // 🟢 RECALCULAR Y ACTUALIZAR LOS CONTADORES SUPERIORES EN TIEMPO REAL (CON EXCLUSIONES)
+    // 🟢 4. SINCRONIZADOR RESTANTE DE PATIO EN LA MINITABLA
     function sincronizarTotalesSistemico() {{
-        let totalMlp = 0;
-        let totalRental = 0;
-        let totalCar = 0;
+        let conteoUnidades = {{}};
 
-        document.querySelectorAll('.fila-hibrida-sis').forEach(fila => {{
-            const inputNombre = fila.querySelector('.edit-name-sis');
-            const usadasEl = fila.querySelector('.u-manual-sis');
-            if (!inputNombre || !usadasEl) return;
+        document.querySelectorAll('.fila-plan-sistemico').forEach(fila => {{
+            let idx = fila.id.replace("sis-tr-", "");
+            let elNombre = document.getElementById(`sis-nombre-${{idx}}`);
+            let elRes = document.getElementById(`sis-res-${{idx}}`);
 
-            // Lee la propiedad .value del input editable
-            const nombre = (inputNombre.value || inputNombre.innerText || "").toLowerCase().trim();
-            const usadas = parseInt(usadasEl.innerText) || 0;
+            let nombre = elNombre?.value?.trim()?.toLowerCase() || "";
+            let asignadas = parseInt(elRes?.innerText) || 0;
 
-            if (usadas <= 0 || !nombre) return;
-
-            // 🚫 FILTRO DE EXCLUSIÓN: Ignorar unidades especiales
-            const esExtraLargeHB = nombre.includes("extra large van mlp h&b") || nombre.includes("extra large van mlp h & b");
-            const esTruck35 = nombre.includes("truck 3.5 tons mlp") || nombre.includes("truck 3.5 ton mlp") || nombre.includes("truck 3.5");
-            const esDeliveryCell = nombre.includes("delivery cell");
-
-            // Si es alguna de las 3 unidades excluidas, no entra a ningún contador
-            if (esExtraLargeHB || esTruck35 || esDeliveryCell) {{
-                return;
-            }}
-
-            // 🟢 SUMATORIA DE CATEGORÍAS VÁLIDAS
-            if (nombre.includes("mlp")) {{
-                totalMlp += usadas;
-            }} else if (nombre.includes("rental")) {{
-                totalRental += usadas;
-            }} else if (nombre.includes("car") || nombre.includes("moto") || nombre.includes("small van") || nombre.includes("newbie")) {{
-                totalCar += usadas;
+            if (nombre && asignadas > 0) {{
+                conteoUnidades[nombre] = (conteoUnidades[nombre] || 0) + asignadas;
             }}
         }});
 
-        // Actualiza los cuadritos superiores visibles en la cabecera
-        const valMlp = document.getElementById("val-mlp-rute-2");
-        const valRental = document.getElementById("val-rental-rute-2");
-        const valCar = document.getElementById("val-car-rute-2");
+        document.querySelectorAll('.row-flota-sis').forEach((row, idx) => {{
+            let nameCell = row.querySelector('.sis-unit-name');
+            let inputDisp = document.getElementById(`sis-disp-flota-${{idx}}`);
+            let restCell = document.getElementById(`sis-rest-flota-${{idx}}`);
 
-        if (valMlp) valMlp.innerText = totalMlp;
-        if (valRental) valRental.innerText = totalRental;
-        if (valCar) valCar.innerText = totalCar;
+            let nombre = nameCell?.innerText?.trim()?.toLowerCase() || "";
+            let disponible = parseInt(inputDisp?.value) || 0;
+            let ocupadas = conteoUnidades[nombre] || 0;
+
+            if (restCell) {{
+                let restante = disponible - ocupadas;
+                restCell.innerText = restante;
+                restCell.style.color = restante < 0 ? "#ef4444" : "#2dd4bf";
+            }}
+        }});
     }}
 
 
@@ -6111,14 +6103,12 @@ function obtenerCarFlexible() {{
 }}
 
 
-// 🟢 1. CÁLCULO DE UNIDADES ADICIONALES POR PLAN (IDs DROPEADOS ÷ SPR LOGIS)
+    // 🟢 1. CÁLCULO EN CASCADA MATEMÁTICAMENTE EXACTO POR PLAN
     function calcularPlanSistemico(planIdx) {{
         const dropIn = document.getElementById(`sis-drop-plan-${{planIdx}}`);
-        const totalDrop = parseFloat(dropIn?.value) || 0;
+        let dropRestante = parseFloat(dropIn?.value) || 0;
 
         const filasPlan = document.querySelectorAll(`.fila-plan-sistemico[data-plan-idx="${{planIdx}}"]`);
-        let totalSprPlan = 0;
-        let filasValidas = [];
 
         filasPlan.forEach(fila => {{
             let idx = fila.id.replace("sis-tr-", "");
@@ -6129,25 +6119,33 @@ function obtenerCarFlexible() {{
             let nombre = inputNombre?.value?.trim() || "";
             let spr = parseFloat(inputSpr?.value) || 0;
 
-            if (nombre && spr > 0) {{
-                filasValidas.push({{ idx, resDisplay, spr }});
-                totalSprPlan += spr;
-            }} else if (resDisplay) {{
-                resDisplay.innerText = "0";
+            if (nombre && spr > 0 && dropRestante > 0) {{
+                // Cuántas de esta unidad especifica se necesitan para cubrir lo que queda de IDs
+                let unidadesNecesarias = Math.ceil(dropRestante / spr);
+                let capacidadCubierta = unidadesNecesarias * spr;
+
+                if (resDisplay) resDisplay.innerText = unidadesNecesarias;
+
+                // Descuenta la capacidad real del acumulador
+                dropRestante -= capacidadCubierta;
+                if (dropRestante < 0) dropRestante = 0;
+            }} else {{
+                if (resDisplay) resDisplay.innerText = "0";
             }}
         }});
 
-        if (totalDrop > 0 && filasValidas.length > 0) {{
-            filasValidas.forEach(item => {{
-                let proporcion = item.spr / totalSprPlan;
-                let dropUnidad = totalDrop * proporcion;
-                let adicionales = Math.ceil(dropUnidad / item.spr);
-                item.resDisplay.innerText = adicionales;
-            }});
-        }}
+        sincronizarTotalesSistemico();
     }}
 
-    // 🟢 2. AGREGAR / QUITAR FILAS DINÁMICAS POR PLAN
+
+    function calcularTodosLosPlanesSistemico() {{
+        const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
+        planesUnicos.forEach(planIdx => calcularPlanSistemico(planIdx));
+    }}
+
+    
+
+    // 🟢 3. REAGRUSTAR ROWSPAN PERFECTO AL AGREGAR O QUITAR FILAS
     function agregarFilaPlanSis(planNom, planIdx) {{
         const tbody = document.getElementById("tbody-sistemico-planes");
         if (!tbody) return;
@@ -6166,26 +6164,27 @@ function obtenerCarFlexible() {{
         nuevaTr.setAttribute("data-plan", planNom);
         nuevaTr.setAttribute("data-plan-idx", planIdx);
         nuevaTr.id = `sis-tr-${{totalFilasGlobal}}`;
-        nuevaTr.style.cssText = "border-bottom: 1px solid #f1f5f9; height: 48px;";
+        nuevaTr.style.cssText = "border-bottom: 1px solid #f1f5f9; height: 44px;";
 
         nuevaTr.innerHTML = `
-            <td style="padding: 4px 8px; text-align: left; vertical-align: middle; position: relative; border-right: 1px solid #f1f5f9;">
+            <td style="padding: 3px 6px; text-align: left; vertical-align: middle; position: relative; border-right: 1px solid #f1f5f9;">
                 <input type="text" class="edit-name-sis" id="sis-nombre-${{totalFilasGlobal}}" oninput="buscarCoincidenciasUnidad(this, ${{totalFilasGlobal}}); calcularPlanSistemico(${{planIdx}});" onkeydown="navegarSugerenciasUnidad(event, ${{totalFilasGlobal}})" onfocus="buscarCoincidenciasUnidad(this, ${{totalFilasGlobal}})" placeholder="Buscar unidad..." autocomplete="off"
-                       style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 14px; color: #1e293b; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 3px 6px; border-radius: 4px;" />
-                <div id="sis-sug-${{totalFilasGlobal}}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 90%; left: 8px; right: 8px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 150px; overflow-y: auto;"></div>
+                       style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 13px; color: #1e293b; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 3px 5px; border-radius: 4px;" />
+                <div id="sis-sug-${{totalFilasGlobal}}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 90%; left: 6px; right: 6px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 140px; overflow-y: auto;"></div>
             </td>
-            <td style="text-align: center; padding: 4px; vertical-align: middle; border-right: 1px solid #f1f5f9;">
+            <td style="text-align: center; padding: 3px; vertical-align: middle; border-right: 1px solid #f1f5f9;">
                 <input type="number" id="sis-spr-${{totalFilasGlobal}}" value="0" oninput="calcularPlanSistemico(${{planIdx}})" onfocus="this.select()"
-                       style="width: 65px; text-align: center; padding: 3px; font-weight: 600; font-size: 14px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #64748b; outline: none;" />
+                       style="width: 60px; text-align: center; padding: 2px; font-weight: 600; font-size: 13px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #64748b; outline: none;" />
             </td>
-            <td style="text-align: center; padding: 4px; vertical-align: middle;">
-                <span id="sis-res-${{totalFilasGlobal}}" class="res-adic-sis" style="font-weight: 800; font-size: 19px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
+            <td style="text-align: center; padding: 3px; vertical-align: middle;">
+                <span id="sis-res-${{totalFilasGlobal}}" class="res-adic-sis" style="font-weight: 800; font-size: 18px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
             </td>
         `;
 
         const ultimaFila = filasExistentes[filasExistentes.length - 1];
         ultimaFila.after(nuevaTr);
     }}
+    
 
     function quitarFilaPlanSis(planNom, planIdx) {{
         const filasExistentes = document.querySelectorAll(`.fila-plan-sistemico[data-plan-idx="${{planIdx}}"]`);
@@ -6202,10 +6201,11 @@ function obtenerCarFlexible() {{
             calcularPlanSistemico(planIdx);
         }}
     }}
+    
 
-    // 🧠 3. AUTO-CALCULAR INTELIGENTE (RESPETA UNIDADES EXISTENTES Y PRIORIZA PLANES)
+    // 🧠 2. AUTO-CALCULAR VINCULADO STRICTAMENTE A DISPONIBILIDAD DE PATIO
     function distribuirAutomaticoSistemico() {{
-        // A. Leer disponibilidad desde la minitabla de flota
+        // A. Leer disponibilidad de patio de la minitabla flotante
         let flotaDisponibilidad = {{}};
         document.querySelectorAll('.row-flota-sis').forEach((row, idx) => {{
             let nameCell = row.querySelector('.sis-unit-name');
@@ -6223,7 +6223,7 @@ function obtenerCarFlexible() {{
             }}
         }});
 
-        // B. Agrupar planes por volumen total de IDs dropeados
+        // B. Agrupar planes e IDs dropeados (Prioridad: mayor a menor IDs)
         let planesData = [];
         const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
 
@@ -6232,7 +6232,7 @@ function obtenerCarFlexible() {{
             let dropTotal = parseFloat(dropIn?.value) || 0;
             let filasPlan = document.querySelectorAll(`.fila-plan-sistemico[data-plan-idx="${{planIdx}}"]`);
 
-            let unidadesAsignadas = [];
+            let unidadesDelPlan = [];
             filasPlan.forEach(fila => {{
                 let idx = fila.id.replace("sis-tr-", "");
                 let inputNombre = document.getElementById(`sis-nombre-${{idx}}`);
@@ -6243,31 +6243,32 @@ function obtenerCarFlexible() {{
                 let spr = parseFloat(inputSpr?.value) || 0;
 
                 if (nombre && spr > 0) {{
-                    unidadesAsignadas.push({{ idx, nombre, spr, elRes }});
+                    unidadesDelPlan.push({{ idx, nombre, spr, elRes }});
                 }}
             }});
 
             planesData.push({{
                 planIdx,
                 dropTotal,
-                unidadesAsignadas
+                unidadesDelPlan
             }});
         }});
 
-        // C. Ordenar planes de mayor a menor IDs dropeados
+        // Ordenar planes por mayor cantidad de IDs
         planesData.sort((a, b) => b.dropTotal - a.dropTotal);
 
-        // D. Asignar unidades respetando la flota cargada
+        // C. Reparto en cascada respetando disponibilidad real en patio
         planesData.forEach(pData => {{
-            if (pData.dropTotal <= 0 || pData.unidadesAsignadas.length === 0) return;
+            let dropRestante = pData.dropTotal;
+            if (dropRestante <= 0 || pData.unidadesDelPlan.length === 0) return;
 
-            let totalSprPlan = pData.unidadesAsignadas.reduce((acc, u) => acc + u.spr, 0);
+            pData.unidadesDelPlan.forEach(uInfo => {{
+                if (dropRestante <= 0) {{
+                    if (uInfo.elRes) uInfo.elRes.innerText = "0";
+                    return;
+                }}
 
-            pData.unidadesAsignadas.forEach(uInfo => {{
-                let proporcion = uInfo.spr / totalSprPlan;
-                let dropUnidad = pData.dropTotal * proporcion;
-                let necesarias = Math.ceil(dropUnidad / uInfo.spr);
-
+                let necesarias = Math.ceil(dropRestante / uInfo.spr);
                 let claveUnidad = uInfo.nombre.toLowerCase();
                 let esExcepcionInfinita = claveUnidad.includes("car 8h") || claveUnidad.includes("car - 8h") || claveUnidad.includes("small van 9h ext");
 
@@ -6275,14 +6276,14 @@ function obtenerCarFlexible() {{
 
                 if (flotaDisponibilidad[claveUnidad]) {{
                     let dispInfo = flotaDisponibilidad[claveUnidad];
-                    let restantesPatio = dispInfo.disponible - dispInfo.usadas;
+                    let disponiblesPatio = dispInfo.disponible - dispInfo.usadas;
 
-                    if (restantesPatio >= necesarias) {{
+                    if (disponiblesPatio >= necesarias) {{
                         asignadas = necesarias;
                         dispInfo.usadas += necesarias;
-                    }} else if (restantesPatio > 0) {{
-                        asignadas = restantesPatio;
-                        dispInfo.usadas += restantesPatio;
+                    }} else if (disponiblesPatio > 0) {{
+                        asignadas = disponiblesPatio;
+                        dispInfo.usadas += disponiblesPatio;
                     }} else if (esExcepcionInfinita) {{
                         asignadas = necesarias;
                     }}
@@ -6290,22 +6291,18 @@ function obtenerCarFlexible() {{
                     asignadas = necesarias;
                 }}
 
-                if (uInfo.elRes) {{
-                    uInfo.elRes.innerText = asignadas;
-                }}
+                if (uInfo.elRes) uInfo.elRes.innerText = asignadas;
+
+                // Descuenta la capacidad cubierta
+                let capacidadCubierta = asignadas * uInfo.spr;
+                dropRestante -= capacidadCubierta;
+                if (dropRestante < 0) dropRestante = 0;
             }});
         }});
-    }}
 
-    // Redireccionar el botón global Auto-Calcular cuando estés en Sistémico (Tab 4)
-    const fnAutoCalcularOriginal = window.distribuirAutomatico;
-    window.distribuirAutomatico = function() {{
-        if (currentTab === 4) {{
-            distribuirAutomaticoSistemico();
-        }} else if (typeof fnAutoCalcularOriginal === 'function') {{
-            fnAutoCalcularOriginal();
-        }}
-    }};
+        sincronizarTotalesSistemico();
+    }}
+    
 
     // 🟢 4. FILTRAR PLANES OCULTANDO LOS QUE NO TIENEN UNIDADES NI IDs (AL PULSAR "ACTIVAS")
     function filterRowsSistemico(onlyActive) {{
