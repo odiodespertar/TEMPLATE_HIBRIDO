@@ -6576,19 +6576,16 @@ function obtenerCarFlexible() {{
         const filasExistentes = document.querySelectorAll(`.fila-plan-sistemico[data-plan-idx="${{planIdx}}"]`);
         const nuevaNumFilas = filasExistentes.length + 1;
 
-        // 🟢 1. Actualizar el rowspan de las celdas PLAN e IDS DROPEADOS
         const tdPlan = document.getElementById(`td-plan-nom-${{planIdx}}`);
         const tdDrop = document.getElementById(`td-plan-drop-${{planIdx}}`);
         if (tdPlan) tdPlan.rowSpan = nuevaNumFilas;
         if (tdDrop) tdDrop.rowSpan = nuevaNumFilas;
 
-        // 🟢 2. Quitar el borde inferior grueso a la fila que antes era la última del plan
         const ultimaFilaAnterior = filasExistentes[filasExistentes.length - 1];
         if (ultimaFilaAnterior) {{
             ultimaFilaAnterior.style.borderBottom = "1px solid #cbd5e1";
         }}
 
-        // 🟢 3. Crear la nueva fila con el borde marco de cierre (2px solid #25282b)
         const totalFilasGlobal = tbody.querySelectorAll('.fila-plan-sistemico').length;
         const nuevaTr = document.createElement("tr");
         nuevaTr.className = "fila-plan-sistemico";
@@ -6605,15 +6602,18 @@ function obtenerCarFlexible() {{
             </td>
             <td style="text-align: center; padding: 4px; vertical-align: middle; border-right: 1px solid #25282b;">
                 <input type="number" id="sis-spr-${{totalFilasGlobal}}" value="0" oninput="calcularPlanSistemico(${{planIdx}})" onfocus="this.select()"
-                       style="width: 65px; text-align: center; padding: 4px; font-weight: 700; font-size: 15px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #475569; outline: none;" />
+                       style="width: 65px; text-align: center; padding: 4px; font-weight: 700; font-size: 20px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #475569; outline: none;" />
             </td>
-            <td style="text-align: center; padding: 4px; vertical-align: middle; background: #d3f0e5;">
+            <!-- 🟢 FONDO BLANCO RESTAURADO EN UNIDADES ADICIONALES -->
+            <td style="text-align: center; padding: 4px; vertical-align: middle; background: #ffffff;">
                 <span id="sis-res-${{totalFilasGlobal}}" class="res-adic-sis" style="font-weight: 800; font-size: 22px; color: #008B8B; -webkit-font-smoothing: antialiased;">0</span>
             </td>
         `;
 
         ultimaFilaAnterior.after(nuevaTr);
     }}
+
+    
 
     function quitarFilaPlanSis(planNom, planIdx) {{
         const filasExistentes = document.querySelectorAll(`.fila-plan-sistemico[data-plan-idx="${{planIdx}}"]`);
