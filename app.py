@@ -1721,72 +1721,108 @@ PLANES_SISTEMICO = [
    "CONTINGENCIA TUZAMAPA", "CONTINGENCIA XICO"
 ]
 
+
+PLANES_SISTEMICO = [
+   "ACTOPAN", "⚠️ CENTRO 1", "⚠️️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
+   "TEZUITLAN", "TLALTETELA", "TRAPICHE", "TUZAMAPA", "XICO", "CONTINGENCIA CENTRO NODO", 
+   "CONTINGENCIA TUZAMAPA", "CONTINGENCIA XICO"
+]
+
+
+# --- TABLA DE FLOTA DISPONIBLE EN RUTEO SISTÉMICO (TAB 4) ---
+def gen_master_rows_sistemico():
+    rows = ""
+    for idx, (nombre, spr) in enumerate(CATALOGO_SISTEMICO.items()):
+        rows += f'''
+        <tr class="master-row-sis" style="height: 32px; border-bottom: 1px solid #e2e8f0;">
+            <td class="edit-name" style="font-weight: bold; text-align: left; padding-left: 10px; color: #25282b;">
+                {nombre}
+            </td>
+            <td class="edit-spr-max" style="text-align: center; color: #64748b; font-weight: 600;">
+                {spr[1]}
+            </td>
+            <td contenteditable="true" class="f-stock" oninput="sincronizarTotalesSistemico()" onfocus="this.select()"
+                style="text-align: center; background-color: #fef08a; font-weight: 800; font-size: 15px; color: #0f172a; border-radius: 4px;">
+                0
+            </td>
+            <td class="f-ruteadas" style="text-align: center; font-weight: bold; color: #0f766e;">
+                0
+            </td>
+            <td class="f-left" style="text-align: center; font-weight: bold; color: #dc2626;">
+                0
+            </td>
+        </tr>
+        '''
+    return rows
+
+
 def gen_tabla_sistemico_planes():
     html = '''
-    <div style="max-width: 950px; margin: 0 auto; background: #ffffff; padding: 20px 24px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0,0,0,0.04); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+    <div style="max-width: 980px; margin: 0 auto; background: #ffffff; padding: 20px 24px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0,0,0,0.04); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
         <div style="font-size: 17px; font-weight: 700; color: #111111; margin-bottom: 16px; border-bottom: 1.5px solid #0f766e; padding-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
             <span>📋 Planificación de Ruteo Sistémico por Plan</span>
-            <span style="font-size: 12px; color: #0f766e; font-weight: 600;">Cálculo de IDs Dropeados ÷ SPR Logis</span>
+            <span style="font-size: 12px; color: #0f766e; font-weight: 600;">Cálculo de IDs Dropeados (Unificado por Plan) ÷ SPR Logis</span>
         </div>
 
-        <table style="width: 100%; border-collapse: collapse; color: #222222; font-size: 14px;">
+        <table style="width: 100%; border-collapse: collapse; color: #222222; font-size: 14px; table-layout: fixed;">
             <thead>
                 <tr style="height: 38px; background: #f8fafc; color: #475569; font-weight: 700; border-bottom: 2px solid #cbd5e1; font-size: 13px; text-transform: uppercase;">
-                    <th style="padding: 8px; text-align: center; width: 20%; border-right: 1px solid #e2e8f0;">PLAN</th>
-                    <th style="padding: 8px; text-align: left; width: 35%; border-right: 1px solid #e2e8f0;">UNIDAD</th>
-                    <th style="padding: 8px; text-align: center; width: 15%; border-right: 1px solid #e2e8f0;">SPR LOGIS</th>
-                    <th style="padding: 8px; text-align: center; width: 15%; border-right: 1px solid #e2e8f0;">IDS DROPEADOS</th>
-                    <th style="padding: 8px; text-align: center; width: 15%;">UNIDADES ADICIONALES</th>
+                    <th style="padding: 8px; text-align: center; width: 18%; border-right: 1px solid #e2e8f0;">PLAN</th>
+                    <th style="padding: 8px; text-align: center; width: 16%; border-right: 1px solid #e2e8f0;">IDS DROPEADOS</th>
+                    <th style="padding: 8px; text-align: left; width: 34%; border-right: 1px solid #e2e8f0;">UNIDAD</th>
+                    <th style="padding: 8px; text-align: center; width: 14%; border-right: 1px solid #e2e8f0;">SPR LOGIS</th>
+                    <th style="padding: 8px; text-align: center; width: 18%;">UNIDADES ADICIONALES</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tbody-sistemico-planes">
     '''
 
     fila_global_idx = 0
     for p_idx, plan_nom in enumerate(PLANES_SISTEMICO):
-        num_filas = 6 if plan_nom == "⚠️ CENTRO 1" else 4
+        # Filas iniciales por defecto: 4 para Centro 1, 2 para los demás para ahorrar espacio
+        num_filas = 4 if plan_nom == "⚠️ CENTRO 1" else 2
 
         for r_idx in range(num_filas):
             idx = fila_global_idx
-            
-            # Borde inferior más grueso al terminar las filas de cada plan
             border_bottom = "2px solid #cbd5e1" if r_idx == num_filas - 1 else "1px solid #f1f5f9"
             
             html += f'''
-            <tr class="fila-plan-sistemico" data-plan="{plan_nom}" id="sis-tr-{idx}" style="border-bottom: {border_bottom}; height: 50px;">
+            <tr class="fila-plan-sistemico" data-plan="{plan_nom}" data-plan-idx="{p_idx}" id="sis-tr-{idx}" style="border-bottom: {border_bottom}; height: 48px;">
             '''
 
-            # Celda con el nombre del Plan (rowspan solo en la primera fila del bloque)
+            # Celdas unificadas para el PLAN e IDS DROPEADOS (rowspan solo en la primera fila)
             if r_idx == 0:
                 html += f'''
-                <td rowspan="{num_filas}" style="background: #f8fafc; font-weight: 800; font-size: 14px; color: #0f172a; text-align: center; vertical-align: middle; border-right: 1.5px solid #cbd5e1; border-bottom: 2px solid #cbd5e1; padding: 6px;">
-                    {plan_nom}
+                <td rowspan="{num_filas}" class="td-plan-name" id="td-plan-nom-{p_idx}" style="background: #f8fafc; font-weight: 800; font-size: 14px; color: #0f172a; text-align: center; vertical-align: middle; border-right: 1.5px solid #cbd5e1; border-bottom: 2px solid #cbd5e1; padding: 6px;">
+                    <div>{plan_nom}</div>
+                    <div style="margin-top: 6px; display: flex; gap: 4px; justify-content: center;">
+                        <button onclick="agregarFilaPlanSis('{plan_nom}', {p_idx})" title="Agregar espacio a este plan" style="cursor: pointer; background: #ccfbf1; color: #0d9488; border: 1px solid #99f6e4; font-weight: 800; border-radius: 4px; padding: 2px 6px; font-size: 12px;">+ fila</button>
+                        <button onclick="quitarFilaPlanSis('{plan_nom}', {p_idx})" title="Quitar última fila de este plan" style="cursor: pointer; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; font-weight: 800; border-radius: 4px; padding: 2px 6px; font-size: 12px;">- fila</button>
+                    </div>
+                </td>
+                <td rowspan="{num_filas}" class="td-plan-drop" id="td-plan-drop-{p_idx}" style="background: #f0fdfa; text-align: center; vertical-align: middle; border-right: 1.5px solid #cbd5e1; border-bottom: 2px solid #cbd5e1; padding: 6px;">
+                    <input type="number" class="sis-plan-drop-in" id="sis-drop-plan-{p_idx}" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()" value="0" placeholder="0"
+                           style="width: 75px; text-align: center; padding: 5px; font-weight: 800; font-size: 16px; border: 1.5px solid #0f766e; background: #ffffff; color: #0f766e; outline: none; border-radius: 6px;" />
                 </td>
                 '''
 
             html += f'''
-                <!-- 2. Búsqueda con sugerencias -->
-                <td style="padding: 6px 10px; text-align: left; vertical-align: middle; position: relative; border-right: 1px solid #f1f5f9;">
-                    <input type="text" class="edit-name-sis" id="sis-nombre-{idx}" oninput="buscarCoincidenciasUnidad(this, {idx}); calcularFilaPlanSistemico({idx});" onkeydown="navegarSugerenciasUnidad(event, {idx})" onfocus="buscarCoincidenciasUnidad(this, {idx})" placeholder="Buscar unidad..." autocomplete="off"
-                           style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 14px; color: #1e293b; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 4px 6px; border-radius: 4px;" />
-                    <div id="sis-sug-{idx}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 90%; left: 10px; right: 10px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 150px; overflow-y: auto;"></div>
+                <!-- Búsqueda con sugerencias por fila -->
+                <td style="padding: 4px 8px; text-align: left; vertical-align: middle; position: relative; border-right: 1px solid #f1f5f9;">
+                    <input type="text" class="edit-name-sis" id="sis-nombre-{idx}" oninput="buscarCoincidenciasUnidad(this, {idx}); calcularPlanSistemico({p_idx});" onkeydown="navegarSugerenciasUnidad(event, {idx})" onfocus="buscarCoincidenciasUnidad(this, {idx})" placeholder="Buscar unidad..." autocomplete="off"
+                           style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 14px; color: #1e293b; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 3px 6px; border-radius: 4px;" />
+                    <div id="sis-sug-{idx}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 90%; left: 8px; right: 8px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 150px; overflow-y: auto;"></div>
                 </td>
 
-                <!-- 3. SPR Logis Editable -->
-                <td style="text-align: center; padding: 6px; vertical-align: middle; border-right: 1px solid #f1f5f9;">
-                    <input type="number" id="sis-spr-{idx}" value="0" oninput="calcularFilaPlanSistemico({idx})" onfocus="this.select()"
-                           style="width: 65px; text-align: center; padding: 4px; font-weight: 600; font-size: 14px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #64748b; outline: none;" />
+                <!-- SPR Logis Editable -->
+                <td style="text-align: center; padding: 4px; vertical-align: middle; border-right: 1px solid #f1f5f9;">
+                    <input type="number" id="sis-spr-{idx}" value="0" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()"
+                           style="width: 65px; text-align: center; padding: 3px; font-weight: 600; font-size: 14px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #64748b; outline: none;" />
                 </td>
 
-                <!-- 4. IDs Dropeados Editable -->
-                <td style="text-align: center; padding: 6px; vertical-align: middle; border-right: 1px solid #f1f5f9;">
-                    <input type="number" id="sis-drop-{idx}" value="0" oninput="calcularFilaPlanSistemico({idx})" onfocus="this.select()" placeholder="0"
-                           style="width: 75px; text-align: center; padding: 4px; font-weight: 700; font-size: 15px; border: none; border-bottom: 1.5px solid #0f766e; background: #f0fdfa; color: #0f766e; outline: none; border-radius: 4px;" />
-                </td>
-
-                <!-- 5. Resultado Unidades Adicionales -->
-                <td style="text-align: center; padding: 6px; vertical-align: middle;">
-                    <span id="sis-res-{idx}" class="res-adic-sis" style="font-weight: 800; font-size: 20px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
+                <!-- Resultado Unidades Adicionales -->
+                <td style="text-align: center; padding: 4px; vertical-align: middle;">
+                    <span id="sis-res-{idx}" class="res-adic-sis" style="font-weight: 800; font-size: 19px; color: #16a34a; -webkit-font-smoothing: antialiased;">0</span>
                 </td>
             </tr>
             '''
@@ -3408,7 +3444,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                             </div>
                         </div>
 
-                        <!-- Celdas de Entrada (Sin scroll horizontal) -->
+                        <!-- Celdas de Entrada -->
                         <div id="contenedor-celdas-2pct" style="display: flex; flex-direction: column; gap: 8px; max-height: 160px; overflow-x: hidden; overflow-y: auto; padding-right: 2px;">
                             <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 1"
                                    style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
@@ -3435,7 +3471,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
                 <!-- RECUADRO 2: DATO DEDICADO INDIVIDUAL + CONVERTIDOR DE ORH -->
                 <div style="flex: 1; display: flex; flex-direction: column; gap: 12px; justify-content: space-between;">
-                    <!-- Recuadro Dato 2 -->
                     <div style="background: #1e2022; padding: 14px 18px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
                         <div>
                             <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - TOTAL(+NODOS)</div>
@@ -3466,6 +3501,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             <!-- ⚡ NUEVA TABLA DE PLANES DE RUTEO SISTÉMICO -->
             {gen_tabla_sistemico_planes()}
         </div>
+        
         
         <div id="polys-9" class="p-content" style="display:none;">{gen_poligonos(u_C1_VACIA)}</div>
         <div id="polys-10" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX8)}</div>
