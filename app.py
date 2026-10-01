@@ -3518,46 +3518,45 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                 </div>
             </div>
 
-            <!-- ➗ NUEVA TARJETA: CALCULADORA DIVISORA (A / B = RESULTADO) -->
-            <div style="max-width: 950px; margin: 0 auto 30px auto; background: #ffffff; padding: 16px 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
-                    <div style="font-size: 11px; font-weight: 700; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">🧮 CALCULADORA</div>
-                    <div style="font-size: 11px; color: #64748b; font-weight: 600;"><strong style="color: #0f172a;"></strong></div>
+            <!-- ➗ NUEVA TARJETA: CALCULADORA DIVISORA (MÁS GRANDE Y COMPACTA) -->
+            <div style="max-width: 950px; margin: 0 auto 30px auto; background: #ffffff; padding: 14px 18px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #f1f5f9; padding-bottom: 6px;">
+                    <div style="font-size: 12px; font-weight: 800; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">🧮 CALCULADORA</div>
                 </div>
 
-                <div style="display: flex; gap: 15px; align-items: center;">
+                <div style="display: flex; gap: 6px; align-items: flex-end;">
                     <!-- Campo 1: Número Editable -->
-                    <div style="flex: 1;">
-                        <label style="font-size: 10px; color: #64748b; font-weight: 700; display: block; margin-bottom: 4px; text-align: center;">IDS</label>
+                    <div style="flex: 1.2;">
+                        <label style="font-size: 10px; color: #64748b; font-weight: 800; display: block; margin-bottom: 3px; text-align: center; letter-spacing: 0.5px;">NÚMERO A DIVIDIR</label>
                         <input type="number" id="calc-div-num1" class="no-spinners" oninput="calcularDivisionSistemico()" onfocus="this.select()" placeholder="Ej. 1000"
-                               style="width: 100%; box-sizing: border-box; padding: 8px; font-size: 18px; font-weight: 700; text-align: center; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 6px;" />
+                               style="width: 100%; box-sizing: border-box; padding: 10px 6px; font-size: 22px; font-weight: 800; text-align: center; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 8px; height: 48px;" />
                     </div>
 
-                    <div style="font-size: 20px; font-weight: 900; color: #94a3b8; padding-top: 16px;">÷</div>
+                    <div style="font-size: 22px; font-weight: 900; color: #64748b; padding-bottom: 10px; user-select: none;">÷</div>
 
-                    <!-- Campo 2: Divisor con Botones + y - -->
-                    <div style="flex: 1.2;">
-                        <label style="font-size: 10px; color: #64748b; font-weight: 700; display: block; margin-bottom: 4px; text-align: center;">SPR</label>
-                        <div style="display: flex; align-items: center; gap: 6px;">
+                    <!-- Campo 2: Divisor con Botones + y - agrupados -->
+                    <div style="flex: 1.4;">
+                        <label style="font-size: 10px; color: #64748b; font-weight: 800; display: block; margin-bottom: 3px; text-align: center; letter-spacing: 0.5px;">DIVISOR</label>
+                        <div style="display: flex; align-items: center; gap: 4px;">
                             <button onclick="pasoDivisorSistemico(-1)" title="Restar 1"
-                                    style="cursor: pointer; background: #f1f5f9; color: #dc2626; border: 1px solid #cbd5e1; font-weight: 800; border-radius: 6px; width: 36px; height: 38px; font-size: 18px; display: inline-flex; align-items: center; justify-content: center; outline: none;"
+                                    style="cursor: pointer; background: #f1f5f9; color: #dc2626; border: 1.5px solid #cbd5e1; font-weight: 900; border-radius: 8px; width: 42px; height: 48px; font-size: 22px; display: inline-flex; align-items: center; justify-content: center; outline: none; flex-shrink: 0;"
                                     onmouseenter="this.style.background='#fee2e2';" onmouseleave="this.style.background='#f1f5f9';">-</button>
 
                             <input type="number" id="calc-div-num2" class="no-spinners" oninput="calcularDivisionSistemico()" onfocus="this.select()" value="1" placeholder="Divisor"
-                                   style="width: 100%; box-sizing: border-box; padding: 8px; font-size: 18px; font-weight: 700; text-align: center; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 6px;" />
+                                   style="width: 100%; box-sizing: border-box; padding: 10px 4px; font-size: 22px; font-weight: 800; text-align: center; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 8px; height: 48px;" />
 
                             <button onclick="pasoDivisorSistemico(1)" title="Sumar 1"
-                                    style="cursor: pointer; background: #f1f5f9; color: #0f766e; border: 1px solid #cbd5e1; font-weight: 800; border-radius: 6px; width: 36px; height: 38px; font-size: 18px; display: inline-flex; align-items: center; justify-content: center; outline: none;"
+                                    style="cursor: pointer; background: #f1f5f9; color: #0f766e; border: 1.5px solid #cbd5e1; font-weight: 900; border-radius: 8px; width: 42px; height: 48px; font-size: 22px; display: inline-flex; align-items: center; justify-content: center; outline: none; flex-shrink: 0;"
                                     onmouseenter="this.style.background='#ccfbf1';" onmouseleave="this.style.background='#f1f5f9';">+</button>
                         </div>
                     </div>
 
-                    <div style="font-size: 20px; font-weight: 900; color: #94a3b8; padding-top: 16px;">=</div>
+                    <div style="font-size: 22px; font-weight: 900; color: #64748b; padding-bottom: 10px; user-select: none;">=</div>
 
                     <!-- Campo 3: Resultado No Editable -->
-                    <div style="flex: 1; background: #1e2022; padding: 10px 14px; border-radius: 8px; border: 1.5px solid #34383d; text-align: center;">
-                        <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold;">RESULTADO:</span>
-                        <span id="calc-div-res" style="font-size: 24px; font-weight: 900; color: #66CDAA;">0</span>
+                    <div style="flex: 1.2; background: #1e2022; padding: 4px 10px; border-radius: 8px; border: 1.5px solid #34383d; text-align: center; height: 48px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;">
+                        <span style="font-size: 9px; color: #aaaaaa; display: block; font-weight: 800; letter-spacing: 0.5px;">RESULTADO:</span>
+                        <span id="calc-div-res" style="font-size: 28px; font-weight: 900; color: #20B2AA; line-height: 1;">0</span>
                     </div>
                 </div>
             </div>
