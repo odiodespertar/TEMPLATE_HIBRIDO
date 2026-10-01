@@ -191,416 +191,113 @@ table {
 }
 
 
-
 /* ============================================================
-   🤖 ASISTENTE DE RUTEO — VENTANA FLOTANTE
+   🟨 ASISTENTE DE RUTEO — ESTILO MERCADO LIBRE / ROUTING PRO
    ============================================================ */
 
+/* Contenedor Flotante */
 div[data-testid="stExpander"] {
     position: fixed !important;
-
-    bottom: 3px !important;
-    right: 15px !important;
-    left: auto !important;
-    top: auto !important;
-
-    width: 550px !important;
-    max-width: 550px !important;
-
+    bottom: 12px !important;
+    right: 18px !important;
+    width: 560px !important;
+    max-width: 560px !important;
     margin: 0 !important;
     z-index: 999999 !important;
-
-    border-radius: 20px !important;
+    border-radius: 18px !important;
     overflow: hidden !important;
-
     background: #f8fafc !important;
-
-    border: 1px solid #cbd5e1 !important;
-
-    box-shadow:
-        0 20px 45px rgba(15, 23, 42, 0.18),
-        0 4px 12px rgba(15, 23, 42, 0.10) !important;
+    border: 1.5px solid #e2e8f0 !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18), 0 4px 10px rgba(0, 0, 0, 0.08) !important;
 }
 
-
-/* CONTENIDO INTERNO */
-
-div[data-testid="stExpander"] > div[role="group"] {
-
-    max-height: calc(90vh - 60px) !important;
-
-    overflow-x: hidden !important;
-
-    overflow-y: hidden !important;
-
-}
-
-
-/* ============================================================
-   📱 PANTALLAS PEQUEÑAS
-   ============================================================ */
-
-@media (max-width: 700px) {
-
-    div[data-testid="stExpander"] {
-        width: calc(100vw - 20px) !important;
-        max-width: calc(100vw - 20px) !important;
-
-        right: 10px !important;
-        bottom: 10px !important;
-    }
-}
-
-
-/* ============================================================
-   🤖 ENCABEZADO DEL ASISTENTE (RESPLANDOR POTENCIADO)
-   ============================================================ */
-
+/* Header Estilo Mercado Libre */
 div[data-testid="stExpander"] summary {
-    background: linear-gradient(
-        135deg,
-        #030712,
-        #2f3030
-    ) !important;
-
-    padding: 15px 18px !important;
-    border-radius: 20px !important;
-    min-height: 54px !important;
-    
-    border: 2px solid #2dd4bf !important; /* 👈 Grosor del borde */
-
-    /* 🟢 RESPLANDOR AZUL/TURQUESA MÁS POTENTE */
-    box-shadow:
-        0 0 8px #2dd4bf,
-        0 0 22px rgba(45, 212, 191, 0.7),
-        0 0 37px rgba(45, 212, 191, 0.4),
-        inset 0 0 12px rgba(45, 212, 191, 0.3) !important;
+    background: linear-gradient(135deg, #FFE600 0%, #FFCC00 100%) !important;
+    padding: 12px 18px !important;
+    border-radius: 16px !important;
+    min-height: 52px !important;
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(255, 214, 0, 0.4) !important;
 }
 
-
-/* ============================================================
-   🤖 TEXTO DEL ENCABEZADO - RESPLANDOR SCI-FI SUTIL
-   ============================================================ */
-
+/* Texto del Header */
 div[data-testid="stExpander"] summary,
 div[data-testid="stExpander"] summary p,
-div[data-testid="stExpander"] summary span,
-div[data-testid="stExpander"] summary div {
-
-    color: #ffffff !important; 
-    -webkit-text-fill-color: #ffffff !important;
-
-    font-weight: 800 !important;
+div[data-testid="stExpander"] summary span {
+    color: #2D3277 !important; /* Azul corporativo MELI */
+    -webkit-text-fill-color: #2D3277 !important;
+    font-weight: 900 !important;
     font-size: 1.05rem !important;
-    letter-spacing: 1px !important;
-    
-    opacity: 1 !important;
-    mix-blend-mode: normal !important;
-
-    /* 🟢 Resplandor suave equilibrado */
-    text-shadow: 
-        0 0 3px rgba(255, 255, 255, 0.8),
-        0 0 8px rgba(45, 212, 191, 0.4) !important;
+    letter-spacing: 0.3px !important;
 }
 
-
-/* ICONO */
-
+/* Icono del expander */
 div[data-testid="stExpander"] summary svg {
-    color: #2dd4bf !important;
-    fill: #2dd4bf !important;
-    filter: drop-shadow(0 0 8px #2dd4bf) !important;
+    color: #2D3277 !important;
+    fill: #2D3277 !important;
 }
 
-/* ============================================================
-   💬 MENSAJE DEL USUARIO
-   ============================================================ */
+/* Tarjeta Neomórfica MELI */
+.meli-asistente-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 14px 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    margin-bottom: 12px;
+}
 
+.meli-pill-tag {
+    background: #fff3e0;
+    color: #e65100;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 12px;
+    display: inline-block;
+}
+
+.meli-stat-box {
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 8px;
+    padding: 6px 10px;
+    text-align: center;
+}
+
+/* Globos de Chat */
 div[data-testid="stChatMessage"]:has(div[aria-label="user"]),
 div[data-testid="stChatMessage"]:has([data-testid*="User"]) {
-
-    background-color: #FFD700 !important;
-
-    border-radius: 10px !important;
-
-    padding: 8px !important;
-
+    background-color: #2D3277 !important; /* Azul Meli para el usuario */
+    border-radius: 12px 12px 2px 12px !important;
+    padding: 10px 14px !important;
     margin: 6px 0 !important;
-
-    box-shadow:
-        0 2px 5px rgba(0,0,0,0.20) !important;
 }
-
 
 div[data-testid="stChatMessage"]:has(div[aria-label="user"]) *,
 div[data-testid="stChatMessage"]:has([data-testid*="User"]) * {
-
-    color: #333333 !important;
-    -webkit-text-fill-color: #333333 !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
 }
-
-
-/* ============================================================
-   🤖 MENSAJE DEL ASISTENTE
-   IMPORTANTE:
-   EL MENSAJE SIEMPRE ES BLANCO Y EL TEXTO OSCURO
-   ============================================================ */
 
 div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]),
 div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) {
-
     background: #ffffff !important;
-
-    color: #334155 !important;
-
-    color-scheme: light !important;
-
-    border: 2px solid #FFD700 !important;
-
-    border-radius: 14px !important;
-
-    padding: 10px !important;
-
-    margin: 8px 0 !important;
-
-    box-shadow:
-        0 3px 10px rgba(15, 23, 42, 0.08) !important;
-}
-
-
-/* ============================================================
-   🔒 CONTENIDO DEL MENSAJE DEL ASISTENTE
-   ESTO EVITA QUE EL MODO OSCURO LO VUELVA BLANCO
-   ============================================================ */
-
-div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) p,
-div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) span,
-div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) div,
-div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) li,
-div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) label,
-
-div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) p,
-div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) span,
-div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) div,
-div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) li,
-div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) label {
-
-    color: #334155 !important;
-
-    -webkit-text-fill-color: #334155 !important;
-
-    text-shadow: none !important;
-}
-
-
-/* NEGRITAS */
-
-div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) strong,
-div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) b,
-div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) strong,
-div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) b {
-
     color: #1e293b !important;
+    border: 1.5px solid #FFE600 !important; /* Borde amarillo MELI */
+    border-radius: 12px 12px 12px 2px !important;
+    padding: 12px !important;
+    margin: 8px 0 !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04) !important;
+}
 
+div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) *,
+div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) * {
+    color: #1e293b !important;
     -webkit-text-fill-color: #1e293b !important;
 }
 
-
-/* ============================================================
-   🎯 BOTONES DEL CUESTIONARIO
-   SIEMPRE GRIS OSCURO
-   ============================================================ */
-
-div[data-testid="stExpander"] div[data-testid="stButton"] button,
-div[data-testid="stExpander"] div[data-testid="stButton"] button *,
-div[data-testid="stExpander"] div[data-testid="stButton"] button p,
-div[data-testid="stExpander"] div[data-testid="stButton"] button span,
-div[data-testid="stExpander"] div[data-testid="stButton"] button div {
-
-    color: #53637a !important;
-
-    -webkit-text-fill-color: #53637a !important;
-
-    text-shadow: none !important;
-}
-
-
-/* HOVER */
-
-div[data-testid="stExpander"] div[data-testid="stButton"] button:hover,
-div[data-testid="stExpander"] div[data-testid="stButton"] button:hover *,
-div[data-testid="stExpander"] div[data-testid="stButton"] button:hover p,
-div[data-testid="stExpander"] div[data-testid="stButton"] button:hover span,
-div[data-testid="stExpander"] div[data-testid="stButton"] button:hover div {
-
-    color: #334155 !important;
-
-    -webkit-text-fill-color: #334155 !important;
-}
-
-
-/* FOCUS / ACTIVE */
-
-div[data-testid="stExpander"] div[data-testid="stButton"] button:focus,
-div[data-testid="stExpander"] div[data-testid="stButton"] button:focus *,
-div[data-testid="stExpander"] div[data-testid="stButton"] button:focus-visible,
-div[data-testid="stExpander"] div[data-testid="stButton"] button:focus-visible *,
-div[data-testid="stExpander"] div[data-testid="stButton"] button:active,
-div[data-testid="stExpander"] div[data-testid="stButton"] button:active * {
-
-    color: #334155 !important;
-
-    -webkit-text-fill-color: #334155 !important;
-}
-
-
-/* DESHABILITADOS */
-
-div[data-testid="stExpander"] div[data-testid="stButton"] button:disabled,
-div[data-testid="stExpander"] div[data-testid="stButton"] button:disabled * {
-
-    color: #64748b !important;
-
-    -webkit-text-fill-color: #64748b !important;
-
-    opacity: 1 !important;
-}
-
-
-/* ============================================================
-   ☑️ CHECKBOXES
-   ============================================================ */
-
-div[data-testid="stExpander"] div[data-testid="stCheckbox"] label,
-div[data-testid="stExpander"] div[data-testid="stCheckbox"] label *,
-div[data-testid="stExpander"] div[data-testid="stCheckbox"] label p,
-div[data-testid="stExpander"] div[data-testid="stCheckbox"] label span {
-
-    color: #475569 !important;
-
-    -webkit-text-fill-color: #475569 !important;
-
-    text-shadow: none !important;
-}
-
-
-/* CHECKBOX HOVER */
-
-div[data-testid="stExpander"] div[data-testid="stCheckbox"] label:hover,
-div[data-testid="stExpander"] div[data-testid="stCheckbox"] label:hover *,
-div[data-testid="stExpander"] div[data-testid="stCheckbox"] label:focus *,
-div[data-testid="stExpander"] div[data-testid="stCheckbox"] label:active * {
-
-    color: #334155 !important;
-
-    -webkit-text-fill-color: #334155 !important;
-}
-
-
-/* ============================================================
-   ✨ TEXTO INDICATIVO
-   ============================================================ */
-
-div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p {
-
-    color: #334155 !important;
-
-    font-weight: 600 !important;
-}
-
-
-/* ============================================================
-   📌 BUSCADOR FIJO DEL ASISTENTE 
-   ============================================================ */
-
-div[data-testid="stExpander"] div[data-testid="stChatInput"] {
-    position: sticky !important;
-    bottom: 0 !important;
-    z-index: 99999 !important;
-    background: #f8fafc !important;
-    padding-top: 5px !important;
-    padding-bottom: 6px !important;
-}
-
-/* Área contenedor del input (Formulario) */
-div[data-testid="stExpander"] div[data-testid="stChatInput"] form {
-    background: #f8fafc !important;
-    border: 2px solid #0a0a0a !important; /* 👈 AQUÍ CAMBIAS EL COLOR DEL CONTORNO */
-    border-radius: 12px !important;       /* Redondeo de las esquinas */
-    box-shadow: 0 0 10px rgba(32, 178, 170, 0.3) !important; /* Resplandor sutil opcional */
-}
-
-/* Estado al hacer clic/focus en la caja de texto */
-div[data-testid="stExpander"] div[data-testid="stChatInput"] form:focus-within {
-    border-color: #0f766e !important;    /* Color del contorno al escribir */
-    box-shadow: 0 0 12px rgba(15, 118, 110, 0.5) !important;
-}
-
-/* Ajuste para MODO OSCURO si aplica */
-@media (prefers-color-scheme: dark) {
-    div[data-testid="stExpander"] div[data-testid="stChatInput"],
-    div[data-testid="stExpander"] div[data-testid="stChatInput"] form {
-        background: #171a1f !important;
-        border-color: #0a0a0a !important; /* 👈 Color del contorno en modo oscuro */
-    }
-}
-
-
-/* ============================================================
-   🌙 MODO OSCURO
-   EL PANEL EXTERIOR CAMBIA, PERO EL CHAT Y EL ENCABEZADO NO
-   ============================================================ */
-
-@media (prefers-color-scheme: dark) {
-    div[data-testid="stExpander"] {
-        background: #171a1f !important;
-        border: 1px solid #475569 !important;
-        box-shadow:
-            0 24px 55px rgba(0, 0, 0, 0.55),
-            0 5px 16px rgba(0, 0, 0, 0.35) !important;
-    }
-
-    div[data-testid="stExpander"] > div[role="group"] {
-        background: #171a1f !important;
-    }
-
-    /* 🟢 FORZAR TEXTO DEL ENCABEZADO BLANCO SÓLIDO EN MODO OSCURO */
-    div[data-testid="stExpander"] summary,
-    div[data-testid="stExpander"] summary p,
-    div[data-testid="stExpander"] summary span,
-    div[data-testid="stExpander"] summary div {
-        color: #ffffff !important;
-        -webkit-text-fill-color: #ffffff !important;
-        opacity: 1 !important;
-        text-shadow: none !important;
-    }
-
-    /* Texto regular fuera de las tarjetas */
-    div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p:not(summary p) {
-        color: #747778 !important;
-        -webkit-text-fill-color: #747778 !important;
-    }
-
-    /* Tarjeta */
-    .asistente-card {
-        background: linear-gradient(
-            135deg,
-            #1e293b,
-            #172f31
-        ) !important;
-
-        border: 1px solid #0f766e !important;
-        box-shadow:
-            0 8px 22px rgba(0, 0, 0, 0.30) !important;
-    }
-
-    .asistente-card-title {
-        color: #ccfbf1 !important;
-    }
-
-    .asistente-card-subtitle {
-        color: #94a3b8 !important;
-    }
 
 
     /* ========================================================
@@ -740,55 +437,56 @@ div[data-testid="stExpander"] div[data-testid="stChatInput"] form:focus-within {
 with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
 
     # ==========================================
-    # 🤖 TARJETA DE PRESENTACIÓN DEL ASISTENTE
+    # 🟨 TARJETA DE PRESENTACIÓN ESTILO ROUTING LM
     # ==========================================
     st.html("""
-    <div class="asistente-card" style="
-        border-radius: 14px;
-        padding: 14px 16px;
-        margin-bottom: 12px;
-    ">
-        <div style="
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        ">
-            <div style="
-                width: 42px;
-                height: 42px;
-                min-width: 42px;
-                border-radius: 12px;
-                background: linear-gradient(
-                    135deg,
-                    #0f766e,
-                    #14b8a6
-                );
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 22px;
-                box-shadow: 0 4px 10px rgba(15,118,110,0.20);
-            ">
-                🤖
-            </div>
-            <div>
-                <div class="asistente-card-title" style="
-                    font-size: 15px;
-                    font-weight: 800;
-                    line-height: 1.2;
+    <div class="meli-asistente-card">
+        <!-- Banner informativo estilo avisos de plataforma -->
+        <div style="background: #eef2ff; border-left: 4px solid #2D3277; padding: 8px 12px; border-radius: 6px; font-size: 11px; color: #1e1b4b; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+            <span>ℹ️ <b>Monitor Logístico Active:</b> Generación de Cierre & prioridades SVC</span>
+            <span class="meli-pill-tag">ROUTING 2026</span>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="
+                    width: 44px;
+                    height: 44px;
+                    border-radius: 10px;
+                    background: #FFE600;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 22px;
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
                 ">
-                    Asistente de Ruteo
+                    🤝
                 </div>
-                <div class="asistente-card-subtitle" style="
-                    font-size: 11px;
-                    margin-top: 4px;
-                ">
-                    SVC · Prioridades · Indicaciones · Resúmenes
+                <div>
+                    <div style="font-size: 15px; font-weight: 900; color: #2D3277; line-height: 1.1;">
+                        Asistente de Ruteo
+                    </div>
+                    <div style="font-size: 11px; color: #64748b; font-weight: 700; margin-top: 3px;">
+                        Planificación & Resúmenes de Turno
+                    </div>
+                </div>
+            </div>
+
+            <!-- Métricas miniatura inspiradas en el panel superior -->
+            <div style="display: flex; gap: 6px;">
+                <div class="meli-stat-box">
+                    <span style="font-size: 9px; color: #64748b; display: block; font-weight: 800;">ESTADO</span>
+                    <span style="font-size: 11px; color: #16a34a; font-weight: 900;">Online</span>
+                </div>
+                <div class="meli-stat-box">
+                    <span style="font-size: 9px; color: #64748b; display: block; font-weight: 800;">LOGIS</span>
+                    <span style="font-size: 11px; color: #2D3277; font-weight: 900;">MLM</span>
                 </div>
             </div>
         </div>
     </div>
     """)
+    
 
     st.markdown(
         "<div style='font-size:13px; color:#475569; font-weight:600; margin-bottom:8px;'>"
@@ -1004,6 +702,35 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                             st.session_state.paso_resumen = 4.8
                             st.rerun()
 
+
+                    # PASO 4.6: Asignación Incorrecta a Polígonos (NUEVO)
+                    elif paso == 4.6:
+                        st.write("👇 **¿La herramienta asignó unidades a polígonos que no corresponden?**")
+                        if st.button("1️⃣ De nuevo la herramienta asignó Rentals a polígonos foráneos.", use_container_width=True):
+                            st.session_state.data_resumen["asignacion_error"] = "👉 De nuevo la herramienta asignó Rentals a polígonos foráneos."
+                            st.session_state.paso_historial.append(4.6)
+                            st.session_state.paso_resumen = 4.8
+                            st.rerun()
+                        
+                        txt_custom = st.text_input("2️⃣ Escribe otra unidad/error (ej. La herramienta asignó Cars a planes foráneos):", key="in_error_custom")
+                        if st.button("Guardar asignación personalizada ➡️", use_container_width=True):
+                            if txt_custom.strip():
+                                msg_final_err = txt_custom.strip() if txt_custom.strip().startswith("👉") else f"👉 {txt_custom.strip()}"
+                                st.session_state.data_resumen["asignacion_error"] = msg_final_err
+                            else:
+                                st.session_state.data_resumen["asignacion_error"] = ""
+                            st.session_state.paso_historial.append(4.6)
+                            st.session_state.paso_resumen = 4.8
+                            st.rerun()
+
+                        if st.button("3️⃣ No hubo errores de asignación", use_container_width=True):
+                            st.session_state.data_resumen["asignacion_error"] = ""
+                            st.session_state.paso_historial.append(4.6)
+                            st.session_state.paso_resumen = 4.8
+                            st.rerun()
+
+
+                    
                     # PASO 4.8: Uso de la Flota
                     elif paso == 4.8:
                         st.write("👇 **¿Se utilizó la flota en su totalidad?**")
@@ -1095,8 +822,8 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                                 lineas_html.append(f"{texto_bulk}<br>")
                             if texto_dropeo:
                                 lineas_html.append(f"{texto_dropeo}<br>")
-                            if texto_alchichica:
-                                lineas_html.append(f"{texto_alchichica}<br>")
+                            if texto_error_asig:
+                                lineas_html.append(f"{texto_error_asig}<br>")
                             if texto_error_asig:
                                 lineas_html.append(f"{texto_error_asig}<br>")
                             if texto_flota:
