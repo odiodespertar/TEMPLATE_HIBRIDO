@@ -3529,7 +3529,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                     <!-- Campo 1: Número Editable -->
                     <div style="flex: 1;">
                         <label style="font-size: 10px; color: #64748b; font-weight: 700; display: block; margin-bottom: 4px; text-align: center;">NÚMERO A DIVIDIR</label>
-                        <input type="number" id="calc-div-num1" oninput="calcularDivisionSistemico()" onfocus="this.select()" placeholder="Ej. 1000"
+                        <input type="number" id="calc-div-num1" class="no-spinners" oninput="calcularDivisionSistemico()" onfocus="this.select()" placeholder="Ej. 1000"
                                style="width: 100%; box-sizing: border-box; padding: 8px; font-size: 18px; font-weight: 700; text-align: center; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 6px;" />
                     </div>
 
@@ -3543,7 +3543,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                                     style="cursor: pointer; background: #f1f5f9; color: #dc2626; border: 1px solid #cbd5e1; font-weight: 800; border-radius: 6px; width: 36px; height: 38px; font-size: 18px; display: inline-flex; align-items: center; justify-content: center; outline: none;"
                                     onmouseenter="this.style.background='#fee2e2';" onmouseleave="this.style.background='#f1f5f9';">-</button>
 
-                            <input type="number" id="calc-div-num2" oninput="calcularDivisionSistemico()" onfocus="this.select()" value="1" placeholder="Divisor"
+                            <input type="number" id="calc-div-num2" class="no-spinners" oninput="calcularDivisionSistemico()" onfocus="this.select()" value="1" placeholder="Divisor"
                                    style="width: 100%; box-sizing: border-box; padding: 8px; font-size: 18px; font-weight: 700; text-align: center; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 6px;" />
 
                             <button onclick="pasoDivisorSistemico(1)" title="Sumar 1"
