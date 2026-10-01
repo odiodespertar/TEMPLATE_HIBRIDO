@@ -4003,46 +4003,31 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
 
     function cambiarCiclo(valorTab) {{
-        // 1. Ocultar todas las tablas de disponibilidad superiores
-        document.querySelectorAll('.t-content').forEach(el => {{
-            el.style.display = 'none';
-        }});
-
-        // 2. Ocultar todos los bloques de polígonos
-        document.querySelectorAll('.p-content').forEach(el => {{
-            el.style.display = 'none';
-        }});
+        document.querySelectorAll('.t-content').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.p-content').forEach(el => el.style.display = 'none');
 
         currentTab = parseInt(valorTab);
 
-        // 3. Control de visibilidad para SISTÉMICO (ID 4)
         const tituloPoligonos = document.getElementById('titulo-planificacion-poligonos');
+        const botoneraSuperior = document.getElementById('fleet-drag-handle');
+
+        // Ocultar siempre la botonera
+        if (botoneraSuperior) botoneraSuperior.style.display = 'none !important';
 
         if (currentTab === 4) {{
-            // Oculta la tabla superior y el encabezado de polígonos
             const tablaExt = document.getElementById('tab-4');
             if (tablaExt) tablaExt.style.display = 'none';
             if (tituloPoligonos) tituloPoligonos.style.display = 'none';
-
-            poblarSelectExtendido();
         }} else {{
-            // Muestra la tabla superior activa y restaura el encabezado
             const tablaActiva = document.getElementById('tab-' + valorTab);
-            if (tablaActiva) {{
-                tablaActiva.style.display = 'block';
-            }}
+            if (tablaActiva) tablaActiva.style.display = 'block';
             if (tituloPoligonos) tituloPoligonos.style.display = 'block';
         }}
 
-        // 4. Mostrar el panel correspondiente
         const polyActivo = document.getElementById('polys-' + valorTab);
-        if (polyActivo) {{
-            polyActivo.style.display = 'block';
-        }}
+        if (polyActivo) polyActivo.style.display = 'block';
 
-        if (typeof recalc === 'function') {{
-            recalc();
-        }}
+        if (typeof recalc === 'function') recalc();
     }}
     
 
