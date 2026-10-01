@@ -4159,7 +4159,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         }}
         if (typeof recalc === 'function') recalc();
 
-        // 3. 🟢 EJECUTAR LIMPIEZA COMPLETA DE SISTÉMICO (PATIO, DROPEO Y ESTADO)
+        // 3. 🟢 EJECUTAR LIMPIEZA COMPLETA DE SISTÉMICO
         limpiarSistemico();
         
         // 4. Cerrar menú lateral si está abierto
@@ -4167,56 +4167,61 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             toggleMenuLateralVisual();
         }}
     }}
-    
 
-
-    // 🟢 FUNCIÓN DE LIMPIEZA COMPLETA DE SISTÉMICO
+    // 🟢 LIMPIEZA TOTAL Y DEFINITIVA DE PANTALLA SISTÉMICO
     function limpiarSistemico() {{
-        // A. LIMPIAR MINITABLA NEGRA DE PATIO (FLOTA FLOTANTE)
-        const tbodyFlota = document.getElementById("tbody-flota-flotante-sis");
-        if (tbodyFlota) {{
-            tbodyFlota.querySelectorAll("tr").forEach((row) => {{
-                let inputNombre = row.querySelector('.edit-name-flota-sis');
-                let inputDisp = row.querySelector('.sis-disp-flota-in');
-                let spanSpr = row.querySelector('span[id^="sis-flota-spr-"]');
-                let tdRest = row.querySelector('td[id^="sis-rest-flota-"]');
+        const eventoInput = new Event('input', {{ bubbles: true }});
 
-                if (inputNombre) inputNombre.value = '';
-                if (inputDisp) inputDisp.value = '0';
-                if (spanSpr) spanSpr.innerText = '0';
-                if (tdRest) {{
-                    tdRest.innerText = '0';
-                    tdRest.style.color = '#2dd4bf';
-                }}
-            }});
-        }}
-
-        // B. LIMPIAR COLUMNA DROPEO (VOL. TOTAL) EN TODOS LOS PLANES
+        // 1. LIMPIAR CAMPOS DE DROPEO (VOL. TOTAL) EN TODOS LOS PLANES
         document.querySelectorAll('.sis-plan-drop-in').forEach(input => {{
             input.value = '0';
+            input.dispatchEvent(eventoInput);
         }});
 
-        // C. LIMPIAR CELDAS DE CADA FILA (# USADAS, SPR Y UNIDAD)
+        // 2. LIMPIAR CELDAS DE LA TABLA DE PLANES (# USADAS, SPR, UNIDADES)
         document.querySelectorAll('.fila-plan-sistemico').forEach(fila => {{
             let idx = fila.id.replace("sis-tr-", "");
 
             let elNombre = document.getElementById(`sis-nombre-${{idx}}`);
-            let elSpr = document.getElementById(`sis-spr-${{idx}}`);
-            let elRes = document.getElementById(`sis-res-${{idx}}`);
+            if (elNombre) {{
+                elNombre.value = '';
+                elNombre.dispatchEvent(eventoInput);
+            }}
 
-            if (elNombre) elNombre.value = '';
-            if (elSpr) elSpr.value = '0';
+            let elSpr = document.getElementById(`sis-spr-${{idx}}`);
+            if (elSpr) {{
+                elSpr.value = '0';
+                elSpr.dispatchEvent(eventoInput);
+            }}
+
+            let elRes = document.getElementById(`sis-res-${{idx}}`);
             if (elRes) elRes.innerText = '0';
         }});
 
-        // D. RESETEAR TODAS LAS CELDAS DE LA COLUMNA ESTADO A "VACÍO"
+        // 3. RESTABLECER OBLIGATORIAMENTE CELDAS DE ESTADO A "VACÍO"
         document.querySelectorAll('.td-plan-vacio').forEach(vacioCell => {{
             vacioCell.innerText = "VACÍO";
             vacioCell.style.background = "#ededed";
             vacioCell.style.color = "#808080";
         }});
 
-        // E. REINICIAR CALCULADORAS DE 2% Y ORH
+        // 4. LIMPIAR MINITABLA NEGRA FLOTANTE DE PATIO (DISPONIBLE Y RESTANTE)
+        document.querySelectorAll('.row-flota-sis').forEach((row, idx) => {{
+            let inputNombre = document.getElementById(`sis-flota-nombre-${{idx}}`) || row.querySelector('.edit-name-flota-sis');
+            let inputDisp = document.getElementById(`sis-disp-flota-${{idx}}`) || row.querySelector('.sis-disp-flota-in');
+            let spanSpr = document.getElementById(`sis-flota-spr-${{idx}}`) || row.querySelector('span[id^="sis-flota-spr-"]');
+            let tdRest = document.getElementById(`sis-rest-flota-${{idx}}`) || row.querySelector('td[id^="sis-rest-flota-"]');
+
+            if (inputNombre) inputNombre.value = '';
+            if (inputDisp) inputDisp.value = '0';
+            if (spanSpr) spanSpr.innerText = '0';
+            if (tdRest) {{
+                tdRest.innerText = '0';
+                tdRest.style.color = '#2dd4bf';
+            }}
+        }});
+
+        // 5. REINICIAR CALCULADORAS DE 2% Y CONVERTIDOR DE ORH
         const contenedor2pct = document.getElementById('contenedor-celdas-2pct');
         if (contenedor2pct) {{
             contenedor2pct.innerHTML = `
@@ -4241,6 +4246,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         if (inOrhMin) inOrhMin.value = '';
         if (elResOrh) elResOrh.innerText = '00:00';
 
+        // 6. RE-SINCRONIZAR PATIO TRAS DISPARAR LOS EVENTOS
         if (typeof sincronizarTotalesSistemico === 'function') {{
             sincronizarTotalesSistemico();
         }}
