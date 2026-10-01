@@ -4129,11 +4129,11 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     }}
     
 
-    // 🟢 FUNCIÓN PRINCIPAL DE LIMPIEZA CORREGIDA
+    // 🟢 FUNCIÓN PRINCIPAL DE LIMPIEZA CORREGIDA Y UNIFICADA
     function limpiarPantallaCompleta() {{
         if (!confirm("¿Deseas vaciar los valores editados de la pantalla para iniciar un nuevo ruteo?")) return;
 
-        // 1. Limpiar Polígonos Estándar (Pestañas C1, PREC, SDE)
+        // 1. Limpiar Polígonos Estándar (C1, PREC, SDE)
         document.querySelectorAll('.v-total-val, .nodos-val, .nodos-campeche').forEach(el => {{
             if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.value = "0";
             else el.innerText = "0";
@@ -4162,12 +4162,14 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             editedRowsPlan.clear();
         }}
 
-        // 3. 🟢 EJECUTAR OBLIGATORIAMENTE LA LIMPIEZA DE SISTÉMICO
+        // 3. 🟢 EJECUTAR LIMPIEZA DE SISTÉMICO
         limpiarSistemico();
 
-        // 4. Recalcular tablas normales sin alterar Sistémico
-        if (typeof recalc === 'function') recalc();
-        
+        // 4. Si NO estamos en Sistémico, ejecutar recalc() normal
+        if (currentTab !== 4 && typeof recalc === 'function') {{
+            recalc();
+        }}
+
         // 5. Cerrar menú lateral
         if (typeof toggleMenuLateralVisual === 'function') {{
             toggleMenuLateralVisual();
@@ -4175,51 +4177,55 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     }}
 
 
-    // 🟢 LIMPIEZA ABSOLUTA Y DIRECTA DEL DOM EN SISTÉMICO
+    // 🟢 LIMPIEZA ABSOLUTA Y FORZADA DE PANTALLA SISTÉMICO
     function limpiarSistemico() {{
-        // A. LIMPIAR CAMPOS DE DROPEO (VACÍO ABSOLUTO)
-        document.querySelectorAll('.sis-plan-drop-in, input[id^="sis-drop-plan-"]').forEach(input => {{
+        // A. VACIAR CAMPOS DE DROPEO (INPUTS)
+        document.querySelectorAll('.sis-plan-drop-in').forEach(input => {{
             input.value = '0';
             input.setAttribute('value', '0');
         }});
 
-        // B. LIMPIAR TABLITA NEGRA DE PATIO (FLOTA DISPONIBLE)
-        document.querySelectorAll('.edit-name-flota-sis, input[id^="sis-flota-nombre-"]').forEach(input => {{
-            input.value = '';
-            input.setAttribute('value', '');
+        // B. VACIAR TABLITA NEGRA DE PATIO (UNIDADES, SPR, DISPONIBLE, RESTANTE)
+        document.querySelectorAll('.row-flota-sis').forEach(row => {{
+            let inputNombre = row.querySelector('.edit-name-flota-sis');
+            let inputDisp = row.querySelector('.sis-disp-flota-in');
+            let spanSpr = row.querySelector('span[id^="sis-flota-spr-"]');
+            let tdRest = row.querySelector('td[id^="sis-rest-flota-"]');
+
+            if (inputNombre) {{
+                inputNombre.value = '';
+                inputNombre.setAttribute('value', '');
+            }}
+            if (inputDisp) {{
+                inputDisp.value = '0';
+                inputDisp.setAttribute('value', '0');
+            }}
+            if (spanSpr) spanSpr.innerText = '0';
+            if (tdRest) {{
+                tdRest.innerText = '0';
+                tdRest.style.color = '#2dd4bf';
+            }}
         }});
 
-        document.querySelectorAll('.sis-disp-flota-in, input[id^="sis-disp-flota-"]').forEach(input => {{
-            input.value = '0';
-            input.setAttribute('value', '0');
+        // C. VACIAR FILAS DE PLANES (# USADAS, SPR Y TIPO DE UNIDAD)
+        document.querySelectorAll('.fila-plan-sistemico').forEach(fila => {{
+            let inputNombre = fila.querySelector('.edit-name-sis');
+            let inputSpr = fila.querySelector('input[id^="sis-spr-"]');
+            let spanRes = fila.querySelector('.res-adic-sis');
+
+            if (inputNombre) {{
+                inputNombre.value = '';
+                inputNombre.setAttribute('value', '');
+            }}
+            if (inputSpr) {{
+                inputSpr.value = '0';
+                inputSpr.setAttribute('value', '0');
+            }}
+            if (spanRes) spanRes.innerText = '0';
         }});
 
-        document.querySelectorAll('span[id^="sis-flota-spr-"]').forEach(span => {{
-            span.innerText = '0';
-        }});
-
-        document.querySelectorAll('td[id^="sis-rest-flota-"]').forEach(td => {{
-            td.innerText = '0';
-            td.style.color = '#2dd4bf';
-        }});
-
-        // C. LIMPIAR CELDAS DE PLANES (# USADAS, SPR, TIPO DE UNIDAD)
-        document.querySelectorAll('.edit-name-sis, input[id^="sis-nombre-"]').forEach(input => {{
-            input.value = '';
-            input.setAttribute('value', '');
-        }});
-
-        document.querySelectorAll('.sis-spr-input, input[id^="sis-spr-"]').forEach(input => {{
-            input.value = '0';
-            input.setAttribute('value', '0');
-        }});
-
-        document.querySelectorAll('.res-adic-sis, span[id^="sis-res-"]').forEach(span => {{
-            span.innerText = '0';
-        }});
-
-        // D. FORZAR RESTABLECIMIENTO DE TODAS LAS CELDAS DE ESTADO A "VACÍO"
-        document.querySelectorAll('.td-plan-vacio, td[id^="sis-vacio-plan-"]').forEach(vacioCell => {{
+        // D. FORZAR CELDAS DE ESTADO A "VACÍO"
+        document.querySelectorAll('.td-plan-vacio').forEach(vacioCell => {{
             vacioCell.innerText = "VACÍO";
             vacioCell.style.background = "#ededed";
             vacioCell.style.color = "#808080";
