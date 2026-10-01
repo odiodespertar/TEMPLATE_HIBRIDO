@@ -192,10 +192,10 @@ table {
 
 
 /* ============================================================
-   🟨 ASISTENTE DE RUTEO — ESTILO MERCADO LIBRE / ROUTING PRO
+   🟨 ASISTENTE DE RUTEO — ESTILO CONTRASTE GRAFITO / MELI PRO
    ============================================================ */
 
-/* Contenedor Flotante */
+/* Contenedor Flotante (Fondo Gris Grafito para Alto Contraste) */
 div[data-testid="stExpander"] {
     position: fixed !important;
     bottom: 12px !important;
@@ -206,27 +206,32 @@ div[data-testid="stExpander"] {
     z-index: 999999 !important;
     border-radius: 18px !important;
     overflow: hidden !important;
-    background: #f8fafc !important;
-    border: 1.5px solid #e2e8f0 !important;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18), 0 4px 10px rgba(0, 0, 0, 0.08) !important;
+    background: #1e2022 !important; /* 👈 Gris Grafito Oscuro que contrasta con el fondo de la pantalla */
+    border: 1.5px solid #34383d !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0, 0, 0, 0.25) !important;
 }
 
-/* Header Estilo Mercado Libre */
+/* Fondo del cuerpo interno del Expander */
+div[data-testid="stExpander"] > div[role="group"] {
+    background: #1e2022 !important;
+}
+
+/* Header Estilo Mercado Libre (Amarillo Brillante) */
 div[data-testid="stExpander"] summary {
     background: linear-gradient(135deg, #FFE600 0%, #FFCC00 100%) !important;
     padding: 12px 18px !important;
     border-radius: 16px !important;
     min-height: 52px !important;
     border: none !important;
-    box-shadow: 0 2px 8px rgba(255, 214, 0, 0.4) !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
 }
 
 /* Texto del Header */
 div[data-testid="stExpander"] summary,
 div[data-testid="stExpander"] summary p,
 div[data-testid="stExpander"] summary span {
-    color: #2D3277 !important; /* Azul corporativo MELI */
-    -webkit-text-fill-color: #2D3277 !important;
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
     font-weight: 900 !important;
     font-size: 1.05rem !important;
     letter-spacing: 0.3px !important;
@@ -234,17 +239,17 @@ div[data-testid="stExpander"] summary span {
 
 /* Icono del expander */
 div[data-testid="stExpander"] summary svg {
-    color: #2D3277 !important;
-    fill: #2D3277 !important;
+    color: #000000 !important;
+    fill: #000000 !important;
 }
 
-/* Tarjeta Neomórfica MELI */
+/* Tarjeta Neomórfica de Presentación */
 .meli-asistente-card {
-    background: #ffffff;
+    background: #282c30;
     border-radius: 14px;
     padding: 14px 16px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    border: 1px solid #3e444b;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     margin-bottom: 12px;
 }
 
@@ -259,8 +264,8 @@ div[data-testid="stExpander"] summary svg {
 }
 
 .meli-stat-box {
-    background: #f8fafc;
-    border: 1px solid #f1f5f9;
+    background: #181a1b;
+    border: 1px solid #34383d;
     border-radius: 8px;
     padding: 6px 10px;
     text-align: center;
@@ -269,7 +274,7 @@ div[data-testid="stExpander"] summary svg {
 /* Globos de Chat */
 div[data-testid="stChatMessage"]:has(div[aria-label="user"]),
 div[data-testid="stChatMessage"]:has([data-testid*="User"]) {
-    background-color: #2D3277 !important; /* Azul Meli para el usuario */
+    background-color: #2D3277 !important; /* Azul Meli */
     border-radius: 12px 12px 2px 12px !important;
     padding: 10px 14px !important;
     margin: 6px 0 !important;
@@ -285,11 +290,11 @@ div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]),
 div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) {
     background: #ffffff !important;
     color: #1e293b !important;
-    border: 1.5px solid #FFE600 !important; /* Borde amarillo MELI */
+    border: 1.5px solid #FFE600 !important;
     border-radius: 12px 12px 12px 2px !important;
     padding: 12px !important;
     margin: 8px 0 !important;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04) !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15) !important;
 }
 
 div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) *,
