@@ -4129,11 +4129,11 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     }}
     
 
-    // 🟢 FUNCIÓN DE LIMPIEZA COMPLETA DE PANTALLA
+    // 🟢 FUNCIÓN PRINCIPAL DE LIMPIEZA
     function limpiarPantallaCompleta() {{
         if (!confirm("¿Deseas vaciar los valores editados de la pantalla para iniciar un nuevo ruteo?")) return;
 
-        // 1. Limpiar Polígonos estándar
+        // 1. Limpiar Polígonos Estándar
         document.querySelectorAll('.v-total-val, .nodos-val, .nodos-campeche').forEach(el => el.innerText = "0");
         document.querySelectorAll('.calc-row').forEach(row => {{
             let uSpan = row.querySelector('.u-manual');
@@ -4150,7 +4150,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             if (checkOk) checkOk.checked = false;
         }});
 
-        // 2. Limpiar Flota Superior
+        // 2. Limpiar Flota Estándar
         document.querySelectorAll('.f-stock, .edit-orh, .edit-ocup').forEach(el => el.innerText = "0");
         document.querySelectorAll('.orh-hora').forEach(el => el.innerText = "00:00");
 
@@ -4159,9 +4159,10 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         }}
         if (typeof recalc === 'function') recalc();
 
-        // 3. Limpiar Sistémico
+        // 3. 🟢 EJECUTAR LIMPIEZA COMPLETA DE SISTÉMICO (PATIO, DROPEO Y ESTADO)
         limpiarSistemico();
         
+        // 4. Cerrar menú lateral si está abierto
         if (typeof toggleMenuLateralVisual === 'function') {{
             toggleMenuLateralVisual();
         }}
@@ -4169,65 +4170,53 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     
 
 
-    // 🟢 FUNCIÓN DE LIMPIEZA ABSOLUTA ENLAZADA A TODO SISTÉMICO
+    // 🟢 FUNCIÓN DE LIMPIEZA COMPLETA DE SISTÉMICO
     function limpiarSistemico() {{
-        // 1. LIMPIAR MINITABLA NEGRA FLOTANTE DE PATIO (SPR MAX, DISPONIBLE Y RESTANTE)
-        document.querySelectorAll('.row-flota-sis').forEach((row, idx) => {{
-            let inputNombre = document.getElementById(`sis-flota-nombre-${{idx}}`) || row.querySelector('.edit-name-flota-sis');
-            let inputDisp = document.getElementById(`sis-disp-flota-${{idx}}`) || row.querySelector('.sis-disp-flota-in');
-            let spanSpr = document.getElementById(`sis-flota-spr-${{idx}}`) || row.querySelector('span[id^="sis-flota-spr-"]');
-            let spanRest = document.getElementById(`sis-rest-flota-${{idx}}`) || row.querySelector('td[id^="sis-rest-flota-"]');
+        // A. LIMPIAR MINITABLA NEGRA DE PATIO (FLOTA FLOTANTE)
+        const tbodyFlota = document.getElementById("tbody-flota-flotante-sis");
+        if (tbodyFlota) {{
+            tbodyFlota.querySelectorAll("tr").forEach((row) => {{
+                let inputNombre = row.querySelector('.edit-name-flota-sis');
+                let inputDisp = row.querySelector('.sis-disp-flota-in');
+                let spanSpr = row.querySelector('span[id^="sis-flota-spr-"]');
+                let tdRest = row.querySelector('td[id^="sis-rest-flota-"]');
 
-            if (inputNombre) {{
-                inputNombre.value = '';
-                inputNombre.dispatchEvent(new Event('input', {{ bubbles: true }}));
-            }}
-            if (inputDisp) {{
-                inputDisp.value = '0';
-                inputDisp.dispatchEvent(new Event('input', {{ bubbles: true }}));
-            }}
-            if (spanSpr) spanSpr.innerText = '0';
-            if (spanRest) {{
-                spanRest.innerText = '0';
-                spanRest.style.color = '#2dd4bf';
-            }}
-        }});
+                if (inputNombre) inputNombre.value = '';
+                if (inputDisp) inputDisp.value = '0';
+                if (spanSpr) spanSpr.innerText = '0';
+                if (tdRest) {{
+                    tdRest.innerText = '0';
+                    tdRest.style.color = '#2dd4bf';
+                }}
+            }});
+        }}
 
-        // 2. LIMPIAR TODOS LOS INPUTS DE DROPEO (VOL. TOTAL)
+        // B. LIMPIAR COLUMNA DROPEO (VOL. TOTAL) EN TODOS LOS PLANES
         document.querySelectorAll('.sis-plan-drop-in').forEach(input => {{
             input.value = '0';
-            input.dispatchEvent(new Event('input', {{ bubbles: true }}));
         }});
 
-        // 3. LIMPIAR FILAS DE PLANES (# USADAS, SPR, UNIDADES)
+        // C. LIMPIAR CELDAS DE CADA FILA (# USADAS, SPR Y UNIDAD)
         document.querySelectorAll('.fila-plan-sistemico').forEach(fila => {{
             let idx = fila.id.replace("sis-tr-", "");
 
             let elNombre = document.getElementById(`sis-nombre-${{idx}}`);
-            if (elNombre) {{
-                elNombre.value = '';
-                elNombre.dispatchEvent(new Event('input', {{ bubbles: true }}));
-            }}
-
             let elSpr = document.getElementById(`sis-spr-${{idx}}`);
-            if (elSpr) elSpr.value = '0';
-
             let elRes = document.getElementById(`sis-res-${{idx}}`);
+
+            if (elNombre) elNombre.value = '';
+            if (elSpr) elSpr.value = '0';
             if (elRes) elRes.innerText = '0';
         }});
 
-        // 4. FORZAR CELDAS DE ESTADO A "VACÍO"
-        const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
-        planesUnicos.forEach(planIdx => {{
-            let vacioCell = document.getElementById(`sis-vacio-plan-${{planIdx}}`);
-            if (vacioCell) {{
-                vacioCell.innerText = "VACÍO";
-                vacioCell.style.background = "#ededed";
-                vacioCell.style.color = "#808080";
-            }}
+        // D. RESETEAR TODAS LAS CELDAS DE LA COLUMNA ESTADO A "VACÍO"
+        document.querySelectorAll('.td-plan-vacio').forEach(vacioCell => {{
+            vacioCell.innerText = "VACÍO";
+            vacioCell.style.background = "#ededed";
+            vacioCell.style.color = "#808080";
         }});
 
-        // 5. LIMPIAR CALCULADORAS Y CONVERTIDOR
+        // E. REINICIAR CALCULADORAS DE 2% Y ORH
         const contenedor2pct = document.getElementById('contenedor-celdas-2pct');
         if (contenedor2pct) {{
             contenedor2pct.innerHTML = `
@@ -4252,7 +4241,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         if (inOrhMin) inOrhMin.value = '';
         if (elResOrh) elResOrh.innerText = '00:00';
 
-        // Recalcular inventario de patio libre
         if (typeof sincronizarTotalesSistemico === 'function') {{
             sincronizarTotalesSistemico();
         }}
