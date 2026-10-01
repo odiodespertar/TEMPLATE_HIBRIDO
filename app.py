@@ -1717,7 +1717,7 @@ CATALOGO_SISTEMICO = {
 
 
 PLANES_SISTEMICO = [
-   "ACTOPAN", "⚠️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
+   "ACTOPAN", "⚠️️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
    "TEZUITLAN", "TLALTETELA", "TRAPICHE", "TUZAMAPA", "XICO", "CONTINGENCIA CENTRO NODO", 
    "CONTINGENCIA TUZAMAPA", "CONTINGENCIA XICO"
 ]
@@ -4912,7 +4912,7 @@ function showTab(n, btn) {{
 
 
 
-    // 🟢 PASO MANUAL CON BOTONES (+ / -)
+    // 🟢 BOTONES DE INCREMENTO Y DECREMENTO MANUALLY (+ / -)
     function stepValSis(btn, delta, type, planIdx) {{
         let row = btn.closest('tr');
         if (!row) return;
@@ -4933,11 +4933,13 @@ function showTab(n, btn) {{
                 sprIn.value = newVal;
             }}
         }}
-        calcularPlanSistemico(planIdx);
+        // Recalcular disponibilidad de patio y vacio del plan
+        sincronizarTotalesSistemico();
+        calcularVacioSistemico(planIdx);
     }}
     
 
-    // 🟢 CÁLCULO EN TIEMPO REAL DEL ESTADO/VACÍO POR PLAN
+    // 🟢 RECALCULAR COLUMNA ESTADO (OK, FALTAN, EXCESO, VACÍO)
     function calcularVacioSistemico(planIdx) {{
         let dropIn = document.getElementById(`sis-drop-plan-${{planIdx}}`);
         let vacioCell = document.getElementById(`sis-vacio-plan-${{planIdx}}`);
@@ -4977,7 +4979,6 @@ function showTab(n, btn) {{
             vacioCell.style.color = "#25282b";
         }}
     }}
-
 
 
     function showAlert(msg) {{
@@ -5780,21 +5781,19 @@ document.addEventListener('keydown', function(event) {{
     
 
     // 🟢 RECALCULAR PLAN Y ESTADO
+    // 🟢 EJECUTAR AUTO-CÁLCULO Y ACTUALIZAR CADA PLAN
     function calcularPlanSistemico(planIdx) {{
         distribuirAutomaticoSistemico();
-        calcularVacioSistemico(planIdx);
+        const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
+        planesUnicos.forEach(pIdx => calcularVacioSistemico(pIdx));
     }}
 
 
-    // 🧠 MOTOR AUTO-CALCULAR CON RESPETO ESTRICTO DE UNIDADES PRE-ASIGNADAS Y PATIO
+    // 🟢 MOTOR PRINCIPAL DE AUTO-CALCULAR SEGÚN INVENTARIO EN PATIO DE LA TABLA SUPERIOR
     function distribuirAutomaticoSistemico() {{
-        // 1. Leer disponibilidad real de patio desde la minitabla flotante
         let flotaDisponibilidad = obtenerInventarioPatio();
 
-        // Reiniciar todos los contadores de resultados a 0
-        document.querySelectorAll('.res-adic-sis').forEach(el => el.innerText = "0");
-
-        // 2. Agrupar planes y sus filas de unidades pre-configuradas
+        // 1. Agrupar los planes por orden de mayor a menor IDs dropeados
         let planesData = [];
         const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
 
@@ -5813,7 +5812,6 @@ document.addEventListener('keydown', function(event) {{
                 let nombre = inputNombre?.value?.trim() || "";
                 let spr = parseFloat(inputSpr?.value) || 0;
 
-                // Solo tomamos en cuenta unidades con nombre e introducidas en este plan
                 if (nombre && spr > 0) {{
                     unidadesDelPlan.push({{ idx, nombre, spr, elRes, asignadas: 0 }});
                 }}
@@ -5828,14 +5826,14 @@ document.addEventListener('keydown', function(event) {{
             }}
         }});
 
-        // 🟢 PASO A: ORDENAR PLANES DE MAYOR A MENOR IDs DROPEADOS
+        // Ordenar por volumen
         planesData.sort((a, b) => b.dropTotal - a.dropTotal);
 
-        // 3. Procesar asignaciones respetando prioridades de plan e inventario
+        // 2. Repartir volumen usando primero el stock disponible de la tabla de arriba
         planesData.forEach(pData => {{
             let dropRestantePlan = pData.dropTotal;
 
-            // 🟢 FASE 1: Consumir stock físico DISPONIBLE de patio de las unidades elegidas en este plan
+            // FASE 1: Consumir stock físico DISPONIBLE de patio
             pData.unidadesDelPlan.forEach(uInfo => {{
                 if (dropRestantePlan <= 0) return;
 
@@ -5856,7 +5854,7 @@ document.addEventListener('keydown', function(event) {{
                 }}
             }});
 
-            // 🟢 FASE 2: Si aún faltan IDs por cubrir, utilizar ÚNICAMENTE las Excepciones que YA ESTÁN PUESTAS en este plan
+            // FASE 2: Si falta volumen, usar excepciones infinitas marcadas
             if (dropRestantePlan > 0) {{
                 pData.unidadesDelPlan.forEach(uInfo => {{
                     if (dropRestantePlan <= 0) return;
@@ -5879,7 +5877,7 @@ document.addEventListener('keydown', function(event) {{
                 }});
             }}
 
-            // Escribir en pantalla las unidades finales asignadas a este plan
+            // Escribir en pantalla las unidades finales asignadas
             pData.unidadesDelPlan.forEach(uInfo => {{
                 if (uInfo.elRes) uInfo.elRes.innerText = uInfo.asignadas;
             }});
