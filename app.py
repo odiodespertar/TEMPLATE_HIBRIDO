@@ -4421,48 +4421,23 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     }}
     
 
-    // 🟢 FUNCIÓN PRINCIPAL DE LIMPIEZA CORREGIDA Y UNIFICADA
     function limpiarPantallaCompleta() {{
         if (!confirm("¿Deseas vaciar los valores editados de la pantalla para iniciar un nuevo ruteo?")) return;
 
-        // 1. Limpiar Polígonos Estándar (C1, PREC, SDE)
+        // 1. Limpiar Polígonos Estándar
         document.querySelectorAll('.v-total-val, .nodos-val, .nodos-campeche').forEach(el => {{
             if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.value = "0";
             else el.innerText = "0";
         }});
 
-        document.querySelectorAll('.calc-row').forEach(row => {{
-            let uSpan = row.querySelector('.u-manual');
-            let sprSpan = row.querySelector('.spr-real-val');
-            let selectType = row.querySelector('.s-type');
-            let checkOk = row.querySelector('.ok-check');
-
-            if (uSpan) uSpan.innerText = "0";
-            if (sprSpan) sprSpan.innerText = "0";
-            if (selectType) {{
-                selectType.value = ""; 
-                if (typeof updateSelectColor === 'function') updateSelectColor(selectType); 
-            }}
-            if (checkOk) checkOk.checked = false;
-        }});
-
-        // 2. Limpiar Flota Estándar
-        document.querySelectorAll('.f-stock, .edit-orh, .edit-ocup').forEach(el => el.innerText = "0");
-        document.querySelectorAll('.orh-hora').forEach(el => el.innerText = "00:00");
-
-        if (typeof editedRowsPlan !== 'undefined' && editedRowsPlan.clear) {{
-            editedRowsPlan.clear();
-        }}
-
-        // 3. 🟢 EJECUTAR LIMPIEZA DE SISTÉMICO
+        // 2. Ejecutar Limpieza de Calculadoras de Sistémico
         limpiarSistemico();
 
-        // 4. Si NO estamos en Sistémico, ejecutar recalc() normal
+        // 3. Recalcular y cerrar menú
         if (currentTab !== 4 && typeof recalc === 'function') {{
             recalc();
         }}
 
-        // 5. Cerrar menú lateral
         if (typeof toggleMenuLateralVisual === 'function') {{
             toggleMenuLateralVisual();
         }}
@@ -4470,44 +4445,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
 
     
-    // 🟢 LIMPIEZA TOTAL Y REINICIO DE TODAS LAS CALCULADORAS DE SISTÉMICO
-    function limpiarSistemico() {{
-        // 1. REINICIAR CALCULADORA 2% DATO 1 (SUMATORIA DINÁMICA)
-        const contenedor2pct = document.getElementById('contenedor-celdas-2pct');
-        if (contenedor2pct) {{
-            contenedor2pct.innerHTML = `
-                <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 1" style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
-                <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 2" style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
-                <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 3" style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
-            `;
-        }}
-        
-        const elSuma1 = document.getElementById('dos-pct-suma-total-1');
-        const elRes1 = document.getElementById('dos-pct-res-1');
-        if (elSuma1) elSuma1.innerText = '0';
-        if (elRes1) elRes1.innerText = '0';
-
-        // 2. REINICIAR CALCULADORA 2% DATO 2 (TOTAL + NODOS)
-        const inDato2 = document.getElementById('dos-pct-in-2');
-        const elRes2 = document.getElementById('dos-pct-res-2');
-        if (inDato2) inDato2.value = '';
-        if (elRes2) elRes2.innerText = '0';
-
-        // 3. REINICIAR CONVERTIDOR DE ORH
-        const inOrhMin = document.getElementById('orh-minutos-in');
-        const elResOrh = document.getElementById('orh-horas-res');
-        if (inOrhMin) inOrhMin.value = '';
-        if (elResOrh) elResOrh.innerText = '00:00';
-
-        // 4. REINICIAR CALCULADORA DIVISORA (OPCIÓN B: CAMPOS TOTALMENTE LIMPIOS)
-        const inDivNum1 = document.getElementById('calc-div-num1');
-        const inDivNum2 = document.getElementById('calc-div-num2');
-        const elResDiv = document.getElementById('calc-div-res');
-
-        if (inDivNum1) inDivNum1.value = '';
-        if (inDivNum2) inDivNum2.value = ''; // 👈 Vacío según la Opción B
-        if (elResDiv) elResDiv.innerText = '0';
-    }}
+    
     
 
 
@@ -5526,12 +5464,12 @@ function actualizarDosPorciento() {{
 
 
     
-    // 🟢 REINICIO Y LIMPIEZA COMPLETA DE SISTÉMICO POR PLAN
+    // 🟢 LIMPIEZA EXCLUSIVA Y COMPLETA PARA LAS 3 CALCULADORAS DE SISTÉMICO
     function limpiarSistemico() {{
-        // Limpiar Calculadoras 2%
-        const contenedor = document.getElementById('contenedor-celdas-2pct');
-        if (contenedor) {{
-            contenedor.innerHTML = `
+        // 1. REINICIAR CALCULADORA 2% DATO 1 (DINÁMICA)
+        const contenedor2pct = document.getElementById('contenedor-celdas-2pct');
+        if (contenedor2pct) {{
+            contenedor2pct.innerHTML = `
                 <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 1" style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
                 <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 2" style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
                 <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 3" style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
@@ -5543,36 +5481,26 @@ function actualizarDosPorciento() {{
         if (elSuma1) elSuma1.innerText = '0';
         if (elRes1) elRes1.innerText = '0';
 
+        // 2. REINICIAR CALCULADORA 2% DATO 2 (TOTAL + NODOS)
         const inDato2 = document.getElementById('dos-pct-in-2');
         const elRes2 = document.getElementById('dos-pct-res-2');
-        if (inDato2) inDato2.value = '0';
+        if (inDato2) inDato2.value = '';
         if (elRes2) elRes2.innerText = '0';
 
+        // 3. REINICIAR CONVERTIDOR DE ORH
         const inOrhMin = document.getElementById('orh-minutos-in');
         const elResOrh = document.getElementById('orh-horas-res');
         if (inOrhMin) inOrhMin.value = '';
         if (elResOrh) elResOrh.innerText = '00:00';
 
-        // Limpiar todas las filas por Plan de Sistémico
-        document.querySelectorAll('.fila-plan-sistemico').forEach(fila => {{
-            let idx = fila.id.replace("sis-tr-", "");
+        // 4. REINICIAR NUEVA CALCULADORA DIVISORA (OPCIÓN B)
+        const inDiv1 = document.getElementById('calc-div-num1');
+        const inDiv2 = document.getElementById('calc-div-num2');
+        const resDiv = document.getElementById('calc-div-res');
 
-            const elNombre = document.getElementById(`sis-nombre-${{idx}}`);
-            if (elNombre) elNombre.value = '';
-
-            const elSpr = document.getElementById(`sis-spr-${{idx}}`);
-            if (elSpr) elSpr.value = '0';
-
-            const elDrop = document.getElementById(`sis-drop-${{idx}}`);
-            if (elDrop) elDrop.value = '0';
-
-            const elRes = document.getElementById(`sis-res-${{idx}}`);
-            if (elRes) elRes.innerText = '0';
-        }});
-
-        if (typeof sincronizarTotalesSistemico === 'function') {{
-            sincronizarTotalesSistemico();
-        }}
+        if (inDiv1) inDiv1.value = '';
+        if (inDiv2) inDiv2.value = '';
+        if (resDiv) resDiv.innerText = '0';
     }}
 
 
