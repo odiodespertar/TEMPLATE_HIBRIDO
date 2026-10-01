@@ -3556,7 +3556,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                 </div>
             </div>
 
-        </div>
+        </div> 
         
         
         <div id="polys-9" class="p-content" style="display:none;">{gen_poligonos(u_C1_VACIA)}</div>
