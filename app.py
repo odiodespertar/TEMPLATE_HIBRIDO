@@ -110,6 +110,13 @@ if st.session_state.flotar_activo:
 st.markdown("""
 <style>
 
+
+/* 🟢 OCULTAR LA BOTONERA SUPERIOR EN TODOS LOS RUTEOS */
+#fleet-drag-handle {
+    display: none !important;
+}
+
+
 .block-container {
     padding: 0rem !important;
 }
@@ -3475,104 +3482,11 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <div id="polys-1" class="p-content" style="display:none;">{gen_poligonos(u_PREC)}</div>
         <div id="polys-5" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX2)}</div>
         
-        <!-- 🟢 CONTENEDOR TABLA HÍBRIDA CON MINICALCULADORAS 2% Y CONVERTIDOR ORH -->
+        <!-- 🟢 CONTENEDOR SISTÉMICO: EXCLUSIVAMENTE CALCULADORAS 2% Y CONVERTIDOR ORH -->
         <div id="polys-4" class="p-content" style="display:none;">
 
-            <!-- 🚛 ÚNICA TARJETA DE PATIO FLOTANTE (POSICIONADA ARRIBA) -->
-            <div id="sis-flota-contenedor" class="sis-normal">
-                <div id="handle-moverse-sis" 
-                     onpointerdown="iniciarArrastreSisFlotante(event)"
-                     style="display:none; width:100%; height:28px; background:#343a40; color:#ffffff; font-size:11px; font-weight:bold; line-height:28px; border-radius:6px 6px 0 0; margin:-8px -8px 8px -8px; cursor:grab; user-select:none; z-index:9999999; position:relative; padding:0 8px; box-sizing:border-box; touch-action:none;">
-                    <span style="float:left;">:: CLIC Y ARRASTRA AQUÍ PARA MOVER FLOTA SISTÉMICO ::</span>
-                    <button onclick="toggleFleetFloating();" onpointerdown="event.stopPropagation();"
-                            style="float:right; margin-top:3px; cursor:pointer; background:#dc3545; color:white; border:none; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:bold; outline:none;">
-                        ✕ NORMAL (enter)
-                    </button>
-                    <div style="clear:both;"></div>
-                </div>
-
-                <div id="sis-flota-flotante" style="max-width: 980px; margin: 0 auto 18px auto; background: #17191b; padding: 14px 20px; border-radius: 12px; border: 1.5px solid #2dd4bf; box-shadow: 0 6px 20px rgba(0,0,0,0.35); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #262626; padding-bottom: 8px;">
-                        <span style="font-size: 13px; font-weight: 800; color: #2dd4bf; letter-spacing: 0.8px; text-transform: uppercase;">🚛 FLOTA DISPONIBLE EN PATIO (SISTÉMICO)</span>
-                        <span style="font-size: 11px; color: #a3a3a3; font-weight: 500;">Ingresa disponibilidad real para Auto-Calcular</span>
-                    </div>
-
-                    <table style="width: 100%; border-collapse: collapse; color: #f5f5f5; font-size: 14px; table-layout: fixed;">
-                        <thead>
-                            <tr style="color: #67e8f9; font-size: 12px; font-weight: 800; text-transform: uppercase; border-bottom: 1.5px solid #333333; height: 30px;">
-                                <th style="text-align: left; width: 45%; padding-left: 6px;">UNIDAD</th>
-                                <th style="text-align: center; width: 18%;">SPR MAX</th>
-                                <th style="text-align: center; width: 18%; color: #facc15;">DISPONIBLE</th>
-                                <th style="text-align: center; width: 19%;">RESTANTE</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody-flota-flotante-sis">
-                            <tr class="row-flota-sis" id="sis-flota-tr-0" style="border-bottom: 1px solid #262626; height: 42px;">
-                                <td style="padding: 6px; text-align: left; vertical-align: middle; position: relative;">
-                                    <input type="text" class="edit-name-flota-sis" id="sis-flota-nombre-0" oninput="buscarCoincidenciasFlotaSis(this, 0);" onkeydown="navegarSugerenciasFlotaSis(event, 0)" onfocus="buscarCoincidenciasFlotaSis(this, 0)" placeholder="Buscar unidad..." autocomplete="off"
-                                           style="width: 100%; box-sizing: border-box; font-weight: 700; font-size: 15px; color: #ffffff; outline: none; border: none; border-bottom: 1.5px solid #525252; background: transparent; padding: 4px 6px;" />
-                                    <div id="sis-flota-sug-0" class="sugerencias-flota-box" style="display: none; position: absolute; top: 90%; left: 6px; right: 6px; background: #262626; border: 1px solid #525252; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 999; max-height: 160px; overflow-y: auto;"></div>
-                                </td>
-                                <td style="text-align: center; color: #d4d4d4; font-weight: 700; font-size: 15px;"><span id="sis-flota-spr-0">0</span></td>
-                                <td style="text-align: center; padding: 3px;">
-                                    <input type="number" class="sis-disp-flota-in" id="sis-disp-flota-0" oninput="sincronizarTotalesSistemico();" onfocus="this.select()" value="0" placeholder="0"
-                                           style="width: 65px; text-align: center; padding: 4px; font-weight: 800; font-size: 16px; border: 1.5px solid #facc15; background: #0a0a0a; color: #facc15; outline: none; border-radius: 5px;" />
-                                </td>
-                                <td style="text-align: center; font-weight: 800; font-size: 16px; color: #2dd4bf;" id="sis-rest-flota-0">0</td>
-                            </tr>
-                            <tr class="row-flota-sis" id="sis-flota-tr-1" style="border-bottom: 1px solid #262626; height: 42px;">
-                                <td style="padding: 6px; text-align: left; vertical-align: middle; position: relative;">
-                                    <input type="text" class="edit-name-flota-sis" id="sis-flota-nombre-1" oninput="buscarCoincidenciasFlotaSis(this, 1);" onkeydown="navegarSugerenciasFlotaSis(event, 1)" onfocus="buscarCoincidenciasFlotaSis(this, 1)" placeholder="Buscar unidad..." autocomplete="off"
-                                           style="width: 100%; box-sizing: border-box; font-weight: 700; font-size: 15px; color: #ffffff; outline: none; border: none; border-bottom: 1.5px solid #525252; background: transparent; padding: 4px 6px;" />
-                                    <div id="sis-flota-sug-1" class="sugerencias-flota-box" style="display: none; position: absolute; top: 90%; left: 6px; right: 6px; background: #262626; border: 1px solid #525252; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 999; max-height: 160px; overflow-y: auto;"></div>
-                                </td>
-                                <td style="text-align: center; color: #d4d4d4; font-weight: 700; font-size: 15px;"><span id="sis-flota-spr-1">0</span></td>
-                                <td style="text-align: center; padding: 3px;">
-                                    <input type="number" class="sis-disp-flota-in" id="sis-disp-flota-1" oninput="sincronizarTotalesSistemico();" onfocus="this.select()" value="0" placeholder="0"
-                                           style="width: 65px; text-align: center; padding: 4px; font-weight: 800; font-size: 16px; border: 1.5px solid #facc15; background: #0a0a0a; color: #facc15; outline: none; border-radius: 5px;" />
-                                </td>
-                                <td style="text-align: center; font-weight: 800; font-size: 16px; color: #2dd4bf;" id="sis-rest-flota-1">0</td>
-                            </tr>
-                            <tr class="row-flota-sis" id="sis-flota-tr-2" style="border-bottom: 1px solid #262626; height: 42px;">
-                                <td style="padding: 6px; text-align: left; vertical-align: middle; position: relative;">
-                                    <input type="text" class="edit-name-flota-sis" id="sis-flota-nombre-2" oninput="buscarCoincidenciasFlotaSis(this, 2);" onkeydown="navegarSugerenciasFlotaSis(event, 2)" onfocus="buscarCoincidenciasFlotaSis(this, 2)" placeholder="Buscar unidad..." autocomplete="off"
-                                           style="width: 100%; box-sizing: border-box; font-weight: 700; font-size: 15px; color: #ffffff; outline: none; border: none; border-bottom: 1.5px solid #525252; background: transparent; padding: 4px 6px;" />
-                                    <div id="sis-flota-sug-2" class="sugerencias-flota-box" style="display: none; position: absolute; top: 90%; left: 6px; right: 6px; background: #262626; border: 1px solid #525252; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 999; max-height: 160px; overflow-y: auto;"></div>
-                                </td>
-                                <td style="text-align: center; color: #d4d4d4; font-weight: 700; font-size: 15px;"><span id="sis-flota-spr-2">0</span></td>
-                                <td style="text-align: center; padding: 3px;">
-                                    <input type="number" class="sis-disp-flota-in" id="sis-disp-flota-2" oninput="sincronizarTotalesSistemico();" onfocus="this.select()" value="0" placeholder="0"
-                                           style="width: 65px; text-align: center; padding: 4px; font-weight: 800; font-size: 16px; border: 1.5px solid #facc15; background: #0a0a0a; color: #facc15; outline: none; border-radius: 5px;" />
-                                </td>
-                                <td style="text-align: center; font-weight: 800; font-size: 16px; color: #2dd4bf;" id="sis-rest-flota-2">0</td>
-                            </tr>
-                            <tr class="row-flota-sis" id="sis-flota-tr-3" style="border-bottom: 1px solid #262626; height: 42px;">
-                                <td style="padding: 6px; text-align: left; vertical-align: middle; position: relative;">
-                                    <input type="text" class="edit-name-flota-sis" id="sis-flota-nombre-3" oninput="buscarCoincidenciasFlotaSis(this, 3);" onkeydown="navegarSugerenciasFlotaSis(event, 3)" onfocus="buscarCoincidenciasFlotaSis(this, 3)" placeholder="Buscar unidad..." autocomplete="off"
-                                           style="width: 100%; box-sizing: border-box; font-weight: 700; font-size: 15px; color: #ffffff; outline: none; border: none; border-bottom: 1.5px solid #525252; background: transparent; padding: 4px 6px;" />
-                                    <div id="sis-flota-sug-3" class="sugerencias-flota-box" style="display: none; position: absolute; top: 90%; left: 6px; right: 6px; background: #262626; border: 1px solid #525252; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 999; max-height: 160px; overflow-y: auto;"></div>
-                                </td>
-                                <td style="text-align: center; color: #d4d4d4; font-weight: 700; font-size: 15px;"><span id="sis-flota-spr-3">0</span></td>
-                                <td style="text-align: center; padding: 3px;">
-                                    <input type="number" class="sis-disp-flota-in" id="sis-disp-flota-3" oninput="sincronizarTotalesSistemico();" onfocus="this.select()" value="0" placeholder="0"
-                                           style="width: 65px; text-align: center; padding: 4px; font-weight: 800; font-size: 16px; border: 1.5px solid #facc15; background: #0a0a0a; color: #facc15; outline: none; border-radius: 5px;" />
-                                </td>
-                                <td style="text-align: center; font-weight: 800; font-size: 16px; color: #2dd4bf;" id="sis-rest-flota-3">0</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div style="display: flex; gap: 6px; margin-top: 10px; justify-content: flex-end;">
-                        <button onclick="quitarFilaFlotaSis()" title="Quitar última fila" 
-                                style="cursor: pointer; background: #262626; color: #d4d4d4; border: 1px solid #404040; font-weight: 700; border-radius: 4px; width: 24px; height: 22px; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; padding: 0; outline: none;">-</button>
-                        <button onclick="agregarFilaFlotaSis()" title="Agregar nueva fila" 
-                                style="cursor: pointer; background: #262626; color: #d4d4d4; border: 1px solid #404040; font-weight: 700; border-radius: 4px; width: 24px; height: 22px; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; padding: 0; outline: none;">+</button>
-                    </div>
-                </div>
-            </div>
-
             <!-- ⚡ BLOQUE SUPERIOR: DOS CALCULADORAS INDEPENDIENTES DE 2% + CONVERTIDOR DE ORH -->
-            <div style="display: flex; max-width: 950px; margin: 0 auto 20px auto; gap: 15px; align-items: stretch;">
+            <div style="display: flex; max-width: 950px; margin: 30px auto; gap: 15px; align-items: stretch;">
                 
                 <!-- RECUADRO 1: LISTA SUMATORIA DINÁMICA DE 2% -->
                 <div style="flex: 1; background: #ffffff; padding: 16px 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between;">
@@ -3642,8 +3556,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                 </div>
             </div>
 
-            <!-- ⚡ TABLA UNIFICADA DE PLANES DE RUTEO SISTÉMICO -->
-            {gen_tabla_sistemico_planes()}
         </div>
         
         
@@ -4177,61 +4089,10 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     }}
 
 
-    // 🟢 LIMPIEZA ABSOLUTA Y FORZADA DE PANTALLA SISTÉMICO
+    
+    // 🟢 LIMPIEZA EXCLUSIVA PARA LAS CALCULADORAS DE SISTÉMICO
     function limpiarSistemico() {{
-        // A. VACIAR CAMPOS DE DROPEO (INPUTS)
-        document.querySelectorAll('.sis-plan-drop-in').forEach(input => {{
-            input.value = '0';
-            input.setAttribute('value', '0');
-        }});
-
-        // B. VACIAR TABLITA NEGRA DE PATIO (UNIDADES, SPR, DISPONIBLE, RESTANTE)
-        document.querySelectorAll('.row-flota-sis').forEach(row => {{
-            let inputNombre = row.querySelector('.edit-name-flota-sis');
-            let inputDisp = row.querySelector('.sis-disp-flota-in');
-            let spanSpr = row.querySelector('span[id^="sis-flota-spr-"]');
-            let tdRest = row.querySelector('td[id^="sis-rest-flota-"]');
-
-            if (inputNombre) {{
-                inputNombre.value = '';
-                inputNombre.setAttribute('value', '');
-            }}
-            if (inputDisp) {{
-                inputDisp.value = '0';
-                inputDisp.setAttribute('value', '0');
-            }}
-            if (spanSpr) spanSpr.innerText = '0';
-            if (tdRest) {{
-                tdRest.innerText = '0';
-                tdRest.style.color = '#2dd4bf';
-            }}
-        }});
-
-        // C. VACIAR FILAS DE PLANES (# USADAS, SPR Y TIPO DE UNIDAD)
-        document.querySelectorAll('.fila-plan-sistemico').forEach(fila => {{
-            let inputNombre = fila.querySelector('.edit-name-sis');
-            let inputSpr = fila.querySelector('input[id^="sis-spr-"]');
-            let spanRes = fila.querySelector('.res-adic-sis');
-
-            if (inputNombre) {{
-                inputNombre.value = '';
-                inputNombre.setAttribute('value', '');
-            }}
-            if (inputSpr) {{
-                inputSpr.value = '0';
-                inputSpr.setAttribute('value', '0');
-            }}
-            if (spanRes) spanRes.innerText = '0';
-        }});
-
-        // D. FORZAR CELDAS DE ESTADO A "VACÍO"
-        document.querySelectorAll('.td-plan-vacio').forEach(vacioCell => {{
-            vacioCell.innerText = "VACÍO";
-            vacioCell.style.background = "#ededed";
-            vacioCell.style.color = "#808080";
-        }});
-
-        // E. REINICIAR CALCULADORAS DE 2% Y ORH
+        // 1. REINICIAR CALCULADORA 2% DATO 1 (DINÁMICA)
         const contenedor2pct = document.getElementById('contenedor-celdas-2pct');
         if (contenedor2pct) {{
             contenedor2pct.innerHTML = `
@@ -4246,17 +4107,18 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         if (elSuma1) elSuma1.innerText = '0';
         if (elRes1) elRes1.innerText = '0';
 
+        // 2. REINICIAR CALCULADORA 2% DATO 2
         const inDato2 = document.getElementById('dos-pct-in-2');
         const elRes2 = document.getElementById('dos-pct-res-2');
         if (inDato2) inDato2.value = '0';
         if (elRes2) elRes2.innerText = '0';
 
+        // 3. REINICIAR CONVERTIDOR DE ORH
         const inOrhMin = document.getElementById('orh-minutos-in');
         const elResOrh = document.getElementById('orh-horas-res');
         if (inOrhMin) inOrhMin.value = '';
         if (elResOrh) elResOrh.innerText = '00:00';
     }}
-    
     
 
 
