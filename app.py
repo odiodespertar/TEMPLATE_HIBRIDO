@@ -3105,42 +3105,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 </div>
 
 
-<!-- 1. BOTONES SUPERIORES (SE QUEDAN SIEMPRE FIJOS ATRÁS) -->
-<div id="fleet-drag-handle" style="display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap; padding: 4px 0; margin-bottom: 8px;">
-    
-    <button id="fleet-toggle-btn"
-      onclick="toggleFleetFloating();"
-      style="cursor:pointer; border:none; background:#25282b; color:white; padding:4px 9px; border-radius:6px; font-weight:bold; font-size:12px; box-shadow:0 2px 0 #111213; outline:none;">
-      FLOTAR ☁️
-    </button>
 
-    <div class="btn-tooltip-container">
-    <button onclick="distribuirAutomatico()" 
-        style="cursor:pointer; background: #26d4ca; color: #2e3030; border: none; font-size: 12px; padding: 4px 9px; border-radius: 6px; font-weight: bold; box-shadow: 0 2px 0 #2d968f; outline: none;">
-        🧠 AUTO-CALCULAR
-    </button>
-    
-    <button class="filter-btn" onclick="filterRows(true)" 
-        style="cursor:pointer; background: linear-gradient(180deg, #4f4f4f 0%, #25282b 100%); color: white; border: 1px solid #25282b; font-size: 12px; padding: 4px 9px; border-radius: 6px; font-weight: bold; outline: none;">
-        ACTIVAS
-    </button>
-
-    <button class="filter-btn" onclick="filterRows(false)" 
-        style="cursor:pointer; background: #808080; color:white; border:none; font-size:12px; padding:4px 9px; border-radius:6px; font-weight:bold; outline: none;">
-        TODAS
-    </button>
-
-    <!-- NUEVOS BOTONES DE REDUCCIÓN DE HORAS -->
-    <button onclick="reducirHoras()" style="cursor:pointer; background: #dc3545; color:white; border:none; font-size:12px; padding:4px 9px; border-radius:6px; font-weight:bold; outline: none;" title="Reducir 1 hora">
-         ➖ 1h
-    </button>
-
-    <button id="excel-btn" onclick="toggleExcelView()" title="VISTA EXCEL"
-            style="cursor:pointer; background:#228B22; color:white; border:none; font-size:12px; padding:4px 9px; border-radius:6px; font-weight:bold; box-shadow:0 2px 0 #1c6d1c; outline:none;">
-            VISTA EXCEL
-    </button>
-
-</div>
 
 
 
@@ -4350,43 +4315,29 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
 
    function cambiarCiclo(valorTab) {{
-        // 1. Ocultar todas las tablas superiores y contenidos de polígonos
+        // Ocultar todas las tablas y secciones
         document.querySelectorAll('.t-content').forEach(el => el.style.display = 'none');
         document.querySelectorAll('.p-content').forEach(el => el.style.display = 'none');
 
         currentTab = parseInt(valorTab);
 
         const tituloPoligonos = document.getElementById('titulo-planificacion-poligonos');
-        const botoneraSuperior = document.getElementById('fleet-drag-handle');
 
-        // 2. Ocultar la botonera superior en todos los ruteos
-        if (botoneraSuperior) {{
-            botoneraSuperior.style.setProperty('display', 'none', 'important');
-        }}
-
-        // 3. Manejo de visibilidad
         if (currentTab === 4) {{
             const tablaExt = document.getElementById('tab-4');
             if (tablaExt) tablaExt.style.display = 'none';
             if (tituloPoligonos) tituloPoligonos.style.display = 'none';
-
-            // 🟢 FORZAR VISIBILIDAD DE LAS CALCULADORAS EN SISTÉMICO
-            const polys4 = document.getElementById('polys-4');
-            if (polys4) {{
-                polys4.style.setProperty('display', 'block', 'important');
-            }}
         }} else {{
             const tablaActiva = document.getElementById('tab-' + valorTab);
             if (tablaActiva) tablaActiva.style.display = 'block';
             if (tituloPoligonos) tituloPoligonos.style.display = 'block';
-
-            const polyActivo = document.getElementById('polys-' + valorTab);
-            if (polyActivo) {{
-                polyActivo.style.setProperty('display', 'block', 'important');
-            }}
-
-            if (typeof recalc === 'function') recalc();
         }}
+
+        // Mostrar la pestaña seleccionada
+        const polyActivo = document.getElementById('polys-' + valorTab);
+        if (polyActivo) polyActivo.style.display = 'block';
+
+        if (typeof recalc === 'function') recalc();
     }}
     
 
