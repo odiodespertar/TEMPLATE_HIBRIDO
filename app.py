@@ -192,28 +192,37 @@ table {
 
 
 /* ============================================================
-   🟨 ASISTENTE DE RUTEO — ESTILO CONTRASTE GRAFITO / MELI PRO
+   🟨 ASISTENTE DE RUTEO — ESTILO CONTRASTE GRAFITO / MELI PRO (RESPONSIVE)
    ============================================================ */
 
-/* Contenedor Flotante (Fondo Gris Grafito para Alto Contraste) */
+/* Contenedor Flotante Adaptable */
 div[data-testid="stExpander"] {
     position: fixed !important;
-    bottom: 12px !important;
-    right: 18px !important;
-    width: 560px !important;
+    bottom: 10px !important;
+    right: 10px !important;
+    
+    /* 🟢 ANCHO FLUIDO: Se adapta automáticamente si achicas la pantalla */
+    width: calc(100% - 20px) !important;
     max-width: 560px !important;
+    
     margin: 0 !important;
     z-index: 999999 !important;
     border-radius: 18px !important;
     overflow: hidden !important;
-    background: #1e2022 !important; /* 👈 Gris Grafito Oscuro que contrasta con el fondo de la pantalla */
+    background: #1e2022 !important;
     border: 1.5px solid #34383d !important;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+    box-sizing: border-box !important;
 }
 
 /* Fondo del cuerpo interno del Expander */
 div[data-testid="stExpander"] > div[role="group"] {
     background: #1e2022 !important;
+    max-height: calc(85vh - 60px) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 10px !important;
+    box-sizing: border-box !important;
 }
 
 /* Header Estilo Mercado Libre (Amarillo Brillante) */
@@ -243,14 +252,16 @@ div[data-testid="stExpander"] summary svg {
     fill: #000000 !important;
 }
 
-/* Tarjeta Neomórfica de Presentación */
+/* Tarjeta Neomórfica de Presentación Adaptable */
 .meli-asistente-card {
     background: #282c30;
     border-radius: 14px;
-    padding: 14px 16px;
+    padding: 12px;
     border: 1px solid #3e444b;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     margin-bottom: 12px;
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 .meli-pill-tag {
@@ -269,6 +280,17 @@ div[data-testid="stExpander"] summary svg {
     border-radius: 8px;
     padding: 6px 10px;
     text-align: center;
+}
+
+/* 🟢 BOTONES FLEXIBLES: Permiten salto de línea para no cortarse al estrechar */
+div[data-testid="stExpander"] div[data-testid="stButton"] button {
+    white-space: normal !important;
+    word-break: break-word !important;
+    height: auto !important;
+    min-height: 42px !important;
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    line-height: 1.3 !important;
 }
 
 /* Globos de Chat */
@@ -301,6 +323,18 @@ div[data-testid="stChatMessage"]:has(div[aria-label="assistant"]) *,
 div[data-testid="stChatMessage"]:has([data-testid*="Assistant"]) * {
     color: #1e293b !important;
     -webkit-text-fill-color: #1e293b !important;
+}
+
+/* 🟢 AJUSTE DE MÁXIMA COMPRESIÓN EN PANTALLAS O PANELES MUY ESTRECHOS */
+@media (max-width: 600px) {
+    div[data-testid="stExpander"] {
+        right: 5px !important;
+        bottom: 5px !important;
+        width: calc(100% - 10px) !important;
+    }
+    .meli-stat-box {
+        display: none !important;
+    }
 }
 
 
