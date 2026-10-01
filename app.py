@@ -188,11 +188,9 @@ table {
     display: none !important;
 }
 
-/* 🔴 OCULTAR TARJETA NEGRA DE PATIO (SISTÉMICO) Y MODO FLOTANTE */
+/* 🔴 OCULTAR ÚNICAMENTE LA TARJETA NEGRA DE PATIO */
 #sis-flota-contenedor, 
-#sis-flota-flotante, 
-.sis-normal, 
-.sis-floating {
+#sis-flota-flotante {
     display: none !important;
 }
 
@@ -4007,7 +4005,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
 
 
-    function cambiarCiclo(valorTab) {{
+   function cambiarCiclo(valorTab) {{
+        // 1. Ocultar todas las tablas superiores y contenidos de polígonos
         document.querySelectorAll('.t-content').forEach(el => el.style.display = 'none');
         document.querySelectorAll('.p-content').forEach(el => el.style.display = 'none');
 
@@ -4016,25 +4015,33 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         const tituloPoligonos = document.getElementById('titulo-planificacion-poligonos');
         const botoneraSuperior = document.getElementById('fleet-drag-handle');
 
-        // 🔴 FORZAR OCULTACIÓN DE LA BOTONERA SUPERIOR EN TODOS LOS RUTEOS
+        // 2. Ocultar siempre la botonera superior en todos los ruteos
         if (botoneraSuperior) {{
             botoneraSuperior.style.setProperty('display', 'none', 'important');
         }}
 
+        // 3. Control de visibilidad para Sistémico (4) vs Otros Ruteos
         if (currentTab === 4) {{
             const tablaExt = document.getElementById('tab-4');
             if (tablaExt) tablaExt.style.display = 'none';
             if (tituloPoligonos) tituloPoligonos.style.display = 'none';
+
+            poblarSelectExtendido();
         }} else {{
             const tablaActiva = document.getElementById('tab-' + valorTab);
             if (tablaActiva) tablaActiva.style.display = 'block';
             if (tituloPoligonos) tituloPoligonos.style.display = 'block';
         }}
 
+        // 4. 🟢 MOSTRAR EL CONTENEDOR DE LA PESTAÑA SELECCIONADA (EN SISTÉMICO MUESTRA LAS CALCULADORAS)
         const polyActivo = document.getElementById('polys-' + valorTab);
-        if (polyActivo) polyActivo.style.display = 'block';
+        if (polyActivo) {{
+            polyActivo.style.setProperty('display', 'block', 'important');
+        }}
 
-        if (typeof recalc === 'function') recalc();
+        if (typeof recalc === 'function') {{
+            recalc();
+        }}
     }}
     
 
