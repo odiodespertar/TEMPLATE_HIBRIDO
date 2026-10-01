@@ -4129,12 +4129,10 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     }}
     
 
-
-    // 🟢 FUNCIÓN LIMPIAR PANTALLA COMPLETA (INCLUYE SISTÉMICO Y 2%)
     function limpiarPantallaCompleta() {{
         if (!confirm("¿Deseas vaciar los valores editados de la pantalla para iniciar un nuevo ruteo?")) return;
 
-        // 1. Limpiar Polígonos (Volúmenes, Unidades, SPR y Desplegables)
+        // 1. Limpiar Polígonos estándar
         document.querySelectorAll('.v-total-val, .nodos-val, .nodos-campeche').forEach(el => el.innerText = "0");
         document.querySelectorAll('.calc-row').forEach(row => {{
             let uSpan = row.querySelector('.u-manual');
@@ -4151,45 +4149,34 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             if (checkOk) checkOk.checked = false;
         }});
 
-        // 2. Limpiar Flota (Schedule, ORH, Ocupación y Memoria de Reducción)
+        // 2. Limpiar Flota
         document.querySelectorAll('.f-stock, .edit-orh, .edit-ocup').forEach(el => el.innerText = "0");
         document.querySelectorAll('.orh-hora').forEach(el => el.innerText = "00:00");
 
-        // 🟢 LIMPIAR MEMORIA DE REDUCCIÓN DE HORAS
-        document.querySelectorAll('tr').forEach(fila => {{
-            if (fila.hasAttribute("data-orh-original")) {{
-                fila.removeAttribute("data-orh-original");
-            }}
-        }});
-
-        // 3. Reiniciar memoria de filas editadas y recalcular
         if (typeof editedRowsPlan !== 'undefined' && editedRowsPlan.clear) {{
             editedRowsPlan.clear();
         }}
         if (typeof recalc === 'function') recalc();
 
-        // 4. 🟢 LIMPIAR PESTAÑA DE RUTEO SISTÉMICO Y CALCULADORAS DE 2%
+        // 3. 🟢 LIMPIAR TABLA DE RUTEO SISTÉMICO Y TARJETA FLOTANTE
         limpiarSistemico();
         
-        // Cierra el menú al terminar
         if (typeof toggleMenuLateralVisual === 'function') {{
             toggleMenuLateralVisual();
         }}
     }}
+    
 
 
-    // 🟢 SUB-FUNCIÓN AUXILIAR DE LIMPIEZA DE SISTÉMICO (INCLUYE OCULTAR BADGES DE EXCESO)
+    // 🟢 SUB-FUNCIÓN AUXILIAR DE LIMPIEZA TOTAL DE SISTÉMICO
     function limpiarSistemico() {{
-        // A. REINICIAR CALCULADORA 2% DATO 1 (SUMATORIA DINÁMICA)
-        const contenedor = document.getElementById('contenedor-celdas-2pct');
-        if (contenedor) {{
-            contenedor.innerHTML = `
-                <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 1"
-                       style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
-                <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 2"
-                       style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
-                <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 3"
-                       style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
+        // A. LIMPIAR CALCULADORAS DE 2%
+        const contenedor2pct = document.getElementById('contenedor-celdas-2pct');
+        if (contenedor2pct) {{
+            contenedor2pct.innerHTML = `
+                <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 1" style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
+                <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 2" style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
+                <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 3" style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
             `;
         }}
         
@@ -4198,23 +4185,40 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         if (elSuma1) elSuma1.innerText = '0';
         if (elRes1) elRes1.innerText = '0';
 
-        // B. REINICIAR CALCULADORA 2% DATO 2 (ESTÁTICO)
         const inDato2 = document.getElementById('dos-pct-in-2');
         const elRes2 = document.getElementById('dos-pct-res-2');
         if (inDato2) inDato2.value = '0';
         if (elRes2) elRes2.innerText = '0';
 
-        // 🟢 B.2 REINICIAR CONVERTIDOR ORH (AGREGADO AQUÍ)
         const inOrhMin = document.getElementById('orh-minutos-in');
         const elResOrh = document.getElementById('orh-horas-res');
         if (inOrhMin) inOrhMin.value = '';
         if (elResOrh) elResOrh.innerText = '00:00';
 
-        // C. REINICIAR TODAS LAS FILAS DE LA TABLA HÍBRIDA DE SISTÉMICO
-        const filasSistemico = document.querySelectorAll('.fila-hibrida-sis');
-        filasSistemico.forEach((fila, idx) => {{
-            fila.setAttribute('data-disp', '0');
-            fila.setAttribute('data-usadas', '0');
+        // B. LIMPIAR MINITABLA FLOTANTE DE PATIO (DISPONIBLE Y RESTANTE)
+        document.querySelectorAll('.row-flota-sis').forEach((row, idx) => {{
+            let inputNombre = document.getElementById(`sis-flota-nombre-${{idx}}`);
+            let inputDisp = document.getElementById(`sis-disp-flota-${{idx}}`);
+            let spanSpr = document.getElementById(`sis-flota-spr-${{idx}}`);
+            let spanRest = document.getElementById(`sis-rest-flota-${{idx}}`);
+
+            if (inputNombre) inputNombre.value = '';
+            if (inputDisp) inputDisp.value = '0';
+            if (spanSpr) spanSpr.innerText = '0';
+            if (spanRest) {{
+                spanRest.innerText = '0';
+                spanRest.style.color = '#2dd4bf';
+            }}
+        }});
+
+        // C. LIMPIAR TODOS LOS VOLUMENES TOTALES (INPUTS DROPEADOS)
+        document.querySelectorAll('.sis-plan-drop-in').forEach(input => {{
+            input.value = '0';
+        }});
+
+        // D. LIMPIAR UNIDADES, SPR Y # USADAS DE CADA FILA DE LA TABLA DE PLANES
+        document.querySelectorAll('.fila-plan-sistemico').forEach(fila => {{
+            let idx = fila.id.replace("sis-tr-", "");
 
             const elNombre = document.getElementById(`sis-nombre-${{idx}}`);
             if (elNombre) elNombre.value = '';
@@ -4222,33 +4226,22 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             const elSpr = document.getElementById(`sis-spr-${{idx}}`);
             if (elSpr) elSpr.value = '0';
 
-            const elUsadas = document.getElementById(`sis-usadas-${{idx}}`);
-            if (elUsadas) elUsadas.innerText = '0';
-
-            const elDisp = document.getElementById(`sis-disp-${{idx}}`);
-            if (elDisp) elDisp.innerText = '0';
-
-            const elVol = document.getElementById(`sis-vol-${{idx}}`);
-            if (elVol) elVol.value = '0';
-
             const elRes = document.getElementById(`sis-res-${{idx}}`);
             if (elRes) elRes.innerText = '0';
+        }});
 
-            // 🔴 OCULTAR Y LIMPIAR EL BADGE DE EXCESO ROJO
-            const badgeExceso = document.getElementById(`sis-badge-exceso-${{idx}}`);
-            if (badgeExceso) {{
-                badgeExceso.innerText = '';
-                badgeExceso.style.display = 'none';
+        // E. REINICIAR ESTADO/VACÍO EN TODOS LOS PLANES
+        const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
+        planesUnicos.forEach(planIdx => {{
+            let vacioCell = document.getElementById(`sis-vacio-plan-${{planIdx}}`);
+            if (vacioCell) {{
+                vacioCell.innerText = "VACÍO";
+                vacioCell.style.background = "#ededed";
+                vacioCell.style.color = "#808080";
             }}
         }});
 
-        // D. SINCRONIZAR CONTADORES Y RESTABLECER VISTA
-        if (typeof sincronizarTotalesSistemico === 'function') {{
-            sincronizarTotalesSistemico();
-        }}
-        if (typeof filterRows === 'function') {{
-            filterRows(false);
-        }}
+        sincronizarTotalesSistemico();
     }}
     
     
