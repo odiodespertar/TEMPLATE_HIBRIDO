@@ -4421,28 +4421,60 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     }}
     
 
+    // 🟢 FUNCIÓN DE LIMPIEZA COMPLETA (SISTÉMICO + RESTO DE RUTEOS)
     function limpiarPantallaCompleta() {{
         if (!confirm("¿Deseas vaciar los valores editados de la pantalla para iniciar un nuevo ruteo?")) return;
 
-        // 1. Limpiar Polígonos Estándar
+        // 1. Limpiar Polígonos Estándar (Volúmenes y Nodos)
         document.querySelectorAll('.v-total-val, .nodos-val, .nodos-campeche').forEach(el => {{
-            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.value = "0";
-            else el.innerText = "0";
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {{
+                el.value = "0";
+            }} else {{
+                el.innerText = "0";
+            }}
         }});
 
-        // 2. Ejecutar Limpieza de Calculadoras de Sistémico
+        // 2. Limpiar Celdas de Filas de Polígonos (# Usadas, SPR, Selectores y Checkboxes)
+        document.querySelectorAll('.calc-row').forEach(row => {{
+            let uSpan = row.querySelector('.u-manual');
+            let sprSpan = row.querySelector('.spr-real-val');
+            let selectType = row.querySelector('.s-type');
+            let checkOk = row.querySelector('.ok-check');
+
+            if (uSpan) uSpan.innerText = "0";
+            if (sprSpan) sprSpan.innerText = "0";
+            if (selectType) {{
+                selectType.value = ""; 
+                if (typeof updateSelectColor === 'function') updateSelectColor(selectType); 
+            }}
+            if (checkOk) checkOk.checked = false;
+        }});
+
+        // 3. Limpiar Tablas de Flota Estándar Superior (Stock, ORH y Ocupación)
+        document.querySelectorAll('.f-stock, .edit-orh, .edit-ocup').forEach(el => {{
+            el.innerText = "0";
+        }});
+        document.querySelectorAll('.orh-hora').forEach(el => {{
+            el.innerText = "00:00";
+        }});
+
+        if (typeof editedRowsPlan !== 'undefined' && editedRowsPlan.clear) {{
+            editedRowsPlan.clear();
+        }}
+
+        // 4. Limpiar las 3 Calculadoras de Sistémico
         limpiarSistemico();
 
-        // 3. Recalcular y cerrar menú
-        if (currentTab !== 4 && typeof recalc === 'function') {{
+        // 5. Recalcular la interfaz para actualizar totales en ruteos estándar
+        if (typeof recalc === 'function') {{
             recalc();
         }}
 
+        // 6. Cerrar el menú lateral
         if (typeof toggleMenuLateralVisual === 'function') {{
             toggleMenuLateralVisual();
         }}
     }}
-
 
     
     
