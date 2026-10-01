@@ -4129,11 +4129,16 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     }}
     
 
+    // 🟢 FUNCIÓN PRINCIPAL DE LIMPIEZA CORREGIDA
     function limpiarPantallaCompleta() {{
         if (!confirm("¿Deseas vaciar los valores editados de la pantalla para iniciar un nuevo ruteo?")) return;
 
-        // 1. Limpiar Polígonos Estándar
-        document.querySelectorAll('.v-total-val, .nodos-val, .nodos-campeche').forEach(el => el.innerText = "0");
+        // 1. Limpiar Polígonos Estándar (Pestañas C1, PREC, SDE)
+        document.querySelectorAll('.v-total-val, .nodos-val, .nodos-campeche').forEach(el => {{
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.value = "0";
+            else el.innerText = "0";
+        }});
+
         document.querySelectorAll('.calc-row').forEach(row => {{
             let uSpan = row.querySelector('.u-manual');
             let sprSpan = row.querySelector('.spr-real-val');
@@ -4157,82 +4162,70 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             editedRowsPlan.clear();
         }}
 
-        // 3. Recalcular las otras pestañas
-        if (typeof recalc === 'function') recalc();
-
-        // 4. 🟢 EJECUTAR LIMPIEZA DE SISTÉMICO AL FINAL DE TODO
-        // (Sin llamar a sincronizarTotalesSistemico() para que no re-calcule los números)
+        // 3. 🟢 EJECUTAR OBLIGATORIAMENTE LA LIMPIEZA DE SISTÉMICO
         limpiarSistemico();
+
+        // 4. Recalcular tablas normales sin alterar Sistémico
+        if (typeof recalc === 'function') recalc();
         
+        // 5. Cerrar menú lateral
         if (typeof toggleMenuLateralVisual === 'function') {{
             toggleMenuLateralVisual();
         }}
     }}
 
 
-    // 🟢 FUNCIÓN DE LIMPIEZA TOTAL Y ABSOLUTA (SISTÉMICO + PATIO + DROPEO)
+    // 🟢 LIMPIEZA ABSOLUTA Y DIRECTA DEL DOM EN SISTÉMICO
     function limpiarSistemico() {{
-        // 1. DESACTIVAR REAGRUPACIÓN TEMPORAL DE PATIO
-        // Vaciar minitabla negra flotante de patio (Disponibles, Nombres, SPR, Restantes)
-        document.querySelectorAll('.row-flota-sis').forEach((row, idx) => {{
-            let inputNombre = document.getElementById(`sis-flota-nombre-${{idx}}`) || row.querySelector('.edit-name-flota-sis');
-            let inputDisp = document.getElementById(`sis-disp-flota-${{idx}}`) || row.querySelector('.sis-disp-flota-in');
-            let spanSpr = document.getElementById(`sis-flota-spr-${{idx}}`) || row.querySelector('span[id^="sis-flota-spr-"]');
-            let tdRest = document.getElementById(`sis-rest-flota-${{idx}}`) || row.querySelector('td[id^="sis-rest-flota-"]');
-
-            if (inputNombre) {{
-                inputNombre.value = '';
-                inputNombre.setAttribute('value', '');
-            }}
-            if (inputDisp) {{
-                inputDisp.value = '0';
-                inputDisp.setAttribute('value', '0');
-            }}
-            if (spanSpr) spanSpr.innerText = '0';
-            if (tdRest) {{
-                tdRest.innerText = '0';
-                tdRest.style.color = '#2dd4bf';
-            }}
-        }});
-
-        // 2. BORRAR TODOS LOS CAMPOS DE DROPEO (VOL. TOTAL) EN PANTALLA
-        document.querySelectorAll('.sis-plan-drop-in').forEach(input => {{
+        // A. LIMPIAR CAMPOS DE DROPEO (VACÍO ABSOLUTO)
+        document.querySelectorAll('.sis-plan-drop-in, input[id^="sis-drop-plan-"]').forEach(input => {{
             input.value = '0';
             input.setAttribute('value', '0');
         }});
 
-        // 3. VACIAR CELDAS DE CADA FILA (# USADAS, SPR Y TIPO DE UNIDAD)
-        document.querySelectorAll('.fila-plan-sistemico').forEach(fila => {{
-            let idx = fila.id.replace("sis-tr-", "");
-
-            let elNombre = document.getElementById(`sis-nombre-${{idx}}`);
-            if (elNombre) {{
-                elNombre.value = '';
-                elNombre.setAttribute('value', '');
-            }}
-
-            let elSpr = document.getElementById(`sis-spr-${{idx}}`);
-            if (elSpr) {{
-                elSpr.value = '0';
-                elSpr.setAttribute('value', '0');
-            }}
-
-            let elRes = document.getElementById(`sis-res-${{idx}}`);
-            if (elRes) elRes.innerText = '0';
+        // B. LIMPIAR TABLITA NEGRA DE PATIO (FLOTA DISPONIBLE)
+        document.querySelectorAll('.edit-name-flota-sis, input[id^="sis-flota-nombre-"]').forEach(input => {{
+            input.value = '';
+            input.setAttribute('value', '');
         }});
 
-        // 4. RESTABLECER CELDAS DE ESTADO A "VACÍO" (SIN RECALCULAR FALTAN NI EXCESO)
-        const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
-        planesUnicos.forEach(planIdx => {{
-            let vacioCell = document.getElementById(`sis-vacio-plan-${{planIdx}}`);
-            if (vacioCell) {{
-                vacioCell.innerText = "VACÍO";
-                vacioCell.style.background = "#ededed";
-                vacioCell.style.color = "#808080";
-            }}
+        document.querySelectorAll('.sis-disp-flota-in, input[id^="sis-disp-flota-"]').forEach(input => {{
+            input.value = '0';
+            input.setAttribute('value', '0');
         }});
 
-        // 5. REINICIAR CALCULADORAS DE 2% Y CONVERTIDOR DE ORH
+        document.querySelectorAll('span[id^="sis-flota-spr-"]').forEach(span => {{
+            span.innerText = '0';
+        }});
+
+        document.querySelectorAll('td[id^="sis-rest-flota-"]').forEach(td => {{
+            td.innerText = '0';
+            td.style.color = '#2dd4bf';
+        }});
+
+        // C. LIMPIAR CELDAS DE PLANES (# USADAS, SPR, TIPO DE UNIDAD)
+        document.querySelectorAll('.edit-name-sis, input[id^="sis-nombre-"]').forEach(input => {{
+            input.value = '';
+            input.setAttribute('value', '');
+        }});
+
+        document.querySelectorAll('.sis-spr-input, input[id^="sis-spr-"]').forEach(input => {{
+            input.value = '0';
+            input.setAttribute('value', '0');
+        }});
+
+        document.querySelectorAll('.res-adic-sis, span[id^="sis-res-"]').forEach(span => {{
+            span.innerText = '0';
+        }});
+
+        // D. FORZAR RESTABLECIMIENTO DE TODAS LAS CELDAS DE ESTADO A "VACÍO"
+        document.querySelectorAll('.td-plan-vacio, td[id^="sis-vacio-plan-"]').forEach(vacioCell => {{
+            vacioCell.innerText = "VACÍO";
+            vacioCell.style.background = "#ededed";
+            vacioCell.style.color = "#808080";
+        }});
+
+        // E. REINICIAR CALCULADORAS DE 2% Y ORH
         const contenedor2pct = document.getElementById('contenedor-celdas-2pct');
         if (contenedor2pct) {{
             contenedor2pct.innerHTML = `
