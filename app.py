@@ -1717,7 +1717,7 @@ CATALOGO_SISTEMICO = {
 
 
 PLANES_SISTEMICO = [
-   "ACTOPAN", "⚠️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
+   "ACTOPAN", "⚠️️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
    "TEZUITLAN", "TLALTETELA", "TRAPICHE", "TUZAMAPA", "XICO", "CONTINGENCIA CENTRO NODO", 
    "CONTINGENCIA TUZAMAPA", "CONTINGENCIA XICO"
 ]
@@ -1729,20 +1729,23 @@ def gen_tabla_sistemico_planes():
             📋 PLANIFICACIÓN POR POLÍGONOS (SISTÉMICO)
         </div>
 
-        <table style="width: 100%; border-collapse: collapse; color: #222222; font-size: 14px; table-layout: fixed;">
+        <table style="width: 100%; border-collapse: collapse; color: #222222; font-size: 13px; table-layout: fixed; border: 1.5px solid #25282b;">
             <thead>
-                <tr style="height: 38px; background: #25282b; color: #ffffff; font-weight: 800; font-size: 13px; text-transform: uppercase;">
-                    <th style="padding: 8px; text-align: center; width: 18%; border-right: 1px solid #ffffff;">PLAN</th>
-                    <th style="padding: 8px; text-align: center; width: 16%; border-right: 1px solid #ffffff;">IDS DROPEADOS</th>
-                    <th style="padding: 8px; text-align: center; width: 34%; border-right: 1px solid #ffffff;">UNIDAD</th>
-                    <th style="padding: 8px; text-align: center; width: 14%; border-right: 1px solid #ffffff;">SPR LOGIS</th>
-                    <th style="padding: 8px; text-align: center; width: 18%;">UNIDADES ADICIONALES</th>
+                <tr style="height: 32px; background: #25282b; color: #ffffff; font-weight: 800; font-size: 12px; text-transform: uppercase;">
+                    <th style="padding: 6px; text-align: center; width: 18%; border-right: 1px solid #ffffff;">PLAN</th>
+                    <th style="padding: 6px; text-align: center; width: 13%; border-right: 1px solid #ffffff;">VOL. TOTAL</th>
+                    <th style="padding: 6px; text-align: center; width: 15%; border-right: 1px solid #ffffff;"># USADAS</th>
+                    <th style="padding: 6px; text-align: center; width: 14%; border-right: 1px solid #ffffff;">SPR</th>
+                    <th style="padding: 6px; text-align: center; width: 28%; border-right: 1px solid #ffffff;">TIPO DE UNIDAD</th>
+                    <th style="padding: 6px; text-align: center; width: 12%;">ESTADO</th>
                 </tr>
             </thead>
             <tbody id="tbody-sistemico-planes">
     '''
 
     fila_global_idx = 0
+    btn_s = "cursor:pointer; border:none; background:rgba(0,0,0,0.08); color:#25282b; font-weight:bold; width:22px; height:20px; border-radius:4px; display:inline-flex; align-items:center; justify-content:center;"
+
     for p_idx, plan_nom in enumerate(PLANES_SISTEMICO):
         num_filas = 4 if plan_nom == "⚠️ CENTRO 1" else 2
 
@@ -1752,47 +1755,68 @@ def gen_tabla_sistemico_planes():
             border_bottom = "2px solid #25282b" if es_ultima_fila_plan else "1px solid #cbd5e1"
             
             html += f'''
-            <tr class="fila-plan-sistemico" data-plan="{plan_nom}" data-plan-idx="{p_idx}" id="sis-tr-{idx}" style="border-bottom: {border_bottom}; height: 48px; background: #ffffff;">
+            <tr class="fila-plan-sistemico" data-plan="{plan_nom}" data-plan-idx="{p_idx}" id="sis-tr-{idx}" style="border-bottom: {border_bottom}; height: 44px; background: #ffffff;">
             '''
 
             if r_idx == 0:
                 html += f'''
-                <td rowspan="{num_filas}" class="td-plan-name" id="td-plan-nom-{p_idx}" style="background: #dcdcdc; border-right: 1.5px solid #25282b; border-bottom: 2px solid #25282b; padding: 8px; vertical-align: middle;">
-                    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100%; gap: 8px;">
-                        <div contenteditable="true" style="font-weight: 800; font-size: 15px; color: #0f172a; text-align: center; outline: none; padding: 2px 4px; border-radius: 4px;" title="Haz clic para editar">{plan_nom}</div>
+                <!-- 1. PLAN -->
+                <td rowspan="{num_filas}" class="td-plan-name" id="td-plan-nom-{p_idx}" style="background: #dcdcdc; border-right: 1.5px solid #25282b; border-bottom: 2px solid #25282b; padding: 6px; vertical-align: middle;">
+                    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100%; gap: 6px;">
+                        <div contenteditable="true" style="font-weight: 800; font-size: 14px; color: #0f172a; text-align: center; outline: none;" title="Haz clic para editar">{plan_nom}</div>
                         <div style="display: flex; gap: 4px; justify-content: center;">
                             <button onclick="agregarFilaPlanSis('{plan_nom}', {p_idx})" title="Agregar fila"
-                                    style="cursor: pointer; background: rgba(0,0,0,0.06); color: #333333; border: 1px solid #a3a3a3; font-weight: 700; border-radius: 4px; width: 22px; height: 20px; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; padding: 0; outline: none;">+</button>
+                                    style="cursor: pointer; background: rgba(0,0,0,0.06); color: #333333; border: 1px solid #a3a3a3; font-weight: 700; border-radius: 4px; width: 20px; height: 18px; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; padding: 0; outline: none;">+</button>
                             <button onclick="quitarFilaPlanSis('{plan_nom}', {p_idx})" title="Quitar fila"
-                                    style="cursor: pointer; background: rgba(0,0,0,0.06); color: #333333; border: 1px solid #a3a3a3; font-weight: 700; border-radius: 4px; width: 22px; height: 20px; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; padding: 0; outline: none;">-</button>
+                                    style="cursor: pointer; background: rgba(0,0,0,0.06); color: #333333; border: 1px solid #a3a3a3; font-weight: 700; border-radius: 4px; width: 20px; height: 18px; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; padding: 0; outline: none;">-</button>
                         </div>
                     </div>
                 </td>
-                <td rowspan="{num_filas}" class="td-plan-drop" id="td-plan-drop-{p_idx}" style="background: #ffffff; text-align: center; vertical-align: middle; border-right: 1.5px solid #25282b; border-bottom: 2px solid #25282b; padding: 6px;">
-                    <!-- 🟢 IDS DROPEADOS: Grande pero estilizado (font-weight: 600, font-size: 20px) -->
+
+                <!-- 2. VOL. TOTAL (IDS DROPEADOS) -->
+                <td rowspan="{num_filas}" class="td-plan-drop" id="td-plan-drop-{p_idx}" style="background: #ffffff; text-align: center; vertical-align: middle; border-right: 1.5px solid #25282b; border-bottom: 2px solid #25282b; padding: 4px;">
                     <input type="number" class="sis-plan-drop-in" id="sis-drop-plan-{p_idx}" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()" value="0" placeholder="0"
-                           style="width: 80px; text-align: center; padding: 6px; font-weight: 600; font-size: 24px; border: 1.5px solid transparent; background: transparent; color: #FF4500; outline: none; border-radius: 6px; transition: all 0.15s ease;" />
+                           style="width: 70px; text-align: center; padding: 4px; font-weight: 600; font-size: 20px; border: 1.5px solid transparent; background: transparent; color: #FF4500; outline: none; border-radius: 6px;" />
                 </td>
                 '''
 
             html += f'''
-                <td style="padding: 4px 8px; text-align: left; vertical-align: middle; position: relative; border-right: 1px solid #25282b;">
+                <!-- 3. # USADAS (UNIDADES ADICIONALES) -->
+                <td style="padding: 2px; text-align: center; vertical-align: middle; background: #d3f0e5; border-right: 1px solid #25282b;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 2px 4px;">
+                        <button style="{btn_s}" onclick="stepValSis(this, -1, 'u', {p_idx})">-</button>
+                        <span id="sis-res-{idx}" class="res-adic-sis" style="font-weight: 700; font-size: 18px; color: #25282b;">0</span>
+                        <button style="{btn_s}" onclick="stepValSis(this, 1, 'u', {p_idx})">+</button>
+                    </div>
+                </td>
+
+                <!-- 4. SPR (SPR LOGIS) -->
+                <td style="padding: 2px; text-align: center; vertical-align: middle; background: #ffffff; border-right: 1px solid #25282b;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 2px 4px;">
+                        <button style="{btn_s}" onclick="stepValSis(this, -1, 's', {p_idx})">-</button>
+                        <input type="number" id="sis-spr-{idx}" value="0" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()"
+                               style="width: 40px; text-align: center; padding: 2px; font-weight: 700; font-size: 18px; border: none; background: transparent; color: #25282b; outline: none;" />
+                        <button style="{btn_s}" onclick="stepValSis(this, 1, 's', {p_idx})">+</button>
+                    </div>
+                </td>
+
+                <!-- 5. TIPO DE UNIDAD -->
+                <td style="padding: 4px 6px; text-align: left; vertical-align: middle; position: relative; border-right: 1.5px solid #25282b;">
                     <input type="text" class="edit-name-sis" id="sis-nombre-{idx}" oninput="buscarCoincidenciasUnidad(this, {idx}); calcularPlanSistemico({p_idx});" onkeydown="navegarSugerenciasUnidad(event, {idx})" onfocus="buscarCoincidenciasUnidad(this, {idx})" placeholder="Buscar unidad..." autocomplete="off"
-                           style="width: 100%; box-sizing: border-box; font-weight: 700; font-size: 15px; color: #1e293b; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 4px 6px; border-radius: 4px;" />
+                           style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 14px; color: #1e293b; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 4px 6px; border-radius: 4px;" />
                     <div id="sis-sug-{idx}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 90%; left: 6px; right: 6px; background: #ffffff; border: 1px solid #25282b; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 160px; overflow-y: auto;"></div>
                 </td>
-
-                <td style="text-align: center; padding: 4px; vertical-align: middle; border-right: 1px solid #25282b;">
-                    <input type="number" id="sis-spr-{idx}" value="0" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()"
-                           style="width: 65px; text-align: center; padding: 4px; font-weight: 700; font-size: 20px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #475569; outline: none;" />
-                </td>
-
-                <!-- 🟢 UNIDADES ADICIONALES: Grande pero estilizado (font-weight: 600, font-size: 20px) -->
-                <td style="text-align: center; padding: 4px; vertical-align: middle; background: #ffffff;">
-                    <span id="sis-res-{idx}" class="res-adic-sis" style="font-weight: 600; font-size: 20px; color: #008B8B; -webkit-font-smoothing: antialiased;">0</span>
-                </td>
-            </tr>
             '''
+
+            if r_idx == 0:
+                html += f'''
+                <!-- 6. ESTADO / VACÍO -->
+                <td rowspan="{num_filas}" class="p-diff-sis" id="sis-vacio-plan-{p_idx}" style="text-align: center; vertical-align: middle; border-bottom: 2px solid #25282b; font-weight: 800; font-size: 14px; background: #ededed; color: #808080; padding: 6px;">
+                    VACÍO
+                </td>
+                '''
+
+            html += '</tr>'
             fila_global_idx += 1
 
     html += '''
@@ -4894,6 +4918,70 @@ function showTab(n, btn) {{
 
 
 
+    // 🟢 PASO MANUAL (+ / -) PARA UNIDADES ADICIONALES Y SPR
+    function stepValSis(btn, delta, type, planIdx) {{
+        let row = btn.closest('tr');
+        if (!row) return;
+
+        let idx = row.id.replace('sis-tr-', '');
+        if (type === 'u') {{
+            let resSpan = document.getElementById(`sis-res-${{idx}}`);
+            if (resSpan) {{
+                let val = parseInt(resSpan.innerText) || 0;
+                let newVal = Math.max(0, val + delta);
+                resSpan.innerText = newVal;
+            }}
+        }} else if (type === 's') {{
+            let sprIn = document.getElementById(`sis-spr-${{idx}}`);
+            if (sprIn) {{
+                let val = parseFloat(sprIn.value) || 0;
+                let newVal = Math.max(0, val + delta);
+                sprIn.value = newVal;
+            }}
+        }}
+        calcularPlanSistemico(planIdx);
+    }}
+
+    // 🟢 RECALCULAR ESTADO / VACÍO POR PLAN
+    function calcularVacioSistemico(planIdx) {{
+        let dropIn = document.getElementById(`sis-drop-plan-${{planIdx}}`);
+        let vacioCell = document.getElementById(`sis-vacio-plan-${{planIdx}}`);
+        if (!dropIn || !vacioCell) return;
+
+        let totalVolumen = parseFloat(dropIn.value) || 0;
+        let cubierto = 0;
+
+        let filasPlan = document.querySelectorAll(`.fila-plan-sistemico[data-plan-idx="${{planIdx}}"]`);
+        filasPlan.forEach(fila => {{
+            let idx = fila.id.replace("sis-tr-", "");
+            let resSpan = document.getElementById(`sis-res-${{idx}}`);
+            let sprIn = document.getElementById(`sis-spr-${{idx}}`);
+
+            let u = parseInt(resSpan?.innerText) || 0;
+            let spr = parseFloat(sprIn?.value) || 0;
+            cubierto += (u * spr);
+        }});
+
+        let restante = totalVolumen - cubierto;
+
+        if (totalVolumen === 0) {{
+            vacioCell.innerText = "VACÍO";
+            vacioCell.style.background = "#ededed";
+            vacioCell.style.color = "#808080";
+        }} else if (restante === 0) {{
+            vacioCell.innerText = "OK";
+            vacioCell.style.background = "#61b888";
+            vacioCell.style.color = "#ffffff";
+        }} else if (restante < 0) {{
+            vacioCell.innerText = "EXCESO: " + Math.abs(restante);
+            vacioCell.style.background = "#f2bd5c";
+            vacioCell.style.color = "#25282b";
+        }} else {{
+            vacioCell.innerText = "FALTAN: " + restante;
+            vacioCell.style.background = "#fc9a88";
+            vacioCell.style.color = "#25282b";
+        }}
+    }}
 
 
 
@@ -6578,41 +6666,53 @@ function obtenerCarFlexible() {{
 
         const tdPlan = document.getElementById(`td-plan-nom-${{planIdx}}`);
         const tdDrop = document.getElementById(`td-plan-drop-${{planIdx}}`);
+        const tdVacio = document.getElementById(`sis-vacio-plan-${{planIdx}}`);
+
         if (tdPlan) tdPlan.rowSpan = nuevaNumFilas;
         if (tdDrop) tdDrop.rowSpan = nuevaNumFilas;
+        if (tdVacio) tdVacio.rowSpan = nuevaNumFilas;
 
         const ultimaFilaAnterior = filasExistentes[filasExistentes.length - 1];
         if (ultimaFilaAnterior) {{
             ultimaFilaAnterior.style.borderBottom = "1px solid #cbd5e1";
         }}
 
-        const totalFilasGlobal = tbody.querySelectorAll('.fila-plan-sistemico').length; 
+        const totalFilasGlobal = tbody.querySelectorAll('.fila-plan-sistemico').length;
+        const btn_s = "cursor:pointer; border:none; background:rgba(0,0,0,0.08); color:#25282b; font-weight:bold; width:22px; height:20px; border-radius:4px; display:inline-flex; align-items:center; justify-content:center;";
+        
         const nuevaTr = document.createElement("tr");
         nuevaTr.className = "fila-plan-sistemico";
         nuevaTr.setAttribute("data-plan", planNom);
         nuevaTr.setAttribute("data-plan-idx", planIdx);
         nuevaTr.id = `sis-tr-${{totalFilasGlobal}}`;
-        nuevaTr.style.cssText = "border-bottom: 2px solid #25282b; height: 48px; background: #ffffff;";
+        nuevaTr.style.cssText = "border-bottom: 2px solid #25282b; height: 44px; background: #ffffff;";
 
         nuevaTr.innerHTML = `
-            <td style="padding: 4px 8px; text-align: left; vertical-align: middle; position: relative; border-right: 1px solid #25282b;">
+            <td style="padding: 2px; text-align: center; vertical-align: middle; background: #d3f0e5; border-right: 1px solid #25282b;">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 2px 4px;">
+                    <button style="${{btn_s}}" onclick="stepValSis(this, -1, 'u', ${{planIdx}})">-</button>
+                    <span id="sis-res-${{totalFilasGlobal}}" class="res-adic-sis" style="font-weight: 700; font-size: 18px; color: #25282b;">0</span>
+                    <button style="${{btn_s}}" onclick="stepValSis(this, 1, 'u', ${{planIdx}})">+</button>
+                </div>
+            </td>
+            <td style="padding: 2px; text-align: center; vertical-align: middle; background: #ffffff; border-right: 1px solid #25282b;">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 2px 4px;">
+                    <button style="${{btn_s}}" onclick="stepValSis(this, -1, 's', ${{planIdx}})">-</button>
+                    <input type="number" id="sis-spr-${{totalFilasGlobal}}" value="0" oninput="calcularPlanSistemico(${{planIdx}})" onfocus="this.select()"
+                           style="width: 40px; text-align: center; padding: 2px; font-weight: 700; font-size: 18px; border: none; background: transparent; color: #25282b; outline: none;" />
+                    <button style="${{btn_s}}" onclick="stepValSis(this, 1, 's', ${{planIdx}})">+</button>
+                </div>
+            </td>
+            <td style="padding: 4px 6px; text-align: left; vertical-align: middle; position: relative; border-right: 1.5px solid #25282b;">
                 <input type="text" class="edit-name-sis" id="sis-nombre-${{totalFilasGlobal}}" oninput="buscarCoincidenciasUnidad(this, ${{totalFilasGlobal}}); calcularPlanSistemico(${{planIdx}});" onkeydown="navegarSugerenciasUnidad(event, ${{totalFilasGlobal}})" onfocus="buscarCoincidenciasUnidad(this, ${{totalFilasGlobal}})" placeholder="Buscar unidad..." autocomplete="off"
-                       style="width: 100%; box-sizing: border-box; font-weight: 700; font-size: 15px; color: #1e293b; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 4px 6px; border-radius: 4px;" />
+                       style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 14px; color: #1e293b; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 4px 6px; border-radius: 4px;" />
                 <div id="sis-sug-${{totalFilasGlobal}}" class="sugerencias-sis-box" style="display: none; position: absolute; top: 90%; left: 6px; right: 6px; background: #ffffff; border: 1px solid #25282b; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 160px; overflow-y: auto;"></div>
-            </td>
-            <td style="text-align: center; padding: 4px; vertical-align: middle; border-right: 1px solid #25282b;">
-                <input type="number" id="sis-spr-${{totalFilasGlobal}}" value="0" oninput="calcularPlanSistemico(${{planIdx}})" onfocus="this.select()"
-                       style="width: 65px; text-align: center; padding: 4px; font-weight: 700; font-size: 20px; border: none; border-bottom: 1.5px solid #cbd5e1; background: transparent; color: #475569; outline: none;" />
-            </td>
-            <!-- 🟢 FONDO BLANCO RESTAURADO EN UNIDADES ADICIONALES -->
-            <td style="text-align: center; padding: 4px; vertical-align: middle; background: #ffffff;">
-                <span id="sis-res-${{totalFilasGlobal}}" class="res-adic-sis" style="font-weight: 600; font-size: 22px; color: #008B8B; -webkit-font-smoothing: antialiased;">0</span>
             </td>
         `;
 
         ultimaFilaAnterior.after(nuevaTr);
+        calcularPlanSistemico(planIdx);
     }}
-
     
 
     function quitarFilaPlanSis(planNom, planIdx) {{
