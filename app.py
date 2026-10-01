@@ -3652,7 +3652,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     }}
 
 
-    // 🟢 LÓGICA DE LA CALCULADORA DIVISORA SISTÉMICO
+    // 🟢 LÓGICA DE LA CALCULADORA DIVISORA CON 1 DECIMAL
     function calcularDivisionSistemico() {{
         const num1 = parseFloat(document.getElementById('calc-div-num1')?.value) || 0;
         const num2 = parseFloat(document.getElementById('calc-div-num2')?.value) || 0;
@@ -3661,8 +3661,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         if (!resDisplay) return;
 
         if (num1 > 0 && num2 > 0) {{
-            let resultado = Math.ceil(num1 / num2);
-            resDisplay.innerText = resultado.toLocaleString();
+            let resultado = (num1 / num2).toFixed(1); // 👈 Formatea exactamente a 1 decimal
+            resDisplay.innerText = resultado;
         }} else {{
             resDisplay.innerText = "0";
         }}
