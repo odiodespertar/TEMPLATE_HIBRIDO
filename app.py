@@ -3505,7 +3505,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             <div style="background: #1e2022; padding: 14px 16px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; flex-direction: column; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center;">
                 <div>
                     <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - TOTAL(+NODOS)</div>
-                    <input type="number" id="dos-pct-in-2" class="no-spinners" oninput="calcularDosPctIndividual(2)" onfocus="this.select()" value="0" placeholder="Ej. 3000"
+                    <input type="number" id="dos-pct-in-2" class="no-spinners" oninput="calcularDosPctIndividual(2)" onfocus="this.select()" value="0" placeholder="0"
                            style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 22px; font-weight: 800; text-align: center; border-radius: 8px; border: 1.5px solid #20B2AA; background: #141414; color: #DCDCDC; outline: none; margin-top: 6px; height: 48px;" />
                 </div>
                 <div style="width: 100%; border-top: 1px solid #34383d; padding-top: 8px;">
