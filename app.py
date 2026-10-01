@@ -1735,7 +1735,7 @@ def gen_tabla_sistemico_planes():
             <thead>
                 <tr style="height: 32px; background: #25282b; color: #ffffff; font-weight: 800; font-size: 12px; text-transform: uppercase;">
                     <th style="padding: 6px; text-align: center; width: 18%; border-right: 1px solid #ffffff;">PLAN</th>
-                    <th style="padding: 6px; text-align: center; width: 13%; border-right: 1px solid #ffffff;">VOL. TOTAL</th>
+                    <th style="padding: 6px; text-align: center; width: 13%; border-right: 1px solid #ffffff;">DROPEO</th>
                     <th style="padding: 6px; text-align: center; width: 15%; border-right: 1px solid #ffffff;"># USADAS</th>
                     <th style="padding: 6px; text-align: center; width: 14%; border-right: 1px solid #ffffff;">SPR</th>
                     <th style="padding: 6px; text-align: center; width: 28%; border-right: 1px solid #ffffff;">TIPO DE UNIDAD</th>
