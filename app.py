@@ -3897,19 +3897,17 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         if (inputSpr) inputSpr.value = spr;
         if (boxSug) boxSug.style.display = "none";
 
-        // Dispara la verificación del badge rojo y actualización de totales
-        calcularFilaHibrida(idx);
-        sincronizarTotalesSistemico();
-    }}
+        // 🟢 Obtener la fila para saber a qué plan pertenece (data-plan-idx)
+        const fila = document.getElementById(`sis-tr-${{idx}}`);
+        const planIdx = fila ? fila.getAttribute('data-plan-idx') : null;
 
-    // Ocultar sugerencias al hacer clic fuera
-    document.addEventListener("click", function(e) {{
-        document.querySelectorAll(".sugerencias-sis-box").forEach(box => {{
-            if (!box.contains(e.target) && !e.target.classList.contains("edit-name-sis")) {{
-                box.style.display = "none";
-            }}
-        }});
-    }});
+        // 🟢 Disparar el Auto-Cálculo de flota y la actualización de la columna ESTADO
+        if (planIdx !== null) {{
+            calcularPlanSistemico(planIdx);
+        }} else {{
+            distribuirAutomaticoSistemico();
+        }}
+    }}
 
 
 
@@ -5809,10 +5807,11 @@ document.addEventListener('keydown', function(event) {{
         planesUnicos.forEach(pIdx => calcularVacioSistemico(pIdx));
     }}
 
-    // 🟢 MOTOR PRINCIPAL DE AUTO-CALCULAR SEGÚN INVENTARIO EN PATIO
+    // 🧠 MOTOR AUTO-CALCULAR (INJECTA SPR EN PANTALLA Y RESTA VOLUMEN EN ESTADO)
     function distribuirAutomaticoSistemico() {{
         let flotaDisponibilidad = obtenerInventarioPatio();
 
+        // 1. Agrupar los planes
         let planesData = [];
         const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
 
@@ -5831,12 +5830,12 @@ document.addEventListener('keydown', function(event) {{
                 let nombre = inputNombre?.value?.trim() || "";
                 let spr = parseFloat(inputSpr?.value) || 0;
 
-                // 🟢 SI EL SPR DE LA FILA ESTÁ EN 0, AUTO-COMPLETAR CON EL CATÁLOGO
+                // 🟢 PASO CLAVE: Si la celda de SPR está en 0 o vacía, buscar el SPR en el catálogo e escribirlo en pantalla
                 if (nombre && spr === 0) {{
                     let claveCat = Object.keys(catalogoUnidadesExtendido).find(k => k.toLowerCase() === nombre.toLowerCase());
                     if (claveCat) {{
                         spr = catalogoUnidadesExtendido[claveCat][1];
-                        if (inputSpr) inputSpr.value = spr;
+                        if (inputSpr) inputSpr.value = spr; // 👈 Se dibuja en la celda SPR de la tabla
                     }}
                 }}
 
@@ -5854,11 +5853,14 @@ document.addEventListener('keydown', function(event) {{
             }}
         }});
 
+        // Ordenar planes por volumen dropeado (mayor a menor)
         planesData.sort((a, b) => b.dropTotal - a.dropTotal);
 
+        // 2. Repartir volumen consumiendo patio
         planesData.forEach(pData => {{
             let dropRestantePlan = pData.dropTotal;
 
+            // FASE 1: Consumir disponibilidad física de la minitabla flotante de arriba
             pData.unidadesDelPlan.forEach(uInfo => {{
                 if (dropRestantePlan <= 0) return;
 
@@ -5879,6 +5881,7 @@ document.addEventListener('keydown', function(event) {{
                 }}
             }});
 
+            // FASE 2: Si aún falta volumen y son unidades libres de desborde (Car 8h, etc.)
             if (dropRestantePlan > 0) {{
                 pData.unidadesDelPlan.forEach(uInfo => {{
                     if (dropRestantePlan <= 0) return;
@@ -5901,6 +5904,7 @@ document.addEventListener('keydown', function(event) {{
                 }});
             }}
 
+            // Escribir la cantidad de unidades en # USADAS
             pData.unidadesDelPlan.forEach(uInfo => {{
                 if (uInfo.elRes) uInfo.elRes.innerText = uInfo.asignadas;
             }});
