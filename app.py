@@ -3527,16 +3527,16 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                 <div style="display: flex; gap: 4px; align-items: flex-end; justify-content: center;">
                     <!-- Campo 1: Número Editable -->
                     <div style="flex: 1.2;">
-                        <label style="font-size: 11px; color: #64748b; font-weight: 800; display: block; margin-bottom: 3px; text-align: center; letter-spacing: 0.5px;">NÚMERO A DIVIDIR</label>
+                        <label style="font-size: 11px; color: #64748b; font-weight: 800; display: block; margin-bottom: 3px; text-align: center; letter-spacing: 0.5px;">IDS</label>
                         <input type="number" id="calc-div-num1" class="no-spinners" oninput="calcularDivisionSistemico()" onfocus="this.select()" placeholder="Ej. 1000"
-                               style="width: 100%; box-sizing: border-box; padding: 6px 4px; font-size: 32px; font-weight: 900; text-align: center; border: 2px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 10px; height: 60px;" />
+                               style="width: 100%; box-sizing: border-box; padding: 6px 4px; font-size: 28px; font-weight: 900; text-align: center; border: 2px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 10px; height: 60px;" />
                     </div>
 
                     <div style="font-size: 28px; font-weight: 900; color: #64748b; padding-bottom: 12px; user-select: none; margin: 0 2px;">÷</div>
 
                     <!-- Campo 2: Divisor con Botones + y - Pegaditos -->
                     <div style="flex: 1.5;">
-                        <label style="font-size: 11px; color: #64748b; font-weight: 800; display: block; margin-bottom: 3px; text-align: center; letter-spacing: 0.5px;">DIVISOR</label>
+                        <label style="font-size: 11px; color: #64748b; font-weight: 800; display: block; margin-bottom: 3px; text-align: center; letter-spacing: 0.5px;">SPR</label>
                         <div style="display: flex; align-items: center; gap: 2px;">
                             <button onclick="pasoDivisorSistemico(-1)" title="Restar 1"
                                     style="cursor: pointer; background: #f1f5f9; color: #dc2626; border: 2px solid #cbd5e1; font-weight: 900; border-radius: 10px 0 0 10px; width: 48px; height: 60px; font-size: 28px; display: inline-flex; align-items: center; justify-content: center; outline: none; flex-shrink: 0;"
@@ -3555,7 +3555,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
                     <!-- Campo 3: Resultado No Editable -->
                     <div style="flex: 1.3; background: #1e2022; padding: 2px 8px; border-radius: 10px; border: 2px solid #34383d; text-align: center; height: 60px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;">
-                        <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: 800; letter-spacing: 0.5px;">RESULTADO:</span>
+                        <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: 800; letter-spacing: 0.5px;">UNIDADES:</span>
                         <span id="calc-div-res" style="font-size: 38px; font-weight: 900; color: #20B2AA; line-height: 0.9;">0</span>
                     </div>
                 </div>
