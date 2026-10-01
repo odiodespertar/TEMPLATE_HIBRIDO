@@ -3498,34 +3498,40 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                     </div>
                 </div>
 
-                <!-- RECUADRO 2: DATO DEDICADO INDIVIDUAL + CONVERTIDOR DE ORH -->
-                <div style="flex: 1; display: flex; flex-direction: column; gap: 12px; justify-content: space-between;">
-                    <div style="background: #1e2022; padding: 14px 18px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+
+
+                <!-- RECUADRO 2: DATO DEDICADO INDIVIDUAL + CONVERTIDOR DE ORH (VERSIÓN VERTICAL) -->
+                <div style="max-width: 320px; width: 100%; margin: 0 auto 15px auto; display: flex; flex-direction: column; gap: 12px;">
+                    
+                    <!-- 🟢 TARJETA 1: 2% PERMITIDO - TOTAL(+NODOS) -->
+                    <div style="background: #1e2022; padding: 14px 16px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; flex-direction: column; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center;">
                         <div>
                             <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - TOTAL(+NODOS)</div>
-                            <input type="number" id="dos-pct-in-2" oninput="calcularDosPctIndividual(2)" onfocus="this.select()" value="0" placeholder="Ej. 3000"
-                                   style="width: 120px; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #20B2AA; background: #141414; color: #DCDCDC; outline: none; margin-top: 4px;" />
+                            <input type="number" id="dos-pct-in-2" class="no-spinners" oninput="calcularDosPctIndividual(2)" onfocus="this.select()" value="0" placeholder="Ej. 3000"
+                                   style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 22px; font-weight: 800; text-align: center; border-radius: 8px; border: 1.5px solid #20B2AA; background: #141414; color: #DCDCDC; outline: none; margin-top: 6px; height: 48px;" />
                         </div>
-                        <div style="text-align: right;">
-                            <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold;">RESULTADO 2%:</span>
-                            <span id="dos-pct-res-2" style="font-size: 26px; font-weight: 900; color: #7CFFB2;">0</span>
+                        <div style="width: 100%; border-top: 1px solid #34383d; padding-top: 8px;">
+                            <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold; letter-spacing: 0.5px;">RESULTADO 2%:</span>
+                            <span id="dos-pct-res-2" style="font-size: 30px; font-weight: 900; color: #7CFFB2; line-height: 1;">0</span>
                         </div>
                     </div>
 
-                    <!-- ⏱️️ MINIPANEL CONVERTIDOR DE ORH A HORAS -->
-                    <div style="background: #1e2022; padding: 14px 18px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                    <!-- ⏱ TARJETA 2: CONVERTIDOR DE ORH -->
+                    <div style="background: #1e2022; padding: 14px 16px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; flex-direction: column; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center;">
                         <div>
                             <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">CONVERTIDOR ORH</div>
-                            <input type="number" id="orh-minutos-in" oninput="convertirOrhRapido()" onfocus="this.select()" placeholder="Minutos"
-                                   style="width: 120px; padding: 6px; font-size: 18px; font-weight: 800; text-align: center; border-radius: 6px; border: 1.5px solid #cbd5e1; background: #ffffff; color: #0f172a; outline: none; margin-top: 4px;" />
+                            <input type="number" id="orh-minutos-in" class="no-spinners" oninput="convertirOrhRapido()" onfocus="this.select()" placeholder="Minutos"
+                                   style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 8px; border: 1.5px solid #cbd5e1; background: #ffffff; color: #0f172a; outline: none; margin-top: 6px; height: 48px;" />
                         </div>
-                        <div style="text-align: right;">
-                            <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold;">HORAS REALES:</span>
-                            <span id="orh-horas-res" style="font-size: 24px; font-weight: 900; color: #20B2AA; font-family: monospace;">00:00</span>
+                        <div style="width: 100%; border-top: 1px solid #34383d; padding-top: 8px;">
+                            <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold; letter-spacing: 0.5px;">HORAS REALES:</span>
+                            <span id="orh-horas-res" style="font-size: 28px; font-weight: 900; color: #20B2AA; font-family: monospace; line-height: 1;">00:00</span>
                         </div>
                     </div>
+
                 </div>
-            </div>
+
+            
 
             <!-- ➗ TARJETA: CALCULADORA DIVISORA (VERSIÓN VERTICAL COMPACTA) -->
             <div style="max-width: 320px; margin: 0 auto 30px auto; background: #ffe600; padding: 16px; border-radius: 14px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
