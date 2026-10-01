@@ -3521,8 +3521,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             <!-- ➗ NUEVA TARJETA: CALCULADORA DIVISORA (A / B = RESULTADO) -->
             <div style="max-width: 950px; margin: 0 auto 30px auto; background: #ffffff; padding: 16px 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
-                    <div style="font-size: 11px; font-weight: 700; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">🧮 CALCULADORA DIVISORA</div>
-                    <div style="font-size: 11px; color: #64748b; font-weight: 600;">División directa: <strong style="color: #0f172a;">Dato 1 ÷ Divisor</strong></div>
+                    <div style="font-size: 11px; font-weight: 700; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">🧮 CALCULADORA</div>
+                    <div style="font-size: 11px; color: #64748b; font-weight: 600;"><strong style="color: #0f172a;"></strong></div>
                 </div>
 
                 <div style="display: flex; gap: 15px; align-items: center;">
