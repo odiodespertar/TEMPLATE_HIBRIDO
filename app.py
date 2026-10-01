@@ -1719,7 +1719,7 @@ CATALOGO_SISTEMICO = {
 
 
 PLANES_SISTEMICO = [
-   "ACTOPAN", "⚠️️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
+   "ACTOPAN", "⚠️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
    "TEZUITLAN", "TLALTETELA", "TRAPICHE", "TUZAMAPA", "XICO", "CONTINGENCIA CENTRO NODO", 
    "CONTINGENCIA TUZAMAPA", "CONTINGENCIA XICO"
 ]
@@ -1775,7 +1775,7 @@ def gen_tabla_sistemico_planes():
                 </td>
 
                 <td rowspan="{num_filas}" class="td-plan-drop" id="td-plan-drop-{p_idx}" style="background: #ffffff; text-align: center; vertical-align: middle; border-right: 1.5px solid #25282b; border-bottom: 2px solid #25282b; padding: 4px;">
-                    <input type="number" class="sis-plan-drop-in" id="sis-drop-plan-{p_idx}" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()" value="0" placeholder="0"
+                    <input type="number" class="sis-plan-drop-in no-spinners" id="sis-drop-plan-{p_idx}" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()" value="0" placeholder="0"
                            style="width: 70px; text-align: center; padding: 4px; font-weight: 600; font-size: 20px; border: 1.5px solid transparent; background: transparent; color: #FF4500; outline: none; border-radius: 6px;" />
                 </td>
                 '''
@@ -1791,10 +1791,10 @@ def gen_tabla_sistemico_planes():
 
                 <td style="padding: 2px; text-align: center; vertical-align: middle; background: #ffffff; border-right: 1px solid #25282b;">
                     <div style="display: flex; align-items: center; justify-content: space-between; padding: 2px 4px;">
-                        <button style="${{btn_s}}" onclick="stepValSis(this, -1, 's', ${{planIdx}})">-</button>
-                        <input type="number" id="sis-spr-${{totalFilasGlobal}}" value="0" oninput="calcularPlanSistemico(${{planIdx}})" onfocus="this.select()"
-                               style="width: 40px; text-align: center; padding: 2px; font-weight: 700; font-size: 18px; border: none; background: transparent; color: #25282b; outline: none; -moz-appearance: textfield;" />
-                        <button style="${{btn_s}}" onclick="stepValSis(this, 1, 's', ${{planIdx}})">+</button>
+                        <button style="{btn_s}" onclick="stepValSis(this, -1, 's', {p_idx})">-</button>
+                        <input type="number" id="sis-spr-{idx}" value="0" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()" class="no-spinners"
+                               style="width: 40px; text-align: center; padding: 2px; font-weight: 700; font-size: 18px; border: none; background: transparent; color: #25282b; outline: none;" />
+                        <button style="{btn_s}" onclick="stepValSis(this, 1, 's', {p_idx})">+</button>
                     </div>
                 </td>
 
@@ -3888,20 +3888,19 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
 
 
+    // 🟢 AL SELECCIONAR UNIDAD DE LA LISTA SUGERIDA
     function seleccionarUnidadSugerida(idx, nombre, spr) {{
         const inputNombre = document.getElementById(`sis-nombre-${{idx}}`);
         const inputSpr = document.getElementById(`sis-spr-${{idx}}`);
         const boxSug = document.getElementById(`sis-sug-${{idx}}`);
 
         if (inputNombre) inputNombre.value = nombre;
-        if (inputSpr) inputSpr.value = spr;
+        if (inputSpr) inputSpr.value = spr; // Inyecta SPR automático
         if (boxSug) boxSug.style.display = "none";
 
-        // 🟢 Obtener la fila para saber a qué plan pertenece (data-plan-idx)
         const fila = document.getElementById(`sis-tr-${{idx}}`);
         const planIdx = fila ? fila.getAttribute('data-plan-idx') : null;
 
-        // 🟢 Disparar el Auto-Cálculo de flota y la actualización de la columna ESTADO
         if (planIdx !== null) {{
             calcularPlanSistemico(planIdx);
         }} else {{
@@ -4959,7 +4958,7 @@ function showTab(n, btn) {{
     }}
     
 
-    // 🟢 RECALCULAR COLUMNA ESTADO (OK, FALTAN, EXCESO, VACÍO)
+    // 🟢 RECALCULAR PLAN Y COLUMNA ESTADO (RESTA DE VOLUMEN)
     function calcularVacioSistemico(planIdx) {{
         let dropIn = document.getElementById(`sis-drop-plan-${{planIdx}}`);
         let vacioCell = document.getElementById(`sis-vacio-plan-${{planIdx}}`);
@@ -4973,9 +4972,21 @@ function showTab(n, btn) {{
             let idx = fila.id.replace("sis-tr-", "");
             let resSpan = document.getElementById(`sis-res-${{idx}}`);
             let sprIn = document.getElementById(`sis-spr-${{idx}}`);
+            let inputNombre = document.getElementById(`sis-nombre-${{idx}}`);
 
             let u = parseInt(resSpan?.innerText) || 0;
             let spr = parseFloat(sprIn?.value) || 0;
+            let nombre = inputNombre?.value?.trim() || "";
+
+            // Auto-completar el SPR si está en 0 pero hay unidad escrita
+            if (nombre && spr === 0) {{
+                let claveCat = Object.keys(catalogoUnidadesExtendido).find(k => k.toLowerCase() === nombre.toLowerCase());
+                if (claveCat) {{
+                    spr = catalogoUnidadesExtendido[claveCat][1];
+                    if (sprIn) sprIn.value = spr;
+                }}
+            }}
+
             cubierto += (u * spr);
         }});
 
@@ -5807,11 +5818,10 @@ document.addEventListener('keydown', function(event) {{
         planesUnicos.forEach(pIdx => calcularVacioSistemico(pIdx));
     }}
 
-    // 🧠 MOTOR AUTO-CALCULAR (INJECTA SPR EN PANTALLA Y RESTA VOLUMEN EN ESTADO)
+    // 🧠 MOTOR AUTO-CALCULAR SEGÚN INVENTARIO EN PATIO
     function distribuirAutomaticoSistemico() {{
         let flotaDisponibilidad = obtenerInventarioPatio();
 
-        // 1. Agrupar los planes
         let planesData = [];
         const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
 
@@ -5830,12 +5840,12 @@ document.addEventListener('keydown', function(event) {{
                 let nombre = inputNombre?.value?.trim() || "";
                 let spr = parseFloat(inputSpr?.value) || 0;
 
-                // 🟢 PASO CLAVE: Si la celda de SPR está en 0 o vacía, buscar el SPR en el catálogo e escribirlo en pantalla
+                // Si el SPR está en 0, auto-completar desde el catálogo
                 if (nombre && spr === 0) {{
                     let claveCat = Object.keys(catalogoUnidadesExtendido).find(k => k.toLowerCase() === nombre.toLowerCase());
                     if (claveCat) {{
                         spr = catalogoUnidadesExtendido[claveCat][1];
-                        if (inputSpr) inputSpr.value = spr; // 👈 Se dibuja en la celda SPR de la tabla
+                        if (inputSpr) inputSpr.value = spr;
                     }}
                 }}
 
@@ -5853,14 +5863,11 @@ document.addEventListener('keydown', function(event) {{
             }}
         }});
 
-        // Ordenar planes por volumen dropeado (mayor a menor)
         planesData.sort((a, b) => b.dropTotal - a.dropTotal);
 
-        // 2. Repartir volumen consumiendo patio
         planesData.forEach(pData => {{
             let dropRestantePlan = pData.dropTotal;
 
-            // FASE 1: Consumir disponibilidad física de la minitabla flotante de arriba
             pData.unidadesDelPlan.forEach(uInfo => {{
                 if (dropRestantePlan <= 0) return;
 
@@ -5881,7 +5888,6 @@ document.addEventListener('keydown', function(event) {{
                 }}
             }});
 
-            // FASE 2: Si aún falta volumen y son unidades libres de desborde (Car 8h, etc.)
             if (dropRestantePlan > 0) {{
                 pData.unidadesDelPlan.forEach(uInfo => {{
                     if (dropRestantePlan <= 0) return;
@@ -5904,7 +5910,6 @@ document.addEventListener('keydown', function(event) {{
                 }});
             }}
 
-            // Escribir la cantidad de unidades en # USADAS
             pData.unidadesDelPlan.forEach(uInfo => {{
                 if (uInfo.elRes) uInfo.elRes.innerText = uInfo.asignadas;
             }});
