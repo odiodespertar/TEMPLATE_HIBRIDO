@@ -734,56 +734,44 @@ div[data-testid="stExpander"] div[data-testid="stChatInput"] form:focus-within {
 """, unsafe_allow_html=True)
 
 
-
 # ==========================================
 # 🤖 ASISTENTE DE PRIORIDADES Y RESUMEN
 # ==========================================
 with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
 
-      
     # ==========================================
     # 🤖 TARJETA DE PRESENTACIÓN DEL ASISTENTE
     # ==========================================
-
     st.html("""
     <div class="asistente-card" style="
         border-radius: 14px;
         padding: 14px 16px;
         margin-bottom: 12px;
     ">
-
         <div style="
             display: flex;
             align-items: center;
             gap: 12px;
         ">
-
             <div style="
                 width: 42px;
                 height: 42px;
                 min-width: 42px;
                 border-radius: 12px;
-
                 background: linear-gradient(
                     135deg,
                     #0f766e,
                     #14b8a6
                 );
-
                 display: flex;
                 align-items: center;
                 justify-content: center;
-
                 font-size: 22px;
-
-                box-shadow:
-                    0 4px 10px rgba(15,118,110,0.20);
+                box-shadow: 0 4px 10px rgba(15,118,110,0.20);
             ">
                 🤖
             </div>
-
             <div>
-
                 <div class="asistente-card-title" style="
                     font-size: 15px;
                     font-weight: 800;
@@ -791,18 +779,14 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                 ">
                     Asistente de Ruteo
                 </div>
-
                 <div class="asistente-card-subtitle" style="
                     font-size: 11px;
                     margin-top: 4px;
                 ">
                     SVC · Prioridades · Indicaciones · Resúmenes
                 </div>
-
             </div>
-
         </div>
-
     </div>
     """)
 
@@ -812,7 +796,6 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
         "</div>",
         unsafe_allow_html=True
     )
-
 
     # Inicialización de Estados
     if "main_chat_messages" not in st.session_state:
@@ -847,17 +830,36 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                         if col1.button("1️⃣ Uniciclo", key="btn_resumen_uniciclo", use_container_width=True):
                             st.session_state.data_resumen["ciclo"] = "Uniciclo"
                             st.session_state.paso_historial.append(1)
-                            st.session_state.paso_resumen = 2
+                            st.session_state.paso_resumen = 1.5
                             st.rerun()
                         if col2.button("2️⃣ Ciclo 1", key="btn_resumen_c1", use_container_width=True):
                             st.session_state.data_resumen["ciclo"] = "C1"
                             st.session_state.paso_historial.append(1)
+                            st.session_state.paso_resumen = 1.5
+                            st.rerun()
+
+                    # PASO 1.5: Rentals e Híbridas
+                    elif paso == 1.5:
+                        st.write("👇 **¿Cómo se procesaron las Rentals en Centro?**")
+                        if st.button("1️⃣ Se cargaron Rentals como híbridas (el sistema NO consideró todas como híbridas)", use_container_width=True):
+                            st.session_state.data_resumen["rentals_hibridas"] = "parcial"
+                            st.session_state.paso_historial.append(1.5)
+                            st.session_state.paso_resumen = 2
+                            st.rerun()
+                        if st.button("2️⃣ Se cargaron Rentals como híbridas (el sistema tomó TODAS correctamente)", use_container_width=True):
+                            st.session_state.data_resumen["rentals_hibridas"] = "todas"
+                            st.session_state.paso_historial.append(1.5)
+                            st.session_state.paso_resumen = 2
+                            st.rerun()
+                        if st.button("3️⃣ No aplica / Sin Rentals híbridas", use_container_width=True):
+                            st.session_state.data_resumen["rentals_hibridas"] = "na"
+                            st.session_state.paso_historial.append(1.5)
                             st.session_state.paso_resumen = 2
                             st.rerun()
 
                     # PASO 2: Unidades Dedicadas para Nodos
                     elif paso == 2:
-                        st.write("👇 **Unidades dedicadas para nodos (selecciona la casilla):**")
+                        st.write("👇 **Unidades dedicadas para nodos (selecciona las casillas que apliquen):**")
                         
                         u1 = st.checkbox("3.5 tons", key="chk_35")
                         u2 = st.checkbox("Delivery Cell", key="chk_del")
@@ -870,13 +872,13 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                         
                         st.write("¿Logis tomó todas?")
                         col_s, col_n = st.columns(2)
-                        if col_s.button("1️⃣ Sí", use_container_width=True):
+                        if col_s.button("1️⃣ Sí (tomó todas)", use_container_width=True):
                             st.session_state.data_resumen["unidades_centro"] = unidades_elegidas
                             st.session_state.data_resumen["logis_tomo_todas"] = True
                             st.session_state.paso_historial.append(2)
                             st.session_state.paso_resumen = 2.5
                             st.rerun()
-                        if col_n.button("2️⃣ No", use_container_width=True):
+                        if col_n.button("2️⃣ No (dejó fuera)", use_container_width=True):
                             st.session_state.data_resumen["unidades_centro"] = unidades_elegidas
                             st.session_state.data_resumen["logis_tomo_todas"] = False
                             st.session_state.paso_historial.append(2)
@@ -957,7 +959,7 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                         if c2.button("2️⃣ No", use_container_width=True):
                             st.session_state.data_resumen["alchichica"] = False
                             st.session_state.paso_historial.append(4)
-                            st.session_state.paso_resumen = 5
+                            st.session_state.paso_resumen = 4.8
                             st.rerun()
 
                     # PASO 4.5: Unidades Alchichica
@@ -967,11 +969,26 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                         if c1.button("1️⃣ Sí", use_container_width=True):
                             st.session_state.data_resumen["alchichica_2sv"] = True
                             st.session_state.paso_historial.append(4.5)
-                            st.session_state.paso_resumen = 5
+                            st.session_state.paso_resumen = 4.8
                             st.rerun()
                         if c2.button("2️⃣ No", use_container_width=True):
                             st.session_state.data_resumen["alchichica_2sv"] = False
                             st.session_state.paso_historial.append(4.5)
+                            st.session_state.paso_resumen = 4.8
+                            st.rerun()
+
+                    # PASO 4.8: Uso de la Flota
+                    elif paso == 4.8:
+                        st.write("👇 **¿Se utilizó la flota en su totalidad?**")
+                        c1, c2 = st.columns(2)
+                        if c1.button("1️⃣ Sí (Usamos flota completa)", use_container_width=True):
+                            st.session_state.data_resumen["flota_completa"] = True
+                            st.session_state.paso_historial.append(4.8)
+                            st.session_state.paso_resumen = 5
+                            st.rerun()
+                        if c2.button("2️⃣ No (Quedó flota restante)", use_container_width=True):
+                            st.session_state.data_resumen["flota_completa"] = False
+                            st.session_state.paso_historial.append(4.8)
                             st.session_state.paso_resumen = 5
                             st.rerun()
 
@@ -981,7 +998,7 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                         dia_sel = st.selectbox(
                             "Selecciona:",
                             ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"],
-                            index=4
+                            index=3
                         )
                         
                         if st.button("🚀 Generar Resumen", use_container_width=True):
@@ -992,56 +1009,69 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                             logis_tomo_todas = d.get("logis_tomo_todas", True)
                             unis_fuera = d.get("unidades_fuera", [])
 
-                            # Construcción del texto de unidades
-                            if logis_tomo_todas or not unis_fuera:
-                                texto_unidades = "👉 <b>Unidades 3.5 tons y Delivery Cell</b>: se asignaron al polígono de Centro, logis tomó ambas."
+                            # 1. Rentals Híbridas
+                            rentals_mode = d.get("rentals_hibridas", "na")
+                            if rentals_mode == "parcial":
+                                texto_rentals = "📌 Se cargaron las Rentals como híbridas en Centro, pero el sistema no las consideró todas como híbridas."
+                            elif rentals_mode == "todas":
+                                texto_rentals = "📌 Se cargaron las Rentals como híbridas en Centro correctamente."
+                            else:
+                                texto_rentals = ""
+
+                            # 2. Construcción del texto de unidades
+                            if not unis:
+                                texto_unidades = ""
+                            elif logis_tomo_todas or not unis_fuera:
+                                texto_unidades = "👉 Unidades 3.5 tons y Delivery Cell: se asignaron al polígono de Centro, logis tomó ambas."
                             elif len(unis_fuera) == len(unis):
-                                texto_unidades = "👉 <b>Unidades 3.5 tons y Delivery Cell</b>: se asignaron al polígono de Centro, logis dejó fuera ambas."
+                                texto_unidades = "👉 Unidades 3.5 tons y Delivery Cell: se asignaron al polígono de Centro, logis dejó fuera ambas."
                             else:
                                 fuera_str = " y ".join([", ".join(unis_fuera[:-1]), unis_fuera[-1]]) if len(unis_fuera) > 1 else unis_fuera[0]
-                                texto_unidades = f"👉 <b>Unidades 3.5 tons y Delivery Cell</b>: se asignaron al polígono de Centro, logis dejó fuera la {fuera_str}."
+                                texto_unidades = f"👉 Unidades 3.5 tons y Delivery Cell: se asignaron al polígono de Centro, logis dejó fuera la {fuera_str}."
 
-                            # Construcción del texto de dropeo
+                            # 3. Construcción del texto de dropeo
                             if d.get("dropeo_nodos", False):
                                 if d.get("dropeo_restriccion", False):
-                                    texto_dropeo = f"👉 <b>Hubo dropeo de nodo</b> y se cargó en contingencia (logis nos dejó fuera ids por zona de restricción)."
+                                    texto_dropeo = "👉 Hubo dropeo de nodo y se cargó en contingencia (logis nos dejó fuera ids por zona de restricción)."
                                 else:
-                                    texto_dropeo = f"👉 <b>Hubo dropeo de nodo</b> y se cargó en contingencia."
+                                    texto_dropeo = "👉 Hubo dropeo de nodo y se cargó en contingencia."
                             else:
                                 texto_dropeo = "👉 No hubo dropeo de nodo."
 
-                            # Construcción del texto de Alchichica
+                            # 4. Construcción del texto de Alchichica
                             if d.get("alchichica", False):
                                 if d.get("alchichica_2sv", True):
-                                    texto_alchichica = "🚛 Se cargó plan de <b>Alchichica ND</b> en AM0 con 2 unidades Small Van MLP."
+                                    texto_alchichica = "🚛 Se cargó plan de Alchichica ND en AM0 con 2 unidades Small Van MLP."
                                 else:
-                                    texto_alchichica = "🚛 Se cargó plan de <b>Alchichica ND</b> en AM0."
+                                    texto_alchichica = "🚛 Se cargó plan de Alchichica ND en AM0."
                             else:
                                 texto_alchichica = ""
 
-                            # Bulk
+                            # 5. Bulk y Flota Completa
                             texto_bulk = "📦 Se asignó H&B para el volumen Bulk." if d.get("hubo_bulk", False) else ""
+                            texto_flota = "🚨🚛 Usamos la flota en su totalidad." if d.get("flota_completa", False) else ""
 
+                            # Ensamble del reporte final
                             lineas_html = [
-                                f"**Queda publicado {ciclo_txt} team**:<br><br>",
-                                '<span style="font-weight: normal;">',
-                                "📌 Se trabajó con el volumen disponible al momento de iniciar el ruteo.<br>",
-                                "📌 Se cargaron las Rentals como híbridas en Centro, pero el sistema no las consideró todas como híbridas.<br>",
-                                f"{texto_unidades}<br>"
+                                f"Resumen de ruteo team:<br><br>",
+                                "📌 Se trabajó con el volumen disponible al momento de iniciar el ruteo.<br>"
                             ]
                             
+                            if texto_rentals:
+                                lineas_html.append(f"{texto_rentals}<br>")
+                            if texto_unidades:
+                                lineas_html.append(f"{texto_unidades}<br>")
                             if texto_bulk:
                                 lineas_html.append(f"{texto_bulk}<br>")
-                                
-                            lineas_html.append(f"{texto_dropeo}<br>")
-                            
+                            if texto_dropeo:
+                                lineas_html.append(f"{texto_dropeo}<br>")
                             if texto_alchichica:
                                 lineas_html.append(f"{texto_alchichica}<br>")
-                                
-                            lineas_html.append(f"📌 Se usaron los parámetros establecidos para C1 del día {dia_sel}.<br>")
-                            lineas_html.append("📋 Comparto template final.")
-                            lineas_html.append("</span><br><br>")
-                            lineas_html.append("<b>**¡Excelente turno! 👋**</b>")
+                            if texto_flota:
+                                lineas_html.append(f"{texto_flota}<br>")
+
+                            lineas_html.append(f"📌 Se usaron los parámetros establecidos para {ciclo_txt} del día {dia_sel}.<br><br>")
+                            lineas_html.append("<b>¡Excelente turno! 👋</b>")
 
                             resumen_final = "".join(lineas_html)
 
@@ -1058,6 +1088,7 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                         if st.button("↩️ Volver al paso anterior / Corregir", key="btn_atras_resumen"):
                             st.session_state.paso_resumen = st.session_state.paso_historial.pop()
                             st.rerun()
+
 
         # 2. OPCIONES INTERACTIVAS SMX5
         if st.session_state.esperando_subtipo_smx5:
