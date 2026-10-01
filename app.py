@@ -101,6 +101,8 @@ if st.session_state.flotar_activo:
 
 
 
+
+
 # ==========================================
 # CSS GENERAL + ESTILO DE VENTANA FLOTANTE
 # ==========================================
@@ -1789,10 +1791,10 @@ def gen_tabla_sistemico_planes():
 
                 <td style="padding: 2px; text-align: center; vertical-align: middle; background: #ffffff; border-right: 1px solid #25282b;">
                     <div style="display: flex; align-items: center; justify-content: space-between; padding: 2px 4px;">
-                        <button style="{btn_s}" onclick="stepValSis(this, -1, 's', {p_idx})">-</button>
-                        <input type="number" id="sis-spr-{idx}" value="0" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()"
-                               style="width: 40px; text-align: center; padding: 2px; font-weight: 700; font-size: 18px; border: none; background: transparent; color: #25282b; outline: none;" />
-                        <button style="{btn_s}" onclick="stepValSis(this, 1, 's', {p_idx})">+</button>
+                        <button style="${{btn_s}}" onclick="stepValSis(this, -1, 's', ${{planIdx}})">-</button>
+                        <input type="number" id="sis-spr-${{totalFilasGlobal}}" value="0" oninput="calcularPlanSistemico(${{planIdx}})" onfocus="this.select()"
+                               style="width: 40px; text-align: center; padding: 2px; font-weight: 700; font-size: 18px; border: none; background: transparent; color: #25282b; outline: none; -moz-appearance: textfield;" />
+                        <button style="${{btn_s}}" onclick="stepValSis(this, 1, 's', ${{planIdx}})">+</button>
                     </div>
                 </td>
 
@@ -2313,7 +2315,16 @@ tr.master-row:hover td, tr.calc-row:hover td {{
         }}
 
 
+        /* 🟢 Ocultar flechas nativas de incremento/decremento en inputs con clase .no-spinners */
+        .no-spinners::-webkit-outer-spin-button,
+        .no-spinners::-webkit-inner-spin-button {{
+            -webkit-appearance: none !important;
+            margin: 0 !important;
+         }}
 
+         .no-spinners {{
+             -moz-appearance: textfield !important;
+         }}
 
 
         /* Redondear botones de +/- para que parezcan botones 3D físicos */
@@ -2400,6 +2411,17 @@ body {{ font-family: sans-serif; background: #ffffff; padding: 14px; }}
     background: white;
     color: #25282b;
 }}
+
+/* 🟢 Ocultar flechas nativas de subida/bajada en los inputs numéricos de SPR */
+#tbody-sistemico-planes input[type=number]::-webkit-inner-spin-button,
+#tbody-sistemico-planes input[type=number]::-webkit-outer-spin-button {{
+    -webkit-appearance: none;
+    margin: 0;
+}}
+#tbody-sistemico-planes input[type=number] {{
+    -moz-appearance: textfield;
+}}
+
 
 
 /* 🟢 Resaltado cuando seleccionas o editas el nombre del plan en Sistémico */
@@ -6693,7 +6715,7 @@ function obtenerCarFlexible() {{
                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 2px 4px;">
                     <button style="${{btn_s}}" onclick="stepValSis(this, -1, 's', ${{planIdx}})">-</button>
                     <input type="number" id="sis-spr-${{totalFilasGlobal}}" value="0" oninput="calcularPlanSistemico(${{planIdx}})" onfocus="this.select()"
-                           style="width: 40px; text-align: center; padding: 2px; font-weight: 700; font-size: 18px; border: none; background: transparent; color: #25282b; outline: none;" />
+                           style="width: 40px; text-align: center; padding: 2px; font-weight: 700; font-size: 18px; border: none; background: transparent; color: #25282b; outline: none; -moz-appearance: textfield;" />
                     <button style="${{btn_s}}" onclick="stepValSis(this, 1, 's', ${{planIdx}})">+</button>
                 </div>
             </td>
