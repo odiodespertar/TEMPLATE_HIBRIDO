@@ -4129,6 +4129,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     }}
     
 
+    // 🟢 FUNCIÓN DE LIMPIEZA COMPLETA DE PANTALLA
     function limpiarPantallaCompleta() {{
         if (!confirm("¿Deseas vaciar los valores editados de la pantalla para iniciar un nuevo ruteo?")) return;
 
@@ -4149,7 +4150,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             if (checkOk) checkOk.checked = false;
         }});
 
-        // 2. Limpiar Flota
+        // 2. Limpiar Flota Superior
         document.querySelectorAll('.f-stock, .edit-orh, .edit-ocup').forEach(el => el.innerText = "0");
         document.querySelectorAll('.orh-hora').forEach(el => el.innerText = "00:00");
 
@@ -4158,7 +4159,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         }}
         if (typeof recalc === 'function') recalc();
 
-        // 3. 🟢 LIMPIAR TABLA DE RUTEO SISTÉMICO Y TARJETA FLOTANTE
+        // 3. Limpiar Sistémico
         limpiarSistemico();
         
         if (typeof toggleMenuLateralVisual === 'function') {{
@@ -4168,9 +4169,9 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     
 
 
-    // 🟢 FUNCIÓN DE LIMPIEZA ABSOLUTA DE SISTÉMICO Y TABLITA NEGRA
+    // 🟢 FUNCIÓN DE LIMPIEZA ABSOLUTA DE SISTÉMICO Y TARJETA FLOTANTE DE PATIO
     function limpiarSistemico() {{
-        // 1. LIMPIAR MINITABLA NEGRA FLOTANTE DE PATIO (DISPONIBLE Y UNIDADES)
+        // 1. LIMPIAR MINITABLA FLOTANTE DE PATIO (DISPONIBLE, SPR Y RESTANTE)
         document.querySelectorAll('.row-flota-sis').forEach((row) => {{
             let inputNombre = row.querySelector('.edit-name-flota-sis');
             let inputDisp = row.querySelector('.sis-disp-flota-in');
@@ -4186,38 +4187,30 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             }}
         }});
 
-        // 2. LIMPIAR VOLUMEN TOTAL (IDS DROPEADOS) Y ESTADO EN TODOS LOS PLANES
-        const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
-        
-        planesUnicos.forEach(planIdx => {{
-            // Limpiar Vol. Total
-            let dropIn = document.getElementById(`sis-drop-plan-${{planIdx}}`);
-            if (dropIn) dropIn.value = '0';
-
-            // Resetear celda Estado
-            let vacioCell = document.getElementById(`sis-vacio-plan-${{planIdx}}`);
-            if (vacioCell) {{
-                vacioCell.innerText = "VACÍO";
-                vacioCell.style.background = "#ededed";
-                vacioCell.style.color = "#808080";
-            }}
+        // 2. LIMPIAR VOLUMEN TOTAL (VOL. TOTAL) EN TODOS LOS PLANES
+        document.querySelectorAll('.sis-plan-drop-in').forEach(input => {{
+            input.value = '0';
         }});
 
-        // 3. LIMPIAR CELDAS DE CADA FILA (# USADAS, SPR Y TIPO DE UNIDAD)
+        // 3. LIMPIAR CELDAS DE CADA FILA DE LA TABLA (# USADAS, SPR Y TIPO DE UNIDAD)
         document.querySelectorAll('.fila-plan-sistemico').forEach(fila => {{
-            let idx = fila.id.replace("sis-tr-", "");
+            let inputNombre = fila.querySelector('.edit-name-sis');
+            let inputSpr = fila.querySelector('input[id^="sis-spr-"]');
+            let spanRes = fila.querySelector('.res-adic-sis');
 
-            let elNombre = document.getElementById(`sis-nombre-${{idx}}`);
-            if (elNombre) elNombre.value = '';
-
-            let elSpr = document.getElementById(`sis-spr-${{idx}}`);
-            if (elSpr) elSpr.value = '0';
-
-            let elRes = document.getElementById(`sis-res-${{idx}}`);
-            if (elRes) elRes.innerText = '0';
+            if (inputNombre) inputNombre.value = '';
+            if (inputSpr) inputSpr.value = '0';
+            if (spanRes) spanRes.innerText = '0';
         }});
 
-        // 4. LIMPIAR CALCULADORAS DE 2% Y ORH
+        // 4. RESETEAR TODAS LAS CELDAS DE ESTADO A "VACÍO"
+        document.querySelectorAll('.td-plan-vacio').forEach(vacioCell => {{
+            vacioCell.innerText = "VACÍO";
+            vacioCell.style.background = "#ededed";
+            vacioCell.style.color = "#808080";
+        }});
+
+        // 5. LIMPIAR MINICALCULADORAS DE 2% Y CONVERTIDOR ORH
         const contenedor2pct = document.getElementById('contenedor-celdas-2pct');
         if (contenedor2pct) {{
             contenedor2pct.innerHTML = `
@@ -4241,6 +4234,8 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         const elResOrh = document.getElementById('orh-horas-res');
         if (inOrhMin) inOrhMin.value = '';
         if (elResOrh) elResOrh.innerText = '00:00';
+
+        sincronizarTotalesSistemico();
     }}
     
     
