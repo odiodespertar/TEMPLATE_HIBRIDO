@@ -4168,9 +4168,56 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     
 
 
-    // 🟢 SUB-FUNCIÓN AUXILIAR DE LIMPIEZA TOTAL DE SISTÉMICO
+    // 🟢 FUNCIÓN DE LIMPIEZA ABSOLUTA DE SISTÉMICO Y TABLITA NEGRA
     function limpiarSistemico() {{
-        // A. LIMPIAR CALCULADORAS DE 2%
+        // 1. LIMPIAR MINITABLA NEGRA FLOTANTE DE PATIO (DISPONIBLE Y UNIDADES)
+        document.querySelectorAll('.row-flota-sis').forEach((row) => {{
+            let inputNombre = row.querySelector('.edit-name-flota-sis');
+            let inputDisp = row.querySelector('.sis-disp-flota-in');
+            let spanSpr = row.querySelector('span[id^="sis-flota-spr-"]');
+            let spanRest = row.querySelector('td[id^="sis-rest-flota-"]');
+
+            if (inputNombre) inputNombre.value = '';
+            if (inputDisp) inputDisp.value = '0';
+            if (spanSpr) spanSpr.innerText = '0';
+            if (spanRest) {{
+                spanRest.innerText = '0';
+                spanRest.style.color = '#2dd4bf';
+            }}
+        }});
+
+        // 2. LIMPIAR VOLUMEN TOTAL (IDS DROPEADOS) Y ESTADO EN TODOS LOS PLANES
+        const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
+        
+        planesUnicos.forEach(planIdx => {{
+            // Limpiar Vol. Total
+            let dropIn = document.getElementById(`sis-drop-plan-${{planIdx}}`);
+            if (dropIn) dropIn.value = '0';
+
+            // Resetear celda Estado
+            let vacioCell = document.getElementById(`sis-vacio-plan-${{planIdx}}`);
+            if (vacioCell) {{
+                vacioCell.innerText = "VACÍO";
+                vacioCell.style.background = "#ededed";
+                vacioCell.style.color = "#808080";
+            }}
+        }});
+
+        // 3. LIMPIAR CELDAS DE CADA FILA (# USADAS, SPR Y TIPO DE UNIDAD)
+        document.querySelectorAll('.fila-plan-sistemico').forEach(fila => {{
+            let idx = fila.id.replace("sis-tr-", "");
+
+            let elNombre = document.getElementById(`sis-nombre-${{idx}}`);
+            if (elNombre) elNombre.value = '';
+
+            let elSpr = document.getElementById(`sis-spr-${{idx}}`);
+            if (elSpr) elSpr.value = '0';
+
+            let elRes = document.getElementById(`sis-res-${{idx}}`);
+            if (elRes) elRes.innerText = '0';
+        }});
+
+        // 4. LIMPIAR CALCULADORAS DE 2% Y ORH
         const contenedor2pct = document.getElementById('contenedor-celdas-2pct');
         if (contenedor2pct) {{
             contenedor2pct.innerHTML = `
@@ -4194,54 +4241,6 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         const elResOrh = document.getElementById('orh-horas-res');
         if (inOrhMin) inOrhMin.value = '';
         if (elResOrh) elResOrh.innerText = '00:00';
-
-        // B. LIMPIAR MINITABLA FLOTANTE DE PATIO (DISPONIBLE Y RESTANTE)
-        document.querySelectorAll('.row-flota-sis').forEach((row, idx) => {{
-            let inputNombre = document.getElementById(`sis-flota-nombre-${{idx}}`);
-            let inputDisp = document.getElementById(`sis-disp-flota-${{idx}}`);
-            let spanSpr = document.getElementById(`sis-flota-spr-${{idx}}`);
-            let spanRest = document.getElementById(`sis-rest-flota-${{idx}}`);
-
-            if (inputNombre) inputNombre.value = '';
-            if (inputDisp) inputDisp.value = '0';
-            if (spanSpr) spanSpr.innerText = '0';
-            if (spanRest) {{
-                spanRest.innerText = '0';
-                spanRest.style.color = '#2dd4bf';
-            }}
-        }});
-
-        // C. LIMPIAR TODOS LOS VOLUMENES TOTALES (INPUTS DROPEADOS)
-        document.querySelectorAll('.sis-plan-drop-in').forEach(input => {{
-            input.value = '0';
-        }});
-
-        // D. LIMPIAR UNIDADES, SPR Y # USADAS DE CADA FILA DE LA TABLA DE PLANES
-        document.querySelectorAll('.fila-plan-sistemico').forEach(fila => {{
-            let idx = fila.id.replace("sis-tr-", "");
-
-            const elNombre = document.getElementById(`sis-nombre-${{idx}}`);
-            if (elNombre) elNombre.value = '';
-
-            const elSpr = document.getElementById(`sis-spr-${{idx}}`);
-            if (elSpr) elSpr.value = '0';
-
-            const elRes = document.getElementById(`sis-res-${{idx}}`);
-            if (elRes) elRes.innerText = '0';
-        }});
-
-        // E. REINICIAR ESTADO/VACÍO EN TODOS LOS PLANES
-        const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
-        planesUnicos.forEach(planIdx => {{
-            let vacioCell = document.getElementById(`sis-vacio-plan-${{planIdx}}`);
-            if (vacioCell) {{
-                vacioCell.innerText = "VACÍO";
-                vacioCell.style.background = "#ededed";
-                vacioCell.style.color = "#808080";
-            }}
-        }});
-
-        sincronizarTotalesSistemico();
     }}
     
     
