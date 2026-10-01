@@ -5802,20 +5802,17 @@ document.addEventListener('keydown', function(event) {{
 
     
 
-    // 🟢 RECALCULAR PLAN Y ESTADO
-    // 🟢 EJECUTAR AUTO-CÁLCULO Y ACTUALIZAR CADA PLAN
+    // 🟢 RECALCULAR PLAN Y ESTADO (DISPARADOR PRINCIPAL)
     function calcularPlanSistemico(planIdx) {{
         distribuirAutomaticoSistemico();
         const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
         planesUnicos.forEach(pIdx => calcularVacioSistemico(pIdx));
     }}
 
-
-    // 🟢 MOTOR PRINCIPAL DE AUTO-CALCULAR SEGÚN INVENTARIO EN PATIO DE LA TABLA SUPERIOR
+    // 🟢 MOTOR PRINCIPAL DE AUTO-CALCULAR SEGÚN INVENTARIO EN PATIO
     function distribuirAutomaticoSistemico() {{
         let flotaDisponibilidad = obtenerInventarioPatio();
 
-        // 1. Agrupar los planes por orden de mayor a menor IDs dropeados
         let planesData = [];
         const planesUnicos = [...new Set(Array.from(document.querySelectorAll('.fila-plan-sistemico')).map(f => f.getAttribute('data-plan-idx')))];
 
@@ -5834,6 +5831,15 @@ document.addEventListener('keydown', function(event) {{
                 let nombre = inputNombre?.value?.trim() || "";
                 let spr = parseFloat(inputSpr?.value) || 0;
 
+                // 🟢 SI EL SPR DE LA FILA ESTÁ EN 0, AUTO-COMPLETAR CON EL CATÁLOGO
+                if (nombre && spr === 0) {{
+                    let claveCat = Object.keys(catalogoUnidadesExtendido).find(k => k.toLowerCase() === nombre.toLowerCase());
+                    if (claveCat) {{
+                        spr = catalogoUnidadesExtendido[claveCat][1];
+                        if (inputSpr) inputSpr.value = spr;
+                    }}
+                }}
+
                 if (nombre && spr > 0) {{
                     unidadesDelPlan.push({{ idx, nombre, spr, elRes, asignadas: 0 }});
                 }}
@@ -5848,14 +5854,11 @@ document.addEventListener('keydown', function(event) {{
             }}
         }});
 
-        // Ordenar por volumen
         planesData.sort((a, b) => b.dropTotal - a.dropTotal);
 
-        // 2. Repartir volumen usando primero el stock disponible de la tabla de arriba
         planesData.forEach(pData => {{
             let dropRestantePlan = pData.dropTotal;
 
-            // FASE 1: Consumir stock físico DISPONIBLE de patio
             pData.unidadesDelPlan.forEach(uInfo => {{
                 if (dropRestantePlan <= 0) return;
 
@@ -5876,7 +5879,6 @@ document.addEventListener('keydown', function(event) {{
                 }}
             }});
 
-            // FASE 2: Si falta volumen, usar excepciones infinitas marcadas
             if (dropRestantePlan > 0) {{
                 pData.unidadesDelPlan.forEach(uInfo => {{
                     if (dropRestantePlan <= 0) return;
@@ -5899,7 +5901,6 @@ document.addEventListener('keydown', function(event) {{
                 }});
             }}
 
-            // Escribir en pantalla las unidades finales asignadas
             pData.unidadesDelPlan.forEach(uInfo => {{
                 if (uInfo.elRes) uInfo.elRes.innerText = uInfo.asignadas;
             }});
