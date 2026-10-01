@@ -1717,7 +1717,7 @@ CATALOGO_SISTEMICO = {
 
 
 PLANES_SISTEMICO = [
-   "ACTOPAN", "⚠️️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
+   "ACTOPAN", "⚠️ CENTRO 1", "⚠️ CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", "PEROTE", 
    "TEZUITLAN", "TLALTETELA", "TRAPICHE", "TUZAMAPA", "XICO", "CONTINGENCIA CENTRO NODO", 
    "CONTINGENCIA TUZAMAPA", "CONTINGENCIA XICO"
 ]
@@ -1760,7 +1760,6 @@ def gen_tabla_sistemico_planes():
 
             if r_idx == 0:
                 html += f'''
-                <!-- 1. PLAN -->
                 <td rowspan="{num_filas}" class="td-plan-name" id="td-plan-nom-{p_idx}" style="background: #dcdcdc; border-right: 1.5px solid #25282b; border-bottom: 2px solid #25282b; padding: 6px; vertical-align: middle;">
                     <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100%; gap: 6px;">
                         <div contenteditable="true" style="font-weight: 800; font-size: 14px; color: #0f172a; text-align: center; outline: none;" title="Haz clic para editar">{plan_nom}</div>
@@ -1773,7 +1772,6 @@ def gen_tabla_sistemico_planes():
                     </div>
                 </td>
 
-                <!-- 2. VOL. TOTAL (IDS DROPEADOS) -->
                 <td rowspan="{num_filas}" class="td-plan-drop" id="td-plan-drop-{p_idx}" style="background: #ffffff; text-align: center; vertical-align: middle; border-right: 1.5px solid #25282b; border-bottom: 2px solid #25282b; padding: 4px;">
                     <input type="number" class="sis-plan-drop-in" id="sis-drop-plan-{p_idx}" oninput="calcularPlanSistemico({p_idx})" onfocus="this.select()" value="0" placeholder="0"
                            style="width: 70px; text-align: center; padding: 4px; font-weight: 600; font-size: 20px; border: 1.5px solid transparent; background: transparent; color: #FF4500; outline: none; border-radius: 6px;" />
@@ -1781,7 +1779,6 @@ def gen_tabla_sistemico_planes():
                 '''
 
             html += f'''
-                <!-- 3. # USADAS (UNIDADES ADICIONALES) -->
                 <td style="padding: 2px; text-align: center; vertical-align: middle; background: #d3f0e5; border-right: 1px solid #25282b;">
                     <div style="display: flex; align-items: center; justify-content: space-between; padding: 2px 4px;">
                         <button style="{btn_s}" onclick="stepValSis(this, -1, 'u', {p_idx})">-</button>
@@ -1790,7 +1787,6 @@ def gen_tabla_sistemico_planes():
                     </div>
                 </td>
 
-                <!-- 4. SPR (SPR LOGIS) -->
                 <td style="padding: 2px; text-align: center; vertical-align: middle; background: #ffffff; border-right: 1px solid #25282b;">
                     <div style="display: flex; align-items: center; justify-content: space-between; padding: 2px 4px;">
                         <button style="{btn_s}" onclick="stepValSis(this, -1, 's', {p_idx})">-</button>
@@ -1800,7 +1796,6 @@ def gen_tabla_sistemico_planes():
                     </div>
                 </td>
 
-                <!-- 5. TIPO DE UNIDAD -->
                 <td style="padding: 4px 6px; text-align: left; vertical-align: middle; position: relative; border-right: 1.5px solid #25282b;">
                     <input type="text" class="edit-name-sis" id="sis-nombre-{idx}" oninput="buscarCoincidenciasUnidad(this, {idx}); calcularPlanSistemico({p_idx});" onkeydown="navegarSugerenciasUnidad(event, {idx})" onfocus="buscarCoincidenciasUnidad(this, {idx})" placeholder="Buscar unidad..." autocomplete="off"
                            style="width: 100%; box-sizing: border-box; font-weight: 600; font-size: 14px; color: #1e293b; outline: none; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; padding: 4px 6px; border-radius: 4px;" />
@@ -1810,8 +1805,7 @@ def gen_tabla_sistemico_planes():
 
             if r_idx == 0:
                 html += f'''
-                <!-- 6. ESTADO / VACÍO -->
-                <td rowspan="{num_filas}" class="p-diff-sis" id="sis-vacio-plan-{p_idx}" style="text-align: center; vertical-align: middle; border-bottom: 2px solid #25282b; font-weight: 800; font-size: 14px; background: #ededed; color: #808080; padding: 6px;">
+                <td rowspan="{num_filas}" class="td-plan-vacio" id="sis-vacio-plan-{p_idx}" style="text-align: center; vertical-align: middle; border-bottom: 2px solid #25282b; font-weight: 800; font-size: 13px; background: #ededed; color: #808080; padding: 6px;">
                     VACÍO
                 </td>
                 '''
@@ -4918,7 +4912,7 @@ function showTab(n, btn) {{
 
 
 
-    // 🟢 PASO MANUAL (+ / -) PARA UNIDADES ADICIONALES Y SPR
+    // 🟢 PASO MANUAL CON BOTONES (+ / -)
     function stepValSis(btn, delta, type, planIdx) {{
         let row = btn.closest('tr');
         if (!row) return;
@@ -4941,8 +4935,9 @@ function showTab(n, btn) {{
         }}
         calcularPlanSistemico(planIdx);
     }}
+    
 
-    // 🟢 RECALCULAR ESTADO / VACÍO POR PLAN
+    // 🟢 CÁLCULO EN TIEMPO REAL DEL ESTADO/VACÍO POR PLAN
     function calcularVacioSistemico(planIdx) {{
         let dropIn = document.getElementById(`sis-drop-plan-${{planIdx}}`);
         let vacioCell = document.getElementById(`sis-vacio-plan-${{planIdx}}`);
@@ -5784,10 +5779,10 @@ document.addEventListener('keydown', function(event) {{
 
     
 
-    // 🟢 2. CÁLCULO INDIVIDUAL DE PLANES RESPETANDO PATIO
+    // 🟢 RECALCULAR PLAN Y ESTADO
     function calcularPlanSistemico(planIdx) {{
-        // Si no se llama desde Auto-Calcular, recalculamos todo el mapa para mantener coherencia
         distribuirAutomaticoSistemico();
+        calcularVacioSistemico(planIdx);
     }}
 
 
@@ -6657,6 +6652,7 @@ function obtenerCarFlexible() {{
 
     
 
+    // 🟢 AGREGAR NUEVA FILA SIN ROMPER ROWSPAN DE PLAN, DROP Y ESTADO
     function agregarFilaPlanSis(planNom, planIdx) {{
         const tbody = document.getElementById("tbody-sistemico-planes");
         if (!tbody) return;
@@ -6715,6 +6711,7 @@ function obtenerCarFlexible() {{
     }}
     
 
+    // 🟢 QUITAR FILA REAJUSTANDO CORRECTAMENTE EL ROWSPAN
     function quitarFilaPlanSis(planNom, planIdx) {{
         const filasExistentes = document.querySelectorAll(`.fila-plan-sistemico[data-plan-idx="${{planIdx}}"]`);
         if (filasExistentes.length > 1) {{
@@ -6724,10 +6721,12 @@ function obtenerCarFlexible() {{
             const nuevaNumFilas = filasExistentes.length - 1;
             const tdPlan = document.getElementById(`td-plan-nom-${{planIdx}}`);
             const tdDrop = document.getElementById(`td-plan-drop-${{planIdx}}`);
+            const tdVacio = document.getElementById(`sis-vacio-plan-${{planIdx}}`);
+
             if (tdPlan) tdPlan.rowSpan = nuevaNumFilas;
             if (tdDrop) tdDrop.rowSpan = nuevaNumFilas;
+            if (tdVacio) tdVacio.rowSpan = nuevaNumFilas;
 
-            // Restablecer el borde de cierre en la nueva última fila del plan
             const nuevaUltimaFila = filasExistentes[filasExistentes.length - 2];
             if (nuevaUltimaFila) {{
                 nuevaUltimaFila.style.borderBottom = "2px solid #25282b";
