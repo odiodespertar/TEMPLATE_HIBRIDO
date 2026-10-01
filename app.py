@@ -3444,11 +3444,11 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <div id="polys-1" class="p-content" style="display:none;">{gen_poligonos(u_PREC)}</div>
         <div id="polys-5" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX2)}</div>
         
-        <!-- 🟢 CONTENEDOR SISTÉMICO: EXCLUSIVAMENTE CALCULADORAS 2% Y CONVERTIDOR ORH -->
+        <!-- 🟢 CONTENEDOR SISTÉMICO: CALCULADORAS 2%, CONVERTIDOR Y CALCULADORA DIVISORA -->
         <div id="polys-4" class="p-content" style="display:none;">
 
             <!-- ⚡ BLOQUE SUPERIOR: DOS CALCULADORAS INDEPENDIENTES DE 2% + CONVERTIDOR DE ORH -->
-            <div style="display: flex; max-width: 950px; margin: 30px auto; gap: 15px; align-items: stretch;">
+            <div style="display: flex; max-width: 950px; margin: 30px auto 15px auto; gap: 15px; align-items: stretch;">
                 
                 <!-- RECUADRO 1: LISTA SUMATORIA DINÁMICA DE 2% -->
                 <div style="flex: 1; background: #ffffff; padding: 16px 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between;">
@@ -3503,7 +3503,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                         </div>
                     </div>
 
-                    <!-- ⏱️ MINIPANEL CONVERTIDOR DE ORH A HORAS -->
+                    <!-- ⏱️️ MINIPANEL CONVERTIDOR DE ORH A HORAS -->
                     <div style="background: #1e2022; padding: 14px 18px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
                         <div>
                             <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">CONVERTIDOR ORH</div>
@@ -3514,6 +3514,50 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                             <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold;">HORAS REALES:</span>
                             <span id="orh-horas-res" style="font-size: 24px; font-weight: 900; color: #20B2AA; font-family: monospace;">00:00</span>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ➗ NUEVA TARJETA: CALCULADORA DIVISORA (A / B = RESULTADO) -->
+            <div style="max-width: 950px; margin: 0 auto 30px auto; background: #ffffff; padding: 16px 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">🧮 CALCULADORA DIVISORA</div>
+                    <div style="font-size: 11px; color: #64748b; font-weight: 600;">División directa: <strong style="color: #0f172a;">Dato 1 ÷ Divisor</strong></div>
+                </div>
+
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <!-- Campo 1: Número Editable -->
+                    <div style="flex: 1;">
+                        <label style="font-size: 10px; color: #64748b; font-weight: 700; display: block; margin-bottom: 4px; text-align: center;">NÚMERO A DIVIDIR</label>
+                        <input type="number" id="calc-div-num1" oninput="calcularDivisionSistemico()" onfocus="this.select()" placeholder="Ej. 1000"
+                               style="width: 100%; box-sizing: border-box; padding: 8px; font-size: 18px; font-weight: 700; text-align: center; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 6px;" />
+                    </div>
+
+                    <div style="font-size: 20px; font-weight: 900; color: #94a3b8; padding-top: 16px;">÷</div>
+
+                    <!-- Campo 2: Divisor con Botones + y - -->
+                    <div style="flex: 1.2;">
+                        <label style="font-size: 10px; color: #64748b; font-weight: 700; display: block; margin-bottom: 4px; text-align: center;">DIVISOR</label>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <button onclick="pasoDivisorSistemico(-1)" title="Restar 1"
+                                    style="cursor: pointer; background: #f1f5f9; color: #dc2626; border: 1px solid #cbd5e1; font-weight: 800; border-radius: 6px; width: 36px; height: 38px; font-size: 18px; display: inline-flex; align-items: center; justify-content: center; outline: none;"
+                                    onmouseenter="this.style.background='#fee2e2';" onmouseleave="this.style.background='#f1f5f9';">-</button>
+
+                            <input type="number" id="calc-div-num2" oninput="calcularDivisionSistemico()" onfocus="this.select()" value="1" placeholder="Divisor"
+                                   style="width: 100%; box-sizing: border-box; padding: 8px; font-size: 18px; font-weight: 700; text-align: center; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 6px;" />
+
+                            <button onclick="pasoDivisorSistemico(1)" title="Sumar 1"
+                                    style="cursor: pointer; background: #f1f5f9; color: #0f766e; border: 1px solid #cbd5e1; font-weight: 800; border-radius: 6px; width: 36px; height: 38px; font-size: 18px; display: inline-flex; align-items: center; justify-content: center; outline: none;"
+                                    onmouseenter="this.style.background='#ccfbf1';" onmouseleave="this.style.background='#f1f5f9';">+</button>
+                        </div>
+                    </div>
+
+                    <div style="font-size: 20px; font-weight: 900; color: #94a3b8; padding-top: 16px;">=</div>
+
+                    <!-- Campo 3: Resultado No Editable -->
+                    <div style="flex: 1; background: #1e2022; padding: 10px 14px; border-radius: 8px; border: 1.5px solid #34383d; text-align: center;">
+                        <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold;">RESULTADO:</span>
+                        <span id="calc-div-res" style="font-size: 24px; font-weight: 900; color: #66CDAA;">0</span>
                     </div>
                 </div>
             </div>
@@ -3597,6 +3641,34 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             let resultado = Math.round(inputVal * 0.02);
             resDisplay.innerText = resultado.toLocaleString();
         }}
+    }}
+
+
+    // 🟢 LÓGICA DE LA CALCULADORA DIVISORA SISTÉMICO
+    function calcularDivisionSistemico() {{
+        const num1 = parseFloat(document.getElementById('calc-div-num1')?.value) || 0;
+        const num2 = parseFloat(document.getElementById('calc-div-num2')?.value) || 0;
+        const resDisplay = document.getElementById('calc-div-res');
+
+        if (!resDisplay) return;
+
+        if (num1 > 0 && num2 > 0) {{
+            let resultado = Math.ceil(num1 / num2);
+            resDisplay.innerText = resultado.toLocaleString();
+        }} else {{
+            resDisplay.innerText = "0";
+        }}
+    }}
+
+    function pasoDivisorSistemico(delta) {{
+        const inputDiv = document.getElementById('calc-div-num2');
+        if (!inputDiv) return;
+
+        let valActual = parseFloat(inputDiv.value) || 0;
+        let nuevoVal = Math.max(1, valActual + delta); // Evita dividores menores a 1
+
+        inputDiv.value = nuevoVal;
+        calcularDivisionSistemico();
     }}
 
 
