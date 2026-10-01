@@ -181,16 +181,13 @@ table {
 }
 
 
-/* 🔴 OCULTAR BOTONERA SUPERIOR EN TODOS LOS RUTEOS */
-#fleet-drag-handle, 
-.btn-tooltip-container, 
-#fleet-toggle-btn {
+/* Oculta la botonera superior */
+#fleet-drag-handle, .btn-tooltip-container, #fleet-toggle-btn {
     display: none !important;
 }
 
-/* 🔴 OCULTAR ÚNICAMENTE LA TARJETA NEGRA DE PATIO */
-#sis-flota-contenedor, 
-#sis-flota-flotante {
+/* Oculta la tarjeta negra de patio si existiera */
+#sis-flota-contenedor, #sis-flota-flotante {
     display: none !important;
 }
 
@@ -4004,6 +4001,361 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     }}
 
 
+    function recalc() {{
+        // 🟢 CANDADO PARA SISTÉMICO: Si estamos en la pestaña 4, no buscar tablas eliminadas
+        if (currentTab === 4) return;
+
+        let fleet = {{}};
+        
+        // --- NORMALIZACIÓN DE PESTAÑA PARA MANEJO DE IDS ---
+        let tabId = currentTab;
+        // ----------------------------------------------------
+
+
+        // 1. Capturar datos de la flota (Tabla de arriba)
+        document.querySelectorAll('#body-' + tabId + ' tr').forEach(row => {{
+            let nameCell = row.querySelector('.edit-name');
+            if (!nameCell) return;
+            let name = nameCell.innerText.trim();
+            let sch = parseInt(row.querySelector('.f-stock')?.innerText) || 0;
+            let mi = row.querySelector('.edit-spr-min'), ma = row.querySelector('.edit-spr-max'), fs = row.querySelector('.f-stock');
+            
+            if(sch > 0) {{
+                // --- ESTE ES EL COLOR DE FONDO DE LA FILA COMPLETA ---
+                row.style.background = "white"; 
+
+                // --- ESTE ES EL COLOR DE FONDO DE LA CELDA DE STOCK Y MÍNIMOS ---
+                if (fs) fs.style.background = "#fcf8cc"; 
+
+                // =======================================================================
+                // 🔥 AQUÍ SE CAMBIA EL COLOR DE SPR MIN Y SPR MAX CUANDO SCHEDULE > 0
+                // =======================================================================
+                if (mi) {{ mi.style.background = "#ffffff"; mi.style.color = "#25282b"; mi.style.fontWeight = "bold"; }}
+                if (ma) {{ ma.style.background = "#ffffff"; ma.style.color = "#25282b"; ma.style.fontWeight = "bold"; }}
+
+                // --- ESTE ES EL COLOR DEL NOMBRE DE LA UNIDAD ---
+                nameCell.style.color = "#25282b";
+                nameCell.style.fontWeight = "bold";
+            }} else {{
+                row.style.background = "#DCDCDC"; 
+                if (fs) fs.style.background = "#FFFF00"; 
+                if (mi) {{ mi.style.background = "#dcdcdc"; mi.style.color = "#969696"; mi.style.fontWeight = "normal"; }}
+                if (ma) {{ ma.style.background = "#dcdcdc"; ma.style.color = "#969696"; ma.style.fontWeight = "normal"; }}
+                
+                nameCell.style.color = "#969696";
+                nameCell.style.fontWeight = "normal";
+            }}
+            
+            if(name !== "" && name !== "NUEVA UNIDAD") {{
+                fleet[name] = {{ max: parseFloat(ma?.innerText)||0, stock: sch, used: 0 }};
+            }}
+        }});
+
+
+        // --- INICIO DEL BLOQUE DE SINCRONIZACIÓN ---
+        let mapeoRuteadas = {{}};
+        document.querySelectorAll('#polys-' + tabId + ' .calc-row').forEach(row => {{
+            let s = row.querySelector('.s-type')?.value;
+            let u = parseInt(row.querySelector('.u-manual')?.innerText) || 0;
+            if (s && s !== "Seleccionar...") {{
+                mapeoRuteadas[s] = (mapeoRuteadas[s] || 0) + u;
+            }}
+        }});
+
+        document.querySelectorAll('#body-' + tabId + ' tr').forEach(row => {{
+            let nameCell = row.querySelector('.edit-name');
+            let ruteadaCell = row.querySelector('.f-ruteadas');
+            if (nameCell && ruteadaCell) {{
+                let name = nameCell.innerText.trim();
+                ruteadaCell.innerText = mapeoRuteadas[name] || 0;
+            }}
+        }});
+        // --- FIN DEL BLOQUE DE SINCRONIZACIÓN ---
+
+
+
+        // 2. Calcular ocupación por polígono (Tabla de abajo)
+        document.querySelectorAll('#polys-' + tabId + ' .poligono-bloque').forEach(bl => {{
+            let vT = parseFloat(bl.querySelector('.v-total-val')?.innerText) || 0, vA = 0;
+            let vCalcEl = bl.querySelector('.v-calculado-total');
+
+            let nombrePlanPadre = bl.querySelector('td[rowspan]')?.innerText?.toUpperCase()?.trim() || "";
+            let esCentro = (nombrePlanPadre === "⚠️ CENTRO 1" || nombrePlanPadre === "⚠️ CENTRO 2");
+            
+            let celdaNodos = bl.querySelector('.nodos-val');
+            let tieneNodo = (tabId == 6 && celdaNodos && parseInt(celdaNodos.innerText) > 0);
+            
+            let filas = bl.querySelectorAll('.calc-row');
+
+            filas.forEach((r, index) => {{
+                let sType = r.querySelector('.s-type');
+                let uManual = r.querySelector('.u-manual');
+                let sp = r.querySelector('.spr-real-val');
+                
+                if (!sType || !uManual || !sp) return;
+
+                if (!esCentro && tieneNodo && index === 0 && (sType.value === "" || sType.value === "Seleccionar...")) {{
+                    sType.value = "Large Van MLP foráneo";
+                    uManual.innerText = "1";
+                }}
+
+                if (sType.value === "" || sType.value === "Seleccionar...") {{
+                    uManual.innerText = "0";
+                }}
+                
+                let s = sType.value;
+                let u = parseInt(uManual.innerText) || 0;
+
+                let nombrePlanPadre = bl.querySelector('td[rowspan]')?.innerText?.toUpperCase() || "";
+                if (nombrePlanPadre.includes("ALCHICHICA")) {{
+                    if (s !== "Seleccionar..." && s !== "") {{
+                        vA += (u * (parseFloat(sp.innerText) || 0));
+                        sp.style.fontWeight = "bold";
+                        sp.style.setProperty("background-color", "#edf2f2");
+                        sp.style.setProperty("color", "#25282b");
+                    }}
+                    return; 
+                }}
+
+                if(s !== "Seleccionar..." && s !== "" && fleet[s]) {{
+                    if(!editedRowsPlan.has(r)) sp.innerText = fleet[s].max; 
+                    fleet[s].used += u; 
+                    vA += (u * (parseFloat(sp.innerText) || 0));
+                    sp.style.setProperty("background-color", "#edf2f2");
+                    sp.style.setProperty("color", "#25282b");
+                }} else {{
+                    sp.style.setProperty("background-color", "#FFFFFF");
+                }}
+            }});
+
+            if (vCalcEl) vCalcEl.innerText = Math.round(vA);
+            let d = bl.querySelector('.p-diff');
+            let diffVal = Math.round(vA);
+            if (d) {{
+                if (vT === 0) d.innerText = "VACÍO";
+                else if (diffVal === Math.round(vT)) {{ d.innerText = "OK"; d.style.background = "#61b888"; }}
+                else if (vA > vT) {{ d.innerText = "EXCESO: " + Math.round(vA - vT); d.style.background = "#f2bd5c"; }}
+                else {{ d.innerText = "FALTAN: " + Math.round(vT - vA); d.style.background = "#fc9a88"; }}
+            }}
+        }});
+
+
+
+        // 3. REPLICAR Y CALCULAR DELTA BASADO EN "RUTEADAS" MANUALES
+        document.querySelectorAll('#body-' + tabId + ' tr').forEach(row => {{
+            let nameCell = row.querySelector('.edit-name');
+            if (!nameCell) return;
+            
+            let n = nameCell.innerText.trim();
+            
+            let ruteadasManuales = parseFloat(row.querySelector('.f-ruteadas')?.innerText || 0);
+            let stock = parseFloat(row.querySelector('.f-stock')?.innerText || 0);
+            let cL = row.querySelector('.f-left'); 
+            
+            let ruteadaCell = row.querySelector('.f-ruteadas');
+            if (ruteadaCell) {{
+                if (ruteadasManuales > 0) {{
+                    ruteadaCell.style.backgroundColor = "#d3f0e5"; 
+                    ruteadaCell.style.color = "#008B8B";           
+                    ruteadaCell.style.fontWeight = "bold";
+                }} else {{
+                    ruteadaCell.style.backgroundColor = "#dcdcdc";
+                    ruteadaCell.style.color = "";
+                    ruteadaCell.style.fontWeight = "bold";
+                }}
+            }}
+
+            if (cL) {{
+                let exceso = ruteadasManuales - stock; 
+                
+                if (exceso > 0) {{
+                    cL.innerText = "+" + exceso;
+                    cL.style.color = "red"; 
+                    cL.style.fontWeight = "bold"; 
+                    cL.style.background = "transparent";
+                }} else if (ruteadasManuales === stock && stock > 0) {{
+                    cL.innerText = "0";
+                    cL.style.color = "white"; 
+                    cL.style.background = "#fc765d"; 
+                    cL.style.fontWeight = "bold";
+                }} else {{
+                    let restantes = stock - ruteadasManuales;
+                    cL.innerText = restantes;
+                    cL.style.color = "#17191a"; 
+                    cL.style.background = "transparent"; 
+                    cL.style.fontWeight = "normal";
+                }}
+            }}
+        }});
+
+
+
+
+        // 3.5 BADGE DE UNIDADES ADICIONALES EN POLÍGONOS
+        let contadorAcumulado = {{}};
+
+        document.querySelectorAll('#polys-' + tabId + ' .calc-row').forEach(r => {{
+            let sel = r.querySelector('.s-type')?.value;
+            let uCell = r.querySelector('.u-manual-cell');
+            let divFlex = uCell ? uCell.querySelector('div') : null;
+            let spanU = r.querySelector('.u-manual');
+            let uManual = parseInt(spanU?.innerText) || 0;
+
+            if (!divFlex) return;
+
+            let badge = divFlex.querySelector('.badge-adicional');
+
+            if (sel && sel !== "Seleccionar..." && fleet[sel] && uManual > 0) {{
+                let stockInicial = fleet[sel].stock;
+                let usadasPrevias = contadorAcumulado[sel] || 0;
+
+                let cubiertasPorSchedule = Math.max(0, Math.min(uManual, stockInicial - usadasPrevias));
+                let excesoFila = uManual - cubiertasPorSchedule;
+
+                contadorAcumulado[sel] = usadasPrevias + uManual;
+
+                if (excesoFila > 0) {{
+                    if (!badge) {{
+                        badge = document.createElement('span');
+                        badge.className = 'badge-adicional';
+                        badge.style.cssText = 'font-size: 10px; background: #d32f2f; color: white; padding: 1px 4px; border-radius: 3px; font-weight: bold; margin-left: 2px;';
+                        if (spanU) spanU.after(badge);
+                    }}
+                    badge.innerText = `+${{excesoFila}}`;
+                    badge.style.display = 'inline-block';
+                    badge.title = `${{cubiertasPorSchedule}} de Schedule + ${{excesoFila}} adicionales en este plan`;
+                    uCell.style.backgroundColor = "#d3f0e5";
+                }} else {{
+                    if (badge) badge.style.display = 'none';
+                    uCell.style.backgroundColor = "#d3f0e5";
+                }}
+            }} else {{
+                if (badge) badge.style.display = 'none';
+                if (uCell) uCell.style.backgroundColor = "#d3f0e5";
+            }}
+        }});
+
+
+
+
+        // 4. FILTRAR LISTA 
+        document.querySelectorAll('#polys-' + tabId + ' .poligono-bloque').forEach(bl => {{
+
+            const permitidasSinStock = ["car 8h", "car - 8h", "car 5h", "car - 5h", "car 3h", "car - 3h"];
+
+            bl.querySelectorAll('.s-type').forEach(s => {{ 
+                let cur = s.value; 
+                let opt = '<option value="">Seleccionar...</option>';
+                
+                Object.keys(fleet).forEach(k => {{
+                    let nameLower = k.toLowerCase().trim();
+                    let stock = fleet[k].stock;
+                    let used = fleet[k].used;
+                    
+                    let esPermitida = permitidasSinStock.some(u => nameLower.includes(u));
+                    let tieneCapacidad = (stock - used > 0);
+                    
+                    if (tieneCapacidad || esPermitida || k === cur) {{
+                        opt += `<option value="${{k}}">${{k}}</option>`;
+                    }}
+                }});
+                
+                s.innerHTML = opt;
+                s.value = cur;
+
+                if (typeof updateSelectColor === 'function') updateSelectColor(s);
+            }});
+        }});
+
+
+        // --- 5. CALCULO DE TOTALES ---
+        let totals = {{
+            mlpDecl: 0, mlpRute: 0,
+            rentalDecl: 0, rentalRute: 0,
+            carDecl: 0, carRute: 0,
+            otrosRute: 0,
+            totalRuteadas: 0
+        }};
+
+        document.querySelectorAll('#body-' + tabId + ' tr').forEach(row => {{
+            let name = row.querySelector('.edit-name')?.innerText.toLowerCase().trim() || "";
+            let sch = parseInt(row.querySelector('.f-stock')?.innerText) || 0;
+            
+            if (name.includes("mlp")) totals.mlpDecl += sch;
+            else if (name.includes("rental")) totals.rentalDecl += sch;
+            else if (name.includes("car") || name.includes("moto") || name.includes("Newbie") || name.includes("9h")) totals.carDecl += sch;
+        }});
+
+
+        totals.totalRuteadas = 0; 
+        totals.mlpRute = 0;
+        totals.rentalRute = 0;
+        totals.carRute = 0;
+        totals.otrosRute = 0; 
+
+        document.querySelectorAll('#polys-' + tabId + ' .calc-row').forEach(row => {{
+            let s = row.querySelector('.s-type')?.value; 
+            let u = parseInt(row.querySelector('.u-manual')?.innerText) || 0;
+
+            if (!s || s === "Seleccionar...") return;
+
+            let name = s.toLowerCase().trim();
+
+            if (name.includes("mlp")) {{
+                totals.mlpRute += u;
+            }} else if (name.includes("rental")) {{
+                totals.rentalRute += u;
+            }} else if (name.includes("delivery")) {{
+                totals.otrosRute += u;
+            }} else if (name.includes("car") || name.includes("moto") || name.includes("Newbie") || name.includes("9h")) {{
+                totals.carRute += u;
+            }} else {{
+                totals.otrosRute += u; 
+            }}
+
+            totals.totalRuteadas = totals.mlpRute + totals.rentalRute + totals.carRute + totals.otrosRute;
+        }});
+
+        totals.totalRuteadas = totals.mlpRute + totals.rentalRute + totals.carRute + totals.otrosRute;
+
+        function setT(id, val) {{
+            let finalId = id + '-' + tabId;
+            let el = document.getElementById(finalId);
+            if (el) {{
+                el.innerText = Math.round(val);
+            }}
+        }}
+
+        setT('total-mlp-decl', totals.mlpDecl);
+        setT('total-mlp-rute', totals.mlpRute);
+        setT('total-rental-decl', totals.rentalDecl);
+        setT('total-rental-rute', totals.rentalRute);
+        setT('total-car-schedule', totals.carDecl);
+        setT('total-car-real', totals.carRute);
+        setT('total-otros', totals.otrosRute); 
+
+        setTimeout(() => {{
+            let valorCorrecto = totals.mlpRute + totals.rentalRute + totals.carRute + totals.otrosRute;
+            let el = document.getElementById('total-ruteadas-' + tabId);
+            if (el) {{
+                el.innerText = Math.round(valorCorrecto);
+                el.style.color = "#66CDAA"; 
+            }}
+        }}, 500); 
+
+        if (typeof updateFleetFloat === 'function') updateFleetFloat();
+        if (typeof actualizarTotales === 'function') actualizarTotales();
+        if (typeof actualizarDosPorciento === 'function') actualizarDosPorciento();
+
+        let elMlp = document.getElementById('val-mlp-rute-' + tabId);
+        let elRental = document.getElementById('val-rental-rute-' + tabId);
+        let elCar = document.getElementById('val-car-rute-' + tabId);
+
+        if(elMlp) elMlp.innerText = Math.round(totals.mlpRute);
+        if(elRental) elRental.innerText = Math.round(totals.rentalRute);
+        if(elCar) elCar.innerText = Math.round(totals.carRute);
+    }}
+
 
    function cambiarCiclo(valorTab) {{
         // 1. Ocultar todas las tablas superiores y contenidos de polígonos
@@ -4015,32 +4367,33 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         const tituloPoligonos = document.getElementById('titulo-planificacion-poligonos');
         const botoneraSuperior = document.getElementById('fleet-drag-handle');
 
-        // 2. Ocultar siempre la botonera superior en todos los ruteos
+        // 2. Ocultar la botonera superior en todos los ruteos
         if (botoneraSuperior) {{
             botoneraSuperior.style.setProperty('display', 'none', 'important');
         }}
 
-        // 3. Control de visibilidad para Sistémico (4) vs Otros Ruteos
+        // 3. Manejo de visibilidad
         if (currentTab === 4) {{
             const tablaExt = document.getElementById('tab-4');
             if (tablaExt) tablaExt.style.display = 'none';
             if (tituloPoligonos) tituloPoligonos.style.display = 'none';
 
-            poblarSelectExtendido();
+            // 🟢 FORZAR VISIBILIDAD DE LAS CALCULADORAS EN SISTÉMICO
+            const polys4 = document.getElementById('polys-4');
+            if (polys4) {{
+                polys4.style.setProperty('display', 'block', 'important');
+            }}
         }} else {{
             const tablaActiva = document.getElementById('tab-' + valorTab);
             if (tablaActiva) tablaActiva.style.display = 'block';
             if (tituloPoligonos) tituloPoligonos.style.display = 'block';
-        }}
 
-        // 4. 🟢 MOSTRAR EL CONTENEDOR DE LA PESTAÑA SELECCIONADA (EN SISTÉMICO MUESTRA LAS CALCULADORAS)
-        const polyActivo = document.getElementById('polys-' + valorTab);
-        if (polyActivo) {{
-            polyActivo.style.setProperty('display', 'block', 'important');
-        }}
+            const polyActivo = document.getElementById('polys-' + valorTab);
+            if (polyActivo) {{
+                polyActivo.style.setProperty('display', 'block', 'important');
+            }}
 
-        if (typeof recalc === 'function') {{
-            recalc();
+            if (typeof recalc === 'function') recalc();
         }}
     }}
     
@@ -5025,451 +5378,11 @@ function actualizarDosPorciento() {{
 
 
 
-
-
-
-    function recalc() {{
-        let fleet = {{}};
-        
-        // --- NORMALIZACIÓN DE PESTAÑA PARA MANEJO DE IDS ---
-        let tabId = currentTab;
-        // ----------------------------------------------------
-
-
-        // 1. Capturar datos de la flota (Tabla de arriba)
-document.querySelectorAll('#body-' + tabId + ' tr').forEach(row => {{
-    let nameCell = row.querySelector('.edit-name');
-    let name = nameCell.innerText.trim();
-    let sch = parseInt(row.querySelector('.f-stock').innerText) || 0;
-    let mi = row.querySelector('.edit-spr-min'), ma = row.querySelector('.edit-spr-max'), fs = row.querySelector('.f-stock');
     
-    if(sch > 0) {{
-        // --- ESTE ES EL COLOR DE FONDO DE LA FILA COMPLETA ---
-        row.style.background = "white"; 
 
-
-        // Eliminamos row.style.color para no forzar toda la fila 
-// --- ESTE ES EL COLOR DE FONDO DE LA CELDA DE STOCK Y MÍNIMOS ---
-        fs.style.background = "#fcf8cc"; 
-
-
-// =======================================================================
-        // 🔥 AQUÍ SE CAMBIA EL COLOR DE SPR MIN Y SPR MAX CUANDO SCHEDULE > 0
-        // =======================================================================
-        mi.style.background = "#ffffff"; mi.style.color = "#25282b"; mi.style.fontWeight = "bold";
-        ma.style.background = "#ffffff"; ma.style.color = "#25282b"; ma.style.fontWeight = "bold";
-
-
-// --- ESTE ES EL COLOR DEL NOMBRE DE LA UNIDAD ---
-        // Ponemos nombre en NEGRO
-        nameCell.style.color = "#25282b";
-        nameCell.style.fontWeight = "bold";
-    }} else {{
-        row.style.background = "#DCDCDC"; 
-        // Eliminamos row.style.color = "#969696"
-        fs.style.background = "#FFFF00"; 
-        mi.style.background = "#dcdcdc"; mi.style.color = "#969696"; mi.style.fontWeight = "normal";
-        ma.style.background = "#dcdcdc"; ma.style.color = "#969696"; ma.style.fontWeight = "normal";
-        
-        // Ponemos nombre en GRIS
-        nameCell.style.color = "#969696";
-        nameCell.style.fontWeight = "normal";
-    }}
     
-    if(name !== "" && name !== "NUEVA UNIDAD") {{
-        fleet[name] = {{ max: parseFloat(ma.innerText)||0, stock: sch, used: 0 }};
-    }}
-}});
 
-
-// --- INICIO DEL BLOQUE DE SINCRONIZACIÓN ---
-let mapeoRuteadas = {{}};
-document.querySelectorAll('#polys-' + tabId + ' .calc-row').forEach(row => {{
-    let s = row.querySelector('.s-type').value;
-    let u = parseInt(row.querySelector('.u-manual').innerText) || 0;
-    if (s && s !== "Seleccionar...") {{
-        mapeoRuteadas[s] = (mapeoRuteadas[s] || 0) + u;
-    }}
-}});
-
-document.querySelectorAll('#body-' + tabId + ' tr').forEach(row => {{
-    let nameCell = row.querySelector('.edit-name');
-    let ruteadaCell = row.querySelector('.f-ruteadas');
-    if (nameCell && ruteadaCell) {{
-        let name = nameCell.innerText.trim();
-        ruteadaCell.innerText = mapeoRuteadas[name] || 0;
-    }}
-}});
-// --- FIN DEL BLOQUE DE SINCRONIZACIÓN ---
-
-
-
-// 2. Calcular ocupación por polígono (Tabla de abajo)
-document.querySelectorAll('#polys-' + tabId + ' .poligono-bloque').forEach(bl => {{
-    let vT = parseFloat(bl.querySelector('.v-total-val').innerText) || 0, vA = 0;
-    let vCalcEl = bl.querySelector('.v-calculado-total');
-
-    // Obtenemos el nombre del plan aquí para identificar CENTRO 1 y CENTRO 2
-    let nombrePlanPadre = bl.querySelector('td[rowspan]')?.innerText?.toUpperCase()?.trim() || "";
-    let esCentro = (nombrePlanPadre === "⚠️ CENTRO 1" || nombrePlanPadre === "⚠️ CENTRO 2");
     
-    let celdaNodos = bl.querySelector('.nodos-val');
-    let tieneNodo = (tabId == 6 && celdaNodos && parseInt(celdaNodos.innerText) > 0);
-    
-    // Obtenemos todas las filas del bloque
-    let filas = bl.querySelectorAll('.calc-row');
-
-    filas.forEach((r, index) => {{
-        let sType = r.querySelector('.s-type');
-        let uManual = r.querySelector('.u-manual');
-        let sp = r.querySelector('.spr-real-val');
-        
-        // 🔥 AQUÍ ESTÁ LA MAGIA:
-        // Si NO es Centro Y tiene nodo, aplica la regla (Funciona para todos los demás)
-        // Si ES Centro, esta condición da FALSE y se salta la asignación automática
-        if (!esCentro && tieneNodo && index === 0 && (sType.value === "" || sType.value === "Seleccionar...")) {{
-            sType.value = "Large Van MLP foráneo";
-            uManual.innerText = "1";
-        }}
-
-        // Si el usuario cambió la unidad manualmente, aseguramos que si es "Seleccionar...", la cantidad sea 0
-        if (sType.value === "" || sType.value === "Seleccionar...") {{
-            uManual.innerText = "0";
-        }}
-        
-        let s = sType.value;
-        let u = parseInt(uManual.innerText) || 0;
-
-        // 🔥 CANDADO ALCHICHICA
-        let nombrePlanPadre = bl.querySelector('td[rowspan]')?.innerText?.toUpperCase() || "";
-        if (nombrePlanPadre.includes("ALCHICHICA")) {{
-            if (s !== "Seleccionar..." && s !== "") {{
-                vA += (u * (parseFloat(sp.innerText) || 0));
-                sp.style.fontWeight = "bold";
-                sp.style.setProperty("background-color", "#edf2f2");
-                sp.style.setProperty("color", "#25282b");
-            }}
-            return; 
-        }}
-
-        // Lógica de flota
-        if(s !== "Seleccionar..." && s !== "" && fleet[s]) {{
-            if(!editedRowsPlan.has(r)) sp.innerText = fleet[s].max; 
-            fleet[s].used += u; 
-            vA += (u * (parseFloat(sp.innerText) || 0));
-            sp.style.setProperty("background-color", "#edf2f2");
-            sp.style.setProperty("color", "#25282b");
-        }} else {{
-            sp.style.setProperty("background-color", "#FFFFFF");
-        }}
-    }});
-
-    // ... (Cálculo de vCalcEl y vT igual que antes) ...
-    vCalcEl.innerText = Math.round(vA);
-    let d = bl.querySelector('.p-diff');
-    let diffVal = Math.round(vA);
-    if (vT === 0) d.innerText = "VACÍO";
-    else if (diffVal === Math.round(vT)) {{ d.innerText = "OK"; d.style.background = "#61b888"; }}
-    else if (vA > vT) {{ d.innerText = "EXCESO: " + Math.round(vA - vT); d.style.background = "#f2bd5c"; }}
-    else {{ d.innerText = "FALTAN: " + Math.round(vT - vA); d.style.background = "#fc9a88"; }}
-}});
-
-
-
-// 3. REPLICAR Y CALCULAR DELTA BASADO EN "RUTEADAS" MANUALES
-document.querySelectorAll('#body-' + tabId + ' tr').forEach(row => {{
-    let nameCell = row.querySelector('.edit-name');
-    if (!nameCell) return;
-    
-    let n = nameCell.innerText.trim();
-    
-    // Buscamos el valor de Ruteadas (USADAS) y del Schedule
-    let ruteadasManuales = parseFloat(row.querySelector('.f-ruteadas')?.innerText || 0);
-    let stock = parseFloat(row.querySelector('.f-stock')?.innerText || 0);
-    let cL = row.querySelector('.f-left'); // Columna DELTA
-    
-    // --- Lógica de color para columna USADAS ---
-    let ruteadaCell = row.querySelector('.f-ruteadas');
-    if (ruteadaCell) {{
-        if (ruteadasManuales > 0) {{
-            ruteadaCell.style.backgroundColor = "#d3f0e5"; // Fondo verde claro
-            ruteadaCell.style.color = "#008B8B";           // Número verde
-            ruteadaCell.style.fontWeight = "bold";
-        }} else {{
-            ruteadaCell.style.backgroundColor = "#dcdcdc";
-            ruteadaCell.style.color = "";
-            ruteadaCell.style.fontWeight = "bold";
-        }}
-    }}
-
-    // --- LÓGICA DE COLOR Y FORMATO POSITIVO PARA DELTA ---
-    if (cL) {{
-        let exceso = ruteadasManuales - stock; // Diferencia de adicionales
-        
-        if (exceso > 0) {{
-            // 🔥 Si excediste el Schedule, muestra +3 en color rojo
-            cL.innerText = "+" + exceso;
-            cL.style.color = "red"; 
-            cL.style.fontWeight = "bold"; 
-            cL.style.background = "transparent";
-        }} else if (ruteadasManuales === stock && stock > 0) {{
-            // Si consumiste exactamente todo el Schedule (0 sobrantes, 0 faltantes)
-            cL.innerText = "0";
-            cL.style.color = "white"; 
-            cL.style.background = "#fc765d"; // Naranja/Rojo de completado
-            cL.style.fontWeight = "bold";
-        }} else {{
-            // Si todavía te quedan unidades por usar del Schedule
-            let restantes = stock - ruteadasManuales;
-            cL.innerText = restantes;
-            cL.style.color = "#17191a"; 
-            cL.style.background = "transparent"; 
-            cL.style.fontWeight = "normal";
-        }}
-    }}
-}});
-
-
-
-
-// 3.5 BADGE DE UNIDADES ADICIONALES EN POLÍGONOS (CÁLCULO EXACTO POR FILA)
-let contadorAcumulado = {{}};
-
-document.querySelectorAll('#polys-' + tabId + ' .calc-row').forEach(r => {{
-    let sel = r.querySelector('.s-type')?.value;
-    let uCell = r.querySelector('.u-manual-cell');
-    let divFlex = uCell ? uCell.querySelector('div') : null;
-    let spanU = r.querySelector('.u-manual');
-    let uManual = parseInt(spanU?.innerText) || 0;
-
-    if (!divFlex) return;
-
-    let badge = divFlex.querySelector('.badge-adicional');
-
-    if (sel && sel !== "Seleccionar..." && fleet[sel] && uManual > 0) {{
-        let stockInicial = fleet[sel].stock;
-        let usadasPrevias = contadorAcumulado[sel] || 0;
-
-        // Calculamos cuántas de las unidades de ESTA FILA entran en el Schedule restante
-        let cubiertasPorSchedule = Math.max(0, Math.min(uManual, stockInicial - usadasPrevias));
-        let excesoFila = uManual - cubiertasPorSchedule;
-
-        // Acumulamos el uso para la siguiente fila
-        contadorAcumulado[sel] = usadasPrevias + uManual;
-
-        if (excesoFila > 0) {{
-            // 🔥 Si esta fila específica consumió unidades por encima del Schedule
-            if (!badge) {{
-                badge = document.createElement('span');
-                badge.className = 'badge-adicional';
-                badge.style.cssText = 'font-size: 10px; background: #d32f2f; color: white; padding: 1px 4px; border-radius: 3px; font-weight: bold; margin-left: 2px;';
-                if (spanU) spanU.after(badge);
-            }}
-            badge.innerText = `+${{excesoFila}}`;
-            badge.style.display = 'inline-block';
-            badge.title = `${{cubiertasPorSchedule}} de Schedule + ${{excesoFila}} adicionales en este plan`;
-            uCell.style.backgroundColor = "#d3f0e5";
-        }} else {{
-            if (badge) badge.style.display = 'none';
-            uCell.style.backgroundColor = "#d3f0e5";
-        }}
-    }} else {{
-        if (badge) badge.style.display = 'none';
-        if (uCell) uCell.style.backgroundColor = "#d3f0e5";
-    }}
-}});
-
-
-
-
-       // 4. FILTRAR LISTA (Solo las crowd permanecen siempre visibles)
-document.querySelectorAll('#polys-' + tabId + ' .poligono-bloque').forEach(bl => {{
-
-    // 🔥 Lista de unidades permitidas para seguir apareciendo sin stock
-    const permitidasSinStock = ["car 8h", "car - 8h", "car 5h", "car - 5h", "car 3h", "car - 3h"];
-
-    bl.querySelectorAll('.s-type').forEach(s => {{ 
-        let cur = s.value; 
-        let opt = '<option value="">Seleccionar...</option>';
-        
-        Object.keys(fleet).forEach(k => {{
-            let nameLower = k.toLowerCase().trim();
-            let stock = fleet[k].stock;
-            let used = fleet[k].used;
-            
-            let esPermitida = permitidasSinStock.some(u => nameLower.includes(u));
-            let tieneCapacidad = (stock - used > 0);
-            
-            // Muestra la unidad si tiene saldo libre, o si es de las permitidas, o si ya está seleccionada en esta fila
-            if (tieneCapacidad || esPermitida || k === cur) {{
-                opt += `<option value="${{k}}">${{k}}</option>`;
-            }}
-        }});
-        
-        s.innerHTML = opt;
-        s.value = cur;
-
-        updateSelectColor(s);
-    }});
-}});
-
-
-    // --- 5. CALCULO DE TOTALES (Lógica Precisa) ---
-let totals = {{
-    mlpDecl: 0, mlpRute: 0,
-    rentalDecl: 0, rentalRute: 0,
-    carDecl: 0, carRute: 0,
-    otrosRute: 0,
-    totalRuteadas: 0
-}};
-
-// 1. DECLARADAS: Suma la columna "SCHEDULE" de la tabla de arriba
-document.querySelectorAll('#body-' + tabId + ' tr').forEach(row => {{
-    let name = row.querySelector('.edit-name')?.innerText.toLowerCase().trim() || "";
-    let sch = parseInt(row.querySelector('.f-stock')?.innerText) || 0;
-    
-    if (name.includes("mlp")) totals.mlpDecl += sch;
-    else if (name.includes("rental")) totals.rentalDecl += sch;
-    else if (name.includes("car") || name.includes("moto") || name.includes("Newbie") || name.includes("9h")) totals.carDecl += sch;
-}});
-
-
-// 2. Calcular ocupación y totales
-totals.totalRuteadas = 0; // Reiniciamos el acumulador
-totals.mlpRute = 0;
-totals.rentalRute = 0;
-totals.carRute = 0;
-totals.otrosRute = 0; 
-
-document.querySelectorAll('#polys-' + tabId + ' .calc-row').forEach(row => {{
-    let s = row.querySelector('.s-type').value; 
-    let u = parseInt(row.querySelector('.u-manual').innerText) || 0;
-
-    if (!s || s === "Seleccionar...") return;
-
-    let name = s.toLowerCase().trim();
-
-    // 1. CLASIFICACIÓN
-    if (name.includes("mlp")) {{
-        totals.mlpRute += u;
-    }} else if (name.includes("rental")) {{
-        totals.rentalRute += u;
-    }} else if (name.includes("delivery")) {{
-        totals.otrosRute += u;
-    }} else if (name.includes("car") || name.includes("moto") || name.includes("Newbie") || name.includes("9h")) {{
-        totals.carRute += u;
-    }} else {{
-        totals.otrosRute += u; 
-    }}
-
-    // 2. SUMA TOTAL (Aquí sumamos todas las categorías recién actualizadas)
-    // Esto garantiza que el total siempre sea la suma de las partes
-    totals.totalRuteadas = totals.mlpRute + totals.rentalRute + totals.carRute + totals.otrosRute;
-}});
-
-
-
-// 3. ACTUALIZACIÓN DE PANTALLA
-
-totals.totalRuteadas = totals.mlpRute + totals.rentalRute + totals.carRute + totals.otrosRute;
-
-console.log("DEBUG: MLP=" + totals.mlpRute + ", Rental=" + totals.rentalRute + ", Car=" + totals.carRute + ", Otros=" + totals.otrosRute + ", TOTAL=" + totals.totalRuteadas);
-
-// 3. ACTUALIZACIÓN DE PANTALLA
-function setT(id, val) {{
-    let finalId = id + '-' + tabId;
-    let el = document.getElementById(finalId);
-    
-    if (el) {{
-        el.innerText = Math.round(val);
-        console.log("ÉXITO: Se actualizó el ID " + finalId + " con valor " + val);
-    }} else {{
-        console.error("¡ERROR! No encontré el ID: " + finalId);
-    }}
-}}
-
-// --- PONLO AQUÍ: Esto garantiza que la suma sea la correcta ---
-totals.totalRuteadas = totals.mlpRute + totals.rentalRute + totals.carRute + totals.otrosRute;
-// -----------------------------------------------------------------
-
-// Ahora llamamos a los setT
-setT('total-mlp-decl', totals.mlpDecl);
-setT('total-mlp-rute', totals.mlpRute);
-setT('total-rental-decl', totals.rentalDecl);
-setT('total-rental-rute', totals.rentalRute);
-setT('total-car-schedule', totals.carDecl);
-setT('total-car-real', totals.carRute);
-setT('total-otros', totals.otrosRute); 
-// En lugar de llamar a setT normalmente para el total, hacemos esto:
-setTimeout(() => {{
-    let valorCorrecto = totals.mlpRute + totals.rentalRute + totals.carRute + totals.otrosRute;
-    let el = document.getElementById('total-ruteadas-' + tabId);
-    if (el) {{
-        el.innerText = Math.round(valorCorrecto);
-        el.style.color = "#66CDAA"; // Le damos un color para saber que el forzado funcionó
-        console.log("FORZADO: El total ahora es " + valorCorrecto);
-    }}
-}}, 500); // Espera medio segundo después de que todo se ejecute para forzar el valor
-
-updateFleetFloat();
-
-actualizarTotales();
-
-actualizarDosPorciento();
-
-// --- ACTUALIZACIÓN DINÁMICA SEGÚN LA PESTAÑA (tabId) ---
-    // Esto busca el ID específico de la pestaña actual (ej: val-mlp-rute-2)
-    let elMlp = document.getElementById('val-mlp-rute-' + tabId);
-    let elRental = document.getElementById('val-rental-rute-' + tabId);
-    let elCar = document.getElementById('val-car-rute-' + tabId);
-
-    // Solo actualizamos si el elemento realmente existe en la pestaña actual
-    if(elMlp) elMlp.innerText = Math.round(totals.mlpRute);
-    if(elRental) elRental.innerText = Math.round(totals.rentalRute);
-    if(elCar) elCar.innerText = Math.round(totals.carRute);
-
-    }}
-
-
-
-// --- ENTER: SALIR DE FLOTANTE / CIERRA PRIORIDADES / ALERTAS ---
-document.addEventListener('keydown', function(event) {{
-    if (event.key !== 'Enter') return;
-
-    // 1️⃣ SI ESTÁ FLOTANDO: Salir inmediatamente a la vista NORMAL al dar Enter
-    const fleet = document.getElementById("fleet-sticky");
-    if (fleet && fleet.classList.contains("fleet-floating")) {{
-        event.preventDefault();
-        if (typeof toggleFleetFloating === "function") {{
-            toggleFleetFloating();
-        }}
-        return;
-    }}
-
-    // 2️⃣ SI NO ESTÁ FLOTANDO: Validar controles interactivos
-    const ae = document.activeElement;
-    const tag = ae && ae.tagName ? ae.tagName.toLowerCase() : "";
-    if (tag === "button" || tag === "input" || tag === "select" || tag === "textarea") {{
-        return;
-    }}
-    if (ae && ae.isContentEditable) {{
-        return;
-    }}
-
-    // 3️⃣ LÓGICA PANEL PRIORIDADES
-    let panel = document.getElementById('panel-prioridades');
-    if (panel && panel.style.top === "0px") {{
-        panel.style.top = "-600px";
-        if (document.activeElement) document.activeElement.blur();
-    }}
-
-    // 4️⃣ LÓGICA ALERTAS ROJAS
-    let alerta = document.querySelector('.alerta-roja, .p-diff');
-    if (alerta && alerta.innerText.includes('EXCESO')) {{
-        if (document.activeElement) document.activeElement.blur();
-    }}
-}});
-
 
 
 
