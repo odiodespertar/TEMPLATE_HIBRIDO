@@ -959,7 +959,7 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                         if c2.button("2️⃣ No", use_container_width=True):
                             st.session_state.data_resumen["alchichica"] = False
                             st.session_state.paso_historial.append(4)
-                            st.session_state.paso_resumen = 4.8
+                            st.session_state.paso_resumen = 4.6
                             st.rerun()
 
                     # PASO 4.5: Unidades Alchichica
@@ -969,11 +969,38 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                         if c1.button("1️⃣ Sí", use_container_width=True):
                             st.session_state.data_resumen["alchichica_2sv"] = True
                             st.session_state.paso_historial.append(4.5)
-                            st.session_state.paso_resumen = 4.8
+                            st.session_state.paso_resumen = 4.6
                             st.rerun()
                         if c2.button("2️⃣ No", use_container_width=True):
                             st.session_state.data_resumen["alchichica_2sv"] = False
                             st.session_state.paso_historial.append(4.5)
+                            st.session_state.paso_resumen = 4.6
+                            st.rerun()
+
+                    # PASO 4.6: Asignación Incorrecta a Polígonos (NUEVO)
+                    elif paso == 4.6:
+                        st.write("👇 **¿La herramienta asignó unidades a polígonos que no corresponden?**")
+                        if st.button("1️⃣ De nuevo la herramienta asignó Rentals a polígonos foráneos.", use_container_width=True):
+                            st.session_state.data_resumen["asignacion_error"] = "👉 De nuevo la herramienta asignó Rentals a polígonos foráneos."
+                            st.session_state.paso_historial.append(4.6)
+                            st.session_state.paso_resumen = 4.8
+                            st.rerun()
+                        
+                        txt_custom = st.text_input("2️⃣ Escribe otra unidad/error (ej. La herramienta asignó Cars a planes foráneos):", key="in_error_custom")
+                        if st.button("Guardar asignación personalizada ➡️", use_container_width=True):
+                            if txt_custom.strip():
+                                # Asegura que lleve el emoji de la mano si no lo escribió
+                                msg_final_err = txt_custom.strip() if txt_custom.strip().startswith("👉") else f"👉 {txt_custom.strip()}"
+                                st.session_state.data_resumen["asignacion_error"] = msg_final_err
+                            else:
+                                st.session_state.data_resumen["asignacion_error"] = ""
+                            st.session_state.paso_historial.append(4.6)
+                            st.session_state.paso_resumen = 4.8
+                            st.rerun()
+
+                        if st.button("3️⃣ No hubo errores de asignación", use_container_width=True):
+                            st.session_state.data_resumen["asignacion_error"] = ""
+                            st.session_state.paso_historial.append(4.6)
                             st.session_state.paso_resumen = 4.8
                             st.rerun()
 
@@ -1047,7 +1074,10 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                             else:
                                 texto_alchichica = ""
 
-                            # 5. Bulk y Flota Completa
+                            # 5. Error de asignación de la herramienta
+                            texto_error_asig = d.get("asignacion_error", "")
+
+                            # 6. Bulk y Flota Completa
                             texto_bulk = "📦 Se asignó H&B para el volumen Bulk." if d.get("hubo_bulk", False) else ""
                             texto_flota = "🚨🚛 Usamos la flota en su totalidad." if d.get("flota_completa", False) else ""
 
@@ -1067,6 +1097,8 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                                 lineas_html.append(f"{texto_dropeo}<br>")
                             if texto_alchichica:
                                 lineas_html.append(f"{texto_alchichica}<br>")
+                            if texto_error_asig:
+                                lineas_html.append(f"{texto_error_asig}<br>")
                             if texto_flota:
                                 lineas_html.append(f"{texto_flota}<br>")
 
