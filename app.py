@@ -3571,7 +3571,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                     <!-- Campo 3: Resultado Unidades -->
                     <div style="width: 100%; background: #1e2022; padding: 6px 8px; border-radius: 10px; border: 2px solid #34383d; text-align: center; height: 60px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;">
                         <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: 800; letter-spacing: 0.5px;">UNIDADES:</span>
-                        <span id="calc-div-res" style="font-size: 38px; font-weight: 900; color: #20B2AA; line-height: 0.9;">0</span>
+                        <span id="calc-div-res" style="font-size: 38px; font-weight: 900; color: #3483fa; line-height: 0.9;">0</span>
                     </div>
                 </div>
             </div>
