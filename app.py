@@ -3464,7 +3464,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                     <div>
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
                             <div>
-                                <div style="font-size: 11px; font-weight: 700; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - SIN NODOS</div>
+                                <div style="font-size: 11px; font-weight: 800; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - SIN NODOS</div>
                                 <span style="font-size: 11px; color: #64748b; font-weight: 600;">Suma total: <strong id="dos-pct-suma-total-1" style="color: #0f172a;">0</strong></span>
                             </div>
                             <div style="text-align: right;">
