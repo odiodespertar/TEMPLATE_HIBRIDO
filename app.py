@@ -3566,7 +3566,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                 </div>
             </div>
 
-        </div> 
+        </div>
         
         
         <div id="polys-9" class="p-content" style="display:none;">{gen_poligonos(u_C1_VACIA)}</div>
@@ -4016,8 +4016,10 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         const tituloPoligonos = document.getElementById('titulo-planificacion-poligonos');
         const botoneraSuperior = document.getElementById('fleet-drag-handle');
 
-        // Ocultar siempre la botonera
-        if (botoneraSuperior) botoneraSuperior.style.display = 'none !important';
+        // 🔴 FORZAR OCULTACIÓN DE LA BOTONERA SUPERIOR EN TODOS LOS RUTEOS
+        if (botoneraSuperior) {{
+            botoneraSuperior.style.setProperty('display', 'none', 'important');
+        }}
 
         if (currentTab === 4) {{
             const tablaExt = document.getElementById('tab-4');
