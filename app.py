@@ -3528,7 +3528,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             </div>
 
             <!-- ➗ TARJETA: CALCULADORA DIVISORA (VERSIÓN VERTICAL COMPACTA) -->
-            <div style="max-width: 320px; margin: 0 auto 30px auto; background: #ffffff; padding: 16px; border-radius: 14px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+            <div style="max-width: 320px; margin: 0 auto 30px auto; background: #ffe600; padding: 16px; border-radius: 14px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #f1f5f9; padding-bottom: 6px;">
                     <div style="font-size: 13px; font-weight: 800; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">🧮 CALCULADORA</div>
                 </div>
