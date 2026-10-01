@@ -3527,14 +3527,14 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                 </div>
             </div>
 
-            <!-- ➗ TARJETA: CALCULADORA DIVISORA (BOTONES COMPACTOS + SPR AMPLIO) -->
+            <!-- ➗ TARJETA: CALCULADORA DIVISORA (PLACEHOLDER "0") -->
             <div style="max-width: 950px; margin: 0 auto 30px auto; background: #ffffff; padding: 14px 16px; border-radius: 14px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 6px;">
                     <div style="font-size: 13px; font-weight: 800; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">🧮 CALCULADORA</div>
                 </div>
 
                 <div style="display: flex; gap: 4px; align-items: flex-end; justify-content: center;">
-                    <!-- Campo 1: IDS / Número Editable -->
+                    <!-- Campo 1: IDS (Placeholder en 0) -->
                     <div style="flex: 1.2;">
                         <label style="font-size: 11px; color: #64748b; font-weight: 800; display: block; margin-bottom: 3px; text-align: center; letter-spacing: 0.5px;">IDS</label>
                         <input type="number" id="calc-div-num1" class="no-spinners" oninput="calcularDivisionSistemico()" onfocus="this.select()" placeholder="0"
@@ -3543,20 +3543,17 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
                     <div style="font-size: 28px; font-weight: 900; color: #64748b; padding-bottom: 12px; user-select: none; margin: 0 2px;">÷</div>
 
-                    <!-- Campo 2: SPR / Divisor con Botones + y - Ultra Delgado (30px) -->
+                    <!-- Campo 2: SPR / Divisor con Botones + y - -->
                     <div style="flex: 2;">
                         <label style="font-size: 11px; color: #64748b; font-weight: 800; display: block; margin-bottom: 3px; text-align: center; letter-spacing: 0.5px;">SPR</label>
                         <div style="display: flex; align-items: center; gap: 0;">
-                            <!-- Botón Restar Reducido -->
                             <button onclick="pasoDivisorSistemico(-1)" title="Restar 1"
                                     style="cursor: pointer; background: #f1f5f9; color: #dc2626; border: 2px solid #cbd5e1; border-right: none; font-weight: 900; border-radius: 10px 0 0 10px; width: 32px; min-width: 32px; height: 60px; font-size: 22px; display: inline-flex; align-items: center; justify-content: center; outline: none; flex-shrink: 0; padding: 0;"
                                     onmouseenter="this.style.background='#fee2e2';" onmouseleave="this.style.background='#f1f5f9';">-</button>
 
-                            <!-- Campo Divisor Ampliado -->
-                            <input type="number" id="calc-div-num2" class="no-spinners" oninput="calcularDivisionSistemico()" onfocus="this.select()" value="1" placeholder="Divisor"
+                            <input type="number" id="calc-div-num2" class="no-spinners" oninput="calcularDivisionSistemico()" onfocus="this.select()" value="1" placeholder="0"
                                    style="width: 100%; box-sizing: border-box; padding: 6px 2px; font-size: 32px; font-weight: 900; text-align: center; border: 2px solid #cbd5e1; border-left: none; border-right: none; background: #f8fafc; color: #0f172a; outline: none; border-radius: 0; height: 60px;" />
 
-                            <!-- Botón Sumar Reducido -->
                             <button onclick="pasoDivisorSistemico(1)" title="Sumar 1"
                                     style="cursor: pointer; background: #f1f5f9; color: #0f766e; border: 2px solid #cbd5e1; border-left: none; font-weight: 900; border-radius: 0 10px 10px 0; width: 32px; min-width: 32px; height: 60px; font-size: 22px; display: inline-flex; align-items: center; justify-content: center; outline: none; flex-shrink: 0; padding: 0;"
                                     onmouseenter="this.style.background='#ccfbf1';" onmouseleave="this.style.background='#f1f5f9';">+</button>
@@ -3565,7 +3562,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
                     <div style="font-size: 28px; font-weight: 900; color: #64748b; padding-bottom: 12px; user-select: none; margin: 0 2px;">=</div>
 
-                    <!-- Campo 3: Resultado Unidades -->
+                    <!-- Campo 3: Resultado -->
                     <div style="flex: 1.3; background: #1e2022; padding: 2px 8px; border-radius: 10px; border: 2px solid #34383d; text-align: center; height: 60px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;">
                         <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: 800; letter-spacing: 0.5px;">UNIDADES:</span>
                         <span id="calc-div-res" style="font-size: 38px; font-weight: 900; color: #20B2AA; line-height: 0.9;">0</span>
