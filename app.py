@@ -3528,7 +3528,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                 <div style="display: flex; gap: 15px; align-items: center;">
                     <!-- Campo 1: Número Editable -->
                     <div style="flex: 1;">
-                        <label style="font-size: 10px; color: #64748b; font-weight: 700; display: block; margin-bottom: 4px; text-align: center;">NÚMERO A DIVIDIR</label>
+                        <label style="font-size: 10px; color: #64748b; font-weight: 700; display: block; margin-bottom: 4px; text-align: center;">IDS</label>
                         <input type="number" id="calc-div-num1" class="no-spinners" oninput="calcularDivisionSistemico()" onfocus="this.select()" placeholder="Ej. 1000"
                                style="width: 100%; box-sizing: border-box; padding: 8px; font-size: 18px; font-weight: 700; text-align: center; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 6px;" />
                     </div>
@@ -3537,7 +3537,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
                     <!-- Campo 2: Divisor con Botones + y - -->
                     <div style="flex: 1.2;">
-                        <label style="font-size: 10px; color: #64748b; font-weight: 700; display: block; margin-bottom: 4px; text-align: center;">DIVISOR</label>
+                        <label style="font-size: 10px; color: #64748b; font-weight: 700; display: block; margin-bottom: 4px; text-align: center;">SPR</label>
                         <div style="display: flex; align-items: center; gap: 6px;">
                             <button onclick="pasoDivisorSistemico(-1)" title="Restar 1"
                                     style="cursor: pointer; background: #f1f5f9; color: #dc2626; border: 1px solid #cbd5e1; font-weight: 800; border-radius: 6px; width: 36px; height: 38px; font-size: 18px; display: inline-flex; align-items: center; justify-content: center; outline: none;"
