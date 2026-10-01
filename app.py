@@ -181,15 +181,7 @@ table {
 }
 
 
-/* Oculta la botonera superior */
-#fleet-drag-handle, .btn-tooltip-container, #fleet-toggle-btn {
-    display: none !important;
-}
 
-/* Oculta la tarjeta negra de patio si existiera */
-#sis-flota-contenedor, #sis-flota-flotante {
-    display: none !important;
-}
 
 /* ============================================================
    🤖 ASISTENTE DE RUTEO — VENTANA FLOTANTE
