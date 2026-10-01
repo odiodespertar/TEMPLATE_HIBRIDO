@@ -3537,7 +3537,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                     <!-- Campo 1: IDS / Número Editable -->
                     <div style="flex: 1.2;">
                         <label style="font-size: 11px; color: #64748b; font-weight: 800; display: block; margin-bottom: 3px; text-align: center; letter-spacing: 0.5px;">IDS</label>
-                        <input type="number" id="calc-div-num1" class="no-spinners" oninput="calcularDivisionSistemico()" onfocus="this.select()" placeholder="Ej. 1000"
+                        <input type="number" id="calc-div-num1" class="no-spinners" oninput="calcularDivisionSistemico()" onfocus="this.select()" placeholder="0"
                                style="width: 100%; box-sizing: border-box; padding: 6px 4px; font-size: 32px; font-weight: 900; text-align: center; border: 2px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 10px; height: 60px;" />
                     </div>
 
