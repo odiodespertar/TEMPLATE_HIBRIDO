@@ -3452,165 +3452,159 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <div id="polys-8" class="p-content" style="display:none;">{gen_poligonos(u_C1_SMD1)}</div>
         <div id="polys-1" class="p-content" style="display:none;">{gen_poligonos(u_PREC)}</div>
         <div id="polys-5" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX2)}</div>
-        
-        <!-- 🟢 CONTENEDOR SISTÉMICO: CALCULADORAS 2%, CONVERTIDOR Y CALCULADORA DIVISORA -->
-        <div id="polys-4" class="p-content" style="display:none;">
 
-            <!-- ⚡ BLOQUE SUPERIOR: DOS CALCULADORAS INDEPENDIENTES DE 2% + CONVERTIDOR DE ORH -->
-            <div style="display: flex; max-width: 950px; margin: 30px auto 15px auto; gap: 15px; align-items: stretch;">
-                
-                <!-- RECUADRO 1: LISTA SUMATORIA DINÁMICA DE 2% -->
-                <div style="flex: 1; background: #ffffff; padding: 16px 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between;">
+<!-- 🟢 CONTENEDOR SISTÉMICO: CALCULADORAS 2%, CONVERTIDOR Y CALCULADORA DIVISORA -->
+<div id="polys-4" class="p-content" style="display:none;">
+
+    <!-- ⚡ 1️⃣ FILA SUPERIOR: DOS CALCULADORAS DE 2% + CONVERTIDOR DE ORH (JUNTAS ARRIBA) -->
+    <div style="display: flex; flex-direction: row; max-width: 700px; margin: 30px auto 20px auto; gap: 16px; align-items: stretch; justify-content: center;">
+        
+        <!-- RECUADRO 1: LISTA SUMATORIA DINÁMICA DE 2% -->
+        <div style="flex: 1; background: #ffffff; padding: 16px 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
                     <div>
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
-                            <div>
-                                <div style="font-size: 11px; font-weight: 800; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - SIN NODOS</div>
-                                <span style="font-size: 11px; color: #64748b; font-weight: 600;">Suma total: <strong id="dos-pct-suma-total-1" style="color: #0f172a;">0</strong></span>
-                            </div>
-                            <div style="text-align: right;">
-                                <span style="font-size: 10px; color: #888888; display: block; font-weight: 600;">RESULTADO 2%:</span>
-                                <span id="dos-pct-res-1" style="font-size: 26px; font-weight: 900; color: #66CDAA;">0</span>
-                            </div>
-                        </div>
-
-                        <!-- Celdas de Entrada -->
-                        <div id="contenedor-celdas-2pct" style="display: flex; flex-direction: column; gap: 8px; max-height: 160px; overflow-x: hidden; overflow-y: auto; padding-right: 2px;">
-                            <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 1"
-                                   style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
-                            <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 2"
-                                   style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
-                            <input type="number" class="in-2pct-lista" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 3"
-                                   style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
-                        </div>
+                        <div style="font-size: 11px; font-weight: 800; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - SIN NODOS</div>
+                        <span style="font-size: 11px; color: #64748b; font-weight: 600;">Suma total: <strong id="dos-pct-suma-total-1" style="color: #0f172a;">0</strong></span>
                     </div>
-
-                    <!-- Botones de Control + y - -->
-                    <div style="display: flex; gap: 8px; margin-top: 10px;">
-                        <button onclick="removerCelda2Pct()" title="Eliminar última celda"
-                                style="flex: 1; cursor: pointer; background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; font-weight: 700; border-radius: 6px; padding: 4px 0; font-size: 16px; transition: all 0.15s ease;"
-                                onmouseenter="this.style.background='#fee2e2'; this.style.color='#dc2626'; this.style.borderColor='#fca5a5';" 
-                                onmouseleave="this.style.background='#f1f5f9'; this.style.color='#64748b'; this.style.borderColor='#cbd5e1';">-</button>
-
-                        <button onclick="agregarCelda2Pct()" title="Agregar celda"
-                                style="flex: 1; cursor: pointer; background: #f1f5f9; color: #0f766e; border: 1px solid #cbd5e1; font-weight: 700; border-radius: 6px; padding: 4px 0; font-size: 16px; transition: all 0.15s ease;"
-                                onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488'; this.style.borderColor='#99f6e4';" 
-                                onmouseleave="this.style.background='#f1f5f9'; this.style.color='#0f766e'; this.style.borderColor='#cbd5e1';">+</button>
+                    <div style="text-align: right;">
+                        <span style="font-size: 10px; color: #888888; display: block; font-weight: 600;">RESULTADO 2%:</span>
+                        <span id="dos-pct-res-1" style="font-size: 26px; font-weight: 900; color: #66CDAA;">0</span>
                     </div>
                 </div>
 
-
-
-                <!-- RECUADRO 2: DATO DEDICADO INDIVIDUAL + CONVERTIDOR DE ORH (VERSIÓN VERTICAL) -->
-                <div style="max-width: 320px; width: 100%; margin: 0 auto 15px auto; display: flex; flex-direction: column; gap: 12px;">
-                    
-                    <!-- 🟢 TARJETA 1: 2% PERMITIDO - TOTAL(+NODOS) -->
-                    <div style="background: #1e2022; padding: 14px 16px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; flex-direction: column; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center;">
-                        <div>
-                            <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - TOTAL(+NODOS)</div>
-                            <input type="number" id="dos-pct-in-2" class="no-spinners" oninput="calcularDosPctIndividual(2)" onfocus="this.select()" value="0" placeholder="Ej. 3000"
-                                   style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 22px; font-weight: 800; text-align: center; border-radius: 8px; border: 1.5px solid #20B2AA; background: #141414; color: #DCDCDC; outline: none; margin-top: 6px; height: 48px;" />
-                        </div>
-                        <div style="width: 100%; border-top: 1px solid #34383d; padding-top: 8px;">
-                            <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold; letter-spacing: 0.5px;">RESULTADO 2%:</span>
-                            <span id="dos-pct-res-2" style="font-size: 30px; font-weight: 900; color: #7CFFB2; line-height: 1;">0</span>
-                        </div>
-                    </div>
-
-                    <!-- ⏱ TARJETA 2: CONVERTIDOR DE ORH -->
-                    <div style="background: #1e2022; padding: 14px 16px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; flex-direction: column; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center;">
-                        <div>
-                            <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">CONVERTIDOR ORH</div>
-                            <input type="number" id="orh-minutos-in" class="no-spinners" oninput="convertirOrhRapido()" onfocus="this.select()" placeholder="Minutos"
-                                   style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 8px; border: 1.5px solid #cbd5e1; background: #ffffff; color: #0f172a; outline: none; margin-top: 6px; height: 48px;" />
-                        </div>
-                        <div style="width: 100%; border-top: 1px solid #34383d; padding-top: 8px;">
-                            <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold; letter-spacing: 0.5px;">HORAS REALES:</span>
-                            <span id="orh-horas-res" style="font-size: 28px; font-weight: 900; color: #20B2AA; font-family: monospace; line-height: 1;">00:00</span>
-                        </div>
-                    </div>
-
-                </div>
-
-            
-
-            <!-- ➗ TARJETA: CALCULADORA DIVISORA (VERSIÓN VERTICAL COMPACTA) -->
-            <div style="max-width: 320px; margin: 0 auto 30px auto; background: #ffe600; padding: 16px; border-radius: 14px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #474747; padding-bottom: 6px;">
-                    <div style="font-size: 13px; font-weight: 800; color: #474747; letter-spacing: 0.5px; text-transform: uppercase;">🧮 CALCULADORA</div>
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
-                    <!-- Campo 1: IDS -->
-                    <div style="width: 100%;">
-                        <label style="font-size: 11px; color: #64748b; font-weight: 800; display: block; margin-bottom: 3px; text-align: center; letter-spacing: 0.5px;">IDS</label>
-                        <input type="number" id="calc-div-num1" class="no-spinners" 
-                               onkeydown="moverFlechasDivisora(event, this)" 
-                               oninput="calcularDivisionSistemico()" 
-                               onfocus="this.select()" placeholder="0"
-                               style="width: 100%; box-sizing: border-box; padding: 6px 4px; font-size: 32px; font-weight: 900; text-align: center; border: 2px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 10px; height: 60px;" />
-                    </div>
-
-                    <div style="font-size: 22px; font-weight: 900; color: #64748b; user-select: none; line-height: 1;">÷</div>
-
-                    <!-- Campo 2: SPR / Divisor -->
-                    <div style="width: 100%;">
-                        <label style="font-size: 11px; color: #64748b; font-weight: 800; display: block; margin-bottom: 3px; text-align: center; letter-spacing: 0.5px;">SPR</label>
-                        <div style="display: flex; align-items: center; gap: 0; width: 100%;">
-                            <button onclick="pasoDivisorSistemico(-1)" title="Restar 1"
-                                    style="cursor: pointer; background: #f1f5f9; color: #dc2626; border: 2px solid #cbd5e1; border-right: none; font-weight: 900; border-radius: 10px 0 0 10px; width: 42px; min-width: 42px; height: 60px; font-size: 22px; display: inline-flex; align-items: center; justify-content: center; outline: none; flex-shrink: 0; padding: 0;"
-                                    onmouseenter="this.style.background='#fee2e2';" onmouseleave="this.style.background='#f1f5f9';">-</button>
-
-                            <input type="number" id="calc-div-num2" class="no-spinners" 
-                                   onkeydown="moverFlechasDivisora(event, this)" 
-                                   oninput="calcularDivisionSistemico()" 
-                                   onfocus="this.select()" placeholder="0"
-                                   style="width: 100%; box-sizing: border-box; padding: 6px 2px; font-size: 32px; font-weight: 900; text-align: center; border: 2px solid #cbd5e1; border-left: none; border-right: none; background: #f8fafc; color: #0f172a; outline: none; border-radius: 0; height: 60px;" />
-
-                            <button onclick="pasoDivisorSistemico(1)" title="Sumar 1"
-                                    style="cursor: pointer; background: #f1f5f9; color: #0f766e; border: 2px solid #cbd5e1; border-left: none; font-weight: 900; border-radius: 0 10px 10px 0; width: 42px; min-width: 42px; height: 60px; font-size: 22px; display: inline-flex; align-items: center; justify-content: center; outline: none; flex-shrink: 0; padding: 0;"
-                                    onmouseenter="this.style.background='#ccfbf1';" onmouseleave="this.style.background='#f1f5f9';">+</button>
-                        </div>
-                    </div>
-
-                    <div style="font-size: 22px; font-weight: 900; color: #64748b; user-select: none; line-height: 1;">=</div>
-
-                    <!-- Campo 3: Resultado Unidades -->
-                    <div style="width: 100%; background: #1e2022; padding: 6px 8px; border-radius: 10px; border: 2px solid #34383d; text-align: center; height: 60px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;">
-                        <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: 800; letter-spacing: 0.5px;">UNIDADES:</span>
-                        <span id="calc-div-res" style="font-size: 38px; font-weight: 900; color: #3483fa; line-height: 0.9;">0</span>
-                    </div>
+                <!-- Celdas de Entrada -->
+                <div id="contenedor-celdas-2pct" style="display: flex; flex-direction: column; gap: 8px; max-height: 160px; overflow-x: hidden; overflow-y: auto; padding-right: 2px;">
+                    <input type="number" class="in-2pct-lista no-spinners" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 1"
+                           style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
+                    <input type="number" class="in-2pct-lista no-spinners" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 2"
+                           style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
+                    <input type="number" class="in-2pct-lista no-spinners" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 3"
+                           style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
                 </div>
             </div>
-            
-        </div>
-        
-        
-        <div id="polys-9" class="p-content" style="display:none;">{gen_poligonos(u_C1_VACIA)}</div>
-        <div id="polys-10" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX8)}</div>
-        
 
-        <div id="excel-polys" style="display:none; margin-top:10px;">
-            <div style="background:#25282b; color:white; font-weight:bold; text-align:center; padding:8px; font-size:18px; border:1px solid #0f5b84;">
-                📋 RESUMEN DE POLÍGONOS
+            <!-- Botones de Control + y - -->
+            <div style="display: flex; gap: 8px; margin-top: 10px;">
+                <button onclick="removerCelda2Pct()" title="Eliminar última celda"
+                        style="flex: 1; cursor: pointer; background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; font-weight: 700; border-radius: 6px; padding: 4px 0; font-size: 16px; transition: all 0.15s ease;"
+                        onmouseenter="this.style.background='#fee2e2'; this.style.color='#dc2626'; this.style.borderColor='#fca5a5';" 
+                        onmouseleave="this.style.background='#f1f5f9'; this.style.color='#64748b'; this.style.borderColor='#cbd5e1';">-</button>
+
+                <button onclick="agregarCelda2Pct()" title="Agregar celda"
+                        style="flex: 1; cursor: pointer; background: #f1f5f9; color: #0f766e; border: 1px solid #cbd5e1; font-weight: 700; border-radius: 6px; padding: 4px 0; font-size: 16px; transition: all 0.15s ease;"
+                        onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488'; this.style.borderColor='#99f6e4';" 
+                        onmouseleave="this.style.background='#f1f5f9'; this.style.color='#0f766e'; this.style.borderColor='#cbd5e1';">+</button>
+            </div>
+        </div>
+
+        <!-- RECUADRO 2: DATO DEDICADO INDIVIDUAL + CONVERTIDOR DE ORH -->
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 12px;">
+            
+            <!-- 🟢 TARJETA 1: 2% PERMITIDO - TOTAL(+NODOS) -->
+            <div style="background: #1e2022; padding: 14px 16px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; flex-direction: column; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center;">
+                <div>
+                    <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - TOTAL(+NODOS)</div>
+                    <input type="number" id="dos-pct-in-2" class="no-spinners" oninput="calcularDosPctIndividual(2)" onfocus="this.select()" value="0" placeholder="Ej. 3000"
+                           style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 22px; font-weight: 800; text-align: center; border-radius: 8px; border: 1.5px solid #20B2AA; background: #141414; color: #DCDCDC; outline: none; margin-top: 6px; height: 48px;" />
+                </div>
+                <div style="width: 100%; border-top: 1px solid #34383d; padding-top: 8px;">
+                    <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold; letter-spacing: 0.5px;">RESULTADO 2%:</span>
+                    <span id="dos-pct-res-2" style="font-size: 30px; font-weight: 900; color: #7CFFB2; line-height: 1;">0</span>
+                </div>
             </div>
 
-            <table style="width:100%; border-collapse:collapse; background:white; font-size:16px; table-layout:fixed;">
-                <thead>
-                    <tr style="background:#25282b; color:white; height:28px;">
-                        <th style="border:1px solid #c0c0c0;">PLAN</th>
-                        <th style="border:1px solid #c0c0c0;">VOL</th>
-                        <th style="border:1px solid #c0c0c0;">UNIDAD</th>
-                        <th style="border:1px solid #c0c0c0; width:55px;">ASIG</th>
-                        <th style="border:1px solid #c0c0c0;">NODO</th>
-                    </tr>
-                </thead>
-                <tbody id="excel-polys-body"></tbody>
-            </table>
+            <!-- ⏱ TARJETA 2: CONVERTIDOR DE ORH -->
+            <div style="background: #1e2022; padding: 14px 16px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; flex-direction: column; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center;">
+                <div>
+                    <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">CONVERTIDOR ORH</div>
+                    <input type="number" id="orh-minutos-in" class="no-spinners" oninput="convertirOrhRapido()" onfocus="this.select()" placeholder="Minutos"
+                           style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 8px; border: 1.5px solid #cbd5e1; background: #ffffff; color: #0f172a; outline: none; margin-top: 6px; height: 48px;" />
+                </div>
+                <div style="width: 100%; border-top: 1px solid #34383d; padding-top: 8px;">
+                    <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold; letter-spacing: 0.5px;">HORAS REALES:</span>
+                    <span id="orh-horas-res" style="font-size: 28px; font-weight: 900; color: #20B2AA; font-family: monospace; line-height: 1;">00:00</span>
+                </div>
+            </div>
+
         </div>
-        
+
+    </div> 
+    <!-- 🛑 FIN DE LA FILA SUPERIOR -->
+
+
+    <!-- ⚡ 2️⃣ FILA INFERIOR: CALCULADORA DIVISORA AMARILLA (ABAJO SOLA Y CENTRADA) -->
+    <div style="max-width: 320px; margin: 0 auto 30px auto; background: #ffe600; padding: 16px; border-radius: 14px; border: 1.5px solid #e6c200; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #474747; padding-bottom: 6px;">
+            <div style="font-size: 13px; font-weight: 800; color: #474747; letter-spacing: 0.5px; text-transform: uppercase;">🧮 CALCULADORA</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+            <!-- Campo 1: IDS -->
+            <div style="width: 100%;">
+                <label style="font-size: 11px; color: #64748b; font-weight: 800; display: block; margin-bottom: 3px; text-align: center; letter-spacing: 0.5px;">IDS</label>
+                <input type="number" id="calc-div-num1" class="no-spinners" 
+                       onkeydown="moverFlechasDivisora(event, this)" 
+                       oninput="calcularDivisionSistemico()" 
+                       onfocus="this.select()" placeholder="0"
+                       style="width: 100%; box-sizing: border-box; padding: 6px 4px; font-size: 32px; font-weight: 900; text-align: center; border: 2px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 10px; height: 60px;" />
+            </div>
+
+            <div style="font-size: 22px; font-weight: 900; color: #64748b; user-select: none; line-height: 1;">÷</div>
+
+            <!-- Campo 2: SPR / Divisor -->
+            <div style="width: 100%;">
+                <label style="font-size: 11px; color: #64748b; font-weight: 800; display: block; margin-bottom: 3px; text-align: center; letter-spacing: 0.5px;">SPR</label>
+                <div style="display: flex; align-items: center; gap: 0; width: 100%;">
+                    <button onclick="pasoDivisorSistemico(-1)" title="Restar 1"
+                            style="cursor: pointer; background: #f1f5f9; color: #dc2626; border: 2px solid #cbd5e1; border-right: none; font-weight: 900; border-radius: 10px 0 0 10px; width: 42px; min-width: 42px; height: 60px; font-size: 22px; display: inline-flex; align-items: center; justify-content: center; outline: none; flex-shrink: 0; padding: 0;"
+                            onmouseenter="this.style.background='#fee2e2';" onmouseleave="this.style.background='#f1f5f9';">-</button>
+
+                    <input type="number" id="calc-div-num2" class="no-spinners" 
+                           onkeydown="moverFlechasDivisora(event, this)" 
+                           oninput="calcularDivisionSistemico()" 
+                           onfocus="this.select()" placeholder="0"
+                           style="width: 100%; box-sizing: border-box; padding: 6px 2px; font-size: 32px; font-weight: 900; text-align: center; border: 2px solid #cbd5e1; border-left: none; border-right: none; background: #f8fafc; color: #0f172a; outline: none; border-radius: 0; height: 60px;" />
+
+                    <button onclick="pasoDivisorSistemico(1)" title="Sumar 1"
+                            style="cursor: pointer; background: #f1f5f9; color: #0f766e; border: 2px solid #cbd5e1; border-left: none; font-weight: 900; border-radius: 0 10px 10px 0; width: 42px; min-width: 42px; height: 60px; font-size: 22px; display: inline-flex; align-items: center; justify-content: center; outline: none; flex-shrink: 0; padding: 0;"
+                            onmouseenter="this.style.background='#ccfbf1';" onmouseleave="this.style.background='#f1f5f9';">+</button>
+                </div>
+            </div>
+
+            <div style="font-size: 22px; font-weight: 900; color: #64748b; user-select: none; line-height: 1;">=</div>
+
+            <!-- Campo 3: Resultado Unidades -->
+            <div style="width: 100%; background: #1e2022; padding: 6px 8px; border-radius: 10px; border: 2px solid #34383d; text-align: center; height: 60px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;">
+                <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: 800; letter-spacing: 0.5px;">UNIDADES:</span>
+                <span id="calc-div-res" style="font-size: 38px; font-weight: 900; color: #3483fa; line-height: 0.9;">0</span>
+            </div>
+        </div>
     </div>
-         
 
+</div> <!-- 🛑 AQUÍ SE CIERRA POLYS-4 -->
+
+<div id="polys-9" class="p-content" style="display:none;">{gen_poligonos(u_C1_VACIA)}</div>
+<div id="polys-10" class="p-content" style="display:none;">{gen_poligonos(u_PREC_SMX8)}</div>
+
+<div id="excel-polys" style="display:none; margin-top:10px;">
+    <div style="background:#25282b; color:white; font-weight:bold; text-align:center; padding:8px; font-size:18px; border:1px solid #0f5b84;">
+        📋 RESUMEN DE POLÍGONOS
+    </div>
+
+    <table style="width:100%; border-collapse:collapse; background:white; font-size:16px; table-layout:fixed;">
+        <thead>
+            <tr style="background:#25282b; color:white; height:28px;">
+                <th style="border:1px solid #c0c0c0;">PLAN</th>
+                <th style="border:1px solid #c0c0c0;">VOL</th>
+                <th style="border:1px solid #c0c0c0;">UNIDAD</th>
+                <th style="border:1px solid #c0c0c0; width:55px;">ASIG</th>
+                <th style="border:1px solid #c0c0c0;">NODO</th>
+            </tr>
+        </thead>
+        <tbody id="excel-polys-body"></tbody>
+    </table>
+</div>
 
 <!-- CONTADOR FLOTANTE OCULTO -->
 <div id="fleet-float" hidden>
