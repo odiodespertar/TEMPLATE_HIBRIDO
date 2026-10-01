@@ -3551,7 +3551,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                                     style="cursor: pointer; background: #f1f5f9; color: #dc2626; border: 2px solid #cbd5e1; border-right: none; font-weight: 900; border-radius: 10px 0 0 10px; width: 32px; min-width: 32px; height: 60px; font-size: 22px; display: inline-flex; align-items: center; justify-content: center; outline: none; flex-shrink: 0; padding: 0;"
                                     onmouseenter="this.style.background='#fee2e2';" onmouseleave="this.style.background='#f1f5f9';">-</button>
 
-                            <input type="number" id="calc-div-num2" class="no-spinners" oninput="calcularDivisionSistemico()" onfocus="this.select()" value="0" placeholder="0"
+                            <input type="number" id="calc-div-num2" class="no-spinners" oninput="calcularDivisionSistemico()" onfocus="this.select()" placeholder="0"
                                    style="width: 100%; box-sizing: border-box; padding: 6px 2px; font-size: 32px; font-weight: 900; text-align: center; border: 2px solid #cbd5e1; border-left: none; border-right: none; background: #f8fafc; color: #0f172a; outline: none; border-radius: 0; height: 60px;" />
 
                             <button onclick="pasoDivisorSistemico(1)" title="Sumar 1"
