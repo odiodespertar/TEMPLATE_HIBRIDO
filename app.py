@@ -3538,7 +3538,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                     <div style="flex: 1.2;">
                         <label style="font-size: 11px; color: #64748b; font-weight: 800; display: block; margin-bottom: 3px; text-align: center; letter-spacing: 0.5px;">IDS</label>
                         <input type="number" id="calc-div-num1" class="no-spinners" 
-                               onkeydown="navegarTecladoCalcDiv(event, this)" 
+                               onkeydown="moverFlechasDivisora(event, this)" 
                                oninput="calcularDivisionSistemico()" 
                                onfocus="this.select()" placeholder="0"
                                style="width: 100%; box-sizing: border-box; padding: 6px 4px; font-size: 32px; font-weight: 900; text-align: center; border: 2px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 10px; height: 60px;" />
@@ -3555,7 +3555,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                                     onmouseenter="this.style.background='#fee2e2';" onmouseleave="this.style.background='#f1f5f9';">-</button>
 
                             <input type="number" id="calc-div-num2" class="no-spinners" 
-                                   onkeydown="navegarTecladoCalcDiv(event, this)" 
+                                   onkeydown="moverFlechasDivisora(event, this)" 
                                    oninput="calcularDivisionSistemico()" 
                                    onfocus="this.select()" placeholder="0"
                                    style="width: 100%; box-sizing: border-box; padding: 6px 2px; font-size: 32px; font-weight: 900; text-align: center; border: 2px solid #cbd5e1; border-left: none; border-right: none; background: #f8fafc; color: #0f172a; outline: none; border-radius: 0; height: 60px;" />
@@ -3674,40 +3674,29 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         }}
     }}
 
-    function navegarTecladoCalcDiv(event, currentInput) {{
-        const input1 = document.getElementById('calc-div-num1');
-        const input2 = document.getElementById('calc-div-num2');
 
-        if (event.key === 'ArrowRight') {{
-            if (currentInput === input1 && input2) {{
-                event.preventDefault();
-                input2.focus();
-                input2.select();
-            }}
-        }} else if (event.key === 'ArrowLeft') {{
-            if (currentInput === input2 && input1) {{
-                event.preventDefault();
-                input1.focus();
-                input1.select();
-            }}
-        }} else if (event.key === 'ArrowUp') {{
-            event.preventDefault();
-            if (currentInput === input2) {{
-                pasoDivisorSistemico(1);
-            }} else if (currentInput === input1 && input2) {{
-                input2.focus();
-                input2.select();
-            }}
-        }} else if (event.key === 'ArrowDown') {{
-            event.preventDefault();
-            if (currentInput === input2) {{
-                pasoDivisorSistemico(-1);
-            }} else if (currentInput === input1 && input2) {{
-                input2.focus();
-                input2.select();
-            }}
+    // 🟢 NAVEGACIÓN DIRECTA CON FLECHAS EN CALCULADORA DIVISORA
+    function moverFlechasDivisora(e, elem) {{
+        const in1 = document.getElementById('calc-div-num1');
+        const in2 = document.getElementById('calc-div-num2');
+
+        if (!in1 || !in2) return;
+
+        // Si presionas Flecha Derecha o Abajo estando en IDS (in1) -> Pasa a SPR (in2)
+        if ((e.key === 'ArrowRight' || e.key === 'ArrowDown') && elem === in1) {{
+            e.preventDefault();
+            in2.focus();
+            in2.select();
+        }}
+        
+        // Si presionas Flecha Izquierda o Arriba estando en SPR (in2) -> Regresa a IDS (in1)
+        if ((e.key === 'ArrowLeft' || e.key === 'ArrowUp') && elem === in2) {{
+            e.preventDefault();
+            in1.focus();
+            in1.select();
         }}
     }}
+
 
     function pasoDivisorSistemico(delta) {{
         const inputDiv = document.getElementById('calc-div-num2');
