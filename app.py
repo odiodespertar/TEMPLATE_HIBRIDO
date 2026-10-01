@@ -111,12 +111,6 @@ st.markdown("""
 <style>
 
 
-/* 🟢 OCULTAR LA BOTONERA SUPERIOR EN TODOS LOS RUTEOS */
-#fleet-drag-handle {
-    display: none !important;
-}
-
-
 .block-container {
     padding: 0rem !important;
 }
@@ -184,6 +178,17 @@ table {
 #contenedor-celdas-2pct {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+}
+
+
+/* 🔴 OCULTAR BOTONERA SUPERIOR EN TODOS LOS RUTEOS */
+#fleet-drag-handle {
+    display: none !important;
+}
+
+/* 🔴 OCULTAR TARJETA NEGRA DE PATIO (SISTÉMICO) */
+#sis-flota-contenedor, #sis-flota-flotante {
+    display: none !important;
 }
 
 /* ============================================================
