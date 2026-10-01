@@ -4470,9 +4470,9 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
 
     
-    // 🟢 LIMPIEZA EXCLUSIVA PARA LAS CALCULADORAS DE SISTÉMICO
+    // 🟢 LIMPIEZA TOTAL Y REINICIO DE TODAS LAS CALCULADORAS DE SISTÉMICO
     function limpiarSistemico() {{
-        // 1. REINICIAR CALCULADORA 2% DATO 1 (DINÁMICA)
+        // 1. REINICIAR CALCULADORA 2% DATO 1 (SUMATORIA DINÁMICA)
         const contenedor2pct = document.getElementById('contenedor-celdas-2pct');
         if (contenedor2pct) {{
             contenedor2pct.innerHTML = `
@@ -4487,10 +4487,10 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         if (elSuma1) elSuma1.innerText = '0';
         if (elRes1) elRes1.innerText = '0';
 
-        // 2. REINICIAR CALCULADORA 2% DATO 2
+        // 2. REINICIAR CALCULADORA 2% DATO 2 (TOTAL + NODOS)
         const inDato2 = document.getElementById('dos-pct-in-2');
         const elRes2 = document.getElementById('dos-pct-res-2');
-        if (inDato2) inDato2.value = '0';
+        if (inDato2) inDato2.value = '';
         if (elRes2) elRes2.innerText = '0';
 
         // 3. REINICIAR CONVERTIDOR DE ORH
@@ -4498,6 +4498,15 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         const elResOrh = document.getElementById('orh-horas-res');
         if (inOrhMin) inOrhMin.value = '';
         if (elResOrh) elResOrh.innerText = '00:00';
+
+        // 4. REINICIAR CALCULADORA DIVISORA (OPCIÓN B: CAMPOS TOTALMENTE LIMPIOS)
+        const inDivNum1 = document.getElementById('calc-div-num1');
+        const inDivNum2 = document.getElementById('calc-div-num2');
+        const elResDiv = document.getElementById('calc-div-res');
+
+        if (inDivNum1) inDivNum1.value = '';
+        if (inDivNum2) inDivNum2.value = ''; // 👈 Vacío según la Opción B
+        if (elResDiv) elResDiv.innerText = '0';
     }}
     
 
