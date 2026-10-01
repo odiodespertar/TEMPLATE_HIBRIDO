@@ -182,12 +182,17 @@ table {
 
 
 /* 🔴 OCULTAR BOTONERA SUPERIOR EN TODOS LOS RUTEOS */
-#fleet-drag-handle {
+#fleet-drag-handle, 
+.btn-tooltip-container, 
+#fleet-toggle-btn {
     display: none !important;
 }
 
-/* 🔴 OCULTAR TARJETA NEGRA DE PATIO (SISTÉMICO) */
-#sis-flota-contenedor, #sis-flota-flotante {
+/* 🔴 OCULTAR TARJETA NEGRA DE PATIO (SISTÉMICO) Y MODO FLOTANTE */
+#sis-flota-contenedor, 
+#sis-flota-flotante, 
+.sis-normal, 
+.sis-floating {
     display: none !important;
 }
 
