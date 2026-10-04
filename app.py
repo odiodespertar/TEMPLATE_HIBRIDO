@@ -195,6 +195,30 @@ table {
    🟨 ASISTENTE DE RUTEO — ESTILO CONTRASTE GRAFITO / MELI PRO (RESPONSIVE)
    ============================================================ */
 
+/* 🟢 FIX DE VISIBILIDAD DE TEXTO EN CAMPOS DE ENTRADA (text_input) DEL ASISTENTE */
+div[data-testid="stExpander"] div[data-testid="stTextInput"] input {
+    color: #ffffff !important;                   /* Color del texto mientras escribes */
+    -webkit-text-fill-color: #ffffff !important; /* Fuerza el color en navegadores WebKit */
+    background-color: #121417 !important;        /* Fondo oscuro de alto contraste */
+    border: 1.5px solid #0f766e !important;      /* Borde turquesa legible */
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+}
+
+/* Color del texto de la etiqueta superior (Label) */
+div[data-testid="stExpander"] div[data-testid="stTextInput"] label {
+    color: #cbd5e1 !important;
+    -webkit-text-fill-color: #cbd5e1 !important;
+    font-weight: 700 !important;
+}
+
+/* Color del texto sugerido (Placeholder) */
+div[data-testid="stExpander"] div[data-testid="stTextInput"] input::placeholder {
+    color: #94a3b8 !important;
+    -webkit-text-fill-color: #94a3b8 !important;
+}
+
+
 /* Contenedor Flotante Adaptable */
 div[data-testid="stExpander"] {
     position: fixed !important;
