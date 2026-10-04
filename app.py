@@ -774,17 +774,24 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
 
 
                     
-                    # PASO 4.8: Uso de la Flota
+                    # PASO 4.8: Flotas utilizadas en su totalidad (NUEVA LÓGICA CON CHECKBOXES)
                     elif paso == 4.8:
-                        st.write("👇 **¿Se utilizó la flota en su totalidad?**")
-                        c1, c2 = st.columns(2)
-                        if c1.button("1️⃣ Sí (Usamos flota completa)", use_container_width=True):
-                            st.session_state.data_resumen["flota_completa"] = True
-                            st.session_state.paso_historial.append(4.8)
-                            st.session_state.paso_resumen = 5
-                            st.rerun()
-                        if c2.button("2️⃣ No (Quedó flota restante)", use_container_width=True):
-                            st.session_state.data_resumen["flota_completa"] = False
+                        st.write("👇 **¿Qué unidades se usaron en su totalidad? (selecciona las casillas que apliquen):**")
+                        
+                        chk_mlp = st.checkbox("🚛 MLP", key="chk_flota_mlp")
+                        chk_rental = st.checkbox("🚙 Rentals", key="chk_flota_rental")
+                        chk_crowd = st.checkbox("🚗 Crowd / Cars", key="chk_flota_crowd")
+                        
+                        flotas_completas = []
+                        if chk_mlp:
+                            flotas_completas.append("MLP")
+                        if chk_rental:
+                            flotas_completas.append("Rentals")
+                        if chk_crowd:
+                            flotas_completas.append("Crowd")
+                        
+                        if st.button("Continuar al día del ruteo ➡️", use_container_width=True):
+                            st.session_state.data_resumen["flotas_completas"] = flotas_completas
                             st.session_state.paso_historial.append(4.8)
                             st.session_state.paso_resumen = 5
                             st.rerun()
@@ -850,11 +857,21 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                             # 5. Error de asignación de la herramienta
                             texto_error_asig = d.get("asignacion_error", "")
 
-                            # 6. Bulk y Flota Completa
+                            # 6. Bulk y Flota Usada en su totalidad (LÓGICA ACTUALIZADA)
                             texto_bulk = "📦 Se asignó H&B para el volumen Bulk." if d.get("hubo_bulk", False) else ""
-                            texto_flota = "🚨🚛 Usamos la flota en su totalidad." if d.get("flota_completa", False) else ""
+                            
+                            flotas_sel = d.get("flotas_completas", [])
+                            if flotas_sel:
+                                if len(flotas_sel) == 3:
+                                    texto_flota = "🚨🚛 Usamos la flota en su totalidad (MLP, Rentals y Crowd)."
+                                elif len(flotas_sel) == 2:
+                                    texto_flota = f"🚨🚛 Usamos la flota de {flotas_sel[0]} y {flotas_sel[1]} en su totalidad."
+                                else:
+                                    texto_flota = f"🚨🚛 Usamos la flota de {flotas_sel[0]} en su totalidad."
+                            else:
+                                texto_flota = ""
 
-                            # Ensamble del reporte final (LIMPIO SIN DUPLICADOS)
+                            # Ensamble del reporte final (SE QUEDA EXACTAMENTE IGUAL)
                             lineas_html = [
                                 f"Resumen de ruteo team:<br><br>",
                                 "📌 Se trabajó con el volumen disponible al momento de iniciar el ruteo.<br>"
