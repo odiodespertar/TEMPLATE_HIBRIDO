@@ -742,21 +742,40 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                             st.session_state.paso_resumen = 4.6
                             st.rerun()
 
-                    # PASO 4.6: Asignaciones Incorrectas a Polígonos (SELECCIÓN MÚLTIPLE O PERSONALIZADA)
+                    # PASO 4.6: Asignaciones Incorrectas a Polígonos (CON OPCIÓN DE MEDIA MILLA)
                     elif paso == 4.6:
-                        st.write("👇 **¿La herramienta asignó unidades a polígonos que no corresponden? (selecciona o escribe):**")
+                        st.write("👇 **¿La herramienta asignó unidades a polígonos que no corresponden?**")
                         
-                        # Casilla rápida para Rentals
+                        # 1. Casilla rápida Rentals
                         chk_rentals_err = st.checkbox("👉 De nuevo la herramienta asignó Rentals a polígonos foráneos.", key="chk_rentals_foraneos")
                         
-                        # Campo de texto para otras unidades
-                        txt_custom_err = st.text_input("✍️ Escribe si hubo otra unidad/error adicional (ej. Asignó Cars a planes foráneos):", key="in_error_custom")
+                        # 2. Casilla y selector para Media Milla
+                        chk_mm_err = st.checkbox("👉 Asignó Media Milla a un plan específico:", key="chk_mm_especifico")
+                        plan_mm_sel = ""
+                        if chk_mm_err:
+                            plan_mm_sel = st.selectbox(
+                                "Selecciona el plan donde se asignó la Media Milla:",
+                                [
+                                    "ACTOPAN", "CENTRO 1", "CENTRO 2", "EJA1 SP", "MISANTLA", "NAOLINCO", 
+                                    "PEROTE", "TEZUITLAN", "TLALTETELA", "TRAPICHE", "TUZAMAPA", "XICO",
+                                    "OTRO PLAN"
+                                ],
+                                key="sel_plan_mm"
+                            )
+                            if plan_mm_sel == "OTRO PLAN":
+                                plan_mm_sel = st.text_input("Escribe el nombre del plan:", key="in_plan_mm_custom")
+
+                        # 3. Campo de texto para otro error cualquiera
+                        txt_custom_err = st.text_input("✍️ Escribe otra unidad/error adicional (opcional):", key="in_error_custom")
                         
                         if st.button("Continuar a uso de flota ➡️", use_container_width=True):
                             errores_asig = []
                             
                             if chk_rentals_err:
                                 errores_asig.append("👉 De nuevo la herramienta asignó Rentals a polígonos foráneos.")
+                                
+                            if chk_mm_err and plan_mm_sel:
+                                errores_asig.append(f"👉 Se asignó Media Milla al plan {plan_mm_sel.upper().strip()}.")
                                 
                             if txt_custom_err.strip():
                                 msg_custom = txt_custom_err.strip() if txt_custom_err.strip().startswith("👉") else f"👉 {txt_custom_err.strip()}"
