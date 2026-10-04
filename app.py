@@ -718,29 +718,27 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                             st.session_state.paso_resumen = 4.6
                             st.rerun()
 
-                    # PASO 4.6: Asignación Incorrecta a Polígonos (NUEVO)
+                    # PASO 4.6: Asignaciones Incorrectas a Polígonos (SELECCIÓN MÚLTIPLE O PERSONALIZADA)
                     elif paso == 4.6:
-                        st.write("👇 **¿La herramienta asignó unidades a polígonos que no corresponden?**")
-                        if st.button("1️⃣ De nuevo la herramienta asignó Rentals a polígonos foráneos.", use_container_width=True):
-                            st.session_state.data_resumen["asignacion_error"] = "👉 De nuevo la herramienta asignó Rentals a polígonos foráneos."
-                            st.session_state.paso_historial.append(4.6)
-                            st.session_state.paso_resumen = 4.8
-                            st.rerun()
+                        st.write("👇 **¿La herramienta asignó unidades a polígonos que no corresponden? (selecciona o escribe):**")
                         
-                        txt_custom = st.text_input("2️⃣ Escribe otra unidad/error (ej. La herramienta asignó Cars a planes foráneos):", key="in_error_custom")
-                        if st.button("Guardar asignación personalizada ➡️", use_container_width=True):
-                            if txt_custom.strip():
-                                # Asegura que lleve el emoji de la mano si no lo escribió
-                                msg_final_err = txt_custom.strip() if txt_custom.strip().startswith("👉") else f"👉 {txt_custom.strip()}"
-                                st.session_state.data_resumen["asignacion_error"] = msg_final_err
-                            else:
-                                st.session_state.data_resumen["asignacion_error"] = ""
-                            st.session_state.paso_historial.append(4.6)
-                            st.session_state.paso_resumen = 4.8
-                            st.rerun()
-
-                        if st.button("3️⃣ No hubo errores de asignación", use_container_width=True):
-                            st.session_state.data_resumen["asignacion_error"] = ""
+                        # Casilla rápida para Rentals
+                        chk_rentals_err = st.checkbox("👉 De nuevo la herramienta asignó Rentals a polígonos foráneos.", key="chk_rentals_foraneos")
+                        
+                        # Campo de texto para otras unidades
+                        txt_custom_err = st.text_input("✍️ Escribe si hubo otra unidad/error adicional (ej. Asignó Cars a planes foráneos):", key="in_error_custom")
+                        
+                        if st.button("Continuar a uso de flota ➡️", use_container_width=True):
+                            errores_asig = []
+                            
+                            if chk_rentals_err:
+                                errores_asig.append("👉 De nuevo la herramienta asignó Rentals a polígonos foráneos.")
+                                
+                            if txt_custom_err.strip():
+                                msg_custom = txt_custom_err.strip() if txt_custom_err.strip().startswith("👉") else f"👉 {txt_custom_err.strip()}"
+                                errores_asig.append(msg_custom)
+                                
+                            st.session_state.data_resumen["lista_errores_asig"] = errores_asig
                             st.session_state.paso_historial.append(4.6)
                             st.session_state.paso_resumen = 4.8
                             st.rerun()
@@ -854,8 +852,8 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                             else:
                                 texto_alchichica = ""
 
-                            # 5. Error de asignación de la herramienta
-                            texto_error_asig = d.get("asignacion_error", "")
+                            # 5. Errores de asignación de la herramienta (Lectura de lista)
+                            errores_asig_lista = d.get("lista_errores_asig", [])
 
                             # 6. Bulk y Flota Usada en su totalidad (LÓGICA ACTUALIZADA)
                             texto_bulk = "📦 Se asignó H&B para el volumen Bulk." if d.get("hubo_bulk", False) else ""
@@ -887,8 +885,9 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                                 lineas_html.append(f"{texto_dropeo}<br>")
                             if texto_alchichica:
                                 lineas_html.append(f"{texto_alchichica}<br>")
-                            if texto_error_asig:
-                                lineas_html.append(f"{texto_error_asig}<br>")
+                            if errores_asig_lista:
+                                for err_item in errores_asig_lista:
+                                    lineas_html.append(f"{err_item}<br>")
                             if texto_flota:
                                 lineas_html.append(f"{texto_flota}<br>")
 
