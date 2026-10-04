@@ -7568,10 +7568,20 @@ const ruteos = [
         nombre:"SMX9",
         hora:"16:40"
     }},
+
+    {{
+        nombre:"SGD2",
+        hora:"17:00"
+    }},
     
     {{
         nombre:"SMX5",
         hora:"17:20"
+    }},
+
+    {{
+        nombre:"SMX4",
+        hora:"17:40"
     }},
 
     {{
