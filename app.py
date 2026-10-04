@@ -701,15 +701,19 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
 
                     # PASO 4.5: Unidades Alchichica
                     elif paso == 4.5:
-                        st.write("👇 **¿Fue con 2 Small Van MLP?**")
-                        c1, c2 = st.columns(2)
-                        if c1.button("1️⃣ Sí", use_container_width=True):
-                            st.session_state.data_resumen["alchichica_2sv"] = True
+                        st.write("👇 **¿Con qué unidades se cargó Alchichica ND en AM0?**")
+                        if st.button("1️⃣ Con 2 Small Van MLP", use_container_width=True):
+                            st.session_state.data_resumen["alchichica_tipo"] = "2sv"
                             st.session_state.paso_historial.append(4.5)
                             st.session_state.paso_resumen = 4.6
                             st.rerun()
-                        if c2.button("2️⃣ No", use_container_width=True):
-                            st.session_state.data_resumen["alchichica_2sv"] = False
+                        if st.button("2️⃣ Con 2 Large Van MLP", use_container_width=True):
+                            st.session_state.data_resumen["alchichica_tipo"] = "2lv"
+                            st.session_state.paso_historial.append(4.5)
+                            st.session_state.paso_resumen = 4.6
+                            st.rerun()
+                        if st.button("3️⃣ Otra configuración", use_container_width=True):
+                            st.session_state.data_resumen["alchichica_tipo"] = "otra"
                             st.session_state.paso_historial.append(4.5)
                             st.session_state.paso_resumen = 4.6
                             st.rerun()
@@ -833,8 +837,11 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
 
                             # 4. Construcción del texto de Alchichica
                             if d.get("alchichica", False):
-                                if d.get("alchichica_2sv", True):
+                                tipo_al = d.get("alchichica_tipo", "2sv")
+                                if tipo_al == "2sv":
                                     texto_alchichica = "🚛 Se cargó plan de Alchichica ND en AM0 con 2 unidades Small Van MLP."
+                                elif tipo_al == "2lv":
+                                    texto_alchichica = "🚛 Se cargó plan de Alchichica ND en AM0 con 2 unidades Large Van MLP."
                                 else:
                                     texto_alchichica = "🚛 Se cargó plan de Alchichica ND en AM0."
                             else:
@@ -847,7 +854,7 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                             texto_bulk = "📦 Se asignó H&B para el volumen Bulk." if d.get("hubo_bulk", False) else ""
                             texto_flota = "🚨🚛 Usamos la flota en su totalidad." if d.get("flota_completa", False) else ""
 
-                            # Ensamble del reporte final
+                            # Ensamble del reporte final (LIMPIO SIN DUPLICADOS)
                             lineas_html = [
                                 f"Resumen de ruteo team:<br><br>",
                                 "📌 Se trabajó con el volumen disponible al momento de iniciar el ruteo.<br>"
@@ -861,8 +868,8 @@ with st.expander("🤖 ¿INDICACIONES DE RUTEO? Te ayudo", expanded=False):
                                 lineas_html.append(f"{texto_bulk}<br>")
                             if texto_dropeo:
                                 lineas_html.append(f"{texto_dropeo}<br>")
-                            if texto_error_asig:
-                                lineas_html.append(f"{texto_error_asig}<br>")
+                            if texto_alchichica:
+                                lineas_html.append(f"{texto_alchichica}<br>")
                             if texto_error_asig:
                                 lineas_html.append(f"{texto_error_asig}<br>")
                             if texto_flota:
