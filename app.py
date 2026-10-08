@@ -3452,11 +3452,11 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
 
 
-<!-- ⚡ 3️⃣ FILA INFERIOR ADICIONAL: CONTRALOR/REGISTRO DE UNIDADES DINÁMICO (AMPLIADO & ORDENADO) -->
-    <div style="max-width: 440px; margin: 20px auto 10px auto; background: #ffffff; padding: 18px; border-radius: 14px; border: 1.5px solid #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.06); position: relative;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
-            <div style="font-size: 12px; font-weight: 800; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">🚛 REGISTRO DE UNIDADES</div>
-            <span style="font-size: 11px; color: #64748b; font-weight: 600;">Filas: <strong id="cant-filas-unidades" style="color: #0f172a;">3</strong></span>
+<!-- ⚡ 3️⃣ FILA INFERIOR ADICIONAL: REGISTRO DE UNIDADES (LETRAS Y NÚMEROS MÁS GRANDES) -->
+    <div style="max-width: 460px; margin: 20px auto 10px auto; background: #ffffff; padding: 18px; border-radius: 14px; border: 1.5px solid #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.06); position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
+            <div style="font-size: 13px; font-weight: 800; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">🚛 REGISTRO DE UNIDADES</div>
+            <span style="font-size: 12px; color: #64748b; font-weight: 700;">Filas: <strong id="cant-filas-unidades" style="color: #0f172a; font-size: 14px;">3</strong></span>
         </div>
 
         <!-- Contenedor Dinámico de Filas -->
@@ -3470,19 +3470,19 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                            onkeydown="navegarSugerenciasUnidadList(event, 0)" 
                            onfocus="buscarCoincidenciasUnidadList(this, 0)" 
                            placeholder="Buscar unidad (Dato 1)..." autocomplete="off"
-                           style="width: 100%; box-sizing: border-box; padding: 6px 8px; font-size: 13px; font-weight: 700; color: #0f172a; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
-                    <div id="sug-list-0" class="sugerencias-unit-box" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border: 1.5px solid #0f766e; border-radius: 6px; box-shadow: 0 8px 18px rgba(0,0,0,0.2); z-index: 99999; max-height: 150px; overflow-y: auto;"></div>
+                           style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 15px; font-weight: 800; color: #0f172a; border: none; border-bottom: 2px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
+                    <div id="sug-list-0" class="sugerencias-unit-box" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border: 1.5px solid #0f766e; border-radius: 6px; box-shadow: 0 8px 18px rgba(0,0,0,0.2); z-index: 99999; max-height: 160px; overflow-y: auto;"></div>
                 </div>
 
-                <div style="flex: 1; display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 2px 6px; height: 34px; box-sizing: border-box;">
+                <div style="flex: 1; display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 2px 6px; height: 38px; box-sizing: border-box;">
                     <button onclick="pasoUnidadCantidad(0, -1)" title="Restar 1"
-                            style="cursor: pointer; background: transparent; color: #dc2626; border: none; font-weight: 900; font-size: 16px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; outline: none; padding: 0;">-</button>
+                            style="cursor: pointer; background: transparent; color: #dc2626; border: none; font-weight: 900; font-size: 20px; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; outline: none; padding: 0;">-</button>
 
                     <input type="number" class="in-unidad-cant no-spinners" id="input-u-cant-0" value="0" onfocus="this.select()"
-                           style="width: 32px; text-align: center; font-size: 15px; font-weight: 900; border: none; background: transparent; color: #0f172a; outline: none; padding: 0;" />
+                           style="width: 36px; text-align: center; font-size: 18px; font-weight: 900; border: none; background: transparent; color: #0f172a; outline: none; padding: 0;" />
 
                     <button onclick="pasoUnidadCantidad(0, 1)" title="Sumar 1"
-                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 900; font-size: 16px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; outline: none; padding: 0;">+</button>
+                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 900; font-size: 20px; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; outline: none; padding: 0;">+</button>
                 </div>
             </div>
 
@@ -3494,19 +3494,19 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                            onkeydown="navegarSugerenciasUnidadList(event, 1)" 
                            onfocus="buscarCoincidenciasUnidadList(this, 1)" 
                            placeholder="Buscar unidad (Dato 2)..." autocomplete="off"
-                           style="width: 100%; box-sizing: border-box; padding: 6px 8px; font-size: 13px; font-weight: 700; color: #0f172a; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
-                    <div id="sug-list-1" class="sugerencias-unit-box" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border: 1.5px solid #0f766e; border-radius: 6px; box-shadow: 0 8px 18px rgba(0,0,0,0.2); z-index: 99999; max-height: 150px; overflow-y: auto;"></div>
+                           style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 15px; font-weight: 800; color: #0f172a; border: none; border-bottom: 2px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
+                    <div id="sug-list-1" class="sugerencias-unit-box" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border: 1.5px solid #0f766e; border-radius: 6px; box-shadow: 0 8px 18px rgba(0,0,0,0.2); z-index: 99999; max-height: 160px; overflow-y: auto;"></div>
                 </div>
 
-                <div style="flex: 1; display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 2px 6px; height: 34px; box-sizing: border-box;">
+                <div style="flex: 1; display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 2px 6px; height: 38px; box-sizing: border-box;">
                     <button onclick="pasoUnidadCantidad(1, -1)" title="Restar 1"
-                            style="cursor: pointer; background: transparent; color: #dc2626; border: none; font-weight: 900; font-size: 16px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; outline: none; padding: 0;">-</button>
+                            style="cursor: pointer; background: transparent; color: #dc2626; border: none; font-weight: 900; font-size: 20px; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; outline: none; padding: 0;">-</button>
 
                     <input type="number" class="in-unidad-cant no-spinners" id="input-u-cant-1" value="0" onfocus="this.select()"
-                           style="width: 32px; text-align: center; font-size: 15px; font-weight: 900; border: none; background: transparent; color: #0f172a; outline: none; padding: 0;" />
+                           style="width: 36px; text-align: center; font-size: 18px; font-weight: 900; border: none; background: transparent; color: #0f172a; outline: none; padding: 0;" />
 
                     <button onclick="pasoUnidadCantidad(1, 1)" title="Sumar 1"
-                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 900; font-size: 16px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; outline: none; padding: 0;">+</button>
+                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 900; font-size: 20px; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; outline: none; padding: 0;">+</button>
                 </div>
             </div>
 
@@ -3518,19 +3518,19 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                            onkeydown="navegarSugerenciasUnidadList(event, 2)" 
                            onfocus="buscarCoincidenciasUnidadList(this, 2)" 
                            placeholder="Buscar unidad (Dato 3)..." autocomplete="off"
-                           style="width: 100%; box-sizing: border-box; padding: 6px 8px; font-size: 13px; font-weight: 700; color: #0f172a; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
-                    <div id="sug-list-2" class="sugerencias-unit-box" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border: 1.5px solid #0f766e; border-radius: 6px; box-shadow: 0 8px 18px rgba(0,0,0,0.2); z-index: 99999; max-height: 150px; overflow-y: auto;"></div>
+                           style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 15px; font-weight: 800; color: #0f172a; border: none; border-bottom: 2px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
+                    <div id="sug-list-2" class="sugerencias-unit-box" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border: 1.5px solid #0f766e; border-radius: 6px; box-shadow: 0 8px 18px rgba(0,0,0,0.2); z-index: 99999; max-height: 160px; overflow-y: auto;"></div>
                 </div>
 
-                <div style="flex: 1; display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 2px 6px; height: 34px; box-sizing: border-box;">
+                <div style="flex: 1; display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 2px 6px; height: 38px; box-sizing: border-box;">
                     <button onclick="pasoUnidadCantidad(2, -1)" title="Restar 1"
-                            style="cursor: pointer; background: transparent; color: #dc2626; border: none; font-weight: 900; font-size: 16px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; outline: none; padding: 0;">-</button>
+                            style="cursor: pointer; background: transparent; color: #dc2626; border: none; font-weight: 900; font-size: 20px; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; outline: none; padding: 0;">-</button>
 
                     <input type="number" class="in-unidad-cant no-spinners" id="input-u-cant-2" value="0" onfocus="this.select()"
-                           style="width: 32px; text-align: center; font-size: 15px; font-weight: 900; border: none; background: transparent; color: #0f172a; outline: none; padding: 0;" />
+                           style="width: 36px; text-align: center; font-size: 18px; font-weight: 900; border: none; background: transparent; color: #0f172a; outline: none; padding: 0;" />
 
                     <button onclick="pasoUnidadCantidad(2, 1)" title="Sumar 1"
-                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 900; font-size: 16px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; outline: none; padding: 0;">+</button>
+                            style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 900; font-size: 20px; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; outline: none; padding: 0;">+</button>
                 </div>
             </div>
 
@@ -3539,12 +3539,12 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         <!-- Botones de Control (+ / - Filas) -->
         <div style="display: flex; gap: 8px; margin-top: 14px;">
             <button onclick="removerFilaUnidadList()" title="Eliminar última fila"
-                    style="flex: 1; cursor: pointer; background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; font-weight: 700; border-radius: 6px; padding: 4px 0; font-size: 16px; transition: all 0.15s ease;"
+                    style="flex: 1; cursor: pointer; background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; font-weight: 700; border-radius: 6px; padding: 6px 0; font-size: 18px; transition: all 0.15s ease;"
                     onmouseenter="this.style.background='#fee2e2'; this.style.color='#dc2626';" 
                     onmouseleave="this.style.background='#f1f5f9'; this.style.color='#64748b';">-</button>
 
             <button onclick="agregarFilaUnidadList()" title="Agregar fila"
-                    style="flex: 1; cursor: pointer; background: #f1f5f9; color: #0f766e; border: 1px solid #cbd5e1; font-weight: 700; border-radius: 6px; padding: 4px 0; font-size: 16px; transition: all 0.15s ease;"
+                    style="flex: 1; cursor: pointer; background: #f1f5f9; color: #0f766e; border: 1px solid #cbd5e1; font-weight: 700; border-radius: 6px; padding: 6px 0; font-size: 18px; transition: all 0.15s ease;"
                     onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488';" 
                     onmouseleave="this.style.background='#f1f5f9'; this.style.color='#0f766e';">+</button>
         </div>
