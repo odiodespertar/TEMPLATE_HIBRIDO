@@ -5545,7 +5545,7 @@ function actualizarDosPorciento() {{
         inputCant.value = nuevoVal;
     }}
 
-    // 🟢 AGREGAR NUEVA FILA EDITABLE HACIA ABAJO
+    // 🟢 AGREGAR NUEVA FILA EDITABLE HACIA ABAJO (TAMAÑOS GRANDES)
     function agregarFilaUnidadList() {{
         const contenedor = document.getElementById('contenedor-filas-unidades');
         if (!contenedor) return;
@@ -5555,28 +5555,28 @@ function actualizarDosPorciento() {{
         
         nuevaFila.className = 'fila-unidad-item';
         nuevaFila.id = `fila-unidad-${{numFilas}}`;
-        nuevaFila.style.cssText = 'display: flex; gap: 8px; align-items: center;';
+        nuevaFila.style.cssText = 'display: flex; gap: 10px; align-items: center; position: relative;';
 
         nuevaFila.innerHTML = `
-            <div style="flex: 1.5; position: relative;">
+            <div style="flex: 1.8; position: relative;">
                 <input type="text" class="in-unidad-nombre" id="input-u-nombre-${{numFilas}}" 
                        oninput="buscarCoincidenciasUnidadList(this, ${{numFilas}})" 
                        onkeydown="navegarSugerenciasUnidadList(event, ${{numFilas}})" 
                        onfocus="buscarCoincidenciasUnidadList(this, ${{numFilas}})" 
-                       placeholder="Buscar unidad..." autocomplete="off"
-                       style="width: 100%; box-sizing: border-box; padding: 6px 8px; font-size: 13px; font-weight: 700; color: #0f172a; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
-                <div id="sug-list-${{numFilas}}" class="sugerencias-unit-box" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; max-height: 140px; overflow-y: auto;"></div>
+                       placeholder="Buscar unidad (Dato ${{numFilas + 1}})..." autocomplete="off"
+                       style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 15px; font-weight: 800; color: #0f172a; border: none; border-bottom: 2px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
+                <div id="sug-list-${{numFilas}}" class="sugerencias-unit-box" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border: 1.5px solid #0f766e; border-radius: 6px; box-shadow: 0 8px 18px rgba(0,0,0,0.2); z-index: 99999; max-height: 160px; overflow-y: auto;"></div>
             </div>
 
-            <div style="flex: 1; display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 2px 4px; height: 34px; box-sizing: border-box;">
+            <div style="flex: 1; display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 2px 6px; height: 38px; box-sizing: border-box;">
                 <button onclick="pasoUnidadCantidad(${{numFilas}}, -1)" title="Restar 1"
-                        style="cursor: pointer; background: transparent; color: #dc2626; border: none; font-weight: 900; font-size: 16px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; outline: none; padding: 0;">-</button>
+                        style="cursor: pointer; background: transparent; color: #dc2626; border: none; font-weight: 900; font-size: 20px; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; outline: none; padding: 0;">-</button>
 
                 <input type="number" class="in-unidad-cant no-spinners" id="input-u-cant-${{numFilas}}" value="0" onfocus="this.select()"
-                       style="width: 32px; text-align: center; font-size: 15px; font-weight: 900; border: none; background: transparent; color: #0f172a; outline: none; padding: 0;" />
+                       style="width: 36px; text-align: center; font-size: 18px; font-weight: 900; border: none; background: transparent; color: #0f172a; outline: none; padding: 0;" />
 
                 <button onclick="pasoUnidadCantidad(${{numFilas}}, 1)" title="Sumar 1"
-                        style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 900; font-size: 16px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; outline: none; padding: 0;">+</button>
+                        style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 900; font-size: 20px; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; outline: none; padding: 0;">+</button>
             </div>
         `;
 
@@ -5586,6 +5586,7 @@ function actualizarDosPorciento() {{
         const inputNombre = document.getElementById(`input-u-nombre-${{numFilas}}`);
         if (inputNombre) inputNombre.focus();
     }}
+    
 
     // 🟢 ELIMINAR ÚLTIMA FILA
     function removerFilaUnidadList() {{
