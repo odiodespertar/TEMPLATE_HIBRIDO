@@ -5679,7 +5679,7 @@ function actualizarDosPorciento() {{
         if (elSpan) elSpan.innerText = cant;
     }}
 
-    // 🟢 BÚSQUEDA Y AUTOCOMPLETADO DE UNIDADES
+    // 🟢 BÚSQUEDA Y AUTOCOMPLETADO CON RESALTADO AUTOMÁTICO DE LA MEJOR COINCIDENCIA (ÍNDICE 0)
     function buscarCoincidenciasUnidadList(input, idx) {{
         const query = input.value.toLowerCase().trim();
         const boxSug = document.getElementById(`sug-list-${{idx}}`);
@@ -5715,6 +5715,9 @@ function actualizarDosPorciento() {{
         }});
 
         boxSug.style.display = "block";
+
+        // 🌟 RESALTA AUTOMÁTICAMENTE LA PRIMERA OPCIÓN (COINCIDENCIA MAYOR)
+        resaltarSugerenciaUnitItem(idx, 0);
     }}
 
     // 🟢 RESALTAR ELEMENTO DE LA LISTA
@@ -5740,7 +5743,7 @@ function actualizarDosPorciento() {{
         const items = document.querySelectorAll(`.sug-unit-item-${{idx}}`);
         if (items.length === 0) return;
 
-        let currentIndex = indiceUnidadListSeleccionada[idx] ?? -1;
+        let currentIndex = indiceUnidadListSeleccionada[idx] ?? 0;
 
         if (event.key === "ArrowDown") {{
             event.preventDefault();
