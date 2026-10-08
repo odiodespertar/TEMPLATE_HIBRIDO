@@ -192,27 +192,19 @@ table {
 
 
 
-/* 🟢 ESTILO UNIFICADO Y FORZADO PARA TODOS LOS CAMPOS DE UNIDAD */
 .in-unidad-nombre {
     width: 100% !important;
     box-sizing: border-box !important;
     padding: 8px 10px !important;
-    font-size: 14px !important;        /* 👈 Tamaño idéntico en todas las filas */
-    font-weight: 600 !important;     /* 👈 Peso uniforme y legible */
+    font-size: 15px !important;
+    font-weight: 600 !important;
     color: #0f172a !important;
     border: none !important;
     border-bottom: 2px solid #cbd5e1 !important;
     background: #f8fafc !important;
     outline: none !important;
     border-radius: 4px !important;
-    height: 38px !important;           /* 👈 Altura congelada para alineación perfecta */
-}
-
-/* Forzar tamaño idéntico en el texto cuando se selecciona una opción */
-.in-unidad-nombre:focus,
-.in-unidad-nombre:valid {
-    font-size: 14px !important;
-    font-weight: 600 !important;
+    height: 38px !important;
 }
 
 
@@ -5571,7 +5563,7 @@ function actualizarDosPorciento() {{
     }}
 
 
-    // 🟢 AGREGAR NUEVA FILA EDITABLE IGUALADA POR CSS
+    // 🟢 AGREGAR NUEVA FILA EDITABLE (LETRAS A 15px)
     function agregarFilaUnidadList() {{
         const contenedor = document.getElementById('contenedor-filas-unidades');
         if (!contenedor) return;
@@ -5589,7 +5581,8 @@ function actualizarDosPorciento() {{
                        oninput="buscarCoincidenciasUnidadList(this, ${{numFilas}})" 
                        onkeydown="navegarSugerenciasUnidadList(event, ${{numFilas}})" 
                        onfocus="buscarCoincidenciasUnidadList(this, ${{numFilas}})" 
-                       placeholder="Buscar unidad (Dato ${{numFilas + 1}})..." autocomplete="off" />
+                       placeholder="Buscar unidad (Dato ${{numFilas + 1}})..." autocomplete="off"
+                       style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 15px; font-weight: 600; color: #0f172a; border: none; border-bottom: 2px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
                 <div id="sug-list-${{numFilas}}" class="sugerencias-unit-box" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border: 1.5px solid #0f766e; border-radius: 6px; box-shadow: 0 8px 18px rgba(0,0,0,0.2); z-index: 99999; max-height: 160px; overflow-y: auto;"></div>
             </div>
 
