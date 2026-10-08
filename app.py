@@ -3470,7 +3470,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                            onkeydown="navegarSugerenciasUnidadList(event, 0)" 
                            onfocus="buscarCoincidenciasUnidadList(this, 0)" 
                            placeholder="Buscar unidad (Dato 1)..." autocomplete="off"
-                           style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 15px; font-weight: 800; color: #0f172a; border: none; border-bottom: 2px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
+                           style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 15px; font-weight: 600; color: #0f172a; border: none; border-bottom: 2px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
                     <div id="sug-list-0" class="sugerencias-unit-box" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border: 1.5px solid #0f766e; border-radius: 6px; box-shadow: 0 8px 18px rgba(0,0,0,0.2); z-index: 99999; max-height: 160px; overflow-y: auto;"></div>
                 </div>
 
@@ -3494,7 +3494,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                            onkeydown="navegarSugerenciasUnidadList(event, 1)" 
                            onfocus="buscarCoincidenciasUnidadList(this, 1)" 
                            placeholder="Buscar unidad (Dato 2)..." autocomplete="off"
-                           style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 15px; font-weight: 800; color: #0f172a; border: none; border-bottom: 2px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
+                           style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 15px; font-weight: 600; color: #0f172a; border: none; border-bottom: 2px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
                     <div id="sug-list-1" class="sugerencias-unit-box" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border: 1.5px solid #0f766e; border-radius: 6px; box-shadow: 0 8px 18px rgba(0,0,0,0.2); z-index: 99999; max-height: 160px; overflow-y: auto;"></div>
                 </div>
 
@@ -3518,7 +3518,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                            onkeydown="navegarSugerenciasUnidadList(event, 2)" 
                            onfocus="buscarCoincidenciasUnidadList(this, 2)" 
                            placeholder="Buscar unidad (Dato 3)..." autocomplete="off"
-                           style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 15px; font-weight: 800; color: #0f172a; border: none; border-bottom: 2px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
+                           style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 15px; font-weight: 600; color: #0f172a; border: none; border-bottom: 2px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
                     <div id="sug-list-2" class="sugerencias-unit-box" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border: 1.5px solid #0f766e; border-radius: 6px; box-shadow: 0 8px 18px rgba(0,0,0,0.2); z-index: 99999; max-height: 160px; overflow-y: auto;"></div>
                 </div>
 
@@ -5545,7 +5545,7 @@ function actualizarDosPorciento() {{
         inputCant.value = nuevoVal;
     }}
 
-    // 🟢 AGREGAR NUEVA FILA EDITABLE HACIA ABAJO (TAMAÑOS GRANDES)
+    // 🟢 AGREGAR NUEVA FILA EDITABLE HACIA ABAJO (LETRAS MÁS DELGADAS font-weight: 600)
     function agregarFilaUnidadList() {{
         const contenedor = document.getElementById('contenedor-filas-unidades');
         if (!contenedor) return;
@@ -5564,7 +5564,7 @@ function actualizarDosPorciento() {{
                        onkeydown="navegarSugerenciasUnidadList(event, ${{numFilas}})" 
                        onfocus="buscarCoincidenciasUnidadList(this, ${{numFilas}})" 
                        placeholder="Buscar unidad (Dato ${{numFilas + 1}})..." autocomplete="off"
-                       style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 15px; font-weight: 800; color: #0f172a; border: none; border-bottom: 2px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
+                       style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 15px; font-weight: 600; color: #0f172a; border: none; border-bottom: 2px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
                 <div id="sug-list-${{numFilas}}" class="sugerencias-unit-box" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border: 1.5px solid #0f766e; border-radius: 6px; box-shadow: 0 8px 18px rgba(0,0,0,0.2); z-index: 99999; max-height: 160px; overflow-y: auto;"></div>
             </div>
 
