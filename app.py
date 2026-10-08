@@ -5545,7 +5545,8 @@ function actualizarDosPorciento() {{
         inputCant.value = nuevoVal;
     }}
 
-    // 🟢 AGREGAR NUEVA FILA EDITABLE HACIA ABAJO (LETRAS MÁS DELGADAS font-weight: 600)
+
+    // 🟢 AGREGAR NUEVA FILA EDITABLE IGUALADA (font-size: 15px y font-weight: 600)
     function agregarFilaUnidadList() {{
         const contenedor = document.getElementById('contenedor-filas-unidades');
         if (!contenedor) return;
