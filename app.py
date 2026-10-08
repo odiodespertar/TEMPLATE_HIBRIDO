@@ -5564,6 +5564,7 @@ function actualizarDosPorciento() {{
 
 
     // 🟢 AGREGAR NUEVA FILA EDITABLE (LETRAS A 15px)
+    // 🟢 AGREGAR NUEVA FILA EDITABLE CON TAMAÑO DE LETRA AJUSTADO
     function agregarFilaUnidadList() {{
         const contenedor = document.getElementById('contenedor-filas-unidades');
         if (!contenedor) return;
@@ -5582,7 +5583,7 @@ function actualizarDosPorciento() {{
                        onkeydown="navegarSugerenciasUnidadList(event, ${{numFilas}})" 
                        onfocus="buscarCoincidenciasUnidadList(this, ${{numFilas}})" 
                        placeholder="Buscar unidad (Dato ${{numFilas + 1}})..." autocomplete="off"
-                       style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 15px; font-weight: 600; color: #0f172a; border: none; border-bottom: 2px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
+                       style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 15px !important; font-weight: 600; color: #0f172a; border: none; border-bottom: 2px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
                 <div id="sug-list-${{numFilas}}" class="sugerencias-unit-box" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border: 1.5px solid #0f766e; border-radius: 6px; box-shadow: 0 8px 18px rgba(0,0,0,0.2); z-index: 99999; max-height: 160px; overflow-y: auto;"></div>
             </div>
 
@@ -5604,6 +5605,7 @@ function actualizarDosPorciento() {{
         const inputNombre = document.getElementById(`input-u-nombre-${{numFilas}}`);
         if (inputNombre) inputNombre.focus();
     }}
+    
     
 
     // 🟢 ELIMINAR ÚLTIMA FILA
@@ -5657,7 +5659,7 @@ function actualizarDosPorciento() {{
                        onkeydown="navegarSugerenciasUnidadList(event, ${{numFilas}})" 
                        onfocus="buscarCoincidenciasUnidadList(this, ${{numFilas}})" 
                        placeholder="Buscar unidad (Dato ${{numFilas + 1}})..." autocomplete="off"
-                       style="width: 100%; box-sizing: border-box; padding: 6px 8px; font-size: 13px; font-weight: 700; color: #0f172a; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
+                       style="width: 100%; box-sizing: border-box; padding: 6px 8px; font-size: 15px; font-weight: 700; color: #0f172a; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; outline: none; border-radius: 4px;" />
                 <div id="sug-list-${{numFilas}}" class="sugerencias-unit-box" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border: 1.5px solid #0f766e; border-radius: 6px; box-shadow: 0 8px 18px rgba(0,0,0,0.2); z-index: 99999; max-height: 150px; overflow-y: auto;"></div>
             </div>
 
