@@ -5580,7 +5580,7 @@ function actualizarDosPorciento() {{
                         style="cursor: pointer; background: transparent; color: #0f766e; border: none; font-weight: 900; font-size: 20px; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; outline: none; padding: 0;">+</button>
             </div>
         `;
-
+ 
         contenedor.appendChild(nuevaFila);
         actualizarContadorFilasUnidades();
 
