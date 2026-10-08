@@ -5560,6 +5560,8 @@ function actualizarDosPorciento() {{
         if (elSpan) elSpan.innerText = cant;
     }}
 
+    let indiceUnidadListSeleccionada = {{}};
+
     // 🟢 BÚSQUEDA Y AUTOCOMPLETADO DE UNIDADES
     function buscarCoincidenciasUnidadList(input, idx) {{
         const query = input.value.toLowerCase().trim();
@@ -5577,13 +5579,15 @@ function actualizarDosPorciento() {{
             return;
         }}
 
-        coincidencias.forEach((nombre) => {{
+        coincidencias.forEach((nombre, itemIndex) => {{
             const item = document.createElement("div");
-            item.style.cssText = "padding: 6px 10px; font-size: 12px; font-weight: 700; color: #0f172a; cursor: pointer; border-bottom: 1px solid #f1f5f9;";
+            item.className = `sug-unit-item-${{idx}}`;
+            item.style.cssText = "padding: 6px 10px; font-size: 12px; font-weight: 700; color: #0f172a; cursor: pointer; border-bottom: 1px solid #f1f5f9; transition: background 0.1s ease;";
             item.innerText = nombre;
 
-            item.onmouseenter = function() {{ this.style.background = "#ccfbf1"; }};
-            item.onmouseleave = function() {{ this.style.background = "transparent"; }};
+            item.onmouseenter = function() {{
+                resaltarSugerenciaUnitItem(idx, itemIndex);
+            }};
 
             item.onclick = function() {{
                 input.value = nombre;
@@ -5596,15 +5600,50 @@ function actualizarDosPorciento() {{
         boxSug.style.display = "block";
     }}
 
-    // Ocultar la lista flotante al hacer clic fuera
-    document.addEventListener("click", function(e) {{
-        document.querySelectorAll(".sugerencias-unit-box").forEach(box => {{
-            if (!box.contains(e.target) && !e.target.classList.contains("in-unidad-nombre")) {{
-                box.style.display = "none";
+    // 🟢 RESALTAR ELEMENTO DE LA LISTA
+    function resaltarSugerenciaUnitItem(idx, itemIndex) {{
+        const items = document.querySelectorAll(`.sug-unit-item-${{idx}}`);
+        items.forEach((it, i) => {{
+            if (i === itemIndex) {{
+                it.style.background = "#ccfbf1";
+                it.style.color = "#0f766e";
+            }} else {{
+                it.style.background = "transparent";
+                it.style.color = "#0f172a";
             }}
         }});
-    }});
+        indiceUnidadListSeleccionada[idx] = itemIndex;
+    }}
 
+    // 🟢 NAVEGACIÓN CON TECLADO (FLECHA ABAJO, ARRIBA Y ENTER)
+    function navegarSugerenciasUnidadList(event, idx) {{
+        const boxSug = document.getElementById(`sug-list-${{idx}}`);
+        if (!boxSug || boxSug.style.display === "none") return;
+
+        const items = document.querySelectorAll(`.sug-unit-item-${{idx}}`);
+        if (items.length === 0) return;
+
+        let currentIndex = indiceUnidadListSeleccionada[idx] ?? -1;
+
+        if (event.key === "ArrowDown") {{
+            event.preventDefault();
+            currentIndex = (currentIndex + 1) % items.length;
+            resaltarSugerenciaUnitItem(idx, currentIndex);
+            items[currentIndex].scrollIntoView({{ block: "nearest" }});
+        }} else if (event.key === "ArrowUp") {{
+            event.preventDefault();
+            currentIndex = (currentIndex - 1 + items.length) % items.length;
+            resaltarSugerenciaUnitItem(idx, currentIndex);
+            items[currentIndex].scrollIntoView({{ block: "nearest" }});
+        }} else if (event.key === "Enter") {{
+            event.preventDefault();
+            if (currentIndex >= 0 && items[currentIndex]) {{
+                items[currentIndex].click();
+            }}
+        }} else if (event.key === "Escape") {{
+            boxSug.style.display = "none";
+        }}
+    }}
 
 
     // 🟢 CÁLCULO DE FILA Y EVALUADOR DE BADGE ROJO DE EXCESO (+X)
