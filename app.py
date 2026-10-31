@@ -3378,7 +3378,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             <!-- ⏱ TARJETA 3: AJUSTE DE ORH -->
             <div style="background: #1e2022; padding: 12px 14px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #34383d; padding-bottom: 5px;">
-                    <span style="font-size: 14px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">⏱️ EDITAR ORH</span>
+                    <span style="font-size: 14px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">⏱️ SUBIR/BAJAR ORH</span>
                     <button id="btn-toggle-signo-orh" onclick="toggleOperacionOrh()" title="Cambiar a Suma o Resta"
                             style="cursor: pointer; background: #141414; color: #7CFFB2; border: 1px solid #20B2AA; border-radius: 5px; font-size: 9px; font-weight: 800; padding: 2px 6px; outline: none;">
                         RESTA (−)
