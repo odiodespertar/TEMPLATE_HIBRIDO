@@ -3344,44 +3344,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     <!-- ⚡ 1️⃣ FILA SUPERIOR: DOS CALCULADORAS DE 2% + CONVERTIDOR DE ORH (JUNTAS ARRIBA) -->
     <div style="display: flex; flex-direction: row; max-width: 700px; margin: 30px auto 20px auto; gap: 16px; align-items: stretch; justify-content: center;">
         
-        <!-- RECUADRO 1: LISTA SUMATORIA DINÁMICA DE 2% -->
-        <div style="flex: 1; background: #ffffff; padding: 16px 20px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
-                    <div>
-                        <div style="font-size: 11px; font-weight: 800; color: #0f766e; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - SIN NODOS</div>
-                        <span style="font-size: 11px; color: #64748b; font-weight: 600;">Suma total: <strong id="dos-pct-suma-total-1" style="color: #0f172a;">0</strong></span>
-                    </div>
-                    <div style="text-align: right;">
-                        <span style="font-size: 10px; color: #888888; display: block; font-weight: 600;">RESULTADO 2%:</span>
-                        <span id="dos-pct-res-1" style="font-size: 26px; font-weight: 900; color: #66CDAA;">0</span>
-                    </div>
-                </div>
-
-                <!-- Celdas de Entrada -->
-                <div id="contenedor-celdas-2pct" style="display: flex; flex-direction: column; gap: 8px; max-height: 160px; overflow-x: hidden; overflow-y: auto; padding-right: 2px;">
-                    <input type="number" class="in-2pct-lista no-spinners" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 1"
-                           style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
-                    <input type="number" class="in-2pct-lista no-spinners" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 2"
-                           style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
-                    <input type="number" class="in-2pct-lista no-spinners" onkeydown="navegarConFlechas2Pct(event, this)" oninput="calcularDosPctDato1Dinámico()" onfocus="this.select()" placeholder="Dato 3"
-                           style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 15px; font-weight: 600; text-align: center; border: none; border-bottom: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 4px;" />
-                </div>
-            </div>
-
-            <!-- Botones de Control + y - -->
-            <div style="display: flex; gap: 8px; margin-top: 10px;">
-                <button onclick="removerCelda2Pct()" title="Eliminar última celda"
-                        style="flex: 1; cursor: pointer; background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; font-weight: 700; border-radius: 6px; padding: 4px 0; font-size: 16px; transition: all 0.15s ease;"
-                        onmouseenter="this.style.background='#fee2e2'; this.style.color='#dc2626'; this.style.borderColor='#fca5a5';" 
-                        onmouseleave="this.style.background='#f1f5f9'; this.style.color='#64748b'; this.style.borderColor='#cbd5e1';">-</button>
-
-                <button onclick="agregarCelda2Pct()" title="Agregar celda"
-                        style="flex: 1; cursor: pointer; background: #f1f5f9; color: #0f766e; border: 1px solid #cbd5e1; font-weight: 700; border-radius: 6px; padding: 4px 0; font-size: 16px; transition: all 0.15s ease;"
-                        onmouseenter="this.style.background='#ccfbf1'; this.style.color='#0d9488'; this.style.borderColor='#99f6e4';" 
-                        onmouseleave="this.style.background='#f1f5f9'; this.style.color='#0f766e'; this.style.borderColor='#cbd5e1';">+</button>
-            </div>
-        </div>
+        
 
         <!-- RECUADRO 2: 2% TOTAL, CONVERTIDOR ORH Y AJUSTE DE ORH JUNTOS -->
         <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
