@@ -3358,7 +3358,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
                 </div>
                 <div style="width: 100%; border-top: 1px solid #34383d; padding-top: 6px;">
                     <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold; letter-spacing: 0.5px;">RESULTADO 2%:</span>
-                    <span id="dos-pct-res-2" style="font-size: 32px; font-weight: 900; color: #7CFFB2; line-height: 1;">0</span>
+                    <span id="dos-pct-res-2" style="font-size: 32px; font-weight: 900; color: #f76a36; line-height: 1;">0</span>
                 </div>
             </div>
 
