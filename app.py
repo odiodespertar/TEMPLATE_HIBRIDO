@@ -3767,7 +3767,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
         let mins = Math.round(totalMin % 60);
         let hStr = String(horas).padStart(2, '0');
         let mStr = String(mins).padStart(2, '0');
-        resHhmm.innerText = `(${hStr}:${mStr})`;
+        resHhmm.innerText = `(${{hStr}}:${{mStr}})`;
     }}
 
     // 🟢 NAVEGACIÓN DIRECTA CON FLECHAS EN LA CALCULADORA DE ORH
