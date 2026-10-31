@@ -3468,6 +3468,65 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     </div>
 
 
+<!-- ⚡ CALCULADORA REDUCTORA / AJUSTADORA DE ORH (DISEÑO AMARILLO) -->
+    <div style="max-width: 320px; margin: 0 auto 25px auto; background: #ffe600; padding: 16px; border-radius: 14px; border: 1.5px solid #e6c200; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #474747; padding-bottom: 6px;">
+            <div style="font-size: 13px; font-weight: 800; color: #474747; letter-spacing: 0.5px; text-transform: uppercase;">⏱️ AJUSTE DE ORH</div>
+            <button id="btn-toggle-signo-orh" onclick="toggleOperacionOrh()" title="Cambiar a Suma o Resta"
+                    style="cursor: pointer; background: #25282b; color: #7CFFB2; border: 1px solid #141414; border-radius: 6px; font-size: 11px; font-weight: 800; padding: 3px 8px; outline: none; transition: all 0.15s ease;">
+                MODO: RESTA (−)
+            </button>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+            <!-- Celda 1: ORH Inicial -->
+            <div style="width: 100%;">
+                <label style="font-size: 11px; color: #64748b; font-weight: 800; display: block; margin-bottom: 3px; text-align: center; letter-spacing: 0.5px;">ORH INICIAL (MIN)</label>
+                <input type="number" id="calc-orh-inicial" class="no-spinners" 
+                       onkeydown="moverFlechasOrh(event, this)" 
+                       oninput="calcularAjusteOrh()" 
+                       onfocus="this.select()" placeholder="0"
+                       style="width: 100%; box-sizing: border-box; padding: 6px 4px; font-size: 32px; font-weight: 900; text-align: center; border: 2px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 10px; height: 60px;" />
+            </div>
+
+            <!-- Signo Operativo Central Dinámico -->
+            <div id="simbolo-operacion-orh" style="font-size: 26px; font-weight: 900; color: #64748b; user-select: none; line-height: 1;">−</div>
+
+            <!-- Celda 2: Minutos a Reducir / Sumar con +/- -->
+            <div style="width: 100%;">
+                <label style="font-size: 11px; color: #64748b; font-weight: 800; display: block; margin-bottom: 3px; text-align: center; letter-spacing: 0.5px;">MINUTOS A AJUSTAR</label>
+                <div style="display: flex; align-items: center; gap: 0; width: 100%;">
+                    <button onclick="pasoMinutosOrh(-15)" title="Restar 15 min"
+                            style="cursor: pointer; background: #f1f5f9; color: #dc2626; border: 2px solid #cbd5e1; border-right: none; font-weight: 900; border-radius: 10px 0 0 10px; width: 42px; min-width: 42px; height: 60px; font-size: 22px; display: inline-flex; align-items: center; justify-content: center; outline: none; flex-shrink: 0; padding: 0;"
+                            onmouseenter="this.style.background='#fee2e2';" onmouseleave="this.style.background='#f1f5f9';">-</button>
+
+                    <input type="number" id="calc-orh-delta" class="no-spinners" 
+                       onkeydown="moverFlechasOrh(event, this)" 
+                       oninput="calcularAjusteOrh()" 
+                       onfocus="this.select()" placeholder="0"
+                       style="width: 100%; box-sizing: border-box; padding: 6px 2px; font-size: 32px; font-weight: 900; text-align: center; border: 2px solid #cbd5e1; border-left: none; border-right: none; background: #f8fafc; color: #0f172a; outline: none; border-radius: 0; height: 60px;" />
+
+                    <button onclick="pasoMinutosOrh(15)" title="Sumar 15 min"
+                            style="cursor: pointer; background: #f1f5f9; color: #0f766e; border: 2px solid #cbd5e1; border-left: none; font-weight: 900; border-radius: 0 10px 10px 0; width: 42px; min-width: 42px; height: 60px; font-size: 22px; display: inline-flex; align-items: center; justify-content: center; outline: none; flex-shrink: 0; padding: 0;"
+                            onmouseenter="this.style.background='#ccfbf1';" onmouseleave="this.style.background='#f1f5f9';">+</button>
+                </div>
+            </div>
+
+            <div style="font-size: 22px; font-weight: 900; color: #64748b; user-select: none; line-height: 1;">=</div>
+
+            <!-- Celda 3: Resultado Final -->
+            <div style="width: 100%; background: #1e2022; padding: 6px 8px; border-radius: 10px; border: 2px solid #34383d; text-align: center; height: 64px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;">
+                <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: 800; letter-spacing: 0.5px;">NUEVO ORH (MIN / HORAS):</span>
+                <div style="display: flex; align-items: baseline; justify-content: center; gap: 8px;">
+                    <span id="calc-orh-res-min" style="font-size: 32px; font-weight: 900; color: #3483fa; line-height: 0.9;">0</span>
+                    <span style="font-size: 14px; font-weight: 700; color: #64748b;">min</span>
+                    <span id="calc-orh-res-hhmm" style="font-size: 20px; font-weight: 800; color: #20B2AA; font-family: monospace; line-height: 0.9;">(00:00)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 <!-- ⚡ 3️⃣ FILA INFERIOR ADICIONAL: REGISTRO DE UNIDADES (LETRAS Y NÚMEROS MÁS GRANDES) -->
     <div style="max-width: 460px; margin: 20px auto 10px auto; background: #ffffff; padding: 18px; border-radius: 14px; border: 1.5px solid #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.06); position: relative;">
@@ -3659,6 +3718,90 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             resDisplay.innerText = "0";
         }}
     }}
+
+
+    let operacionOrhEsResta = true;
+
+    // 🟢 ALTERNAR MODO ENTRE RESTA Y SUMA
+    function toggleOperacionOrh() {{
+        operacionOrhEsResta = !operacionOrhEsResta;
+        const btn = document.getElementById("btn-toggle-signo-orh");
+        const sim = document.getElementById("simbolo-operacion-orh");
+
+        if (operacionOrhEsResta) {{
+            if (btn) {{
+                btn.innerText = "MODO: RESTA (−)";
+                btn.style.color = "#7CFFB2";
+            }}
+            if (sim) sim.innerText = "−";
+        }} else {{
+            if (btn) {{
+                btn.innerText = "MODO: SUMA (+)";
+                btn.style.color = "#facc15";
+            }}
+            if (sim) sim.innerText = "+";
+        }}
+        calcularAjusteOrh();
+    }}
+
+    // 🟢 CÁLCULO EN TIEMPO REAL DEL ORH AJUSTADO (MINUTOS Y HH:MM)
+    function calcularAjusteOrh() {{
+        const orhIni = parseFloat(document.getElementById('calc-orh-inicial')?.value) || 0;
+        const delta = parseFloat(document.getElementById('calc-orh-delta')?.value) || 0;
+        const resMin = document.getElementById('calc-orh-res-min');
+        const resHhmm = document.getElementById('calc-orh-res-hhmm');
+
+        if (!resMin || !resHhmm) return;
+
+        let totalMin = 0;
+        if (operacionOrhEsResta) {{
+            totalMin = Math.max(0, orhIni - delta);
+        }} else {{
+            totalMin = orhIni + delta;
+        }}
+
+        resMin.innerText = Math.round(totalMin);
+
+        // Conversión a formato Horas:Minutos
+        let horas = Math.floor(totalMin / 60);
+        let mins = Math.round(totalMin % 60);
+        let hStr = String(horas).padStart(2, '0');
+        let mStr = String(mins).padStart(2, '0');
+        resHhmm.innerText = `(${hStr}:${mStr})`;
+    }}
+
+    // 🟢 NAVEGACIÓN DIRECTA CON FLECHAS EN LA CALCULADORA DE ORH
+    function moverFlechasOrh(e, elem) {{
+        const in1 = document.getElementById('calc-orh-inicial');
+        const in2 = document.getElementById('calc-orh-delta');
+
+        if (!in1 || !in2) return;
+
+        if ((e.key === 'ArrowRight' || e.key === 'ArrowDown') && elem === in1) {{
+            e.preventDefault();
+            in2.focus();
+            in2.select();
+        }}
+        
+        if ((e.key === 'ArrowLeft' || e.key === 'ArrowUp') && elem === in2) {{
+            e.preventDefault();
+            in1.focus();
+            in1.select();
+        }}
+    }}
+
+    // 🟢 BOTONES +/- DE INCREMENTO RÁPIDO (EJ. 15, 30, 45, 60 MIN)
+    function pasoMinutosOrh(delta) {{
+        const inputMin = document.getElementById('calc-orh-delta');
+        if (!inputMin) return;
+
+        let valActual = parseFloat(inputMin.value) || 0;
+        let nuevoVal = Math.max(0, valActual + delta);
+
+        inputMin.value = nuevoVal;
+        calcularAjusteOrh();
+    }}
+
 
 
     // 🟢 NAVEGACIÓN DIRECTA CON FLECHAS EN CALCULADORA DIVISORA
@@ -5512,7 +5655,7 @@ function actualizarDosPorciento() {{
 
 
     
-    // 🟢 LIMPIEZA EXCLUSIVA Y COMPLETA PARA LAS 3 CALCULADORAS DE SISTÉMICO
+    // 🟢 LIMPIEZA EXCLUSIVA Y COMPLETA PARA SISTÉMICO
     function limpiarSistemico() {{
         // 1. REINICIAR CALCULADORA 2% DATO 1 (DINÁMICA)
         const contenedor2pct = document.getElementById('contenedor-celdas-2pct');
@@ -5541,14 +5684,27 @@ function actualizarDosPorciento() {{
         if (inOrhMin) inOrhMin.value = '';
         if (elResOrh) elResOrh.innerText = '00:00';
 
-        // 4. REINICIAR NUEVA CALCULADORA DIVISORA (OPCIÓN B)
+        // 4. REINICIAR CALCULADORA DIVISORA (IDS ÷ SPR)
         const inDiv1 = document.getElementById('calc-div-num1');
         const inDiv2 = document.getElementById('calc-div-num2');
         const resDiv = document.getElementById('calc-div-res');
-
         if (inDiv1) inDiv1.value = '';
         if (inDiv2) inDiv2.value = '';
         if (resDiv) resDiv.innerText = '0';
+
+        // 5. REINICIAR CALCULADORA DE AJUSTE ORH
+        const inOrh1 = document.getElementById('calc-orh-inicial');
+        const inOrh2 = document.getElementById('calc-orh-delta');
+        const resOrhM = document.getElementById('calc-orh-res-min');
+        const resOrhH = document.getElementById('calc-orh-res-hhmm');
+        if (inOrh1) inOrh1.value = '';
+        if (inOrh2) inOrh2.value = '';
+        if (resOrhM) resOrhM.innerText = '0';
+        if (resOrhH) resOrhH.innerText = '(00:00)';
+
+        // 6. REINICIAR REGISTRO DE UNIDADES A 0
+        document.querySelectorAll('.in-unidad-nombre').forEach(input => input.value = '');
+        document.querySelectorAll('.in-unidad-cant').forEach(input => input.value = '0');
     }}
 
 
@@ -5562,8 +5718,7 @@ function actualizarDosPorciento() {{
         inputCant.value = nuevoVal;
     }}
 
-
-    // 🟢 AGREGAR NUEVA FILA EDITABLE (LETRAS A 15px)
+    
     // 🟢 AGREGAR NUEVA FILA EDITABLE CON TAMAÑO DE LETRA AJUSTADO
     function agregarFilaUnidadList() {{
         const contenedor = document.getElementById('contenedor-filas-unidades');
