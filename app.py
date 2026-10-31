@@ -3383,32 +3383,79 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             </div>
         </div>
 
-        <!-- RECUADRO 2: DATO DEDICADO INDIVIDUAL + CONVERTIDOR DE ORH -->
-        <div style="flex: 1; display: flex; flex-direction: column; gap: 12px;">
+        <!-- RECUADRO 2: 2% TOTAL, CONVERTIDOR ORH Y AJUSTE DE ORH JUNTOS -->
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
             
             <!-- 🟢 TARJETA 1: 2% PERMITIDO - TOTAL(+NODOS) -->
-            <div style="background: #1e2022; padding: 14px 16px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; flex-direction: column; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center;">
+            <div style="background: #1e2022; padding: 12px 14px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center;">
                 <div>
                     <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - TOTAL(+NODOS)</div>
                     <input type="number" id="dos-pct-in-2" class="no-spinners" oninput="calcularDosPctIndividual(2)" onfocus="this.select()" value="0" placeholder="0"
-                           style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 22px; font-weight: 800; text-align: center; border-radius: 8px; border: 1.5px solid #20B2AA; background: #141414; color: #DCDCDC; outline: none; margin-top: 6px; height: 48px;" />
+                           style="width: 100%; box-sizing: border-box; padding: 4px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 8px; border: 1.5px solid #20B2AA; background: #141414; color: #DCDCDC; outline: none; margin-top: 4px; height: 40px;" />
                 </div>
-                <div style="width: 100%; border-top: 1px solid #34383d; padding-top: 8px;">
+                <div style="width: 100%; border-top: 1px solid #34383d; padding-top: 6px;">
                     <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold; letter-spacing: 0.5px;">RESULTADO 2%:</span>
-                    <span id="dos-pct-res-2" style="font-size: 30px; font-weight: 900; color: #7CFFB2; line-height: 1;">0</span>
+                    <span id="dos-pct-res-2" style="font-size: 26px; font-weight: 900; color: #7CFFB2; line-height: 1;">0</span>
                 </div>
             </div>
 
             <!-- ⏱ TARJETA 2: CONVERTIDOR DE ORH -->
-            <div style="background: #1e2022; padding: 14px 16px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; flex-direction: column; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center;">
+            <div style="background: #1e2022; padding: 12px 14px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center;">
                 <div>
                     <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">CONVERTIDOR ORH</div>
                     <input type="number" id="orh-minutos-in" class="no-spinners" oninput="convertirOrhRapido()" onfocus="this.select()" placeholder="Minutos"
-                           style="width: 100%; box-sizing: border-box; padding: 6px; font-size: 20px; font-weight: 800; text-align: center; border-radius: 8px; border: 1.5px solid #cbd5e1; background: #ffffff; color: #0f172a; outline: none; margin-top: 6px; height: 48px;" />
+                           style="width: 100%; box-sizing: border-box; padding: 4px; font-size: 18px; font-weight: 800; text-align: center; border-radius: 8px; border: 1.5px solid #cbd5e1; background: #ffffff; color: #0f172a; outline: none; margin-top: 4px; height: 40px;" />
                 </div>
-                <div style="width: 100%; border-top: 1px solid #34383d; padding-top: 8px;">
+                <div style="width: 100%; border-top: 1px solid #34383d; padding-top: 6px;">
                     <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: bold; letter-spacing: 0.5px;">HORAS REALES:</span>
-                    <span id="orh-horas-res" style="font-size: 28px; font-weight: 900; color: #20B2AA; font-family: monospace; line-height: 1;">00:00</span>
+                    <span id="orh-horas-res" style="font-size: 24px; font-weight: 900; color: #20B2AA; font-family: monospace; line-height: 1;">00:00</span>
+                </div>
+            </div>
+
+            <!-- ⏱ TARJETA 3: AJUSTE DE ORH COMPACTO Y EN PAREJA CON CONVERTIDOR -->
+            <div style="background: #1e2022; padding: 12px 14px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #34383d; padding-bottom: 5px;">
+                    <span style="font-size: 10px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">⏱️ AJUSTE ORH</span>
+                    <button id="btn-toggle-signo-orh" onclick="toggleOperacionOrh()" title="Cambiar a Suma o Resta"
+                            style="cursor: pointer; background: #141414; color: #7CFFB2; border: 1px solid #20B2AA; border-radius: 5px; font-size: 9px; font-weight: 800; padding: 2px 6px; outline: none;">
+                        RESTA (−)
+                    </button>
+                </div>
+
+                <div style="display: flex; gap: 6px; align-items: center; justify-content: space-between;">
+                    <div style="flex: 1;">
+                        <span style="font-size: 9px; color: #94a3b8; font-weight: 700; display: block; text-align: center;">INICIAL</span>
+                        <input type="number" id="calc-orh-inicial" class="no-spinners" 
+                               onkeydown="moverFlechasOrh(event, this)" oninput="calcularAjusteOrh()" onfocus="this.select()" placeholder="0"
+                               style="width: 100%; box-sizing: border-box; padding: 4px 2px; font-size: 18px; font-weight: 900; text-align: center; border: 1.5px solid #cbd5e1; background: #ffffff; color: #0f172a; outline: none; border-radius: 6px; height: 38px;" />
+                    </div>
+
+                    <span id="simbolo-operacion-orh" style="font-size: 18px; font-weight: 900; color: #20B2AA; user-select: none; padding-top: 12px;">−</span>
+
+                    <div style="flex: 1.2;">
+                        <span style="font-size: 9px; color: #94a3b8; font-weight: 700; display: block; text-align: center;">AJUSTAR</span>
+                        <div style="display: flex; align-items: center; width: 100%; height: 38px;">
+                            <button onclick="pasoMinutosOrh(-15)" title="-15m"
+                                    style="cursor: pointer; background: #282c30; color: #dc2626; border: 1.5px solid #cbd5e1; border-right: none; font-weight: 900; border-radius: 6px 0 0 6px; width: 22px; min-width: 22px; height: 38px; font-size: 14px; outline: none; padding: 0;">-</button>
+                            <input type="number" id="calc-orh-delta" class="no-spinners" 
+                                   onkeydown="moverFlechasOrh(event, this)" oninput="calcularAjusteOrh()" onfocus="this.select()" placeholder="0"
+                                   style="width: 100%; box-sizing: border-box; padding: 4px 0; font-size: 17px; font-weight: 900; text-align: center; border: 1.5px solid #cbd5e1; border-left: none; border-right: none; background: #ffffff; color: #0f172a; outline: none; border-radius: 0; height: 38px;" />
+                            <button onclick="pasoMinutosOrh(15)" title="+15m"
+                                    style="cursor: pointer; background: #282c30; color: #20B2AA; border: 1.5px solid #cbd5e1; border-left: none; font-weight: 900; border-radius: 0 6px 6px 0; width: 22px; min-width: 22px; height: 38px; font-size: 14px; outline: none; padding: 0;">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: #141414; border: 1px solid #20B2AA; border-radius: 8px; padding: 5px 6px; text-align: center; display: flex; justify-content: space-around; align-items: center; margin-top: 2px;">
+                    <div>
+                        <span style="font-size: 8px; color: #94a3b8; display: block; font-weight: 700;">TOTAL MIN</span>
+                        <span id="calc-orh-res-min" style="font-size: 20px; font-weight: 900; color: #3483fa; line-height: 1;">0</span>
+                    </div>
+                    <div style="border-left: 1px solid #34383d; height: 26px;"></div>
+                    <div>
+                        <span style="font-size: 8px; color: #94a3b8; display: block; font-weight: 700;">EN HORAS</span>
+                        <span id="calc-orh-res-hhmm" style="font-size: 18px; font-weight: 900; color: #20B2AA; font-family: monospace; line-height: 1;">00:00</span>
+                    </div>
                 </div>
             </div>
 
@@ -3468,63 +3515,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
     </div>
 
 
-<!-- ⚡ CALCULADORA REDUCTORA / AJUSTADORA DE ORH (DISEÑO AMARILLO) -->
-    <div style="max-width: 320px; margin: 0 auto 25px auto; background: #ffe600; padding: 16px; border-radius: 14px; border: 1.5px solid #e6c200; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #474747; padding-bottom: 6px;">
-            <div style="font-size: 13px; font-weight: 800; color: #474747; letter-spacing: 0.5px; text-transform: uppercase;">⏱️ AJUSTE DE ORH</div>
-            <button id="btn-toggle-signo-orh" onclick="toggleOperacionOrh()" title="Cambiar a Suma o Resta"
-                    style="cursor: pointer; background: #25282b; color: #7CFFB2; border: 1px solid #141414; border-radius: 6px; font-size: 11px; font-weight: 800; padding: 3px 8px; outline: none; transition: all 0.15s ease;">
-                MODO: RESTA (−)
-            </button>
-        </div>
 
-        <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
-            <!-- Celda 1: ORH Inicial -->
-            <div style="width: 100%;">
-                <label style="font-size: 11px; color: #64748b; font-weight: 800; display: block; margin-bottom: 3px; text-align: center; letter-spacing: 0.5px;">ORH INICIAL (MIN)</label>
-                <input type="number" id="calc-orh-inicial" class="no-spinners" 
-                       onkeydown="moverFlechasOrh(event, this)" 
-                       oninput="calcularAjusteOrh()" 
-                       onfocus="this.select()" placeholder="0"
-                       style="width: 100%; box-sizing: border-box; padding: 6px 4px; font-size: 32px; font-weight: 900; text-align: center; border: 2px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; border-radius: 10px; height: 60px;" />
-            </div>
-
-            <!-- Signo Operativo Central Dinámico -->
-            <div id="simbolo-operacion-orh" style="font-size: 26px; font-weight: 900; color: #64748b; user-select: none; line-height: 1;">−</div>
-
-            <!-- Celda 2: Minutos a Reducir / Sumar con +/- -->
-            <div style="width: 100%;">
-                <label style="font-size: 11px; color: #64748b; font-weight: 800; display: block; margin-bottom: 3px; text-align: center; letter-spacing: 0.5px;">MINUTOS A AJUSTAR</label>
-                <div style="display: flex; align-items: center; gap: 0; width: 100%;">
-                    <button onclick="pasoMinutosOrh(-15)" title="Restar 15 min"
-                            style="cursor: pointer; background: #f1f5f9; color: #dc2626; border: 2px solid #cbd5e1; border-right: none; font-weight: 900; border-radius: 10px 0 0 10px; width: 42px; min-width: 42px; height: 60px; font-size: 22px; display: inline-flex; align-items: center; justify-content: center; outline: none; flex-shrink: 0; padding: 0;"
-                            onmouseenter="this.style.background='#fee2e2';" onmouseleave="this.style.background='#f1f5f9';">-</button>
-
-                    <input type="number" id="calc-orh-delta" class="no-spinners" 
-                       onkeydown="moverFlechasOrh(event, this)" 
-                       oninput="calcularAjusteOrh()" 
-                       onfocus="this.select()" placeholder="0"
-                       style="width: 100%; box-sizing: border-box; padding: 6px 2px; font-size: 32px; font-weight: 900; text-align: center; border: 2px solid #cbd5e1; border-left: none; border-right: none; background: #f8fafc; color: #0f172a; outline: none; border-radius: 0; height: 60px;" />
-
-                    <button onclick="pasoMinutosOrh(15)" title="Sumar 15 min"
-                            style="cursor: pointer; background: #f1f5f9; color: #0f766e; border: 2px solid #cbd5e1; border-left: none; font-weight: 900; border-radius: 0 10px 10px 0; width: 42px; min-width: 42px; height: 60px; font-size: 22px; display: inline-flex; align-items: center; justify-content: center; outline: none; flex-shrink: 0; padding: 0;"
-                            onmouseenter="this.style.background='#ccfbf1';" onmouseleave="this.style.background='#f1f5f9';">+</button>
-                </div>
-            </div>
-
-            <div style="font-size: 22px; font-weight: 900; color: #64748b; user-select: none; line-height: 1;">=</div>
-
-            <!-- Celda 3: Resultado Final -->
-            <div style="width: 100%; background: #1e2022; padding: 6px 8px; border-radius: 10px; border: 2px solid #34383d; text-align: center; height: 64px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;">
-                <span style="font-size: 10px; color: #aaaaaa; display: block; font-weight: 800; letter-spacing: 0.5px;">NUEVO ORH (MIN / HORAS):</span>
-                <div style="display: flex; align-items: baseline; justify-content: center; gap: 8px;">
-                    <span id="calc-orh-res-min" style="font-size: 32px; font-weight: 900; color: #3483fa; line-height: 0.9;">0</span>
-                    <span style="font-size: 14px; font-weight: 700; color: #64748b;">min</span>
-                    <span id="calc-orh-res-hhmm" style="font-size: 20px; font-weight: 800; color: #20B2AA; font-family: monospace; line-height: 0.9;">(00:00)</span>
-                </div>
-            </div>
-        </div>
-    </div>
 
 
 
@@ -3730,21 +3721,23 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
         if (operacionOrhEsResta) {{
             if (btn) {{
-                btn.innerText = "MODO: RESTA (−)";
+                btn.innerText = "RESTA (−)";
                 btn.style.color = "#7CFFB2";
+                btn.style.borderColor = "#20B2AA";
             }}
             if (sim) sim.innerText = "−";
         }} else {{
             if (btn) {{
-                btn.innerText = "MODO: SUMA (+)";
+                btn.innerText = "SUMA (+)";
                 btn.style.color = "#facc15";
+                btn.style.borderColor = "#facc15";
             }}
             if (sim) sim.innerText = "+";
         }}
         calcularAjusteOrh();
     }}
 
-    // 🟢 CÁLCULO EN TIEMPO REAL DEL ORH AJUSTADO (MINUTOS Y HH:MM)
+    // 🟢 CÁLCULO DEL ORH AJUSTADO
     function calcularAjusteOrh() {{
         const orhIni = parseFloat(document.getElementById('calc-orh-inicial')?.value) || 0;
         const delta = parseFloat(document.getElementById('calc-orh-delta')?.value) || 0;
@@ -3762,13 +3755,13 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
 
         resMin.innerText = Math.round(totalMin);
 
-        // Conversión a formato Horas:Minutos
         let horas = Math.floor(totalMin / 60);
         let mins = Math.round(totalMin % 60);
         let hStr = String(horas).padStart(2, '0');
         let mStr = String(mins).padStart(2, '0');
-        resHhmm.innerText = `(${{hStr}}:${{mStr}})`;
+        resHhmm.innerText = `${{hStr}}:${{mStr}}`;
     }}
+
 
     // 🟢 NAVEGACIÓN DIRECTA CON FLECHAS EN LA CALCULADORA DE ORH
     function moverFlechasOrh(e, elem) {{
