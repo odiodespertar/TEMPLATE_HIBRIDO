@@ -3352,7 +3352,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             <!-- 🟢 TARJETA 1: 2% PERMITIDO - TOTAL(+NODOS) -->
             <div style="background: #1e2022; padding: 12px 14px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center;">
                 <div>
-                    <div style="font-size: 16px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">MI 2%</div>
+                    <div style="font-size: 14px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">MI 2%</div>
                     <input type="number" id="dos-pct-in-2" class="no-spinners" oninput="calcularDosPctIndividual(2)" onfocus="this.select()" value="0" placeholder="0"
                            style="width: 100%; box-sizing: border-box; padding: 4px; font-size: 26px; font-weight: 800; text-align: center; border-radius: 8px; border: 1.5px solid #20B2AA; background: #141414; color: #DCDCDC; outline: none; margin-top: 4px; height: 46px;" />
                 </div>
@@ -3365,7 +3365,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             <!-- ⏱ TARJETA 2: CONVERTIDOR DE ORH -->
             <div style="background: #1e2022; padding: 12px 14px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center;">
                 <div>
-                    <div style="font-size: 16px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">CONVERTIDOR ORH</div>
+                    <div style="font-size: 14px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">CONVERTIDOR ORH</div>
                     <input type="number" id="orh-minutos-in" class="no-spinners" oninput="convertirOrhRapido()" onfocus="this.select()" placeholder="Minutos"
                            style="width: 100%; box-sizing: border-box; padding: 4px; font-size: 24px; font-weight: 800; text-align: center; border-radius: 8px; border: 1.5px solid #cbd5e1; background: #ffffff; color: #0f172a; outline: none; margin-top: 4px; height: 46px;" />
                 </div>
@@ -3378,7 +3378,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             <!-- ⏱ TARJETA 3: AJUSTE DE ORH -->
             <div style="background: #1e2022; padding: 12px 14px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #34383d; padding-bottom: 5px;">
-                    <span style="font-size: 10px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">⏱️ AJUSTE ORH</span>
+                    <span style="font-size: 14px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">⏱️ EDITAR ORH</span>
                     <button id="btn-toggle-signo-orh" onclick="toggleOperacionOrh()" title="Cambiar a Suma o Resta"
                             style="cursor: pointer; background: #141414; color: #7CFFB2; border: 1px solid #20B2AA; border-radius: 5px; font-size: 9px; font-weight: 800; padding: 2px 6px; outline: none;">
                         RESTA (−)
