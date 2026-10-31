@@ -3352,7 +3352,7 @@ body.excel-view .poligono-bloque th:nth-child(7) {{ width: 45px !important; }} /
             <!-- 🟢 TARJETA 1: 2% PERMITIDO - TOTAL(+NODOS) -->
             <div style="background: #1e2022; padding: 12px 14px; border-radius: 12px; border: 1.5px solid #34383d; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center;">
                 <div>
-                    <div style="font-size: 11px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">2% PERMITIDO - TOTAL(+NODOS)</div>
+                    <div style="font-size: 13px; font-weight: 800; color: #20B2AA; letter-spacing: 0.5px; text-transform: uppercase;">2%</div>
                     <input type="number" id="dos-pct-in-2" class="no-spinners" oninput="calcularDosPctIndividual(2)" onfocus="this.select()" value="0" placeholder="0"
                            style="width: 100%; box-sizing: border-box; padding: 4px; font-size: 26px; font-weight: 800; text-align: center; border-radius: 8px; border: 1.5px solid #20B2AA; background: #141414; color: #DCDCDC; outline: none; margin-top: 4px; height: 46px;" />
                 </div>
